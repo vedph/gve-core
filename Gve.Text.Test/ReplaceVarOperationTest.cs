@@ -3,6 +3,12 @@ namespace Gve.Text.Test;
 public class ReplaceVarOperationTest
 {
     [Fact]
+    public void Parse_Empty_Invalid()
+    {
+        Assert.False(VarOperation.TryParse("", out ReplaceVarOperation op));
+    }
+
+    [Fact]
     public void Execute_Start()
     {
         ReplaceVarOperation op =

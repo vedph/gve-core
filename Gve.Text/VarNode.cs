@@ -46,7 +46,6 @@ public class VarNode
     /// </returns>
     public override string ToString()
     {
-        // TODO
-        return base.ToString();
+        return $"{Operation} ({Children.Count})";
     }
 }
