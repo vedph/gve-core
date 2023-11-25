@@ -194,7 +194,7 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Parsing error</exception>
-    public static VarOperation Parse(string text)
+    public static T Parse<T>(string text) where T : VarOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -205,17 +205,17 @@ public abstract partial class VarOperation : IHasVersionTags
         return GetOperationType(m.Groups[1].Value) switch
         {
             VarOperationType.Replace
-                => ReplaceVarOperation.ParseOperation(text),
+                => (ReplaceVarOperation.ParseOperation(text) as T)!,
             VarOperationType.AddLeft
-                => AddLeftVarOperation.ParseOperation(text),
+                => (AddLeftVarOperation.ParseOperation(text) as T)!,
             VarOperationType.AddRight
-                => AddRightVarOperation.ParseOperation(text),
+                => (AddRightVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Annotate
-                => AnnotateVarOperation.ParseOperation(text),
+                => (AnnotateVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Move
-                => MoveVarOperation.ParseOperation(text),
+                => (MoveVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Swap
-                => SwapVarOperation.ParseOperation(text),
+                => (SwapVarOperation.ParseOperation(text) as T)!,
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")
         };
@@ -228,16 +228,17 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <param name="operation">The parsed operation.</param>
     /// <returns>True if success.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    public static bool TryParse(string text, out VarOperation? operation)
+    public static bool TryParse<T>(string text, out T? operation)
+        where T : VarOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
         try
         {
-            operation = Parse(text);
+            operation = Parse<T>(text);
             return true;
         }
-        catch (Exception ex)
+        catch (FormatException ex)
         {
             Debug.WriteLine(ex.ToString());
             operation = null;
