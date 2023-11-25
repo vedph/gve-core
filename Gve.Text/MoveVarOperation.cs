@@ -7,6 +7,7 @@ namespace Gve.Text;
 /// <summary>
 /// Move text to the specified position.
 /// </summary>
+/// <remarks>Syntax: <c>ATxRUN>ATxRUN^RANK@GROUP [TAG...]  {NOTE}</c>.</remarks>
 /// <seealso cref="VarOperation" />
 public sealed class MoveVarOperation : VarOperation
 {

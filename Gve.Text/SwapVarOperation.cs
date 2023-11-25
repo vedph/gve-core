@@ -4,15 +4,38 @@ using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Swap text operation.
+/// </summary>
+/// <seealso cref="VarOperation" />
 public sealed class SwapVarOperation : VarOperation
 {
+    /// <summary>
+    /// Gets or sets the position to swap text with.
+    /// </summary>
     public short With { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of characters to remove from the target position
+    /// before swapping.
+    /// </summary>
     public short WithRun { get; set; } = 1;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SwapVarOperation"/> class.
+    /// </summary>
     public SwapVarOperation() : base(VarOperationType.Swap)
     {
     }
 
+    /// <summary>
+    /// Execute this operation on the specified text.
+    /// </summary>
+    /// <param name="text">Input annotated text.</param>
+    /// <returns>
+    /// Annotated text.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public override AnnotatedText Execute(AnnotatedText text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -28,6 +51,13 @@ public sealed class SwapVarOperation : VarOperation
         return CreateResult(sb.ToString(), text.Annotations);
     }
 
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FormatException">Invalid swap operation: {text}</exception>
     internal static SwapVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);

@@ -11,7 +11,8 @@ namespace Gve.Text;
 public sealed class AddRightVarOperation : VarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AddRightVarOperation"/> class.
+    /// Initializes a new instance of the <see cref="AddRightVarOperation"/>
+    /// class.
     /// </summary>
     public AddRightVarOperation() : base(VarOperationType.AddRight)
     {

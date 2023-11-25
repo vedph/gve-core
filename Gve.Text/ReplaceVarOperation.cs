@@ -10,6 +10,9 @@ namespace Gve.Text;
 /// <seealso cref="VarOperation" />
 public sealed class ReplaceVarOperation : VarOperation
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReplaceVarOperation"/> class.
+    /// </summary>
     public ReplaceVarOperation() : base(VarOperationType.Replace)
     {
     }

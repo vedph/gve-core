@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace Gve.Text.Test;
 
 public class ReplaceVarOperationTest
