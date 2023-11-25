@@ -9,17 +9,17 @@ public sealed class ReplaceVarOperation : VarOperation
     {
     }
 
-    public override string Execute(string text)
+    public override AnnotatedText Execute(AnnotatedText text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         int index = At - 1;
-        StringBuilder sb = new(text);
+        StringBuilder sb = new(text.Value);
         sb.Remove(index, Run);
         if (!string.IsNullOrEmpty(Value))
         {
             sb.Insert(index, Value);
         }
-        return sb.ToString();
+        return CreateResult(sb.ToString(), text.Annotations);
     }
 }

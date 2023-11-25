@@ -42,23 +42,10 @@ public abstract class VarOperation : IHasVersionTags
     public short Run { get; set; }
 
     /// <summary>
-    /// Gets the value argument for this operation. This is the value of
-    /// the argument with the minimum rank, or null if there is no value
-    /// argument.
+    /// Gets the value argument for this operation. This is the primary argument,
+    /// whose meaning varies depending on the operation type.
     /// </summary>
-    public string? Value
-    {
-        get
-        {
-            return Args.Where(a => a.Name == "value")
-                .OrderBy(a => a.Rank).FirstOrDefault()?.Value;
-        }
-    }
-
-    /// <summary>
-    /// Gets the arguments.
-    /// </summary>
-    public IList<VarOperationArg> Args { get; set; }
+    public string? Value { get; set; }
 
     /// <summary>
     /// Gets or sets the optional group identifier. When an operation is part
@@ -84,7 +71,6 @@ public abstract class VarOperation : IHasVersionTags
     protected VarOperation(VarOperationType type)
     {
         Type = type;
-        Args = new List<VarOperationArg>();
         VersionTags = new List<string>();
     }
 
@@ -124,16 +110,16 @@ public abstract class VarOperation : IHasVersionTags
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        VarOperation result = new();
+        VarOperation result;
         Regex regex = new(
-            @"^(\d+)×(\d+)([=+<>]{1,2})([^@]+)(?:@([^[]+))?"+
+            @"^(\d+)[×x](\d+)([=+<>]{1,2})([^@]+)(?:@([^[]+))?"+
             @"(?:\[([^\]]+)\])?(?:\{([^\}]*)\})?$", RegexOptions.Compiled);
         Match match = regex.Match(text);
         if (match.Success) throw new FormatException($"Invalid operation: {text}");
 
-        result.Type = match.Groups[3].Value switch
+        VarOperationType type = match.Groups[3].Value switch
         {
-            "=" => VarOperationType.Replace,
+            // "=" => VarOperationType.Replace,
             "+<" => VarOperationType.AddLeft,
             "+>" => VarOperationType.AddRight,
             ":" => VarOperationType.Annotate,
@@ -141,6 +127,8 @@ public abstract class VarOperation : IHasVersionTags
             "<>" => VarOperationType.Swap,
             _ => VarOperationType.Replace
         };
+        
+
         result.At = short.Parse(match.Groups[1].Value,
             CultureInfo.InvariantCulture);
         result.Run = short.Parse(match.Groups[2].Value,
@@ -176,7 +164,22 @@ public abstract class VarOperation : IHasVersionTags
         }
     }
 
-    public abstract string Execute(string text);
+    protected AnnotatedText CreateResult(string text,
+        IDictionary<string, string>? annotations = null)
+    {
+        AnnotatedText result = new(text, annotations);
+        if (!string.IsNullOrEmpty(Note))
+            result.Annotations[AnnotatedText.NOTE_KEY] = Note;
+        return result;
+    }
+
+    public abstract AnnotatedText Execute(AnnotatedText text);
+
+    public AnnotatedText Execute(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        return Execute(new AnnotatedText(text));
+    }
 }
 
 /// <summary>
