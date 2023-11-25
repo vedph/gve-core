@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
-public sealed partial class MoveVarOperation : VarOperation
+public sealed class MoveVarOperation : VarOperation
 {
     public short To { get; set; }
     public short ToRun { get; set; } = 1;
@@ -24,9 +24,6 @@ public sealed partial class MoveVarOperation : VarOperation
 
         return CreateResult(sb.ToString(), text.Annotations);
     }
-
-    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?$")]
-    private static partial Regex AtRunRegex();
 
     internal static MoveVarOperation ParseOperation(string text)
     {

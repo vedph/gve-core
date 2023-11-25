@@ -23,7 +23,7 @@ public class VarTree
     /// <summary>
     /// Gets or sets the root operation node for this variants tree.
     /// </summary>
-    public VarNode Root { get; set; } = new();
+    public VarNode? Root { get; set; }
 
     /// <summary>
     /// Converts to string.

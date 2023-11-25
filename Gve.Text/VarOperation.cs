@@ -103,6 +103,9 @@ public abstract partial class VarOperation : IHasVersionTags
         }
     }
 
+    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?$")]
+    protected static partial Regex AtRunRegex();
+
     [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?(?<op>=|\+<|\+>|>|<>|:)$")]
     private static partial Regex OpHeadRegex();
 
@@ -126,7 +129,7 @@ public abstract partial class VarOperation : IHasVersionTags
             ":" => VarOperationType.Annotate,
             ">" => VarOperationType.Move,
             "<>" => VarOperationType.Swap,
-            _ => throw new FormatException($"Invalid operation type: {type}")
+            _ => throw new FormatException($"Invalid operation type: {op}")
         };
     }
 

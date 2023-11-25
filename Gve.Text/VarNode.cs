@@ -10,7 +10,7 @@ public class VarNode
     /// <summary>
     /// Gets or sets the text edit operation for this node.
     /// </summary>
-    public VarOperation Operation { get; set; }
+    public VarOperation Operation { get; }
 
     /// <summary>
     /// Gets or sets the diplomatic data about the node.
@@ -30,9 +30,10 @@ public class VarNode
     /// <summary>
     /// Initializes a new instance of the <see cref="VarNode"/> class.
     /// </summary>
-    public VarNode()
+    public VarNode(VarOperation operation)
     {
-        Operation = new VarOperation();
+        Operation = operation
+            ?? throw new System.ArgumentNullException(nameof(operation));
         Sources = new List<VarSource>();
         Children = new List<VarNode>();
     }
