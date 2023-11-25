@@ -103,10 +103,10 @@ public abstract partial class VarOperation : IHasVersionTags
         }
     }
 
-    [GeneratedRegex(@"^(?<at>[0-9]+)[×x](?<run>[0-9]+)?")]
+    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
     protected static partial Regex AtRunRegex();
 
-    [GeneratedRegex(@"^(?<at>[0-9]+)[×x](?<run>[0-9]+)?(?<op>=|\+<|\+>|>|<>|:)")]
+    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
     private static partial Regex OpHeadRegex();
 
     [GeneratedRegex(
