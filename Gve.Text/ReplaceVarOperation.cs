@@ -15,11 +15,22 @@ public sealed class ReplaceVarOperation : VarOperation
 
         int index = At - 1;
         StringBuilder sb = new(text.Value);
+
         sb.Remove(index, Run);
-        if (!string.IsNullOrEmpty(Value))
-        {
-            sb.Insert(index, Value);
-        }
+        if (!string.IsNullOrEmpty(Value)) sb.Insert(index, Value);
+
         return CreateResult(sb.ToString(), text.Annotations);
+    }
+
+    internal static ReplaceVarOperation ParseOperation(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        ReplaceVarOperation op = new();
+        // "value"
+        string body = ParseHeadAndTail(text, op);
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }

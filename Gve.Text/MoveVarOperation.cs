@@ -1,27 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
-public sealed class MoveVarOperation : VarOperation
+public sealed partial class MoveVarOperation : VarOperation
 {
+    public short To { get; set; }
+    public short ToRun { get; set; } = 1;
+
     public MoveVarOperation() : base(VarOperationType.Move)
     {
     }
 
-    public override string Execute(string text)
+    public override AnnotatedText Execute(AnnotatedText text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        // TODO
-        int index = At - 1;
-        StringBuilder sb = new(text);
-        string value = sb.ToString(index, Run);
-        sb.Remove(index, Run);
-        sb.Insert(index, Value);
-        return sb.ToString();
+        StringBuilder sb = new(text.Value);
+        string value = sb.ToString(At - 1, Run);
+        sb.Remove(At - 1, Run);
+        sb.Insert(To - 1, value);
+
+        return CreateResult(sb.ToString(), text.Annotations);
+    }
+
+    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?$")]
+    private static partial Regex AtRunRegex();
+
+    internal static MoveVarOperation ParseOperation(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        MoveVarOperation op = new();
+        // ATxRUN
+        string body = ParseHeadAndTail(text, op);
+        Match m = AtRunRegex().Match(body);
+        if (!m.Success)
+            throw new FormatException($"Invalid move operation: {text}");
+        op.To = short.Parse(m.Groups["at"].Value);
+        if (m.Groups["run"].Success) op.ToRun = short.Parse(m.Groups["run"].Value);
+
+        return op;
     }
 }

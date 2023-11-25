@@ -9,16 +9,26 @@ public sealed class AddLeftVarOperation : VarOperation
     {
     }
 
-    public override string Execute(string text)
+    public override AnnotatedText Execute(AnnotatedText text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        if (string.IsNullOrEmpty(Value)) return text;
+
+        StringBuilder sb = new(text.Value);
+        sb.Insert(At - 1, Value);
+
+        return CreateResult(sb.ToString(), text.Annotations);
+    }
+
+    internal static AddLeftVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        int index = At - 1;
-        StringBuilder sb = new(text);
-        if (!string.IsNullOrEmpty(Value))
-        {
-            sb.Insert(index, Value);
-        }
-        return sb.ToString();
+        AddLeftVarOperation op = new();
+        // "value"
+        string body = ParseHeadAndTail(text, op);
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }

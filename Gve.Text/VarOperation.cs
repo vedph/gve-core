@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Gve.Text;
 /// A variant text editing operation.
 /// </summary>
 /// <seealso cref="IHasVersionTags" />
-public abstract class VarOperation : IHasVersionTags
+public abstract partial class VarOperation : IHasVersionTags
 {
     /// <summary>
     /// The symbols corresponding to <see cref="VarOperationType"/>'s.
@@ -39,7 +40,13 @@ public abstract class VarOperation : IHasVersionTags
     /// <summary>
     /// Gets or sets the run of characters to include from <see cref="At"/>.
     /// </summary>
-    public short Run { get; set; }
+    public short Run { get; set; } = 1;
+
+    /// <summary>
+    /// Gets or sets the certainty rank for this operation: 0=not specified,
+    /// 1=most probable, 2=less probable, etc.
+    /// </summary>
+    public short Rank { get; set; }
 
     /// <summary>
     /// Gets the value argument for this operation. This is the primary argument,
@@ -74,94 +81,93 @@ public abstract class VarOperation : IHasVersionTags
         VersionTags = new List<string>();
     }
 
-    /// <summary>
-    /// Converts to string. This has format
-    /// <c>At×RunType:Arg1:Arg2:...@GroupId[VersionTags]{Note}</c>.
-    /// </summary>
-    /// <returns>String.</returns>
-    public override string ToString()
+    protected void AppendHead(StringBuilder sb)
     {
-        StringBuilder sb = new();
         sb.Append(At).Append('×').Append(Run).Append(TYPE_SYMBOLS[(int)Type]);
-
-        if (Args.Count > 0) sb.Append(':').AppendJoin(":", Args);
-
-        if (string.IsNullOrEmpty(GroupId))
-            sb.Append('@').Append(GroupId);
-
-        if (VersionTags.Count > 0)
-            sb.Append('[').AppendJoin(" ", VersionTags).Append(']');
-
-        if (!string.IsNullOrEmpty(Note))
-            sb.Append(" {").Append(Note).Append('}');
-
-        return sb.ToString();
     }
 
-    /// <summary>
-    /// Parses the specified text representing a <see cref="VarOperation"/>
-    /// with format <c>At×RunType:Arg1:Arg2:...@GroupId[VersionTags]{Note}</c>.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <returns>Operation.</returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="FormatException">Invalid operation</exception>
-    public static VarOperation Parse(string text)
+    protected void AppendTail(StringBuilder sb)
     {
-        ArgumentNullException.ThrowIfNull(text);
-
-        VarOperation result;
-        Regex regex = new(
-            @"^(\d+)[×x](\d+)([=+<>]{1,2})([^@]+)(?:@([^[]+))?"+
-            @"(?:\[([^\]]+)\])?(?:\{([^\}]*)\})?$", RegexOptions.Compiled);
-        Match match = regex.Match(text);
-        if (match.Success) throw new FormatException($"Invalid operation: {text}");
-
-        VarOperationType type = match.Groups[3].Value switch
+        // ^RANK@GROUP [TAG,...] {NOTE}
+        if (GroupId != null || VersionTags.Count > 0 || Note != null)
         {
-            // "=" => VarOperationType.Replace,
+            if (Rank != 0) sb.Append('^').Append(Rank);
+
+            if (!string.IsNullOrEmpty(GroupId)) sb.Append('@').Append(GroupId);
+
+            if (VersionTags.Count > 0)
+                sb.Append(" [").AppendJoin(" ", VersionTags).Append(']');
+
+            if (Note != null)
+                sb.Append(" {").Append(Note).Append('}');
+        }
+    }
+
+    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?(?<op>=|\+<|\+>|>|<>|:)$")]
+    private static partial Regex OpHeadRegex();
+
+    protected static Match MatchOperationHead(string text) =>
+        OpHeadRegex().Match(text);
+
+    [GeneratedRegex(
+        @"(?<rank>\^[0-9]+)?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
+    private static partial Regex TailRegex();
+
+    protected static Match MatchOperationTail(string text) =>
+        TailRegex().Match(text);
+
+    protected static VarOperationType GetOperationType(string op)
+    {
+        return op switch
+        {
+            "=" => VarOperationType.Replace,
             "+<" => VarOperationType.AddLeft,
             "+>" => VarOperationType.AddRight,
             ":" => VarOperationType.Annotate,
             ">" => VarOperationType.Move,
             "<>" => VarOperationType.Swap,
-            _ => VarOperationType.Replace
+            _ => throw new FormatException($"Invalid operation type: {type}")
         };
-        
-
-        result.At = short.Parse(match.Groups[1].Value,
-            CultureInfo.InvariantCulture);
-        result.Run = short.Parse(match.Groups[2].Value,
-            CultureInfo.InvariantCulture);
-        result.Args = match.Groups[4].Value.Split(':')
-            .Select(VarOperationArg.Parse).ToList();
-        result.GroupId = match.Groups[5].Value;
-        result.VersionTags = match.Groups[6].Value.Split(' ').ToList();
-        result.Note = string.IsNullOrEmpty(match.Groups[7].Value)
-            ? null : match.Groups[7].Value;
-        return result;
     }
 
-    /// <summary>
-    /// Tries to parse the specified text representing a <see cref="VarOperation"/>.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="result">The result.</param>
-    /// <returns>True if success.</returns>
-    public static bool TryParse(string text, out VarOperation? result)
+    private static string? GetOptionalArgValue(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return null;
+        value = value.Trim();
+        return value.Length == 0 ? null : value;
+    }
+
+    protected static string ParseHeadAndTail(string text, VarOperation op)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        try
+        // head: ATxRUN followed by OP
+        Match head = MatchOperationHead(text);
+        if (head.Success)
+            throw new FormatException($"Invalid operation head: {text}");
+
+        op.At = short.Parse(head.Groups["at"].Value,
+            CultureInfo.InvariantCulture);
+        if (head.Groups["run"].Success)
         {
-            result = Parse(text);
-            return true;
+            op.Run = short.Parse(head.Groups["run"].Value,
+                CultureInfo.InvariantCulture);
         }
-        catch (FormatException)
-        {
-            result = null;
-            return false;
-        }
+
+        // tail: ^RANK@GROUP [TAG...] {NOTE}
+        Match tail = MatchOperationTail(text);
+        if (tail.Success)
+            throw new FormatException($"Invalid operation tail: {text}");
+
+        op.Rank = tail.Groups["rank"].Length > 0
+            ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
+            : (short)0;
+        op.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
+        op.VersionTags = tail.Groups["tags"].Value.Split(' ').ToList();
+        op.Note = GetOptionalArgValue(tail.Groups["note"].Value);
+
+        // return text minus head and tail
+        return text.Substring(head.Length, text.Length - tail.Length);
     }
 
     protected AnnotatedText CreateResult(string text,
@@ -179,6 +185,42 @@ public abstract class VarOperation : IHasVersionTags
     {
         ArgumentNullException.ThrowIfNull(text);
         return Execute(new AnnotatedText(text));
+    }
+
+    public static VarOperation Parse(string text)
+    {
+        return GetOperationType(text) switch
+        {
+            VarOperationType.Replace
+                => ReplaceVarOperation.ParseOperation(text),
+            VarOperationType.AddLeft
+                => AddLeftVarOperation.ParseOperation(text),
+            VarOperationType.AddRight
+                => AddRightVarOperation.ParseOperation(text),
+            VarOperationType.Annotate
+                => AnnotateVarOperation.ParseOperation(text),
+            VarOperationType.Move
+                => MoveVarOperation.ParseOperation(text),
+            VarOperationType.Swap
+                => SwapVarOperation.ParseOperation(text),
+            _ => throw new FormatException(
+                $"Invalid operation type: {GetOperationType(text)}")
+        };
+    }
+
+    public static bool TryParse(string text, out VarOperation? op)
+    {
+        try
+        {
+            op = Parse(text);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            op = null;
+            return false;
+        }
     }
 }
 

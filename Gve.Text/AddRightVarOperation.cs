@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
@@ -12,16 +9,27 @@ public sealed class AddRightVarOperation : VarOperation
     {
     }
 
-    public override string Execute(string text)
+    public override AnnotatedText Execute(AnnotatedText text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        if (string.IsNullOrEmpty(Value)) return text;
+
+        StringBuilder sb = new(text.Value);
+        if (Run > 0) sb.Remove(At, Run);
+        sb.Insert(At - 1, Value);
+
+        return CreateResult(sb.ToString(), text.Annotations);
+    }
+
+    internal static AddRightVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        int index = At - 1;
-        StringBuilder sb = new(text);
-        if (!string.IsNullOrEmpty(Value))
-        {
-            sb.Insert(index + Run, Value);
-        }
-        return sb.ToString();
+        AddRightVarOperation op = new();
+        // "value"
+        string body = ParseHeadAndTail(text, op);
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }
