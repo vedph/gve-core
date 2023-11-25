@@ -3,12 +3,25 @@ using System.Text;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Replace text operation.
+/// </summary>
+/// <remarks>Syntax: <c>ATxRUN="VALUE"^RANK@GROUP [TAG...] {NOTE}</c></remarks>.
+/// <seealso cref="VarOperation" />
 public sealed class ReplaceVarOperation : VarOperation
 {
     public ReplaceVarOperation() : base(VarOperationType.Replace)
     {
     }
 
+    /// <summary>
+    /// Execute this operation on the specified text.
+    /// </summary>
+    /// <param name="text">Input annotated text.</param>
+    /// <returns>
+    /// Annotated text.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public override AnnotatedText Execute(AnnotatedText text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -22,6 +35,12 @@ public sealed class ReplaceVarOperation : VarOperation
         return CreateResult(sb.ToString(), text.Annotations);
     }
 
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
     internal static ReplaceVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);

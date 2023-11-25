@@ -4,15 +4,38 @@ using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Move text to the specified position.
+/// </summary>
+/// <seealso cref="VarOperation" />
 public sealed class MoveVarOperation : VarOperation
 {
+    /// <summary>
+    /// Gets or sets the target position.
+    /// </summary>
     public short To { get; set; }
+
+    /// <summary>
+    /// Gets or sets the run of characters to include from <see cref="To"/>.
+    /// These will be removed from the source.
+    /// </summary>
     public short ToRun { get; set; } = 1;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MoveVarOperation"/> class.
+    /// </summary>
     public MoveVarOperation() : base(VarOperationType.Move)
     {
     }
 
+    /// <summary>
+    /// Execute this operation on the specified text.
+    /// </summary>
+    /// <param name="text">Input annotated text.</param>
+    /// <returns>
+    /// Annotated text.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public override AnnotatedText Execute(AnnotatedText text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -25,6 +48,13 @@ public sealed class MoveVarOperation : VarOperation
         return CreateResult(sb.ToString(), text.Annotations);
     }
 
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FormatException">Invalid move operation: {text}</exception>
     internal static MoveVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);

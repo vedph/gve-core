@@ -2,7 +2,7 @@
 
 ## Operations
 
-- replace: `ATxRUN="value"^RANK@GROUP [TAG...] {NOTE}`
+- replace: `ATxRUN="VALUE"^RANK@GROUP [TAG...] {NOTE}`
 - add left, add right: `AT+<"value"^RANK@GROUP#TAG,TAG {NOTE}`: operator is `+<` or `+>`
 
 - move: `ATxRUN>ATxRUN^RANK@GROUP [TAG...]  {NOTE}`

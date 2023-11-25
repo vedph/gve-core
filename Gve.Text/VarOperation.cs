@@ -113,6 +113,12 @@ public abstract partial class VarOperation : IHasVersionTags
         @"(?<rank>\^[0-9]+)?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
     private static partial Regex TailRegex();
 
+    /// <summary>
+    /// Gets the operation type from the specified symbol.
+    /// </summary>
+    /// <param name="op">Operator symbol.</param>
+    /// <returns>Type.</returns>
+    /// <exception cref="FormatException">Invalid operation type.</exception>
     protected static VarOperationType GetOperationType(string op)
     {
         return op switch
@@ -134,7 +140,15 @@ public abstract partial class VarOperation : IHasVersionTags
         return value.Length == 0 ? null : value;
     }
 
-    protected static string ParseHeadAndTail(string text, VarOperation op)
+    /// <summary>
+    /// Parse head and tail parts of the specified text representing an
+    /// operation, storing values into <paramref name="operation"/>.
+    /// </summary>
+    /// <param name="text">Text.</param>
+    /// <param name="operation">Target operation.</param>
+    /// <returns>The body part of the text.</returns>
+    /// <exception cref="FormatException">Invalid text.</exception>
+    protected static string ParseHeadAndTail(string text, VarOperation operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -143,11 +157,11 @@ public abstract partial class VarOperation : IHasVersionTags
         if (!head.Success)
             throw new FormatException($"Invalid operation head: {text}");
 
-        op.At = short.Parse(head.Groups["at"].Value,
+        operation.At = short.Parse(head.Groups["at"].Value,
             CultureInfo.InvariantCulture);
         if (head.Groups["run"].Success)
         {
-            op.Run = short.Parse(head.Groups["run"].Value,
+            operation.Run = short.Parse(head.Groups["run"].Value,
                 CultureInfo.InvariantCulture);
         }
 
@@ -156,12 +170,12 @@ public abstract partial class VarOperation : IHasVersionTags
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
 
-        op.Rank = tail.Groups["rank"].Length > 0
+        operation.Rank = tail.Groups["rank"].Length > 0
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
-        op.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
-        op.VersionTags = tail.Groups["tags"].Value.Split(' ').ToList();
-        op.Note = GetOptionalArgValue(tail.Groups["note"].Value);
+        operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
+        operation.VersionTags = tail.Groups["tags"].Value.Split(' ').ToList();
+        operation.Note = GetOptionalArgValue(tail.Groups["note"].Value);
 
         // return text minus head and tail
         return text[head.Length..^tail.Length];
@@ -176,8 +190,18 @@ public abstract partial class VarOperation : IHasVersionTags
         return result;
     }
 
+    /// <summary>
+    /// Execute this operation on the specified text.
+    /// </summary>
+    /// <param name="text">Input annotated text.</param>
+    /// <returns>Annotated text.</returns>
     public abstract AnnotatedText Execute(AnnotatedText text);
 
+    /// <summary>
+    /// Execute this operation on the specified text.
+    /// </summary>
+    /// <param name="text">The input text.</param>
+    /// <returns>Annotated text.</returns>
     public AnnotatedText Execute(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
