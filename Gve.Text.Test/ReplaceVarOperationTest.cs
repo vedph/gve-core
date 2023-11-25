@@ -31,6 +31,15 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_ARValueRank_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(2, op.Rank);
+    }
+
+    [Fact]
     public void Execute_Start()
     {
         ReplaceVarOperation op =
