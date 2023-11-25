@@ -103,21 +103,15 @@ public abstract partial class VarOperation : IHasVersionTags
         }
     }
 
-    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?$")]
+    [GeneratedRegex(@"^(?<at>[0-9]+)[×x](?<run>[0-9]+)?")]
     protected static partial Regex AtRunRegex();
 
-    [GeneratedRegex(@"^(?<at>\d+)[×x](?<run>\d+)?(?<op>=|\+<|\+>|>|<>|:)$")]
+    [GeneratedRegex(@"^(?<at>[0-9]+)[×x](?<run>[0-9]+)?(?<op>=|\+<|\+>|>|<>|:)")]
     private static partial Regex OpHeadRegex();
-
-    protected static Match MatchOperationHead(string text) =>
-        OpHeadRegex().Match(text);
 
     [GeneratedRegex(
         @"(?<rank>\^[0-9]+)?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
     private static partial Regex TailRegex();
-
-    protected static Match MatchOperationTail(string text) =>
-        TailRegex().Match(text);
 
     protected static VarOperationType GetOperationType(string op)
     {
@@ -145,8 +139,8 @@ public abstract partial class VarOperation : IHasVersionTags
         ArgumentNullException.ThrowIfNull(text);
 
         // head: ATxRUN followed by OP
-        Match head = MatchOperationHead(text);
-        if (head.Success)
+        Match head = OpHeadRegex().Match(text);
+        if (!head.Success)
             throw new FormatException($"Invalid operation head: {text}");
 
         op.At = short.Parse(head.Groups["at"].Value,
@@ -158,8 +152,8 @@ public abstract partial class VarOperation : IHasVersionTags
         }
 
         // tail: ^RANK@GROUP [TAG...] {NOTE}
-        Match tail = MatchOperationTail(text);
-        if (tail.Success)
+        Match tail = TailRegex().Match(text);
+        if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
 
         op.Rank = tail.Groups["rank"].Length > 0
@@ -170,7 +164,7 @@ public abstract partial class VarOperation : IHasVersionTags
         op.Note = GetOptionalArgValue(tail.Groups["note"].Value);
 
         // return text minus head and tail
-        return text.Substring(head.Length, text.Length - tail.Length);
+        return text[head.Length..^tail.Length];
     }
 
     protected AnnotatedText CreateResult(string text,
@@ -190,9 +184,25 @@ public abstract partial class VarOperation : IHasVersionTags
         return Execute(new AnnotatedText(text));
     }
 
+    [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
+    private static partial Regex LocOpRegex();
+
+    /// <summary>
+    /// Parses the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="FormatException">Parsing error</exception>
     public static VarOperation Parse(string text)
     {
-        return GetOperationType(text) switch
+        ArgumentNullException.ThrowIfNull(text);
+
+        Match m = LocOpRegex().Match(text);
+        if (!m.Success)
+            throw new FormatException($"Invalid operation: {text}");
+
+        return GetOperationType(m.Groups[1].Value) switch
         {
             VarOperationType.Replace
                 => ReplaceVarOperation.ParseOperation(text),
@@ -211,17 +221,26 @@ public abstract partial class VarOperation : IHasVersionTags
         };
     }
 
-    public static bool TryParse(string text, out VarOperation? op)
+    /// <summary>
+    /// Tries to parsing the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="operation">The parsed operation.</param>
+    /// <returns>True if success.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    public static bool TryParse(string text, out VarOperation? operation)
     {
+        ArgumentNullException.ThrowIfNull(text);
+
         try
         {
-            op = Parse(text);
+            operation = Parse(text);
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
-            op = null;
+            operation = null;
             return false;
         }
     }
