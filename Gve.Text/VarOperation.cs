@@ -11,7 +11,7 @@ namespace Gve.Text;
 /// A variant text editing operation.
 /// </summary>
 /// <seealso cref="IHasVersionTags" />
-public class VarOperation : IHasVersionTags
+public abstract class VarOperation : IHasVersionTags
 {
     /// <summary>
     /// The symbols corresponding to <see cref="VarOperationType"/>'s.
@@ -29,7 +29,7 @@ public class VarOperation : IHasVersionTags
     /// <summary>
     /// Gets or sets the type.
     /// </summary>
-    public VarOperationType Type { get; set; }
+    public VarOperationType Type { get; protected set; }
 
     /// <summary>
     /// Gets or sets the ordinal character number to start at.
@@ -80,8 +80,10 @@ public class VarOperation : IHasVersionTags
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
     /// </summary>
-    public VarOperation()
+    /// <param name="type">The operation type.</param>
+    protected VarOperation(VarOperationType type)
     {
+        Type = type;
         Args = new List<VarOperationArg>();
         VersionTags = new List<string>();
     }
@@ -173,6 +175,8 @@ public class VarOperation : IHasVersionTags
             return false;
         }
     }
+
+    public abstract string Execute(string text);
 }
 
 /// <summary>

@@ -19,7 +19,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.VarDiplomatic">
-    <Position X="5.25" Y="4.25" Width="1.5" />
+    <Position X="5.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VarDiplomatic.cs</FileName>
@@ -34,7 +34,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAwAAAEAAAAAAAEAAAAAAAAAACAAAAAAQAiAAEEAAI=</HashCode>
+      <HashCode>AIAwAAAEAAAAAAQEAAAAAAAAAACAAAAAAQAiAAEEAAI=</HashCode>
       <FileName>VarOperation.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -45,7 +45,7 @@
   <Class Name="Gve.Text.VarOperationArg">
     <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAhAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAEAAAA=</HashCode>
+      <HashCode>CIAhAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAgAAEAAAA=</HashCode>
       <FileName>VarOperationArg.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -63,7 +63,10 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarSource">
-    <Position X="5.25" Y="6" Width="1.5" />
+    <Position X="5.25" Y="6.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAADAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAEAAAA=</HashCode>
       <FileName>VarSource.cs</FileName>
