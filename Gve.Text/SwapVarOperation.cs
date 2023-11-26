@@ -40,13 +40,17 @@ public sealed class SwapVarOperation : VarOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
+        int li = Math.Min(At, With) - 1;
+        int ri = Math.Max(At, With) - 1;
+
+        string lv = text.Value.Substring(li, Run);
+        string rv = text.Value.Substring(ri, WithRun);
+
         StringBuilder sb = new(text.Value);
-        string value = sb.ToString(At - 1, Run);
-        sb.Remove(At - 1, Run);
-        string with = sb.ToString(With - 1, WithRun);
-        sb.Remove(With - 1, WithRun);
-        sb.Insert(At - 1, with);
-        sb.Insert(With - 1, value);
+        sb.Remove(ri, WithRun);
+        sb.Insert(ri, lv);
+        sb.Remove(li, Run);
+        sb.Insert(li, rv);
 
         return CreateResult(sb.ToString(), text.Annotations);
     }
