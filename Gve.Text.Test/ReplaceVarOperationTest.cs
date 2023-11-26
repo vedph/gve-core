@@ -20,14 +20,22 @@ public class ReplaceVarOperationTest
     public void Parse_ARValue_Ok()
     {
         Assert.True(VarOperation.TryParse("12x3=\"value\"",
-            out ReplaceVarOperation? _));
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
     }
 
     [Fact]
     public void Parse_AValue_Ok()
     {
         Assert.True(VarOperation.TryParse("12=\"value\"",
-            out ReplaceVarOperation? _));
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Equal("value", op.Value);
     }
 
     [Fact]
@@ -36,6 +44,9 @@ public class ReplaceVarOperationTest
         Assert.True(VarOperation.TryParse("12x3=\"value\"^2",
             out ReplaceVarOperation? op));
         Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
         Assert.Equal(2, op.Rank);
     }
 
@@ -45,6 +56,9 @@ public class ReplaceVarOperationTest
         Assert.True(VarOperation.TryParse("12x3=\"value\"@group",
             out ReplaceVarOperation? op));
         Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
         Assert.Equal("group", op.GroupId);
     }
 
@@ -54,8 +68,62 @@ public class ReplaceVarOperationTest
         Assert.True(VarOperation.TryParse("12x3=\"value\"^2@group",
             out ReplaceVarOperation? op));
         Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
         Assert.Equal(2, op.Rank);
         Assert.Equal("group", op.GroupId);
+    }
+
+    [Fact]
+    public void Parse_ARValueNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\" {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal("a note", op.Note);
+    }
+
+    [Fact]
+    public void Parse_ARValueRankNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2 {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("a note", op.Note);
+    }
+
+    [Fact]
+    public void Parse_ARValueRankGroupNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2@group {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("group", op.GroupId);
+        Assert.Equal("a note", op.Note);
+    }
+
+    [Fact]
+    public void Parse_ARValueGroupNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"@group {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal("group", op.GroupId);
+        Assert.Equal("a note", op.Note);
     }
 
     [Fact]
