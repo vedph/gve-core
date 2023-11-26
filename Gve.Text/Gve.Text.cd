@@ -29,12 +29,12 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarOperation">
-    <Position X="7" Y="2.75" Width="1.5" />
+    <Position X="7" Y="2.75" Width="1.75" />
     <Members>
       <Method Name="AtRunRegex" Hidden="true" />
       <Method Name="GetOptionalArgValue" Hidden="true" />
+      <Method Name="HeadRegex" Hidden="true" />
       <Method Name="LocOpRegex" Hidden="true" />
-      <Method Name="OpHeadRegex" Hidden="true" />
       <Method Name="TailRegex" Hidden="true" />
       <Method Name="VarOperation" Hidden="true" />
     </Members>
@@ -42,7 +42,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIBxCBAEAAAgQAQIAAAAAAAAAACAAAAACQAiAIEQIAI=</HashCode>
+      <HashCode>AIBxABAEAAAgQAQIAAAAAAAAAACCAAAACQAiAIEQIAI=</HashCode>
       <FileName>VarOperation.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
