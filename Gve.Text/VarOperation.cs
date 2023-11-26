@@ -81,11 +81,29 @@ public abstract partial class VarOperation : IHasVersionTags
         VersionTags = new List<string>();
     }
 
+    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
+    protected static partial Regex AtRunRegex();
+
+    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
+    private static partial Regex HeadRegex();
+
+    [GeneratedRegex(
+        @"(?:\^(?<rank>[0-9]+))?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
+    private static partial Regex TailRegex();
+
+    /// <summary>
+    /// Appends the head part of an operation to the specified string builder.
+    /// </summary>
+    /// <param name="sb">The target.</param>
     protected void AppendHead(StringBuilder sb)
     {
         sb.Append(At).Append('×').Append(Run).Append(TYPE_SYMBOLS[(int)Type]);
     }
 
+    /// <summary>
+    /// Appends the tail part of an operation to the specified string builder.
+    /// </summary>
+    /// <param name="sb">The target.</param>
     protected void AppendTail(StringBuilder sb)
     {
         // ^RANK@GROUP [TAG,...] {NOTE}
@@ -102,16 +120,6 @@ public abstract partial class VarOperation : IHasVersionTags
                 sb.Append(" {").Append(Note).Append('}');
         }
     }
-
-    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
-    protected static partial Regex AtRunRegex();
-
-    [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
-    private static partial Regex OpHeadRegex();
-
-    [GeneratedRegex(
-        @"(?<rank>\^[0-9]+)?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
-    private static partial Regex TailRegex();
 
     /// <summary>
     /// Gets the operation type from the specified symbol.
@@ -153,7 +161,7 @@ public abstract partial class VarOperation : IHasVersionTags
         ArgumentNullException.ThrowIfNull(text);
 
         // head: ATxRUN followed by OP
-        Match head = OpHeadRegex().Match(text);
+        Match head = HeadRegex().Match(text);
         if (!head.Success)
             throw new FormatException($"Invalid operation head: {text}");
 
