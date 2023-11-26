@@ -40,6 +40,25 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_ARValueGroup_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"@group",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal("group", op.GroupId);
+    }
+
+    [Fact]
+    public void Parse_ARValueRankGroup_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2@group",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("group", op.GroupId);
+    }
+
+    [Fact]
     public void Execute_Start()
     {
         ReplaceVarOperation op =
