@@ -16,6 +16,7 @@ public sealed class AddLeftVarOperation : VarOperation
     /// </summary>
     public AddLeftVarOperation() : base(VarOperationType.AddLeft)
     {
+        Run = 0;
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ public sealed class AddLeftVarOperation : VarOperation
         if (string.IsNullOrEmpty(Value)) return text;
 
         StringBuilder sb = new(text.Value);
+        if (Run > 0) sb.Remove(At - 1, Run);
         sb.Insert(At - 1, Value);
 
         return CreateResult(sb.ToString(), text.Annotations);

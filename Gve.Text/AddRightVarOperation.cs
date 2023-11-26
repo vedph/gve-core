@@ -16,6 +16,7 @@ public sealed class AddRightVarOperation : VarOperation
     /// </summary>
     public AddRightVarOperation() : base(VarOperationType.AddRight)
     {
+        Run = 0;
     }
 
     /// <summary>
@@ -33,7 +34,7 @@ public sealed class AddRightVarOperation : VarOperation
 
         StringBuilder sb = new(text.Value);
         if (Run > 0) sb.Remove(At, Run);
-        sb.Insert(At - 1, Value);
+        sb.Insert(At, Value);
 
         return CreateResult(sb.ToString(), text.Annotations);
     }
