@@ -39,6 +39,19 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_AValueTags_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12=\"value\" [alpha beta]",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
+    }
+
+    [Fact]
     public void Parse_ARValueRank_Ok()
     {
         Assert.True(VarOperation.TryParse("12x3=\"value\"^2",
@@ -48,6 +61,20 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal("value", op.Value);
         Assert.Equal(2, op.Rank);
+    }
+
+    [Fact]
+    public void Parse_ARValueRankTags_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2 [alpha beta]",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal(2, op.Rank);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
     }
 
     [Fact]
@@ -63,6 +90,20 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_ARValueGroupTags_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"@group [alpha beta]",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal("group", op.GroupId);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
+    }
+
+    [Fact]
     public void Parse_ARValueRankGroup_Ok()
     {
         Assert.True(VarOperation.TryParse("12x3=\"value\"^2@group",
@@ -72,6 +113,20 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal(2, op.Rank);
         Assert.Equal("group", op.GroupId);
+    }
+
+    [Fact]
+    public void Parse_ARValueRankGroupTags_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2@group [alpha beta]",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("group", op.GroupId);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
     }
 
     [Fact]
@@ -87,6 +142,20 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_ARValueTagsNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\" [alpha beta] {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal("a note", op.Note);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
+    }
+
+    [Fact]
     public void Parse_ARValueRankNote_Ok()
     {
         Assert.True(VarOperation.TryParse("12x3=\"value\"^2 {a note}",
@@ -97,6 +166,21 @@ public class ReplaceVarOperationTest
         Assert.Equal("value", op.Value);
         Assert.Equal(2, op.Rank);
         Assert.Equal("a note", op.Note);
+    }
+
+    [Fact]
+    public void Parse_ARValueRanTagsNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"^2 [alpha beta] {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("a note", op.Note);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
     }
 
     [Fact]
@@ -114,6 +198,23 @@ public class ReplaceVarOperationTest
     }
 
     [Fact]
+    public void Parse_ARValueRankGroupTagsNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse(
+            "12x3=\"value\"^2@group [alpha beta] {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("group", op.GroupId);
+        Assert.Equal("a note", op.Note);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
+    }
+
+    [Fact]
     public void Parse_ARValueGroupNote_Ok()
     {
         Assert.True(VarOperation.TryParse("12x3=\"value\"@group {a note}",
@@ -124,6 +225,21 @@ public class ReplaceVarOperationTest
         Assert.Equal("value", op.Value);
         Assert.Equal("group", op.GroupId);
         Assert.Equal("a note", op.Note);
+    }
+
+    [Fact]
+    public void Parse_ARValueGroupTagsNote_Ok()
+    {
+        Assert.True(VarOperation.TryParse("12x3=\"value\"@group [alpha beta] {a note}",
+            out ReplaceVarOperation? op));
+        Assert.NotNull(op);
+        Assert.Equal(12, op.At);
+        Assert.Equal(3, op.Run);
+        Assert.Equal("value", op.Value);
+        Assert.Equal("group", op.GroupId);
+        Assert.Equal("a note", op.Note);
+        Assert.True(op.VersionTags.Contains("alpha"));
+        Assert.True(op.VersionTags.Contains("beta"));
     }
 
     [Fact]

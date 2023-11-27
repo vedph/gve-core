@@ -189,6 +189,12 @@ public abstract partial class VarOperation : IHasVersionTags
         return text[head.Length..^tail.Length];
     }
 
+    /// <summary>
+    /// Creates the operation result from the specified text and annotations.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="annotations">The annotations.</param>
+    /// <returns>Result.</returns>
     protected AnnotatedText CreateResult(string text,
         IDictionary<string, string>? annotations = null)
     {
