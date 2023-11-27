@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Text;
 
 namespace Gve.Text;
 
 /// <summary>
 /// Add text to the left of the specified position.
 /// </summary>
-/// <remarks>Syntax: <c>AT+<"VALUE"^RANK@GROUP#TAG,TAG {NOTE}</c>.</remarks>
+/// <remarks>Syntax: <c>AT+&lt;"VALUE"^RANK@GROUP#TAG,TAG {NOTE}</c>.</remarks>
 /// <seealso cref="VarOperation" />
-public sealed class AddLeftVarOperation : VarOperation
+public sealed class AddLeftVarOperation : AddVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AddLeftVarOperation"/>
@@ -16,27 +15,7 @@ public sealed class AddLeftVarOperation : VarOperation
     /// </summary>
     public AddLeftVarOperation() : base(VarOperationType.AddLeft)
     {
-        Run = 0;
-    }
-
-    /// <summary>
-    /// Execute this operation on the specified text.
-    /// </summary>
-    /// <param name="text">Input annotated text.</param>
-    /// <returns>
-    /// Annotated text.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public override AnnotatedText Execute(AnnotatedText text)
-    {
-        ArgumentNullException.ThrowIfNull(text);
-        if (string.IsNullOrEmpty(Value)) return text;
-
-        StringBuilder sb = new(text.Value);
-        if (Run > 0) sb.Remove(At - 1, Run);
-        sb.Insert(At - 1, Value);
-
-        return CreateResult(sb.ToString(), text.Annotations);
+        IsRight = false;
     }
 
     /// <summary>
@@ -52,6 +31,7 @@ public sealed class AddLeftVarOperation : VarOperation
         AddLeftVarOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
         op.Value = body.Trim('"');
 
         return op;

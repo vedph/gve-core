@@ -2,7 +2,13 @@
 
 namespace Gve.Text;
 
+/// <summary>
+/// Interface for objects having version tags.
+/// </summary>
 public interface IHasVersionTags
 {
+    /// <summary>
+    /// Gets or sets the version tags.
+    /// </summary>
     IList<string> VersionTags { get; set; }
 }

@@ -35,7 +35,7 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <summary>
     /// Gets or sets the ordinal character number to start at.
     /// </summary>
-    public short At { get; set; }
+    public short At { get; set; } = 1;
 
     /// <summary>
     /// Gets or sets the run of characters to include from <see cref="At"/>.

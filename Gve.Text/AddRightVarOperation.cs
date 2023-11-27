@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace Gve.Text;
 
@@ -8,7 +7,7 @@ namespace Gve.Text;
 /// </summary>
 /// <remarks>Syntax: <c>AT+>"VALUE"^RANK@GROUP#TAG,TAG {NOTE}</c>.</remarks>
 /// <seealso cref="VarOperation" />
-public sealed class AddRightVarOperation : VarOperation
+public sealed class AddRightVarOperation : AddVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AddRightVarOperation"/>
@@ -16,27 +15,7 @@ public sealed class AddRightVarOperation : VarOperation
     /// </summary>
     public AddRightVarOperation() : base(VarOperationType.AddRight)
     {
-        Run = 0;
-    }
-
-    /// <summary>
-    /// Execute this operation on the specified text.
-    /// </summary>
-    /// <param name="text">Input annotated text.</param>
-    /// <returns>
-    /// Annotated text.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public override AnnotatedText Execute(AnnotatedText text)
-    {
-        ArgumentNullException.ThrowIfNull(text);
-        if (string.IsNullOrEmpty(Value)) return text;
-
-        StringBuilder sb = new(text.Value);
-        if (Run > 0) sb.Remove(At, Run);
-        sb.Insert(At, Value);
-
-        return CreateResult(sb.ToString(), text.Annotations);
+        IsRight = true;
     }
 
     /// <summary>
@@ -50,8 +29,9 @@ public sealed class AddRightVarOperation : VarOperation
         ArgumentNullException.ThrowIfNull(text);
 
         AddRightVarOperation op = new();
-        // "value"
+        // "VALUE"
         string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
         op.Value = body.Trim('"');
 
         return op;
