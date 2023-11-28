@@ -63,6 +63,18 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Gets the count of the nodes in this set.
+    /// </summary>
+    /// <param name="deleted">The deleted filter.</param>
+    /// <returns>Count.</returns>
+    public int GetCount(bool? deleted = null)
+    {
+        return deleted == null
+            ? _nodes.Count
+            : _nodes.Count(n => n.IsDeleted == deleted);
+    }
+
+    /// <summary>
     /// Sets the original text for this set.
     /// </summary>
     /// <param name="text">The original text.</param>

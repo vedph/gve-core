@@ -214,4 +214,73 @@ public sealed class CharNodeSetTest
         Assert.NotNull(node.LeftNode);
         Assert.False(node.IsDeleted);
     }
+
+    [Fact]
+    public void Delete_First_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        set.Delete(1);
+
+        CharNode? node = set.GetFirstNode();
+        Assert.NotNull(node);
+        Assert.Equal('a', node!.Value);
+        Assert.Equal(1, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.Null(node.LeftNode);
+        Assert.True(node.IsDeleted);
+
+        // right node is still linked to the deleted one
+        CharNode? right = set.GetNode(2);
+        Assert.NotNull(right);
+        Assert.Same(node, right.LeftNode);
+    }
+
+    [Fact]
+    public void Delete_Last_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        set.Delete(16);
+
+        CharNode? node = set.GetLastNode();
+        Assert.NotNull(node);
+        Assert.Equal('a', node!.Value);
+        Assert.Equal(16, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.True(node.IsDeleted);
+
+        // deleted node is still linked to its left node
+        CharNode? left = set.GetNode(15);
+        Assert.NotNull(left);
+        Assert.Same(left, node.LeftNode);
+    }
+
+    [Fact]
+    public void Delete_Mid_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        set.Delete(4);
+
+        CharNode? node = set.GetNode(4);
+        Assert.NotNull(node);
+        Assert.Equal('h', node!.Value);
+        Assert.Equal(4, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.True(node.IsDeleted);
+
+        // deleted node is still linked to its left node
+        CharNode? left = set.GetNode(3);
+        Assert.NotNull(left);
+        Assert.Same(left, node.LeftNode);
+
+        // right node is still linked to the deleted one
+        CharNode? right = set.GetNode(5);
+        Assert.NotNull(right);
+        Assert.Same(node, right.LeftNode);
+    }
+
 }
