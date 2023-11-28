@@ -342,10 +342,8 @@ public class CharNodeSet : IEnumerable<CharNode>
         if (nodes.Count == 0) return Delete(at, run);
         if (run == 0) return InsertBefore(at, nodes);
 
-        int r = run;
         List<CharNode> replaced = [];
-
-        for (int i = 0; i < nodes.Count; i++)
+        for (int i = 0; i < nodes.Count && i < run; i++)
         {
             CharNode? node = _nodes.Find(n => n.Ordinal == at + i);
             // reference node not found
@@ -366,11 +364,13 @@ public class CharNodeSet : IEnumerable<CharNode>
                 node.Value = nodes[i].Value;
                 replaced.Add(node);
             }
-            r--;
         }
 
-        // delete tail
-        if (r > 0) replaced.AddRange(Delete(at + nodes.Count, r));
+        // delete or insert tail
+        if (run > nodes.Count)
+            replaced.AddRange(Delete(at + nodes.Count, run - nodes.Count));
+        else if (run < nodes.Count)
+            replaced.AddRange(InsertBefore(at + run, nodes.Skip(run).ToList()));
 
         return replaced;
     }

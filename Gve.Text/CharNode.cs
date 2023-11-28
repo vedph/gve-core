@@ -38,7 +38,7 @@ public class CharNode
             if (_value != value && _value != default)
             {
                 _prevValues ??= [];
-                _prevValues.Insert(0, value);
+                _prevValues.Insert(0, _value);
             }
             _value = value;
         }

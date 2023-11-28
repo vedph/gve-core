@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -293,8 +294,7 @@ public sealed class CharNodeSetTest
         IList<CharNode> nodes = set.InsertBefore(1, "XY");
 
         // X
-        CharNode? node = nodes[0];
-        Assert.NotNull(node);
+        CharNode node = nodes[0];
         Assert.Equal('X', node!.Value);
         Assert.Equal(0, node!.Ordinal);
         Assert.True(node.Id > 0);
@@ -303,7 +303,6 @@ public sealed class CharNodeSetTest
         Assert.False(node.IsDeleted);
         // Y
         node = nodes[1];
-        Assert.NotNull(node);
         Assert.Equal('Y', node!.Value);
         Assert.Equal(0, node!.Ordinal);
         Assert.True(node.Id > 0);
@@ -323,8 +322,7 @@ public sealed class CharNodeSetTest
         IList<CharNode> nodes = set.InsertBefore(6, "XY");
 
         // X
-        CharNode? x = nodes[0];
-        Assert.NotNull(x);
+        CharNode x = nodes[0];
         Assert.Equal('X', x!.Value);
         Assert.Equal(0, x!.Ordinal);
         Assert.True(x.Id > 0);
@@ -334,8 +332,7 @@ public sealed class CharNodeSetTest
         // left of X is node 5
         Assert.Same(set.GetNode(5), x.LeftNode);
         // Y
-        CharNode? y = nodes[1];
-        Assert.NotNull(y);
+        CharNode y = nodes[1];
         Assert.Equal('Y', y!.Value);
         Assert.Equal(0, y!.Ordinal);
         Assert.True(y.Id > 0);
@@ -357,8 +354,7 @@ public sealed class CharNodeSetTest
         IList<CharNode> nodes = set.InsertAfter(16, "XY");
 
         // X
-        CharNode? x = nodes[0];
-        Assert.NotNull(x);
+        CharNode x = nodes[0];
         Assert.Equal('X', x!.Value);
         Assert.Equal(0, x!.Ordinal);
         Assert.True(x.Id > 0);
@@ -367,8 +363,7 @@ public sealed class CharNodeSetTest
         Assert.Same(set.GetNode(16), x.LeftNode);
         Assert.False(x.IsDeleted);
         // Y
-        CharNode? y = nodes[1];
-        Assert.NotNull(y);
+        CharNode y = nodes[1];
         Assert.Equal('Y', y!.Value);
         Assert.Equal(0, y!.Ordinal);
         Assert.True(y.Id > 0);
@@ -385,8 +380,7 @@ public sealed class CharNodeSetTest
         IList<CharNode> nodes = set.InsertAfter(5, "XY");
 
         // X
-        CharNode? x = nodes[0];
-        Assert.NotNull(x);
+        CharNode x = nodes[0];
         Assert.Equal('X', x!.Value);
         Assert.Equal(0, x!.Ordinal);
         Assert.True(x.Id > 0);
@@ -395,8 +389,7 @@ public sealed class CharNodeSetTest
         Assert.Same(set.GetNode(5), x.LeftNode);
         Assert.False(x.IsDeleted);
         // Y
-        CharNode? y = nodes[1];
-        Assert.NotNull(y);
+        CharNode y = nodes[1];
         Assert.Equal('Y', y!.Value);
         Assert.Equal(0, y!.Ordinal);
         Assert.True(y.Id > 0);
@@ -404,5 +397,126 @@ public sealed class CharNodeSetTest
         Assert.NotNull(y.LeftNode);
         Assert.Same(x, y.LeftNode);
         Assert.False(y.IsDeleted);
+    }
+
+    [Fact]
+    public void Replace_SameChars_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(3, 2, "PH");
+
+        Assert.Equal(16, set.GetCount());
+        // P
+        CharNode p = nodes[0];
+        Assert.Equal('P', p!.Value);
+        Assert.Equal(3, p!.Ordinal);
+        Assert.True(p.Id > 0);
+        Assert.Single(p.PreviousValues);
+        Assert.Equal('p', p.PreviousValues[0]);
+        Assert.NotNull(p.LeftNode);
+        Assert.Same(set.GetNode(2), p.LeftNode);
+        Assert.False(p.IsDeleted);
+        // H
+        CharNode h = nodes[1];
+        Assert.Equal('H', h!.Value);
+        Assert.Equal(4, h!.Ordinal);
+        Assert.True(h.Id > 0);
+        Assert.Single(h.PreviousValues);
+        Assert.Equal('h', h.PreviousValues[0]);
+        Assert.NotNull(h.LeftNode);
+        Assert.Same(p, h.LeftNode);
+        Assert.False(h.IsDeleted);
+    }
+
+    [Fact]
+    public void Replace_LessChars_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(3, 2, "F");
+
+        Assert.Equal(2, nodes.Count);
+        Assert.Equal(15, set.GetCount(false));
+        // F
+        CharNode f = nodes[0];
+        Assert.Equal('F', f!.Value);
+        Assert.Equal(3, f!.Ordinal);
+        Assert.True(f.Id > 0);
+        Assert.Single(f.PreviousValues);
+        Assert.Equal('p', f.PreviousValues[0]);
+        Assert.NotNull(f.LeftNode);
+        Assert.Same(set.GetNode(2), f.LeftNode);
+        Assert.False(f.IsDeleted);
+        // right node is deleted h
+        CharNode? right = set.GetRightNodeOf(nodes[0]);
+        Assert.NotNull(right);
+        Assert.Same(f, right.LeftNode);
+        Assert.True(right.IsDeleted);
+    }
+
+    [Fact]
+    public void Replace_MoreChars_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(3, 2, "XYZ");
+
+        Assert.Equal(3, nodes.Count);
+        Assert.Equal(17, set.GetCount());
+        // X
+        CharNode x = nodes[0];
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(3, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Single(x.PreviousValues);
+        Assert.Equal('p', x.PreviousValues[0]);
+        Assert.NotNull(x.LeftNode);
+        Assert.Same(set.GetNode(2), x.LeftNode);
+        Assert.False(x.IsDeleted);
+        // Y
+        CharNode y = nodes[1];
+        Assert.Equal('Y', y!.Value);
+        Assert.Equal(4, y!.Ordinal);
+        Assert.True(y.Id > 0);
+        Assert.Single(y.PreviousValues);
+        Assert.Equal('h', y.PreviousValues[0]);
+        Assert.NotNull(y.LeftNode);
+        Assert.Same(x, y.LeftNode);
+        Assert.False(y.IsDeleted);
+        // Z
+        CharNode z = nodes[2];
+        Assert.Equal('Z', z!.Value);
+        Assert.Equal(0, z!.Ordinal);
+        Assert.True(z.Id > 0);
+        Assert.Empty(z.PreviousValues);
+        Assert.NotNull(z.LeftNode);
+        Assert.Same(y, z.LeftNode);
+        Assert.False(z.IsDeleted);
+        // node 5 has Z as left node
+        CharNode? right = set.GetNode(5);
+        Assert.NotNull(right);
+        Assert.Same(z, right.LeftNode);
+    }
+
+    [Fact]
+    public void Replace_Start_Ok()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Fact]
+    public void Replace_End_Ok()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Fact]
+    public void Replace_WithZero_Deleted()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Fact]
+    public void Replace_RunZero_Inserted()
+    {
+        throw new NotImplementedException();
     }
 }
