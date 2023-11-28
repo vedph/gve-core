@@ -551,6 +551,21 @@ public sealed class CharNodeSetTest
     [Fact]
     public void Replace_RunZero_Inserted()
     {
-        throw new NotImplementedException();
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(6, 0, "X");
+
+        Assert.Equal(17, set.GetCount());
+        Assert.Single(nodes);
+
+        // X was inserted before 6
+        CharNode? node = nodes[0];
+        Assert.NotNull(node);
+        Assert.Equal('X', node!.Value);
+        Assert.Equal(0, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.False(node.IsDeleted);
+        Assert.Same(node, set.GetNode(6)!.LeftNode);
     }
 }
