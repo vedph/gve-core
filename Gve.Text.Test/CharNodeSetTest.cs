@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 
 namespace Gve.Text.Test;
 
@@ -289,10 +290,10 @@ public sealed class CharNodeSetTest
     public void InsertBefore_First_Ok()
     {
         CharNodeSet set = new(TEXT);
-        set.InsertBefore(1, "XY");
+        IList<CharNode> nodes = set.InsertBefore(1, "XY");
 
         // X
-        CharNode? node = set.GetFirstNode();
+        CharNode? node = nodes[0];
         Assert.NotNull(node);
         Assert.Equal('X', node!.Value);
         Assert.Equal(0, node!.Ordinal);
@@ -301,7 +302,7 @@ public sealed class CharNodeSetTest
         Assert.Null(node.LeftNode);
         Assert.False(node.IsDeleted);
         // Y
-        node = set.GetRightNodeOf(node);
+        node = nodes[1];
         Assert.NotNull(node);
         Assert.Equal('Y', node!.Value);
         Assert.Equal(0, node!.Ordinal);
@@ -309,5 +310,11 @@ public sealed class CharNodeSetTest
         Assert.Empty(node.PreviousValues);
         Assert.NotNull(node.LeftNode);
         Assert.False(node.IsDeleted);
+    }
+
+    [Fact]
+    public void InsertBefore_Mid_Ok()
+    {
+        // TODO
     }
 }

@@ -228,19 +228,19 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="nodes">The nodes to insert.</param>
-    /// <returns>True if inserted; false when <paramref name="nodes"/> are empty,
-    /// or reference node is not found.</returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1</exception>
-    public bool InsertBefore(int at, IList<CharNode> nodes)
+    public IList<CharNode> InsertBefore(int at, IList<CharNode> nodes)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(at, 1);
         ArgumentNullException.ThrowIfNull(nameof(nodes));
 
-        if (nodes.Count == 0) return false;
+        if (nodes.Count == 0) return nodes;
 
-        CharNode? refNode = _nodes.Find(n => n.Ordinal == at);
-        if (refNode == null) return false;
+        CharNode? refNode = _nodes.Find(n => n.Ordinal == at)
+            ?? throw new InvalidOperationException(
+                $"Reference node not found at ordinal {at}.");
 
         // inserting XY to the left of B in A[B] means:
         // A<-X
@@ -249,7 +249,7 @@ public class CharNodeSet : IEnumerable<CharNode>
         refNode.LeftNode = nodes[^1];
 
         _nodes.AddRange(nodes);
-        return true;
+        return nodes;
     }
 
     /// <summary>
@@ -257,10 +257,9 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="text">The text to insert.</param>
-    /// <returns>True if inserted; false when <paramref name="text"/> is empty,
-    /// or reference node is not found.</returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public bool InsertBefore(int at, string text)
+    public IList<CharNode> InsertBefore(int at, string text)
         => InsertBefore(at, GetNodesFor(text));
 
     /// <summary>
@@ -268,10 +267,9 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="c">The character to insert.</param>
-    /// <returns>True if inserted; false when reference node is not found.
-    /// </returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public bool InsertBefore(int at, char c)
+    public IList<CharNode> InsertBefore(int at, char c)
         => InsertBefore(at, GetNodesFor(c.ToString()));
 
     /// <summary>
@@ -279,27 +277,28 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="nodes">The nodes to insert.</param>
-    /// <returns>True if inserted; false when <paramref name="nodes"/> are empty,
-    /// or reference node is not found.</returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1</exception>
-    public bool InsertAfter(int at, IList<CharNode> nodes)
+    public IList<CharNode> InsertAfter(int at, IList<CharNode> nodes)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(at, 1);
         ArgumentNullException.ThrowIfNull(nameof(nodes));
 
-        if (nodes.Count == 0) return false;
+        if (nodes.Count == 0) return nodes;
 
-        CharNode? refNode = _nodes.Find(n => n.Ordinal == at);
-        if (refNode == null) return false;
+        CharNode? refNode = _nodes.Find(n => n.Ordinal == at)
+            ?? throw new InvalidOperationException(
+                $"Reference node not found at ordinal {at}.");
 
         // inserting XY to the right of A in [A]<-B means:
         // A<-X
         nodes[0].LeftNode = refNode;
         // Y<-B
         refNode.LeftNode = nodes[nodes.Count - 1];
+
         _nodes.AddRange(nodes);
-        return true;
+        return nodes;
     }
 
     /// <summary>
@@ -307,10 +306,9 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="text">The text to insert.</param>
-    /// <returns>True if inserted; false when <paramref name="text"/> is empty,
-    /// or reference node is not found.</returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public bool InsertAfter(int at, string text)
+    public IList<CharNode> InsertAfter(int at, string text)
         => InsertAfter(at, GetNodesFor(text));
 
     /// <summary>
@@ -318,10 +316,9 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="c">The character to insert.</param>
-    /// <returns>True if inserted; false when reference node is not found.
-    /// </returns>
+    /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public bool InsertAfter(int at, char c)
+    public IList<CharNode> InsertAfter(int at, char c)
         => InsertAfter(at, GetNodesFor(c.ToString()));
 
     /// <summary>
