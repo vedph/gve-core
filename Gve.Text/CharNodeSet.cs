@@ -140,7 +140,7 @@ public class CharNodeSet : IEnumerable<CharNode>
             nodes.Add(new CharNode(GetNextId(), 0)
             {
                 Value = text[i],
-                LeftNode = i > 0 ? _nodes[i - 1] : null
+                LeftNode = i > 0 ? nodes[i - 1] : null
             });
         }
 
@@ -242,11 +242,11 @@ public class CharNodeSet : IEnumerable<CharNode>
         CharNode? refNode = _nodes.Find(n => n.Ordinal == at);
         if (refNode == null) return false;
 
-        // inserting XY to the left of B in A<-[B] means:
-        // Y<-B
-        refNode.LeftNode = nodes[nodes.Count - 1];
+        // inserting XY to the left of B in A[B] means:
         // A<-X
         nodes[0].LeftNode = refNode.LeftNode;
+        // Y<-B
+        refNode.LeftNode = nodes[^1];
 
         _nodes.AddRange(nodes);
         return true;
@@ -262,6 +262,17 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <exception cref="ArgumentNullException">nodes</exception>
     public bool InsertBefore(int at, string text)
         => InsertBefore(at, GetNodesFor(text));
+
+    /// <summary>
+    /// Inserts the specified new char before the node at the specified ordinal.
+    /// </summary>
+    /// <param name="at">The reference node ordinal.</param>
+    /// <param name="c">The character to insert.</param>
+    /// <returns>True if inserted; false when reference node is not found.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">nodes</exception>
+    public bool InsertBefore(int at, char c)
+        => InsertBefore(at, GetNodesFor(c.ToString()));
 
     /// <summary>
     /// Inserts the specified nodes after the node at the specified ordinal.
@@ -301,6 +312,17 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <exception cref="ArgumentNullException">nodes</exception>
     public bool InsertAfter(int at, string text)
         => InsertAfter(at, GetNodesFor(text));
+
+    /// <summary>
+    /// Inserts the specified new char after the node at the specified ordinal.
+    /// </summary>
+    /// <param name="at">The reference node ordinal.</param>
+    /// <param name="c">The character to insert.</param>
+    /// <returns>True if inserted; false when reference node is not found.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">nodes</exception>
+    public bool InsertAfter(int at, char c)
+        => InsertAfter(at, GetNodesFor(c.ToString()));
 
     /// <summary>
     /// Replaces the nodes starting from the specified ordinal, for the specified
@@ -353,6 +375,36 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         return dirty;
     }
+
+    /// <summary>
+    /// Replaces the nodes starting from the specified ordinal, for the specified
+    /// run of nodes, with the specified text.
+    /// </summary>
+    /// <param name="at">The start ordinal.</param>
+    /// <param name="run">The run.</param>
+    /// <param name="text">The new text to replace.</param>
+    /// <returns>True if replaced; false if reference node not found or no
+    /// change was made.</returns>
+    /// <exception cref="ArgumentNullException">nodes</exception>
+    /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
+    /// negative run</exception>
+    public bool Replace(int at, int run, string text)
+        => Replace(at, run, GetNodesFor(text));
+
+    /// <summary>
+    /// Replaces the nodes starting from the specified ordinal, for the specified
+    /// run of nodes, with the specified character.
+    /// </summary>
+    /// <param name="at">The start ordinal.</param>
+    /// <param name="run">The run.</param>
+    /// <param name="c">The new character to replace.</param>
+    /// <returns>True if replaced; false if reference node not found or no
+    /// change was made.</returns>
+    /// <exception cref="ArgumentNullException">nodes</exception>
+    /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
+    /// negative run</exception>
+    public bool Replace(int at, int run, char c)
+        => Replace(at, run, GetNodesFor(c.ToString()));
 
     /// <summary>
     /// Moves the nodes starting with the node with ordinal <paramref name="from"/>

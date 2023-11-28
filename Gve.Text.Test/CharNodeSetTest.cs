@@ -12,6 +12,8 @@ public sealed class CharNodeSetTest
     {
         CharNodeSet set = new(TEXT);
 
+        Assert.Equal(16, set.GetCount());
+
         int i = 0;
         foreach (CharNode node in set)
         {
@@ -283,4 +285,29 @@ public sealed class CharNodeSetTest
         Assert.Same(node, right.LeftNode);
     }
 
+    [Fact]
+    public void InsertBefore_First_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        set.InsertBefore(1, "XY");
+
+        // X
+        CharNode? node = set.GetFirstNode();
+        Assert.NotNull(node);
+        Assert.Equal('X', node!.Value);
+        Assert.Equal(0, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.Null(node.LeftNode);
+        Assert.False(node.IsDeleted);
+        // Y
+        node = set.GetRightNodeOf(node);
+        Assert.NotNull(node);
+        Assert.Equal('Y', node!.Value);
+        Assert.Equal(0, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.False(node.IsDeleted);
+    }
 }

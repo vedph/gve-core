@@ -130,7 +130,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.CharNodeSet">
-    <Position X="0.5" Y="11" Width="1.5" />
+    <Position X="0.5" Y="11" Width="1.75" />
     <Members>
       <Method Name="GetNextId" Hidden="true" />
       <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
