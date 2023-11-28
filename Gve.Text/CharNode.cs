@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gve.Text;
 
@@ -94,6 +95,17 @@ public class CharNode
     {
         _coords ??= [];
         _coords[name] = value;
+    }
+
+    /// <summary>
+    /// Gets the names of all the coords set for this character.
+    /// </summary>
+    /// <returns>Names, sorted ascending.</returns>
+    public IList<string> GetCoordNames()
+    {
+        return _coords == null
+            ? Array.Empty<string>()
+            : (IList<string>)[.. _coords.Keys.OrderBy(s => s)];
     }
 
     /// <summary>
