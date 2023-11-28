@@ -455,12 +455,13 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="run1">The run for set 1.</param>
     /// <param name="at2">The ordinal of the first node of set 2.</param>
     /// <param name="run2">The run for set 2.</param>
-    /// <returns>True if swapped, false if both runs are 0 or sets reference
-    /// nodes are not found.</returns>
+    /// <returns>
+    /// True if swapped, false if both runs are 0 or sets reference
+    /// nodes are not found.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">Cannot swap overlapping nodes.</exception>
     /// <exception cref="ArgumentOutOfRangeException">at1, at2 less than 1,
     /// run1, run2 negative.</exception>
-    /// <exception cref="InvalidOperationException">Cannot swap overlapping nodes.
-    /// </exception>
     public bool Swap(int at1, int run1, int at2, int run2)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(at1, 1);
@@ -499,6 +500,12 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         CharNode? l2 = GetLeftNodeOf(nodes2[0], null);
         CharNode? r2 = GetRightNodeOf(nodes2[^1], null);
+
+        // corner case: adjacent when r1=l2
+        if (r1 == l2)
+        {
+            // TODO
+        }
 
         // swap via anchors
         nodes1[0].LeftNode = l2;

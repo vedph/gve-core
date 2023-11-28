@@ -603,4 +603,22 @@ public sealed class CharNodeSetTest
         Assert.True(set.Move(9, 2, 7));
         Assert.Equal("alpha tabe gamma", set.GetText());
     }
+
+    [Fact]
+    public void Swap_NonAdjacent_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Swap(3, 3, 15, 2));
+        Assert.Equal("alma beta gampha", set.GetText());
+    }
+
+    [Fact]
+    public void Swap_Adjacent_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Swap(9, 2, 7, 2));
+        Assert.Equal("alpha tabe gamma", set.GetText());
+    }
 }
