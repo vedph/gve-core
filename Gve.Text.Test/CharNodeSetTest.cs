@@ -99,7 +99,6 @@ public sealed class CharNodeSetTest
     public void GetLeftNodeOf_DeletedVsNull_Ok()
     {
         CharNodeSet set = new(TEXT);
-
         // delete al[p]ha
         set.Delete(3);
 
@@ -120,7 +119,6 @@ public sealed class CharNodeSetTest
     public void GetLeftNodeOf_DeletedVsTrue_Ok()
     {
         CharNodeSet set = new(TEXT);
-
         // delete al[p]ha
         set.Delete(3);
 
@@ -141,7 +139,6 @@ public sealed class CharNodeSetTest
     public void GetLeftNodeOf_DeletedVsFalse_Ok()
     {
         CharNodeSet set = new(TEXT);
-
         // delete al[p]ha
         set.Delete(3);
 
@@ -152,6 +149,66 @@ public sealed class CharNodeSetTest
         Assert.NotNull(node);
         Assert.Equal('l', node!.Value);
         Assert.Equal(2, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.False(node.IsDeleted);
+    }
+
+    [Fact]
+    public void GetRightNodeOf_DeletedVsNull_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        // delete al[p]ha
+        set.Delete(3);
+
+        CharNode? node = set.GetNode(2);
+        Assert.NotNull(node);
+        node = set.GetRightNodeOf(node);
+
+        Assert.NotNull(node);
+        Assert.Equal('p', node!.Value);
+        Assert.Equal(3, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.True(node.IsDeleted);
+    }
+
+    [Fact]
+    public void GetRightNodeOf_DeletedVsTrue_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        // delete al[p]ha
+        set.Delete(3);
+
+        CharNode? node = set.GetNode(2);
+        Assert.NotNull(node);
+        node = set.GetRightNodeOf(node, true);
+
+        Assert.NotNull(node);
+        Assert.Equal('p', node!.Value);
+        Assert.Equal(3, node!.Ordinal);
+        Assert.True(node.Id > 0);
+        Assert.Empty(node.PreviousValues);
+        Assert.NotNull(node.LeftNode);
+        Assert.True(node.IsDeleted);
+    }
+
+    [Fact]
+    public void GetRightNodeOf_DeletedVsFalse_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        // delete al[p]ha
+        set.Delete(3);
+
+        CharNode? node = set.GetNode(2);
+        Assert.NotNull(node);
+        node = set.GetRightNodeOf(node, false);
+
+        Assert.NotNull(node);
+        Assert.Equal('h', node!.Value);
+        Assert.Equal(4, node!.Ordinal);
         Assert.True(node.Id > 0);
         Assert.Empty(node.PreviousValues);
         Assert.NotNull(node.LeftNode);
