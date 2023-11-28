@@ -10,5 +10,5 @@ public interface IHasVersionTags
     /// <summary>
     /// Gets or sets the version tags.
     /// </summary>
-    IList<string> VersionTags { get; set; }
+    HashSet<string> VersionTags { get; set; }
 }

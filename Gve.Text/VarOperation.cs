@@ -69,7 +69,7 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <summary>
     /// Gets or sets the version tags.
     /// </summary>
-    public IList<string> VersionTags { get; set; }
+    public HashSet<string> VersionTags { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
@@ -78,7 +78,7 @@ public abstract partial class VarOperation : IHasVersionTags
     protected VarOperation(VarOperationType type)
     {
         Type = type;
-        VersionTags = new List<string>();
+        VersionTags = [];
     }
 
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
@@ -182,7 +182,7 @@ public abstract partial class VarOperation : IHasVersionTags
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
-        operation.VersionTags = tail.Groups["tags"].Value.Split(' ').ToList();
+        operation.VersionTags = tail.Groups["tags"].Value.Split(' ').ToHashSet();
         operation.Note = GetOptionalArgValue(tail.Groups["note"].Value);
 
         // return text minus head and tail
