@@ -310,11 +310,99 @@ public sealed class CharNodeSetTest
         Assert.Empty(node.PreviousValues);
         Assert.NotNull(node.LeftNode);
         Assert.False(node.IsDeleted);
+        // node 1 has left node equal to Y
+        CharNode? right = set.GetNode(1);
+        Assert.NotNull(right);
+        Assert.Same(node, right!.LeftNode);
     }
 
     [Fact]
     public void InsertBefore_Mid_Ok()
     {
-        // TODO
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.InsertBefore(6, "XY");
+
+        // X
+        CharNode? x = nodes[0];
+        Assert.NotNull(x);
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(0, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Empty(x.PreviousValues);
+        Assert.NotNull(x.LeftNode);
+        Assert.False(x.IsDeleted);
+        // left of X is node 5
+        Assert.Same(set.GetNode(5), x.LeftNode);
+        // Y
+        CharNode? y = nodes[1];
+        Assert.NotNull(y);
+        Assert.Equal('Y', y!.Value);
+        Assert.Equal(0, y!.Ordinal);
+        Assert.True(y.Id > 0);
+        Assert.Empty(y.PreviousValues);
+        Assert.NotNull(y.LeftNode);
+        Assert.False(y.IsDeleted);
+        // left of Y is node X
+        Assert.Same(x, y.LeftNode);
+        // node 6 has left node equal to Y
+        CharNode? right = set.GetNode(6);
+        Assert.NotNull(right);
+        Assert.Same(y, right!.LeftNode);
+    }
+
+    [Fact]
+    public void InsertAfter_Last_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.InsertAfter(16, "XY");
+
+        // X
+        CharNode? x = nodes[0];
+        Assert.NotNull(x);
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(0, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Empty(x.PreviousValues);
+        Assert.NotNull(x.LeftNode);
+        Assert.Same(set.GetNode(16), x.LeftNode);
+        Assert.False(x.IsDeleted);
+        // Y
+        CharNode? y = nodes[1];
+        Assert.NotNull(y);
+        Assert.Equal('Y', y!.Value);
+        Assert.Equal(0, y!.Ordinal);
+        Assert.True(y.Id > 0);
+        Assert.Empty(y.PreviousValues);
+        Assert.NotNull(y.LeftNode);
+        Assert.Same(x, y.LeftNode);
+        Assert.False(y.IsDeleted);
+    }
+
+    [Fact]
+    public void InsertAfter_Mid_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.InsertAfter(5, "XY");
+
+        // X
+        CharNode? x = nodes[0];
+        Assert.NotNull(x);
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(0, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Empty(x.PreviousValues);
+        Assert.NotNull(x.LeftNode);
+        Assert.Same(set.GetNode(5), x.LeftNode);
+        Assert.False(x.IsDeleted);
+        // Y
+        CharNode? y = nodes[1];
+        Assert.NotNull(y);
+        Assert.Equal('Y', y!.Value);
+        Assert.Equal(0, y!.Ordinal);
+        Assert.True(y.Id > 0);
+        Assert.Empty(y.PreviousValues);
+        Assert.NotNull(y.LeftNode);
+        Assert.Same(x, y.LeftNode);
+        Assert.False(y.IsDeleted);
     }
 }
