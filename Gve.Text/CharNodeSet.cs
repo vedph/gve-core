@@ -501,10 +501,10 @@ public class CharNodeSet : IEnumerable<CharNode>
         CharNode? l2 = GetLeftNodeOf(nodes2[0], null);
         CharNode? r2 = GetRightNodeOf(nodes2[^1], null);
 
-        // corner case: adjacent when r1=l2
-        if (r1 == l2)
+        // corner case: adjacent is a move
+        if (r1?.LeftNode == l2)
         {
-            // TODO
+            return Move(at1, run1, at2);
         }
 
         // swap via anchors

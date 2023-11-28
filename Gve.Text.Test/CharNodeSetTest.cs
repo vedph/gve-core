@@ -596,7 +596,25 @@ public sealed class CharNodeSetTest
     }
 
     [Fact]
+    public void Move_FromMidToRightAdjacent_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(7, 2, 9));
+        Assert.Equal("alpha tabe gamma", set.GetText());
+    }
+
+    [Fact]
     public void Move_FromMidToLeft_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(9, 2, 6));
+        Assert.Equal("alphata be gamma", set.GetText());
+    }
+
+    [Fact]
+    public void Move_FromMidToLeftAdjacent_Ok()
     {
         CharNodeSet set = new(TEXT);
 
@@ -618,7 +636,7 @@ public sealed class CharNodeSetTest
     {
         CharNodeSet set = new(TEXT);
 
-        Assert.True(set.Swap(9, 2, 7, 2));
+        Assert.True(set.Swap(7, 2, 9, 2));
         Assert.Equal("alpha tabe gamma", set.GetText());
     }
 }
