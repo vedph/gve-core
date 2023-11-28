@@ -136,12 +136,24 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Gets the node at the specified ordinal.
+    /// </summary>
+    /// <param name="at">The ordinal.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">at less than 1</exception>
+    public CharNode? GetNode(int at)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(at, 1);
+        return _nodes.Find(n => n.Ordinal == at);
+    }
+
+    /// <summary>
     /// Gets the node at the left of the specified node.
     /// </summary>
     /// <param name="node">The node.</param>
     /// <param name="deleted">The deleted filter.</param>
     /// <returns>Node or null.</returns>
-    public CharNode? GetLeftNodeOf(CharNode? node, bool? deleted)
+    public CharNode? GetLeftNodeOf(CharNode? node, bool? deleted = null)
     {
         if (node == null) return null;
         CharNode? left = node.LeftNode;
@@ -160,7 +172,7 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="node">The node.</param>
     /// <param name="deleted">The deleted filter.</param>
     /// <returns>Node or null.</returns>
-    public CharNode? GetRightNodeOf(CharNode? node, bool? deleted)
+    public CharNode? GetRightNodeOf(CharNode? node, bool? deleted = null)
     {
         if (node == null) return null;
         CharNode? right = _nodes.Find(n => n.LeftNode == node);

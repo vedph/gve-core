@@ -35,12 +35,12 @@ public class CharNode
         get => _value;
         set
         {
-            if (_value != value)
+            if (_value != value && _value != default)
             {
                 _prevValues ??= [];
                 _prevValues.Insert(0, value);
-                _value = value;
             }
+            _value = value;
         }
     }
 
@@ -48,13 +48,13 @@ public class CharNode
     /// Gets all the previous values set for this character. The most recent
     /// values are at the top. If the character never changed, this is empty.
     /// </summary>
-    public IList<string> PreviousValues
+    public IList<char> PreviousValues
     {
         get
         {
             return _prevValues == null
-                ? Array.Empty<string>()
-                : (IList<string>)_prevValues;
+                ? Array.Empty<char>()
+                : (IList<char>)_prevValues;
         }
     }
 
