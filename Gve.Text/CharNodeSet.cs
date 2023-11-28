@@ -441,7 +441,7 @@ public class CharNodeSet : IEnumerable<CharNode>
         // to the node to the left of the first collected node
         CharNode? left = GetLeftNodeOf(nodes[0], null);
         CharNode? right = GetRightNodeOf(nodes[^1], null);
-        if (left != null) left.LeftNode = right;
+        if (right != null) right.LeftNode = left;
 
         // insert the nodes
         InsertBefore(to, nodes);
