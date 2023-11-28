@@ -499,19 +499,53 @@ public sealed class CharNodeSetTest
     [Fact]
     public void Replace_Start_Ok()
     {
-        throw new NotImplementedException();
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(1, 1, "X");
+
+        Assert.Equal(16, set.GetCount());
+        Assert.Single(nodes);
+        // X
+        CharNode x = nodes[0];
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(1, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Single(x.PreviousValues);
+        Assert.Equal('a', x.PreviousValues[0]);
+        Assert.Null(x.LeftNode);
+        Assert.False(x.IsDeleted);
     }
 
     [Fact]
     public void Replace_End_Ok()
     {
-        throw new NotImplementedException();
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(16, 1, "X");
+        Assert.Equal(16, set.GetCount());
+        Assert.Single(nodes);
+        // X
+        CharNode x = nodes[0];
+        Assert.Equal('X', x!.Value);
+        Assert.Equal(16, x!.Ordinal);
+        Assert.True(x.Id > 0);
+        Assert.Single(x.PreviousValues);
+        Assert.Equal('a', x.PreviousValues[0]);
+        Assert.NotNull(x.LeftNode);
+        Assert.False(x.IsDeleted);
     }
 
     [Fact]
     public void Replace_WithZero_Deleted()
     {
-        throw new NotImplementedException();
+        CharNodeSet set = new(TEXT);
+        IList<CharNode> nodes = set.Replace(5, 1, "");
+
+        Assert.Equal(16, set.GetCount());
+        Assert.Equal(15, set.GetCount(false));
+        // 5 was deleted
+        CharNode? node = set.GetNode(5);
+        Assert.NotNull(node);
+        Assert.True(node!.IsDeleted);
+        Assert.Same(nodes[0], node);
     }
 
     [Fact]
