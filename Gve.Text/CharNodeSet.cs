@@ -203,24 +203,25 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The ordinal.</param>
     /// <param name="run">The run.</param>
+    /// <returns>The deleted nodes.</returns>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public bool Delete(int at, int run = 1)
+    public IList<CharNode> Delete(int at, int run = 1)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(at, 1);
         ArgumentOutOfRangeException.ThrowIfNegative(run);
 
-        bool deleted = false;
+        List<CharNode> nodes = [];
         for (int i = 0; i < run; i++)
         {
             CharNode? node = _nodes.Find(n => n.Ordinal == at + i);
             if (node != null)
             {
                 node.IsDeleted = true;
-                deleted = true;
+                nodes.Add(node);
             }
         }
-        return deleted;
+        return nodes;
     }
 
     /// <summary>
@@ -328,12 +329,11 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="at">The start ordinal.</param>
     /// <param name="run">The run.</param>
     /// <param name="nodes">The nodes to replace.</param>
-    /// <returns>True if replaced; false if reference node not found or no
-    /// change was made.</returns>
+    /// <returns>The replaced nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public bool Replace(int at, int run, IList<CharNode> nodes)
+    public IList<CharNode> Replace(int at, int run, IList<CharNode> nodes)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(at, 1);
         ArgumentNullException.ThrowIfNull(nameof(nodes));
@@ -343,34 +343,36 @@ public class CharNodeSet : IEnumerable<CharNode>
         if (run == 0) return InsertBefore(at, nodes);
 
         int r = run;
-        bool dirty = false, b;
+        List<CharNode> replaced = [];
+
         for (int i = 0; i < nodes.Count; i++)
         {
             CharNode? node = _nodes.Find(n => n.Ordinal == at + i);
             // reference node not found
-            if (node == null && i == 0) return false;
+            if (node == null && i == 0)
+            {
+                throw new InvalidOperationException(
+                    $"Reference node not found at ordinal {at}.");
+            }
 
             // if target not found, insert the node as new
             if (node == null)
             {
-                b = InsertBefore(at + i, new[] { nodes[i] });
-                if (!dirty) dirty = b;
+                replaced.AddRange(InsertBefore(at + i, new[] { nodes[i] }));
             }
             // else replace target value
             else if (node.Value != nodes[i].Value)
             {
                 node.Value = nodes[i].Value;
-                dirty = true;
+                replaced.Add(node);
             }
             r--;
         }
-        if (r > 0)
-        {
-            b = Delete(at + nodes.Count, r);
-            if (!dirty) dirty = b;
-        }
 
-        return dirty;
+        // delete tail
+        if (r > 0) replaced.AddRange(Delete(at + nodes.Count, r));
+
+        return replaced;
     }
 
     /// <summary>
@@ -380,12 +382,11 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="at">The start ordinal.</param>
     /// <param name="run">The run.</param>
     /// <param name="text">The new text to replace.</param>
-    /// <returns>True if replaced; false if reference node not found or no
-    /// change was made.</returns>
+    /// <returns>The replaced nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public bool Replace(int at, int run, string text)
+    public IList<CharNode> Replace(int at, int run, string text)
         => Replace(at, run, GetNodesFor(text));
 
     /// <summary>
@@ -395,12 +396,11 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="at">The start ordinal.</param>
     /// <param name="run">The run.</param>
     /// <param name="c">The new character to replace.</param>
-    /// <returns>True if replaced; false if reference node not found or no
-    /// change was made.</returns>
+    /// <returns>The replaced nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public bool Replace(int at, int run, char c)
+    public IList<CharNode> Replace(int at, int run, char c)
         => Replace(at, run, GetNodesFor(c.ToString()));
 
     /// <summary>
@@ -437,7 +437,8 @@ public class CharNodeSet : IEnumerable<CharNode>
         if (left != null) left.LeftNode = right;
 
         // insert the nodes
-        return InsertBefore(to, nodes);
+        InsertBefore(to, nodes);
+        return true;
     }
 
     /// <summary>
