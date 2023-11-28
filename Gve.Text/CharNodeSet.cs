@@ -127,6 +127,13 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Gets the text from the characters in this set.
+    /// </summary>
+    /// <returns>String.</returns>
+    public string GetText() => string.Join("",
+        this.Where(n => !n.IsDeleted).Select(n => n.Value));
+
+    /// <summary>
     /// Gets one new node for each character in <paramref name="text"/>.
     /// </summary>
     /// <param name="text">The text.</param>

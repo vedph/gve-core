@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -567,5 +566,41 @@ public sealed class CharNodeSetTest
         Assert.NotNull(node.LeftNode);
         Assert.False(node.IsDeleted);
         Assert.Same(node, set.GetNode(6)!.LeftNode);
+    }
+
+    [Fact]
+    public void Move_FromStart_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(1, 2, 12));
+        Assert.Equal("pha beta algamma", set.GetText());
+    }
+
+    [Fact]
+    public void Move_FromEnd_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(15, 2, 7));
+        Assert.Equal("alpha mabeta gam", set.GetText());
+    }
+
+    [Fact]
+    public void Move_FromMidToRight_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(7, 2, 12));
+        Assert.Equal("alpha ta begamma", set.GetText());
+    }
+
+    [Fact]
+    public void Move_FromMidToLeft_Ok()
+    {
+        CharNodeSet set = new(TEXT);
+
+        Assert.True(set.Move(9, 2, 7));
+        Assert.Equal("alpha tabe gamma", set.GetText());
     }
 }
