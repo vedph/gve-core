@@ -3,8 +3,7 @@
 namespace Gve.Text;
 
 /// <summary>
-/// A tree of text variant nodes, attached to a specific location of the
-/// base text.
+/// A tree of operations to be planted on the ground of a base text.
 /// </summary>
 public class VarTree
 {
