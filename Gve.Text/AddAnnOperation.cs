@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Base class for add left/right annotation operations.
+/// </summary>
+/// <seealso cref="AnnOperation" />
 public abstract class AddAnnOperation : AnnOperation
 {
     /// <summary>
@@ -22,6 +24,13 @@ public abstract class AddAnnOperation : AnnOperation
     {
     }
 
+    /// <summary>
+    /// Executes this operation for the specified nodes, returning a copy of
+    /// them.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>The output nodes.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public override IList<CharNode> Execute(IList<CharNode> nodes)
     {
         ArgumentNullException.ThrowIfNull(nodes);

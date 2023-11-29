@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Move annotation operation.
+/// </summary>
+/// <seealso cref="AnnOperation" />
 public sealed class MoveAnnOperation : AnnOperation
 {
     /// <summary>
@@ -20,10 +21,24 @@ public sealed class MoveAnnOperation : AnnOperation
     /// </summary>
     public short ToRun { get; set; } = 1;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MoveAnnOperation"/> class.
+    /// </summary>
     public MoveAnnOperation() : base(VarOperationType.Move)
     {
     }
 
+    /// <summary>
+    /// Executes this operation for the specified nodes, returning a copy of
+    /// them.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>
+    /// The output nodes.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException">At, Run, To, and ToRun
+    /// must be within the length of the text</exception>
     public override IList<CharNode> Execute(IList<CharNode> nodes)
     {
         ArgumentNullException.ThrowIfNull(nodes);

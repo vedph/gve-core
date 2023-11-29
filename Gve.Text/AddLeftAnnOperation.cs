@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Add left annotation operation.
+/// </summary>
+/// <seealso cref="AddAnnOperation" />
 public sealed class AddLeftAnnOperation : AddAnnOperation
 {
     /// <summary>

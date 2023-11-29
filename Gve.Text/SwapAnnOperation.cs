@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Swap annotation operation.
+/// </summary>
+/// <seealso cref="AnnOperation" />
 public sealed class SwapAnnOperation : AnnOperation
 {
     /// <summary>
@@ -20,10 +21,22 @@ public sealed class SwapAnnOperation : AnnOperation
     /// </summary>
     public short WithRun { get; set; } = 1;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SwapAnnOperation"/> class.
+    /// </summary>
     public SwapAnnOperation() : base(VarOperationType.Swap)
     {
     }
 
+    /// <summary>
+    /// Executes this operation for the specified nodes, returning a copy of
+    /// them.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>The output nodes.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException">At, Run, With, and WithRun
+    /// must be within the length of the text</exception>
     public override IList<CharNode> Execute(IList<CharNode> nodes)
     {
         ArgumentNullException.ThrowIfNull(nodes);

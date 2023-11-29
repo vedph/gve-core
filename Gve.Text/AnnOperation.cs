@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -190,7 +191,64 @@ public abstract partial class AnnOperation : VarOperationMetadata
         return text[head.Length..^tail.Length];
     }
 
-    // TODO add parse methods
+    /// <summary>
+    /// Parses the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="FormatException">Parsing error</exception>
+    public static T Parse<T>(string text) where T : AnnOperation
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        Match m = LocOpRegex().Match(text);
+        if (!m.Success)
+            throw new FormatException($"Invalid operation: {text}");
+
+        return GetOperationType(m.Groups[1].Value) switch
+        {
+            VarOperationType.Replace
+                => (ReplaceAnnOperation.ParseOperation(text) as T)!,
+            VarOperationType.AddLeft
+                => (AddLeftAnnOperation.ParseOperation(text) as T)!,
+            VarOperationType.AddRight
+                => (AddRightAnnOperation.ParseOperation(text) as T)!,
+            VarOperationType.Annotate
+                => (AnnotateAnnOperation.ParseOperation(text) as T)!,
+            VarOperationType.Move
+                => (MoveAnnOperation.ParseOperation(text) as T)!,
+            VarOperationType.Swap
+                => (SwapAnnOperation.ParseOperation(text) as T)!,
+            _ => throw new FormatException(
+                $"Invalid operation type: {GetOperationType(text)}")
+        };
+    }
+
+    /// <summary>
+    /// Tries to parsing the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="operation">The parsed operation.</param>
+    /// <returns>True if success.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    public static bool TryParse<T>(string text, out T? operation)
+        where T : AnnOperation
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        try
+        {
+            operation = Parse<T>(text);
+            return true;
+        }
+        catch (FormatException ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            operation = null;
+            return false;
+        }
+    }
 
     /// <summary>
     /// Deeply clones the nodes into a new list.
