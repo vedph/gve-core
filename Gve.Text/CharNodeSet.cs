@@ -307,7 +307,9 @@ public class CharNodeSet : IEnumerable<CharNode>
         // A<-X
         nodes[0].LeftNode = refNode;
         // Y<-B
-        refNode.LeftNode = nodes[nodes.Count - 1];
+        // refNode.LeftNode = nodes[^1];
+        CharNode? right = GetRightNodeOf(refNode);
+        if (right != null) right.LeftNode = nodes[^1];
 
         _nodes.AddRange(nodes);
         return nodes;
@@ -379,9 +381,14 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         // delete or insert tail
         if (run > nodes.Count)
+        {
             replaced.AddRange(Delete(at + nodes.Count, run - nodes.Count));
+        }
         else if (run < nodes.Count)
-            replaced.AddRange(InsertBefore(at + run, nodes.Skip(run).ToList()));
+        {
+            replaced.AddRange(InsertBefore(at + replaced.Count,
+                nodes.Skip(run).ToList()));
+        }
 
         return replaced;
     }
@@ -504,11 +511,11 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         // collect anchors: l1 and r1 for left and right nodes of 1st set,
         // l2 and r2 for left and right nodes of 2nd set
-        CharNode? l1 = GetLeftNodeOf(nodes1[0], null);
-        CharNode? r1 = GetRightNodeOf(nodes1[^1], null);
+        CharNode? l1 = GetLeftNodeOf(nodes1[0]);
+        CharNode? r1 = GetRightNodeOf(nodes1[^1]);
 
-        CharNode? l2 = GetLeftNodeOf(nodes2[0], null);
-        CharNode? r2 = GetRightNodeOf(nodes2[^1], null);
+        CharNode? l2 = GetLeftNodeOf(nodes2[0]);
+        CharNode? r2 = GetRightNodeOf(nodes2[^1]);
 
         // corner case: adjacent is a move
         if (r1?.LeftNode == l2)
