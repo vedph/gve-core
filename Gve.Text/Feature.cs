@@ -1,4 +1,6 @@
-﻿namespace Gve.Text;
+﻿using System;
+
+namespace Gve.Text;
 
 /// <summary>
 /// A generic name=value feature.
@@ -22,6 +24,18 @@ public class Feature
     {
         Name = "";
         Value = "";
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Feature"/> class.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <exception cref="ArgumentNullException">name or value</exception>
+    public Feature(string name, string value)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Value = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>

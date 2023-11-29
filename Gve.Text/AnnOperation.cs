@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -52,24 +51,9 @@ public abstract partial class AnnOperation : VarOperationMetadata
     public string? Value { get; set; }
 
     /// <summary>
-    /// Gets or sets the note feature.
+    /// Gets or sets the optional note to be added to the result features.
     /// </summary>
-    public string? Note
-    {
-        get
-        {
-            return Features.FirstOrDefault(f => f.Name == NOTE_KEY)?.Value;
-        }
-        set
-        {
-            for (int i = Features.Count - 1; i > -1; i--)
-            {
-                if (Features[i].Name == NOTE_KEY) Features.RemoveAt(i);
-            }
-            if (!string.IsNullOrEmpty(value))
-                Features.Add(new Feature { Name = NOTE_KEY, Value = value });
-        }
-    }
+    public string? Note { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
@@ -95,6 +79,7 @@ public abstract partial class AnnOperation : VarOperationMetadata
 
     /// <summary>
     /// Appends the head part of an operation to the specified string builder.
+    /// The head is ATxRUN followed by OP.
     /// </summary>
     /// <param name="sb">The target.</param>
     protected void AppendHead(StringBuilder sb)
@@ -158,7 +143,7 @@ public abstract partial class AnnOperation : VarOperationMetadata
     /// <param name="operation">Target operation.</param>
     /// <returns>The body part of the text.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
-    protected static string ParseHeadAndTail(string text, VarOperation operation)
+    protected static string ParseHeadAndTail(string text, AnnOperation operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -265,10 +250,24 @@ public abstract partial class AnnOperation : VarOperationMetadata
     }
 
     /// <summary>
+    /// Adds the <see cref="Note"/> property to annotations if it exists.
+    /// </summary>
+    /// <param name="annotations">The annotations.</param>
+    protected void AddNote(IList<Feature> annotations)
+    {
+        ArgumentNullException.ThrowIfNull(annotations);
+
+        if (!string.IsNullOrEmpty(Note))
+            annotations.Add(new Feature { Name = NOTE_KEY, Value = Note });
+    }
+
+    /// <summary>
     /// Executes this operation for the specified nodes, returning a copy of
     /// them.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
+    /// <param name="annotations">The current annotations.</param>
     /// <returns>The output nodes.</returns>
-    public abstract IList<CharNode> Execute(IList<CharNode> nodes);
+    public abstract IList<CharNode> Execute(IList<CharNode> nodes,
+        IList<Feature> annotations);
 }

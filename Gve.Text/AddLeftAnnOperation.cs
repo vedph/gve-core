@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 
 namespace Gve.Text;
 
 /// <summary>
 /// Add left annotation operation.
+/// Syntax: <c>AT+&lt;"VALUE"^RANK@GROUP [TAG ...] {NOTE}</c>.
 /// </summary>
 /// <seealso cref="AddAnnOperation" />
 public sealed class AddLeftAnnOperation : AddAnnOperation
@@ -23,16 +25,31 @@ public sealed class AddLeftAnnOperation : AddAnnOperation
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static AddLeftVarOperation ParseOperation(string text)
+    internal static AddLeftAnnOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        AddLeftVarOperation op = new();
+        AddLeftAnnOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Run = 0;
         op.Value = body.Trim('"');
 
         return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        sb.Append('"').Append(Value).Append('"');
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

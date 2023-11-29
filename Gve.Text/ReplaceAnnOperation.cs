@@ -23,9 +23,11 @@ public sealed class ReplaceAnnOperation : AnnOperation
     /// them.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
+    /// <param name="annotations">The current annotations.</param>
     /// <returns>The output nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes)
+    public override IList<CharNode> Execute(IList<CharNode> nodes,
+        IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
 
@@ -34,6 +36,8 @@ public sealed class ReplaceAnnOperation : AnnOperation
             throw new InvalidOperationException("At must be between 1 and " +
                 "the length of the text plus 1");
         }
+
+        AddNote(annotations);
 
         int index = At - 1;
         List<CharNode> text = CloneNodes(nodes);
@@ -59,11 +63,11 @@ public sealed class ReplaceAnnOperation : AnnOperation
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static ReplaceVarOperation ParseOperation(string text)
+    internal static ReplaceAnnOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        ReplaceVarOperation op = new();
+        ReplaceAnnOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Value = body.Trim('"');

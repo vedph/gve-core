@@ -29,11 +29,15 @@ public abstract class AddAnnOperation : AnnOperation
     /// them.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
+    /// <param name="annotations">The current annotations.</param>
     /// <returns>The output nodes.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes)
+    public override IList<CharNode> Execute(IList<CharNode> nodes,
+        IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
+
+        AddNote(annotations);
         if (string.IsNullOrEmpty(Value)) return nodes;
 
         int index = IsRight ? At : At - 1;

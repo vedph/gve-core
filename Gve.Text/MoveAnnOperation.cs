@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
 /// <summary>
 /// Move annotation operation.
+/// Syntax: <c>ATxRUN>ATxRUN^RANK@GROUP [TAG ...]  {NOTE}</c>.
 /// </summary>
 /// <seealso cref="AnnOperation" />
 public sealed class MoveAnnOperation : AnnOperation
@@ -33,16 +35,17 @@ public sealed class MoveAnnOperation : AnnOperation
     /// them.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
-    /// <returns>
-    /// The output nodes.
-    /// </returns>
+    /// <param name="annotations">The current annotations.</param>
+    /// <returns>The output nodes.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="InvalidOperationException">At, Run, To, and ToRun
     /// must be within the length of the text</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes)
+    public override IList<CharNode> Execute(IList<CharNode> nodes,
+        IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
 
+        AddNote(annotations);
         List<CharNode> result = CloneNodes(nodes);
 
         // Ensure At, Run, To, and ToRun are within the valid range
@@ -73,11 +76,11 @@ public sealed class MoveAnnOperation : AnnOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid move operation: {text}</exception>
-    internal static MoveVarOperation ParseOperation(string text)
+    internal static MoveAnnOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        MoveVarOperation op = new();
+        MoveAnnOperation op = new();
         // ATxRUN
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);
@@ -87,5 +90,22 @@ public sealed class MoveAnnOperation : AnnOperation
         if (m.Groups["run"].Success) op.ToRun = short.Parse(m.Groups["run"].Value);
 
         return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        // TOxTORUN
+        sb.Append(To);
+        if (ToRun > 1) sb.Append('x').Append(ToRun);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

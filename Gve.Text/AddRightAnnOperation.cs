@@ -23,11 +23,11 @@ public sealed class AddRightAnnOperation : AddAnnOperation
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static AddRightVarOperation ParseOperation(string text)
+    internal static AddRightAnnOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        AddRightVarOperation op = new();
+        AddRightAnnOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Run = 0;

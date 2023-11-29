@@ -47,8 +47,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(12, op.At);
         Assert.Equal(1, op.Run);
         Assert.Equal("value", op.Value);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -73,8 +73,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal("value", op.Value);
         Assert.Equal(2, op.Rank);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -99,8 +99,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal("value", op.Value);
         Assert.Equal("group", op.GroupId);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -125,8 +125,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal(2, op.Rank);
         Assert.Equal("group", op.GroupId);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -151,8 +151,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(3, op.Run);
         Assert.Equal("value", op.Value);
         Assert.Equal("a note", op.Note);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -179,8 +179,8 @@ public class ReplaceVarOperationTest
         Assert.Equal("value", op.Value);
         Assert.Equal(2, op.Rank);
         Assert.Equal("a note", op.Note);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -210,8 +210,8 @@ public class ReplaceVarOperationTest
         Assert.Equal(2, op.Rank);
         Assert.Equal("group", op.GroupId);
         Assert.Equal("a note", op.Note);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]
@@ -238,8 +238,8 @@ public class ReplaceVarOperationTest
         Assert.Equal("value", op.Value);
         Assert.Equal("group", op.GroupId);
         Assert.Equal("a note", op.Note);
-        Assert.True(op.VersionTags.Contains("alpha"));
-        Assert.True(op.VersionTags.Contains("beta"));
+        Assert.Contains("alpha", op.VersionTags);
+        Assert.Contains("beta", op.VersionTags);
     }
 
     [Fact]

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
 /// <summary>
 /// Swap annotation operation.
+/// Syntax: <c>ATxRUN&lt;&gt;ATxRUN^RANK@GROUP [TAG ...]  {NOTE}</c>.
 /// </summary>
 /// <seealso cref="AnnOperation" />
 public sealed class SwapAnnOperation : AnnOperation
@@ -33,15 +35,15 @@ public sealed class SwapAnnOperation : AnnOperation
     /// them.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
+    /// <param name="annotations">The current annotations.</param>
     /// <returns>The output nodes.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="InvalidOperationException">At, Run, With, and WithRun
     /// must be within the length of the text</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes)
+    public override IList<CharNode> Execute(IList<CharNode> nodes,
+        IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
-
-        List<CharNode> result = CloneNodes(nodes);
 
         // ensure At, Run, With, and WithRun are within the valid range
         if (At < 1 || At + Run - 1 > nodes.Count || With < 1 ||
@@ -50,6 +52,9 @@ public sealed class SwapAnnOperation : AnnOperation
             throw new InvalidOperationException(
                 "At, Run, With, and WithRun must be within the length of the text");
         }
+
+        AddNote(annotations);
+        List<CharNode> result = CloneNodes(nodes);
 
         int li = Math.Min(At, With) - 1;
         int ri = Math.Max(At, With) - 1;
@@ -76,11 +81,11 @@ public sealed class SwapAnnOperation : AnnOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid swap operation: {text}</exception>
-    internal static SwapVarOperation ParseOperation(string text)
+    internal static SwapAnnOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        SwapVarOperation op = new();
+        SwapAnnOperation op = new();
         // ATxRUN
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);
@@ -90,5 +95,22 @@ public sealed class SwapAnnOperation : AnnOperation
         if (m.Groups["run"].Success) op.WithRun = short.Parse(m.Groups["run"].Value);
 
         return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        // WITHxWITHRUN
+        sb.Append(With);
+        if (WithRun > 1) sb.Append('x').Append(WithRun);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }
