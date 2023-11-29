@@ -256,6 +256,10 @@ public class CharNodeSet : IEnumerable<CharNode>
         // Y<-B
         refNode.LeftNode = nodes[^1];
 
+        // update the LeftNode of the node to the right of the inserted nodes
+        CharNode? right = GetRightNodeOf(nodes[^1]);
+        if (right != null) right.LeftNode = nodes[^1];
+
         _nodes.AddRange(nodes);
         return nodes;
     }
@@ -439,12 +443,17 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         // link the node to the right of the last collected node
         // to the node to the left of the first collected node
-        CharNode? left = GetLeftNodeOf(nodes[0], null);
-        CharNode? right = GetRightNodeOf(nodes[^1], null);
+        CharNode? left = GetLeftNodeOf(nodes[0]);
+        CharNode? right = GetRightNodeOf(nodes[^1]);
+
         if (right != null) right.LeftNode = left;
+
+        // adjust to if it refers to a node in the sequence being moved
+        if (to > from && to <= from + run) to += run;
 
         // insert the nodes
         InsertBefore(to, nodes);
+
         return true;
     }
 
