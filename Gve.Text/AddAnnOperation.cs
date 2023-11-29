@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Gve.Text;
 
@@ -50,5 +51,20 @@ public abstract class AddAnnOperation : AnnOperation
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        sb.Append('"').Append(Value).Append('"');
+        AppendTail(sb);
+        return sb.ToString();
     }
 }
