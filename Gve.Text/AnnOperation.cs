@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,7 @@ namespace Gve.Text;
 /// A variant generation operation on the annotations plane.
 /// </summary>
 /// <seealso cref="VarOperationMetadata" />
-public partial class AnnOperation : VarOperationMetadata
+public abstract partial class AnnOperation : VarOperationMetadata
 {
     private const string NOTE_KEY = "note";
 
@@ -66,6 +68,15 @@ public partial class AnnOperation : VarOperationMetadata
             if (!string.IsNullOrEmpty(value))
                 Features.Add(new Feature { Name = NOTE_KEY, Value = value });
         }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VarOperation"/> class.
+    /// </summary>
+    /// <param name="type">The operation type.</param>
+    protected AnnOperation(VarOperationType type)
+    {
+        Type = type;
     }
 
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
@@ -180,4 +191,26 @@ public partial class AnnOperation : VarOperationMetadata
     }
 
     // TODO add parse methods
+
+    /// <summary>
+    /// Deeply clones the nodes into a new list.
+    /// </summary>
+    /// <param name="nodes">The nodes to clone.</param>
+    /// <returns>A new list with cloned nodes.</returns>
+    protected static List<CharNode> CloneNodes(IList<CharNode> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        List<CharNode> newNodes = new(nodes.Count);
+        foreach (CharNode node in nodes) newNodes.Add(node.Clone());
+        return newNodes;
+    }
+
+    /// <summary>
+    /// Executes this operation for the specified nodes, returning a copy of
+    /// them.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>The output nodes.</returns>
+    public abstract IList<CharNode> Execute(IList<CharNode> nodes);
 }

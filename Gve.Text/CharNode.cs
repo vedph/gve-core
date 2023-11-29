@@ -131,6 +131,22 @@ public class CharNode
     }
 
     /// <summary>
+    /// Deeply clones this node.
+    /// </summary>
+    /// <returns>New node.</returns>
+    public virtual CharNode Clone()
+    {
+        return new CharNode(Id, Ordinal)
+        {
+            Value = Value,
+            IsDeleted = IsDeleted,
+            LeftNode = LeftNode,
+            _prevValues = _prevValues?.ToList(),
+            _coords = _coords?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+        };
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>
