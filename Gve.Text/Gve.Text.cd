@@ -1,25 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Gve.Text.VarNode">
-    <Position X="2.75" Y="2.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAEAAAEAAAAAAAQAAAAAAEAAAAAAAA=</HashCode>
-      <FileName>VarNode.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Operation" />
-      <Property Name="Diplomatic" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Sources" />
-      <Property Name="Children" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="Gve.Text.VarDiplomatic">
-    <Position X="4.5" Y="0.5" Width="1.5" />
+    <Position X="8.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VarDiplomatic.cs</FileName>
@@ -28,92 +10,8 @@
       <Property Name="Position" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Gve.Text.VarOperation">
-    <Position X="7" Y="2.75" Width="1.75" />
-    <Members>
-      <Method Name="AtRunRegex" Hidden="true" />
-      <Method Name="GetOptionalArgValue" Hidden="true" />
-      <Method Name="HeadRegex" Hidden="true" />
-      <Method Name="LocOpRegex" Hidden="true" />
-      <Method Name="TailRegex" Hidden="true" />
-      <Method Name="VarOperation" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AIBxABAEAAAgQAQIAAAAAAAAAACCAAAACQAiAIEQIAI=</HashCode>
-      <FileName>VarOperation.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Gve.Text.VarTree">
-    <Position X="0.5" Y="2.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAACACAEAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>VarTree.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Root" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="Gve.Text.VarSource">
-    <Position X="4.5" Y="3.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAADAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAEAAAA=</HashCode>
-      <FileName>VarSource.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddLeftVarOperation" Collapsed="true">
-    <Position X="7.25" Y="9.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddLeftVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddRightVarOperation" Collapsed="true">
-    <Position X="9.25" Y="9.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddRightVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AnnotateVarOperation" Collapsed="true">
-    <Position X="5.5" Y="8.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAQAAAAAAAQAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AnnotateVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.MoveVarOperation" Collapsed="true">
-    <Position X="1.5" Y="8.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAIQAAAAAAAAQAAAAA=</HashCode>
-      <FileName>MoveVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.ReplaceVarOperation" Collapsed="true">
-    <Position X="5.5" Y="7.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ReplaceVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.SwapVarOperation" Collapsed="true">
-    <Position X="3.5" Y="8.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAQAAAAAAAAAAAAAQAAAAABAAAAAAAA=</HashCode>
-      <FileName>SwapVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Gve.Text.TextPosition">
-    <Position X="7" Y="0.5" Width="1.75" />
+    <Position X="11.25" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -122,15 +20,8 @@
       <FileName>TextPositiion.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.AddVarOperation" Collapsed="true">
-    <Position X="8.5" Y="7.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
-      <FileName>AddVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Gve.Text.CharNodeSet">
-    <Position X="0.5" Y="11" Width="1.75" />
+    <Position X="0.5" Y="4.25" Width="1.75" />
     <Members>
       <Method Name="GetNextId" Hidden="true" />
       <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
@@ -139,7 +30,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQAABAAAIAAEBAAAIhAAAAAEAEFSAAEAAAAAgAACSA=</HashCode>
+      <HashCode>AAQAABAAAIAAEBAIAIhAAAAAEAEFSAAEAAAAAgAACSA=</HashCode>
       <FileName>CharNodeSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -148,7 +39,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Gve.Text.CharNode">
-    <Position X="3.25" Y="11.25" Width="1.5" />
+    <Position X="3.25" Y="4.5" Width="1.5" />
     <Members>
       <Method Name="CharNode" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
@@ -157,8 +48,61 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>gBACAAAAQAAAAEAEABABAAAAAAAAAAACAAAgAQAAEAI=</HashCode>
+      <HashCode>ghACAAAAQAAAAEAEABABAAAAAAAAAAACAAAgAQAAEAI=</HashCode>
       <FileName>CharNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.TreeNode&lt;T&gt;">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <Members>
+      <Method Name="TreeNode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAIkAAAAAEAAAAAAUQgAAAAAAAAAAAAAAAAAAGAA=</HashCode>
+      <FileName>TreeNode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Children" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Gve.Text.VarOperationMetadata">
+    <Position X="5.75" Y="2.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BAABAAAEAAAAAAAAAAABAAAAAAAQAAAAAAACAAAAAAA=</HashCode>
+      <FileName>VarOperationMetadata.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Diplomatic" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Features" />
+      <Property Name="Sources" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Gve.Text.Feature">
+    <Position X="8.75" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Feature.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.VarSource">
+    <Position X="8.75" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAAEAAAAAAAAAAAAAAAAAQAAAAEAAAA=</HashCode>
+      <FileName>VarSource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
