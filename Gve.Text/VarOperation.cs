@@ -9,11 +9,13 @@ using System.Text.RegularExpressions;
 namespace Gve.Text;
 
 /// <summary>
-/// A variant text editing operation.
+/// Base class for text variant generation operations.
 /// </summary>
-/// <seealso cref="IHasVersionTags" />
-public abstract partial class VarOperation : IHasVersionTags
+/// <seealso cref="VarOperationMetadata" />
+public abstract partial class VarOperation : VarOperationMetadata
 {
+    private const string NOTE_KEY = "note";
+
     /// <summary>
     /// The symbols corresponding to <see cref="VarOperationType"/>'s.
     /// </summary>
@@ -43,33 +45,15 @@ public abstract partial class VarOperation : IHasVersionTags
     public short Run { get; set; } = 1;
 
     /// <summary>
-    /// Gets or sets the certainty rank for this operation: 0=not specified,
-    /// 1=most probable, 2=less probable, etc.
-    /// </summary>
-    public short Rank { get; set; }
-
-    /// <summary>
     /// Gets the value argument for this operation. This is the primary argument,
     /// whose meaning varies depending on the operation type.
     /// </summary>
     public string? Value { get; set; }
 
     /// <summary>
-    /// Gets or sets the optional group identifier. When an operation is part
-    /// of a group, all the operation in it are considered as a unique virtual
-    /// operation.
-    /// </summary>
-    public string? GroupId { get; set; }
-
-    /// <summary>
-    /// Gets or sets an optional note.
+    /// Gets or sets the optional note to be added to the result features.
     /// </summary>
     public string? Note { get; set; }
-
-    /// <summary>
-    /// Gets or sets the version tags.
-    /// </summary>
-    public HashSet<string> VersionTags { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
@@ -78,7 +62,6 @@ public abstract partial class VarOperation : IHasVersionTags
     protected VarOperation(VarOperationType type)
     {
         Type = type;
-        VersionTags = [];
     }
 
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
@@ -91,8 +74,12 @@ public abstract partial class VarOperation : IHasVersionTags
         @"(?:\^(?<rank>[0-9]+))?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
     private static partial Regex TailRegex();
 
+    [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
+    private static partial Regex LocOpRegex();
+
     /// <summary>
     /// Appends the head part of an operation to the specified string builder.
+    /// The head is ATxRUN followed by OP.
     /// </summary>
     /// <param name="sb">The target.</param>
     protected void AppendHead(StringBuilder sb)
@@ -156,7 +143,7 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <param name="operation">Target operation.</param>
     /// <returns>The body part of the text.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
-    protected static string ParseHeadAndTail(string text, VarOperation operation)
+    protected static string ParseHeadAndTail(string text, AnnVarOperation operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -190,49 +177,13 @@ public abstract partial class VarOperation : IHasVersionTags
     }
 
     /// <summary>
-    /// Creates the operation result from the specified text and annotations.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="annotations">The annotations.</param>
-    /// <returns>Result.</returns>
-    protected AnnotatedText CreateResult(string text,
-        IDictionary<string, string>? annotations = null)
-    {
-        AnnotatedText result = new(text, annotations);
-        if (!string.IsNullOrEmpty(Note))
-            result.Annotations[AnnotatedText.NOTE_KEY] = Note;
-        return result;
-    }
-
-    /// <summary>
-    /// Execute this operation on the specified text.
-    /// </summary>
-    /// <param name="text">Input annotated text.</param>
-    /// <returns>Annotated text.</returns>
-    public abstract AnnotatedText Execute(AnnotatedText text);
-
-    /// <summary>
-    /// Execute this operation on the specified text.
-    /// </summary>
-    /// <param name="text">The input text.</param>
-    /// <returns>Annotated text.</returns>
-    public AnnotatedText Execute(string text)
-    {
-        ArgumentNullException.ThrowIfNull(text);
-        return Execute(new AnnotatedText(text));
-    }
-
-    [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
-    private static partial Regex LocOpRegex();
-
-    /// <summary>
     /// Parses the specified text representing an operation.
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Parsing error</exception>
-    public static T Parse<T>(string text) where T : VarOperation
+    public static T Parse<T>(string text) where T : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -243,17 +194,17 @@ public abstract partial class VarOperation : IHasVersionTags
         return GetOperationType(m.Groups[1].Value) switch
         {
             VarOperationType.Replace
-                => (ReplaceVarOperation.ParseOperation(text) as T)!,
+                => (ReplaceAnnVarOperation.ParseOperation(text) as T)!,
             VarOperationType.AddLeft
-                => (AddLeftVarOperation.ParseOperation(text) as T)!,
+                => (AddLeftAnnVarOperation.ParseOperation(text) as T)!,
             VarOperationType.AddRight
-                => (AddRightVarOperation.ParseOperation(text) as T)!,
+                => (AddRightAnnVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Annotate
-                => (AnnotateVarOperation.ParseOperation(text) as T)!,
+                => (AnnotateAnnVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Move
-                => (MoveVarOperation.ParseOperation(text) as T)!,
+                => (MoveAnnVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Swap
-                => (SwapVarOperation.ParseOperation(text) as T)!,
+                => (SwapAnnVarOperation.ParseOperation(text) as T)!,
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")
         };
@@ -267,7 +218,7 @@ public abstract partial class VarOperation : IHasVersionTags
     /// <returns>True if success.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     public static bool TryParse<T>(string text, out T? operation)
-        where T : VarOperation
+        where T : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -282,6 +233,18 @@ public abstract partial class VarOperation : IHasVersionTags
             operation = null;
             return false;
         }
+    }
+
+    /// <summary>
+    /// Adds the <see cref="Note"/> property to annotations if it exists.
+    /// </summary>
+    /// <param name="annotations">The annotations.</param>
+    protected void AddNote(IList<Feature> annotations)
+    {
+        ArgumentNullException.ThrowIfNull(annotations);
+
+        if (!string.IsNullOrEmpty(Note))
+            annotations.Add(new Feature { Name = NOTE_KEY, Value = Note });
     }
 }
 

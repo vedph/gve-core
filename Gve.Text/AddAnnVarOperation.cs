@@ -8,8 +8,8 @@ namespace Gve.Text;
 /// <summary>
 /// Base class for add left/right annotation operations.
 /// </summary>
-/// <seealso cref="AnnOperation" />
-public abstract class AddAnnOperation : AnnOperation
+/// <seealso cref="AnnVarOperation" />
+public abstract class AddAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Gets or sets a value indicating whether this instance is add right
@@ -18,10 +18,10 @@ public abstract class AddAnnOperation : AnnOperation
     protected bool IsRight { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AddAnnOperation"/> class.
+    /// Initializes a new instance of the <see cref="AddAnnVarOperation"/> class.
     /// </summary>
     /// <param name="type">The operation type.</param>
-    protected AddAnnOperation(VarOperationType type) : base(type)
+    protected AddAnnVarOperation(VarOperationType type) : base(type)
     {
     }
 

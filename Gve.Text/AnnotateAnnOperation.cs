@@ -8,8 +8,8 @@ namespace Gve.Text;
 /// Annotate annotation operation.
 /// Syntax: <c>ATxRUN:NAME="!VALUE" [TAG ...] {NOTE}</c>.
 /// </summary>
-/// <seealso cref="AnnOperation" />
-public partial class AnnotateAnnOperation : AnnOperation
+/// <seealso cref="AnnVarOperation" />
+public partial class AnnotateAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Gets or sets the attribute name.
@@ -26,9 +26,9 @@ public partial class AnnotateAnnOperation : AnnOperation
     public bool IsUnique { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AnnotateAnnOperation"/> class.
+    /// Initializes a new instance of the <see cref="AnnotateAnnVarOperation"/> class.
     /// </summary>
-    public AnnotateAnnOperation() : base(VarOperationType.Annotate)
+    public AnnotateAnnVarOperation() : base(VarOperationType.Annotate)
     {
         Name = "";
         Value = "";
@@ -71,11 +71,11 @@ public partial class AnnotateAnnOperation : AnnOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid annotate operation: {text}</exception>
-    internal static AnnotateAnnOperation ParseOperation(string text)
+    internal static AnnotateAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        AnnotateAnnOperation op = new();
+        AnnotateAnnVarOperation op = new();
         // NAME="VALUE" or NAME="!VALUE" for a unique annotation
         string body = ParseHeadAndTail(text, op);
         Match m = NameValueRegex().Match(body);

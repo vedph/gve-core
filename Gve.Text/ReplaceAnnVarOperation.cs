@@ -8,13 +8,13 @@ namespace Gve.Text;
 /// <summary>
 /// Replacement annotation operation.
 /// </summary>
-/// <seealso cref="AnnOperation" />
-public sealed class ReplaceAnnOperation : AnnOperation
+/// <seealso cref="AnnVarOperation" />
+public sealed class ReplaceAnnVarOperation : AnnVarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ReplaceAnnOperation"/> class.
+    /// Initializes a new instance of the <see cref="ReplaceAnnVarOperation"/> class.
     /// </summary>
-    public ReplaceAnnOperation() : base(VarOperationType.Replace)
+    public ReplaceAnnVarOperation() : base(VarOperationType.Replace)
     {
     }
 
@@ -63,11 +63,11 @@ public sealed class ReplaceAnnOperation : AnnOperation
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static ReplaceAnnOperation ParseOperation(string text)
+    internal static ReplaceAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        ReplaceAnnOperation op = new();
+        ReplaceAnnVarOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Value = body.Trim('"');

@@ -9,8 +9,8 @@ namespace Gve.Text;
 /// Move annotation operation.
 /// Syntax: <c>ATxRUN>ATxRUN^RANK@GROUP [TAG ...]  {NOTE}</c>.
 /// </summary>
-/// <seealso cref="AnnOperation" />
-public sealed class MoveAnnOperation : AnnOperation
+/// <seealso cref="AnnVarOperation" />
+public sealed class MoveAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Gets or sets the target position.
@@ -24,9 +24,9 @@ public sealed class MoveAnnOperation : AnnOperation
     public short ToRun { get; set; } = 1;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MoveAnnOperation"/> class.
+    /// Initializes a new instance of the <see cref="MoveAnnVarOperation"/> class.
     /// </summary>
-    public MoveAnnOperation() : base(VarOperationType.Move)
+    public MoveAnnVarOperation() : base(VarOperationType.Move)
     {
     }
 
@@ -76,11 +76,11 @@ public sealed class MoveAnnOperation : AnnOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid move operation: {text}</exception>
-    internal static MoveAnnOperation ParseOperation(string text)
+    internal static MoveAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        MoveAnnOperation op = new();
+        MoveAnnVarOperation op = new();
         // ATxRUN
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);

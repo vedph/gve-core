@@ -9,8 +9,8 @@ namespace Gve.Text;
 /// Swap annotation operation.
 /// Syntax: <c>ATxRUN&lt;&gt;ATxRUN^RANK@GROUP [TAG ...]  {NOTE}</c>.
 /// </summary>
-/// <seealso cref="AnnOperation" />
-public sealed class SwapAnnOperation : AnnOperation
+/// <seealso cref="AnnVarOperation" />
+public sealed class SwapAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Gets or sets the position to swap text with.
@@ -24,9 +24,9 @@ public sealed class SwapAnnOperation : AnnOperation
     public short WithRun { get; set; } = 1;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SwapAnnOperation"/> class.
+    /// Initializes a new instance of the <see cref="SwapAnnVarOperation"/> class.
     /// </summary>
-    public SwapAnnOperation() : base(VarOperationType.Swap)
+    public SwapAnnVarOperation() : base(VarOperationType.Swap)
     {
     }
 
@@ -81,11 +81,11 @@ public sealed class SwapAnnOperation : AnnOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid swap operation: {text}</exception>
-    internal static SwapAnnOperation ParseOperation(string text)
+    internal static SwapAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        SwapAnnOperation op = new();
+        SwapAnnVarOperation op = new();
         // ATxRUN
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);
