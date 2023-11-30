@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Gve.Text.VarDiplomatic">
-    <Position X="8.75" Y="1.75" Width="1.5" />
+    <Position X="12" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VarDiplomatic.cs</FileName>
@@ -11,7 +11,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.TextPosition">
-    <Position X="11.25" Y="1.75" Width="1.75" />
+    <Position X="14.5" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -21,7 +21,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.CharNodeSet">
-    <Position X="0.5" Y="4.25" Width="1.75" />
+    <Position X="1.5" Y="3.25" Width="1.75" />
     <Members>
       <Method Name="GetNextId" Hidden="true" />
       <Method Name="IEnumerable.GetEnumerator" Hidden="true" />
@@ -39,7 +39,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Gve.Text.CharNode">
-    <Position X="3.25" Y="4.5" Width="1.5" />
+    <Position X="4.25" Y="3.5" Width="1.5" />
     <Members>
       <Method Name="CharNode" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
@@ -53,7 +53,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.TreeNode&lt;T&gt;">
-    <Position X="13.75" Y="6.25" Width="1.75" />
+    <Position X="17" Y="5" Width="1.75" />
     <Members>
       <Method Name="TreeNode" Hidden="true" />
     </Members>
@@ -69,7 +69,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.VarOperationMetadata">
-    <Position X="5.75" Y="2.25" Width="2" />
+    <Position X="9" Y="1" Width="2" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -86,7 +86,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.Feature">
-    <Position X="8.75" Y="3" Width="1.5" />
+    <Position X="12" Y="1.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -96,7 +96,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.VarSource">
-    <Position X="8.75" Y="5" Width="1.5" />
+    <Position X="12" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -105,89 +105,8 @@
       <FileName>VarSource.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.AnnVarOperation">
-    <Position X="10" Y="10" Width="2" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>AnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.ReplaceAnnVarOperation">
-    <Position X="8" Y="12.5" Width="2" />
-    <Members>
-      <Method Name="ReplaceAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ReplaceAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddLeftAnnVarOperation">
-    <Position X="11" Y="15" Width="2" />
-    <Members>
-      <Method Name="AddLeftAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddLeftAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddAnnVarOperation">
-    <Position X="12.25" Y="12.5" Width="1.75" />
-    <Members>
-      <Method Name="AddAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
-      <FileName>AddAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddRightAnnVarOperation">
-    <Position X="13.25" Y="15" Width="2" />
-    <Members>
-      <Method Name="AddRightAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddRightAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.MoveAnnVarOperation">
-    <Position X="8" Y="14.75" Width="2" />
-    <Members>
-      <Method Name="MoveAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAIQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MoveAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.SwapAnnVarOperation">
-    <Position X="8" Y="17.25" Width="2" />
-    <Members>
-      <Method Name="SwapAnnVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAQEAAAAAAAAAAAAQAAAAABAAAAAAAA=</HashCode>
-      <FileName>SwapAnnVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AnnotateAnnVarOperation">
-    <Position X="10.75" Y="17.25" Width="2.25" />
-    <Members>
-      <Method Name="AnnotateAnnVarOperation" Hidden="true" />
-      <Method Name="NameValueRegex" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AnnotateAnnOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Gve.Text.AnnTreeGround">
-    <Position X="11" Y="7" Width="1.5" />
+    <Position X="14.25" Y="5.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -200,7 +119,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarOperation">
-    <Position X="5.75" Y="5.25" Width="2" />
+    <Position X="9" Y="4" Width="2" />
     <Members>
       <Method Name="AtRunRegex" Hidden="true" />
       <Method Name="GetOptionalArgValue" Hidden="true" />
@@ -209,93 +128,175 @@
       <Method Name="MetadataRegex" Hidden="true" />
       <Method Name="NameValueRegex" Hidden="true" />
       <Method Name="TailRegex" Hidden="true" />
+      <Method Name="VarOperation" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIJwABAAAAAgAAAIAAAAAAAAAACCBAAACQAgIIAQIAI=</HashCode>
+      <HashCode>AAJQABAAAAAgAAAIAAAAAAAAAACCBAAACQAgIIAQIAI=</HashCode>
       <FileName>VarOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.BaseVarOperation">
-    <Position X="3" Y="10" Width="1.5" />
+  <Class Name="Gve.Text.Base.BaseVarOperation">
+    <Position X="4" Y="8.25" Width="1.5" />
     <Members>
       <Method Name="BaseVarOperation" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>BaseVarOperation.cs</FileName>
+      <HashCode>AIAgAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\BaseVarOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.ReplaceBaseVarOperation">
-    <Position X="0.5" Y="12.25" Width="2" />
+  <Class Name="Gve.Text.Base.ReplaceBaseVarOperation">
+    <Position X="0.5" Y="11.25" Width="2" />
     <Members>
       <Method Name="ReplaceBaseVarOperation" Hidden="true" />
     </Members>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ReplaceBaseVarOperation.cs</FileName>
+      <FileName>Base\ReplaceBaseVarOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.AddLeftBaseVarOperation">
-    <Position X="3" Y="14.25" Width="2" />
-    <Members>
-      <Method Name="AddLeftBaseVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddLeftBaseVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddRightBaseVarOperation">
-    <Position X="5.25" Y="14.25" Width="2.25" />
-    <Members>
-      <Method Name="AddRightBaseVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AddRightBaseVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.MoveBaseVarOperation">
-    <Position X="0.5" Y="14.25" Width="2" />
-    <Members>
-      <Method Name="MoveBaseVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAIQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MoveBaseVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.SwapBaseVarOperation">
-    <Position X="1.5" Y="17" Width="2" />
-    <Members>
-      <Method Name="SwapBaseVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAQEAAAAAAAAAAAAQAAAAABAAAAAAAA=</HashCode>
-      <FileName>SwapBaseVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AnnotateBaseVarOperation">
-    <Position X="4" Y="17" Width="2.25" />
-    <Members>
-      <Method Name="AnnotateBaseVarOperation" Hidden="true" />
-    </Members>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
-      <FileName>AnnotateBaseVarOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Gve.Text.AddBaseVarOperation">
-    <Position X="4.25" Y="12" Width="1.75" />
+  <Class Name="Gve.Text.Base.AddBaseVarOperation">
+    <Position X="3.25" Y="11.25" Width="1.75" />
     <Members>
       <Method Name="AddBaseVarOperation" Hidden="true" />
     </Members>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
-      <FileName>AddBaseVarOperation.cs</FileName>
+      <FileName>Base\AddBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Base.AddLeftBaseVarOperation">
+    <Position X="1.75" Y="14" Width="2" />
+    <Members>
+      <Method Name="AddLeftBaseVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\AddLeftBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Base.AddRightBaseVarOperation">
+    <Position X="4.25" Y="14" Width="2.25" />
+    <Members>
+      <Method Name="AddRightBaseVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\AddRightBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Base.MoveBaseVarOperation">
+    <Position X="5.5" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="MoveBaseVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAIQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\MoveBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Base.SwapBaseVarOperation">
+    <Position X="8" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="SwapBaseVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAQEAAAAAAAAAAAAQAAAAABAAAAAAAA=</HashCode>
+      <FileName>Base\SwapBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Base.AnnotateBaseVarOperation">
+    <Position X="7" Y="14" Width="2.25" />
+    <Members>
+      <Method Name="AnnotateBaseVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Base\AnnotateBaseVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Annotations.AnnVarOperation">
+    <Position X="14.5" Y="8.25" Width="1.5" />
+    <Members>
+      <Method Name="AnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Annotations\AnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Annotations.AddAnnVarOperation">
+    <Position X="13.75" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="AddAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Annotations\AddAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Annotations.ReplaceAnnVarOperation">
+    <Position X="11" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="ReplaceAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Annotations\ReplaceAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.AddLeftAnnVarOperation">
+    <Position X="12.5" Y="14" Width="2" />
+    <Members>
+      <Method Name="AddLeftAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Annotations\AddLeftAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.AddRightAnnVarOperation">
+    <Position X="14.75" Y="14" Width="2.25" />
+    <Members>
+      <Method Name="AddRightAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Annotations\AddRightAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Annotations.MoveAnnVarOperation">
+    <Position X="16.5" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="MoveAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAIQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Annotations\MoveAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.Annotations.SwapAnnVarOperation">
+    <Position X="19" Y="11.25" Width="2" />
+    <Members>
+      <Method Name="SwapAnnVarOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAQEAAAAAAAAAAAAQAAAAABAAAAAAAA=</HashCode>
+      <FileName>Annotations\SwapAnnVarOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.AnnotateAnnVarOperation">
+    <Position X="17.75" Y="14" Width="2.25" />
+    <Members>
+      <Method Name="AnnotateAnnVarOperation" Hidden="true" />
+      <Method Name="NameValueRegex" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Annotations\AnnotateAnnOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

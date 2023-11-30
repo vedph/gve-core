@@ -1,31 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Gve.Text;
+namespace Gve.Text.Base;
 
 /// <summary>
-/// Move base variant operation.
+/// Annotation base variant operation.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public sealed class MoveBaseVarOperation : BaseVarOperation
+public sealed class AnnotateBaseVarOperation : BaseVarOperation
 {
     /// <summary>
-    /// Gets or sets the target position.
-    /// </summary>
-    public short To { get; set; }
-
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MoveBaseVarOperation"/>
+    /// Initializes a new instance of the <see cref="AnnotateBaseVarOperation"/>
     /// class.
     /// </summary>
     /// <param name="set">The set.</param>
-    public MoveBaseVarOperation(CharNodeSet set) :
-        base(VarOperationType.Move, set)
+    public AnnotateBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.Annotate, set)
     {
     }
 
@@ -35,6 +26,9 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     /// </summary>
     /// <param name="nodes">The nodes.</param>
     /// <param name="annotations">The annotations.</param>
+    /// <returns>
+    /// New nodes resulting from the execution.
+    /// </returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
     public override void Execute(IList<CharNode> nodes,
         IList<Feature> annotations)
@@ -43,30 +37,21 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        Set.Move(At, Run, To);
     }
 
     /// <summary>
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
-    /// <exception cref="ArgumentNullException">text or set</exception>
-    /// <exception cref="FormatException">Invalid move operation: {text}</exception>
-    internal static MoveBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FormatException">Invalid annotate operation: {text}</exception>
+    internal static AnnotateAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
 
-        MoveBaseVarOperation op = new(set);
-        // AT
-        string body = ParseHeadAndTail(text, op);
-        Match m = AtRunRegex().Match(body);
-        if (!m.Success)
-            throw new FormatException($"Invalid move operation: {text}");
-        op.To = short.Parse(m.Groups["at"].Value);
+        AnnotateAnnVarOperation op = new();
+        ParseHeadAndTail(text, op);
 
         return op;
     }
@@ -81,8 +66,6 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     {
         StringBuilder sb = new();
         AppendHead(sb);
-        // TO
-        sb.Append(To);
         AppendTail(sb);
         return sb.ToString();
     }

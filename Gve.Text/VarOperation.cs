@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Gve.Text.Annotations;
 
 namespace Gve.Text;
 
@@ -70,7 +71,7 @@ public abstract partial class VarOperation : VarOperationMetadata
     private static partial Regex MetadataRegex();
 
     [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
-    private static partial Regex LocOpRegex();
+    protected static partial Regex LocOpRegex();
 
     /// <summary>
     /// Appends the head part of an operation to the specified string builder.
@@ -184,65 +185,6 @@ public abstract partial class VarOperation : VarOperationMetadata
 
         // return text minus head and tail
         return text[head.Length..^tail.Length];
-    }
-
-    /// <summary>
-    /// Parses the specified text representing an operation.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <returns>Operation.</returns>
-    /// <exception cref="ArgumentNullException">text</exception>
-    /// <exception cref="FormatException">Parsing error</exception>
-    public static T Parse<T>(string text) where T : AnnVarOperation
-    {
-        ArgumentNullException.ThrowIfNull(text);
-
-        Match m = LocOpRegex().Match(text);
-        if (!m.Success)
-            throw new FormatException($"Invalid operation: {text}");
-
-        return GetOperationType(m.Groups[1].Value) switch
-        {
-            VarOperationType.Replace
-                => (ReplaceAnnVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.AddLeft
-                => (AddLeftAnnVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.AddRight
-                => (AddRightAnnVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.Annotate
-                => (AnnotateAnnVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.Move
-                => (MoveAnnVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.Swap
-                => (SwapAnnVarOperation.ParseOperation(text) as T)!,
-            _ => throw new FormatException(
-                $"Invalid operation type: {GetOperationType(text)}")
-        };
-    }
-
-    /// <summary>
-    /// Tries to parsing the specified text representing an operation.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="operation">The parsed operation.</param>
-    /// <returns>True if success.</returns>
-    /// <exception cref="ArgumentNullException">text</exception>
-    public static bool TryParse<T>(string text, out T? operation)
-        where T : AnnVarOperation
-    {
-        ArgumentNullException.ThrowIfNull(text);
-
-        try
-        {
-            operation = Parse<T>(text);
-            return true;
-        }
-        catch (FormatException ex)
-        {
-            Debug.WriteLine(ex.ToString());
-            operation = null;
-            return false;
-        }
     }
 
     /// <summary>

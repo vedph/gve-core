@@ -1,21 +1,21 @@
 ﻿using System;
+using Gve.Text.Annotations;
 
 namespace Gve.Text;
 
 /// <summary>
-/// Add left annotation operation.
-/// Syntax: <c>AT+&lt;"VALUE"^RANK@GROUP [TAG ...] {NOTE}</c>.
+/// Add right annotation operation.
 /// </summary>
 /// <seealso cref="AddAnnVarOperation" />
-public sealed class AddLeftAnnVarOperation : AddAnnVarOperation
+public sealed class AddRightAnnVarOperation : AddAnnVarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AddLeftAnnVarOperation"/>
+    /// Initializes a new instance of the <see cref="AddRightAnnVarOperation"/>
     /// class.
     /// </summary>
-    public AddLeftAnnVarOperation() : base(VarOperationType.AddLeft)
+    public AddRightAnnVarOperation() : base(VarOperationType.AddRight)
     {
-        IsRight = false;
+        IsRight = true;
     }
 
     /// <summary>
@@ -24,11 +24,11 @@ public sealed class AddLeftAnnVarOperation : AddAnnVarOperation
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static AddLeftAnnVarOperation ParseOperation(string text)
+    internal static AddRightAnnVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        AddLeftAnnVarOperation op = new();
+        AddRightAnnVarOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Run = 0;

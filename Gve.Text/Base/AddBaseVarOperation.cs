@@ -2,31 +2,40 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gve.Text;
+namespace Gve.Text.Base;
 
 /// <summary>
-/// Replace base text variant operation.
+/// Base class for add left/right base text operations.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public sealed class ReplaceBaseVarOperation : BaseVarOperation
+public abstract class AddBaseVarOperation : BaseVarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ReplaceBaseVarOperation"/>
+    /// Gets or sets a value indicating whether this instance is add right
+    /// or add left.
+    /// </summary>
+    protected bool IsRight { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddLeftBaseVarOperation"/>
     /// class.
     /// </summary>
+    /// <param name="type">The operation type.</param>
     /// <param name="set">The set.</param>
-    public ReplaceBaseVarOperation(VarOperationType type, CharNodeSet set) :
-        base(type, set)
+    protected AddBaseVarOperation(VarOperationType type, CharNodeSet set)
+        : base(type, set)
     {
     }
 
     /// <summary>
     /// Executes this operation on the specified nodes, updating the received
-    /// <paramref name="annotations"/> if required.
+    /// <paramref name="annotations" /> if required.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
     /// <param name="annotations">The annotations.</param>
-    /// <returns>New nodes resulting from the execution.</returns>
+    /// <returns>
+    /// New nodes resulting from the execution.
+    /// </returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
     public override void Execute(IList<CharNode> nodes,
         IList<Feature> annotations)
@@ -34,29 +43,9 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(nodes);
         ArgumentNullException.ThrowIfNull(annotations);
 
-        Set.Replace(At, Run, nodes);
         AddFeatures(annotations);
-    }
-
-    /// <summary>
-    /// Parses the operation.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
-    /// <returns>Operation.</returns>
-    /// <exception cref="ArgumentNullException">text or set</exception>
-    internal static ReplaceBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
-    {
-        ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
-
-        ReplaceBaseVarOperation op = new(set);
-        // "VALUE"
-        string body = ParseHeadAndTail(text, op);
-        op.Value = body.Trim('"');
-
-        return op;
+        if (IsRight) Set.InsertAfter(At, nodes);
+        else Set.InsertBefore(At, nodes);
     }
 
     /// <summary>

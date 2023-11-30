@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Gve.Text;
+namespace Gve.Text.Annotations;
 
 /// <summary>
 /// Swap annotation operation.

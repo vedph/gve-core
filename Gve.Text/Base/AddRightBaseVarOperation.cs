@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Gve.Text;
+namespace Gve.Text.Base;
 
 /// <summary>
-/// Annotation base variant operation.
+/// Add right base variant operation.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public sealed class AnnotateBaseVarOperation : BaseVarOperation
+public sealed class AddRightBaseVarOperation : AddBaseVarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AnnotateBaseVarOperation"/>
+    /// Initializes a new instance of the <see cref="AddRightBaseVarOperation"/>
     /// class.
     /// </summary>
     /// <param name="set">The set.</param>
-    public AnnotateBaseVarOperation(CharNodeSet set)
-        : base(VarOperationType.Annotate, set)
+    public AddRightBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.AddLeft, set)
     {
+        IsRight = true;
     }
 
     /// <summary>
@@ -37,36 +37,28 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
+        Set.InsertAfter(At, nodes);
     }
 
     /// <summary>
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="FormatException">Invalid annotate operation: {text}</exception>
-    internal static AnnotateAnnVarOperation ParseOperation(string text)
+    internal static AddRightBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
     {
         ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
 
-        AnnotateAnnVarOperation op = new();
-        ParseHeadAndTail(text, op);
+        AddRightBaseVarOperation op = new(set);
+        // "VALUE"
+        string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
+        op.Value = body.Trim('"');
 
         return op;
-    }
-
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="string" /> that represents this instance.
-    /// </returns>
-    public override string ToString()
-    {
-        StringBuilder sb = new();
-        AppendHead(sb);
-        AppendTail(sb);
-        return sb.ToString();
     }
 }

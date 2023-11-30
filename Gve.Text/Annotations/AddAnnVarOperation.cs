@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gve.Text;
+namespace Gve.Text.Annotations;
 
 /// <summary>
 /// Base class for add left/right annotation operations.

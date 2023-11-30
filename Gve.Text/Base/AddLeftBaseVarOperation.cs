@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Gve.Text;
+namespace Gve.Text.Base;
 
 /// <summary>
-/// Base class for add left/right base text operations.
+/// Add left base variant operation.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public abstract class AddBaseVarOperation : BaseVarOperation
+public sealed class AddLeftBaseVarOperation : AddBaseVarOperation
 {
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is add right
-    /// or add left.
-    /// </summary>
-    protected bool IsRight { get; set; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="AddLeftBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="type">The operation type.</param>
     /// <param name="set">The set.</param>
-    protected AddBaseVarOperation(VarOperationType type, CharNodeSet set)
-        : base(type, set)
+    public AddLeftBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.AddLeft, set)
     {
+        IsRight = false;
     }
 
     /// <summary>
@@ -44,22 +37,28 @@ public abstract class AddBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        if (IsRight) Set.InsertAfter(At, nodes);
-        else Set.InsertBefore(At, nodes);
+        Set.InsertBefore(At, nodes);
     }
 
     /// <summary>
-    /// Converts to string.
+    /// Parses the operation.
     /// </summary>
-    /// <returns>
-    /// A <see cref="string" /> that represents this instance.
-    /// </returns>
-    public override string ToString()
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    internal static AddLeftBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
     {
-        StringBuilder sb = new();
-        AppendHead(sb);
-        sb.Append('"').Append(Value).Append('"');
-        AppendTail(sb);
-        return sb.ToString();
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        AddLeftBaseVarOperation op = new(set);
+        // "VALUE"
+        string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }
