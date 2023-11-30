@@ -13,7 +13,7 @@ public sealed class SwapBaseVarOperation : BaseVarOperation
     {
     }
 
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
+    public override void Execute(IList<CharNode> nodes,
                IList<Feature> annotations)
     {
         throw new NotImplementedException();

@@ -30,14 +30,13 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// <param name="annotations">The annotations.</param>
     /// <returns>New nodes resulting from the execution.</returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
+    public override void Execute(IList<CharNode> nodes,
         IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
         ArgumentNullException.ThrowIfNull(annotations);
 
-        IList<CharNode> result = Set.Replace(At, Run, nodes);
+        Set.Replace(At, Run, nodes);
         AddFeatures(annotations);
-        return result;
     }
 }

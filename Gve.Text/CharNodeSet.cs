@@ -307,7 +307,6 @@ public class CharNodeSet : IEnumerable<CharNode>
         // A<-X
         nodes[0].LeftNode = refNode;
         // Y<-B
-        // refNode.LeftNode = nodes[^1];
         CharNode? right = GetRightNodeOf(refNode);
         if (right != null) right.LeftNode = nodes[^1];
 

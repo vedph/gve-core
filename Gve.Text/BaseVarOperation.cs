@@ -22,7 +22,7 @@ public abstract class BaseVarOperation : VarOperation
     /// <exception cref="ArgumentNullException">set</exception>
     protected BaseVarOperation(VarOperationType type, CharNodeSet set) : base(type)
     {
-        Set = set ?? throw new System.ArgumentNullException(nameof(set));
+        Set = set ?? throw new ArgumentNullException(nameof(set));
     }
 
     /// <summary>
@@ -31,7 +31,6 @@ public abstract class BaseVarOperation : VarOperation
     /// </summary>
     /// <param name="nodes">The nodes.</param>
     /// <param name="annotations">The annotations.</param>
-    /// <returns>New nodes resulting from the execution.</returns>
-    public abstract IList<CharNode> Execute(IList<CharNode> nodes,
+    public abstract void Execute(IList<CharNode> nodes,
         IList<Feature> annotations);
 }

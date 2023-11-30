@@ -32,13 +32,13 @@ public sealed class AddRightBaseVarOperation : BaseVarOperation
     /// New nodes resulting from the execution.
     /// </returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
+    public override void Execute(IList<CharNode> nodes,
         IList<Feature> annotations)
     {
         ArgumentNullException.ThrowIfNull(nodes);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        return Set.InsertAfter(At, nodes);
+        Set.InsertAfter(At, nodes);
     }
 }
