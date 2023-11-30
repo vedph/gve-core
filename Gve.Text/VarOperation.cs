@@ -51,11 +51,6 @@ public abstract partial class VarOperation : VarOperationMetadata
     public string? Value { get; set; }
 
     /// <summary>
-    /// Gets or sets the optional note to be added to the result features.
-    /// </summary>
-    public string? Note { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
     /// </summary>
     /// <param name="type">The operation type.</param>
@@ -71,8 +66,11 @@ public abstract partial class VarOperation : VarOperationMetadata
     private static partial Regex HeadRegex();
 
     [GeneratedRegex(
-        @"(?:\^(?<rank>[0-9]+))?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<note>[^\}]+)\})?$")]
+        @"(?:\^(?<rank>[0-9]+))?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<meta>[^\}]+)\})?$")]
     private static partial Regex TailRegex();
+
+    [GeneratedRegex(@"(?<n>[^=]+)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
+    private static partial Regex MetadataRegex();
 
     [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
     private static partial Regex LocOpRegex();
@@ -93,8 +91,8 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <param name="sb">The target.</param>
     protected void AppendTail(StringBuilder sb)
     {
-        // ^RANK@GROUP [TAG,...] {NOTE}
-        if (GroupId != null || VersionTags.Count > 0 || Note != null)
+        // ^RANK@GROUP [TAG,...] {NAME=VALUE or NAME="VALUE"}
+        if (GroupId != null || VersionTags.Count > 0 || Features.Count > 0)
         {
             if (Rank != 0) sb.Append('^').Append(Rank);
 
@@ -103,8 +101,8 @@ public abstract partial class VarOperation : VarOperationMetadata
             if (VersionTags.Count > 0)
                 sb.Append(" [").AppendJoin(" ", VersionTags).Append(']');
 
-            if (Note != null)
-                sb.Append(" {").Append(Note).Append('}');
+            if (Features.Count > 0)
+                sb.Append(" {").AppendJoin(" ", Features).Append('}');
         }
     }
 
@@ -245,6 +243,30 @@ public abstract partial class VarOperation : VarOperationMetadata
 
         if (!string.IsNullOrEmpty(Note))
             annotations.Add(new Feature { Name = NOTE_KEY, Value = Note });
+    }
+
+    /// <summary>
+    /// Adds <see cref="VarOperationMetadata.Features"/> to the received
+    /// <paramref name="annotations"/>.
+    /// </summary>
+    /// <param name="annotations">The annotations to update.</param>
+    protected void AddFeatures(IList<Feature> annotations)
+    {
+        ArgumentNullException.ThrowIfNull(annotations);
+
+        foreach (Feature feature in Features)
+        {
+            // if unique, first remove all the features with the same name
+            if (feature.IsUnique)
+            {
+                for (int i = Features.Count - 1; i >= 0; i--)
+                {
+                    if (Features[i].Name == feature.Name)
+                        Features.RemoveAt(i);
+                }
+            }
+            annotations.Add(feature);
+        }
     }
 }
 

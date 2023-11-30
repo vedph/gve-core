@@ -12,26 +12,10 @@ namespace Gve.Text;
 public partial class AnnotateAnnVarOperation : AnnVarOperation
 {
     /// <summary>
-    /// Gets or sets the attribute name.
-    /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the annotation to add should
-    /// be unique, i.e. if it already exists, it should be replaced.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this annotation is unique; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsUnique { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="AnnotateAnnVarOperation"/> class.
     /// </summary>
     public AnnotateAnnVarOperation() : base(VarOperationType.Annotate)
     {
-        Name = "";
-        Value = "";
     }
 
     [GeneratedRegex(@"^(?<name>[^=]+)=""(?<value>.*)""$")]
@@ -53,13 +37,7 @@ public partial class AnnotateAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddNote(annotations);
-        if (IsUnique)
-        {
-            int i = 0;
-            while (i < annotations.Count && annotations[i].Name != Name) i++;
-            if (i < annotations.Count) annotations.RemoveAt(i);
-        }
-        annotations.Add(new Feature(Name, Value ?? ""));
+        AddFeatures(annotations);
 
         return nodes;
     }
@@ -76,15 +54,7 @@ public partial class AnnotateAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(text);
 
         AnnotateAnnVarOperation op = new();
-        // NAME="VALUE" or NAME="!VALUE" for a unique annotation
-        string body = ParseHeadAndTail(text, op);
-        Match m = NameValueRegex().Match(body);
-        if (!m.Success)
-            throw new FormatException($"Invalid annotate operation: {text}");
-        op.Name = m.Groups["name"].Value;
-        op.Value = m.Groups["value"].Value;
-        op.IsUnique = op.Value.StartsWith('!');
-        if (op.IsUnique) op.Value = op.Value[1..];
+        ParseHeadAndTail(text, op);
 
         return op;
     }

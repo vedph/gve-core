@@ -38,6 +38,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
         }
 
         AddNote(annotations);
+        AddFeatures(annotations);
 
         int index = At - 1;
         List<CharNode> text = CloneNodes(nodes);

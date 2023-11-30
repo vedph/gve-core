@@ -39,6 +39,7 @@ public abstract class AddAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(nodes);
 
         AddNote(annotations);
+        AddFeatures(annotations);
         if (string.IsNullOrEmpty(Value)) return nodes;
 
         int index = IsRight ? At : At - 1;
