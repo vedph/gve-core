@@ -90,14 +90,14 @@ public abstract partial class VarOperation : VarOperationMetadata
     protected void AppendTail(StringBuilder sb)
     {
         // ^RANK@GROUP [TAG,...] {NAME=VALUE or NAME="VALUE"}
-        if (GroupId != null || VersionTags.Count > 0 || Features.Count > 0)
+        if (GroupId != null || TaggedOrdinals.Count > 0 || Features.Count > 0)
         {
             if (Rank != 0) sb.Append('^').Append(Rank);
 
             if (!string.IsNullOrEmpty(GroupId)) sb.Append('@').Append(GroupId);
 
-            if (VersionTags.Count > 0)
-                sb.Append(" [").AppendJoin(" ", VersionTags).Append(']');
+            if (TaggedOrdinals.Count > 0)
+                sb.Append(" [").AppendJoin(" ", TaggedOrdinals).Append(']');
 
             if (Features.Count > 0)
                 sb.Append(" {").AppendJoin(" ", Features).Append('}');
@@ -134,6 +134,18 @@ public abstract partial class VarOperation : VarOperationMetadata
     [GeneratedRegex(@"(?<n>[^=]+)(?<u>:)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
     private static partial Regex NameValueRegex();
 
+    private static void ParseTaggedOrdinals(string text, VarOperation operation)
+    {
+        operation.TaggedOrdinals.Clear();
+
+        // text is TAG=ORDINAL separated by spaces
+        foreach (Match m in NameValueRegex().Matches(text))
+        {
+            operation.TaggedOrdinals[m.Groups["n"].Value] =
+                int.Parse(m.Groups["v"].Value, CultureInfo.InvariantCulture);
+        }
+    }
+
     /// <summary>
     /// Parse head and tail parts of the specified text representing an
     /// operation, storing values into <paramref name="operation"/>.
@@ -168,7 +180,7 @@ public abstract partial class VarOperation : VarOperationMetadata
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
-        operation.VersionTags = [.. tail.Groups["tags"].Value.Split(' ')];
+        ParseTaggedOrdinals(tail.Groups["tags"].Value, operation);
 
         if (tail.Groups["meta"].Success)
         {

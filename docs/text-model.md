@@ -79,7 +79,7 @@ For instance, consider our sample snapshot: say we start from the operation on t
 
 Thus, if we define an edit operation by looking at the character's ordinal number in the text, we can say that the operation on `D` works on character 2; and that the operation on `Z` works on character 7. Yet, when we execute the operation on `D`, we get an additional character after it; which means that all the other ordinal-based operations will be broken, because the number of characters has changed. To avoid this, we must thus provide a mechanism which allows to represent changes in the base text, while still preserving the ordinals of each character in it, so that other base operations can refer to them.
 
-The solution adopted here is creating a linear sequence of character nodes. A **character node** is the node of a linear sequence of nodes, where each node represents a single character of the base text (whitespaces included). Each of these nodes has (among other metadata) the character value and a reference to the node to its left. So, our snapshot sample would be like:
+The solution adopted here is creating a linear sequence of _character nodes_. A **character node** is the node of a linear sequence of nodes, where each node represents a single character of the base text (whitespaces included). Each of these nodes has (among other metadata) the character value and a reference to the node to its left. So, our snapshot sample would be like:
 
 ```txt
 1  2  3  4  5  6  7
@@ -112,6 +112,11 @@ Despite the unchanged ordinals, the insertion happened because it is represented
 This approach allows to define each base operation with reference to ordinals, so that we can still refer to each character as if it were not touched by other operations.
 
 >In the implementation, the set of nodes contains an unordered list of nodes and the logic to apply them operations like replace, add, move, and swap text. So, you just get the text to work with, convert it into a set of nodes, and apply the operations on it. Finally, you get the new text out of the set.
+
+The base plane model workflow is:
+
+1. collect all the version tags from all the base operations defined for the plane. These represent the set of text versions we want to generate, as defined by our interpretations.
+2. for each version tag, determine the order of application of base operations.
 
 ### Annotations Plane Model
 
