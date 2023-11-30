@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Gve.Text;
@@ -56,5 +57,19 @@ public partial class AnnotateAnnVarOperation : AnnVarOperation
         ParseHeadAndTail(text, op);
 
         return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

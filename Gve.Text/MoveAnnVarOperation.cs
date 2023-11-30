@@ -18,12 +18,6 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
     public short To { get; set; }
 
     /// <summary>
-    /// Gets or sets the run of characters to include from <see cref="To"/>.
-    /// These will be removed from the source.
-    /// </summary>
-    public short ToRun { get; set; } = 1;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="MoveAnnVarOperation"/> class.
     /// </summary>
     public MoveAnnVarOperation() : base(VarOperationType.Move)
@@ -50,7 +44,7 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
 
         // Ensure At, Run, To, and ToRun are within the valid range
         if (At < 1 || At + Run - 1 > nodes.Count || To < 1 ||
-            To + ToRun - 1 > nodes.Count)
+            To > nodes.Count)
         {
             throw new InvalidOperationException("At, Run, To, and ToRun " +
                 "must be within the length of the text");
@@ -81,13 +75,12 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(text);
 
         MoveAnnVarOperation op = new();
-        // ATxRUN
+        // AT
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);
         if (!m.Success)
             throw new FormatException($"Invalid move operation: {text}");
         op.To = short.Parse(m.Groups["at"].Value);
-        if (m.Groups["run"].Success) op.ToRun = short.Parse(m.Groups["run"].Value);
 
         return op;
     }
@@ -102,9 +95,8 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
     {
         StringBuilder sb = new();
         AppendHead(sb);
-        // TOxTORUN
+        // TO
         sb.Append(To);
-        if (ToRun > 1) sb.Append('x').Append(ToRun);
         AppendTail(sb);
         return sb.ToString();
     }

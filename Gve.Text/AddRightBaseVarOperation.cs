@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
@@ -10,7 +7,7 @@ namespace Gve.Text;
 /// Add right base variant operation.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public sealed class AddRightBaseVarOperation : BaseVarOperation
+public sealed class AddRightBaseVarOperation : AddBaseVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AddRightBaseVarOperation"/>
@@ -20,6 +17,7 @@ public sealed class AddRightBaseVarOperation : BaseVarOperation
     public AddRightBaseVarOperation(CharNodeSet set)
         : base(VarOperationType.AddLeft, set)
     {
+        IsRight = true;
     }
 
     /// <summary>
@@ -40,5 +38,27 @@ public sealed class AddRightBaseVarOperation : BaseVarOperation
 
         AddFeatures(annotations);
         Set.InsertAfter(At, nodes);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    internal static AddRightBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        AddRightBaseVarOperation op = new(set);
+        // "VALUE"
+        string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }

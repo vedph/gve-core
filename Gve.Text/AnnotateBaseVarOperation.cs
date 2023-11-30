@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Gve.Text;
 
@@ -36,5 +37,36 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="FormatException">Invalid annotate operation: {text}</exception>
+    internal static AnnotateAnnVarOperation ParseOperation(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        AnnotateAnnVarOperation op = new();
+        ParseHeadAndTail(text, op);
+
+        return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

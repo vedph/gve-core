@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Gve.Text;
@@ -43,5 +44,46 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
 
         AddFeatures(annotations);
         Set.Move(At, Run, To);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text or set</exception>
+    /// <exception cref="FormatException">Invalid move operation: {text}</exception>
+    internal static MoveBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        MoveBaseVarOperation op = new(set);
+        // AT
+        string body = ParseHeadAndTail(text, op);
+        Match m = AtRunRegex().Match(body);
+        if (!m.Success)
+            throw new FormatException($"Invalid move operation: {text}");
+        op.To = short.Parse(m.Groups["at"].Value);
+
+        return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        // TO
+        sb.Append(To);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

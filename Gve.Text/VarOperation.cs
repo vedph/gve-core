@@ -141,7 +141,7 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <param name="operation">Target operation.</param>
     /// <returns>The body part of the text.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
-    protected static string ParseHeadAndTail(string text, AnnVarOperation operation)
+    protected static string ParseHeadAndTail(string text, VarOperation operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
@@ -17,8 +15,8 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// class.
     /// </summary>
     /// <param name="set">The set.</param>
-    public ReplaceBaseVarOperation(CharNodeSet set) :
-        base(VarOperationType.Replace, set)
+    public ReplaceBaseVarOperation(VarOperationType type, CharNodeSet set) :
+        base(type, set)
     {
     }
 
@@ -38,5 +36,41 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
 
         Set.Replace(At, Run, nodes);
         AddFeatures(annotations);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text or set</exception>
+    internal static ReplaceBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        ReplaceBaseVarOperation op = new(set);
+        // "VALUE"
+        string body = ParseHeadAndTail(text, op);
+        op.Value = body.Trim('"');
+
+        return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        sb.Append('"').Append(Value).Append('"');
+        AppendTail(sb);
+        return sb.ToString();
     }
 }

@@ -7,7 +7,7 @@ namespace Gve.Text;
 /// Add left base variant operation.
 /// </summary>
 /// <seealso cref="BaseVarOperation" />
-public sealed class AddLeftBaseVarOperation : BaseVarOperation
+public sealed class AddLeftBaseVarOperation : AddBaseVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AddLeftBaseVarOperation"/>
@@ -17,6 +17,7 @@ public sealed class AddLeftBaseVarOperation : BaseVarOperation
     public AddLeftBaseVarOperation(CharNodeSet set)
         : base(VarOperationType.AddLeft, set)
     {
+        IsRight = false;
     }
 
     /// <summary>
@@ -37,5 +38,27 @@ public sealed class AddLeftBaseVarOperation : BaseVarOperation
 
         AddFeatures(annotations);
         Set.InsertBefore(At, nodes);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    internal static AddLeftBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        AddLeftBaseVarOperation op = new(set);
+        // "VALUE"
+        string body = ParseHeadAndTail(text, op);
+        op.Run = 0;
+        op.Value = body.Trim('"');
+
+        return op;
     }
 }

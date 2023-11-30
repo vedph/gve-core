@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
+/// <summary>
+/// Swap base variant operation.
+/// </summary>
+/// <seealso cref="BaseVarOperation" />
 public sealed class SwapBaseVarOperation : BaseVarOperation
 {
     /// <summary>
@@ -44,5 +47,48 @@ public sealed class SwapBaseVarOperation : BaseVarOperation
 
         AddFeatures(annotations);
         Set.Swap(At, Run, With, WithRun);
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="set">The nodes set.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text or set</exception>
+    /// <exception cref="FormatException">Invalid swap operation: {text}</exception>
+    internal static SwapBaseVarOperation ParseOperation(string text,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(set);
+
+        SwapBaseVarOperation op = new(set);
+        // ATxRUN
+        string body = ParseHeadAndTail(text, op);
+        Match m = AtRunRegex().Match(body);
+        if (!m.Success)
+            throw new FormatException($"Invalid swap operation: {text}");
+        op.With = short.Parse(m.Groups["at"].Value);
+        if (m.Groups["run"].Success) op.WithRun = short.Parse(m.Groups["run"].Value);
+
+        return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        // WITHxWITHRUN
+        sb.Append(With);
+        if (WithRun > 1) sb.Append('x').Append(WithRun);
+        AppendTail(sb);
+        return sb.ToString();
     }
 }
