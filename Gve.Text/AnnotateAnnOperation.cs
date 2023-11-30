@@ -36,7 +36,6 @@ public partial class AnnotateAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(nodes);
         ArgumentNullException.ThrowIfNull(annotations);
 
-        AddNote(annotations);
         AddFeatures(annotations);
 
         return nodes;

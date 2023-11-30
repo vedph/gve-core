@@ -53,7 +53,7 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
                 "At, Run, With, and WithRun must be within the length of the text");
         }
 
-        AddNote(annotations);
+        AddFeatures(annotations);
         List<CharNode> result = CloneNodes(nodes);
 
         int li = Math.Min(At, With) - 1;

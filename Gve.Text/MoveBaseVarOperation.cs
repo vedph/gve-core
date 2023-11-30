@@ -8,7 +8,8 @@ namespace Gve.Text;
 
 public sealed class MoveBaseVarOperation : BaseVarOperation
 {
-    public MoveBaseVarOperation() : base(VarOperationType.Move)
+    public MoveBaseVarOperation(CharNodeSet set) :
+        base(VarOperationType.Move, set)
     {
     }
 

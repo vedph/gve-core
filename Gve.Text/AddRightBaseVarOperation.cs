@@ -8,7 +8,8 @@ namespace Gve.Text;
 
 public sealed class AddRightBaseVarOperation : BaseVarOperation
 {
-    public AddRightBaseVarOperation() : base(VarOperationType.AddLeft)
+    public AddRightBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.AddLeft, set)
     {
     }
 

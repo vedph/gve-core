@@ -45,7 +45,7 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(nodes);
 
-        AddNote(annotations);
+        AddFeatures(annotations);
         List<CharNode> result = CloneNodes(nodes);
 
         // Ensure At, Run, To, and ToRun are within the valid range

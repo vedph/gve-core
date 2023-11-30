@@ -8,7 +8,8 @@ namespace Gve.Text;
 
 public sealed class SwapBaseVarOperation : BaseVarOperation
 {
-    public SwapBaseVarOperation() : base(VarOperationType.Swap)
+    public SwapBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.Swap, set)
     {
     }
 

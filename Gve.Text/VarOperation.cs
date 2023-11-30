@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,8 +13,6 @@ namespace Gve.Text;
 /// <seealso cref="VarOperationMetadata" />
 public abstract partial class VarOperation : VarOperationMetadata
 {
-    private const string NOTE_KEY = "note";
-
     /// <summary>
     /// The symbols corresponding to <see cref="VarOperationType"/>'s.
     /// </summary>
@@ -133,6 +130,9 @@ public abstract partial class VarOperation : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
+    [GeneratedRegex(@"(?<n>[^=]+)(?<u>:)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
+    private static partial Regex NameValueRegex();
+
     /// <summary>
     /// Parse head and tail parts of the specified text representing an
     /// operation, storing values into <paramref name="operation"/>.
@@ -167,8 +167,20 @@ public abstract partial class VarOperation : VarOperationMetadata
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
-        operation.VersionTags = tail.Groups["tags"].Value.Split(' ').ToHashSet();
-        operation.Note = GetOptionalArgValue(tail.Groups["note"].Value);
+        operation.VersionTags = [.. tail.Groups["tags"].Value.Split(' ')];
+
+        if (tail.Groups["meta"].Success)
+        {
+            foreach (Match m in MetadataRegex().Matches(tail.Groups["meta"].Value))
+            {
+                operation.Features.Add(new Feature
+                {
+                    Name = m.Groups["n"].Value,
+                    Value = m.Groups["v"].Value.Trim('"'),
+                    IsUnique = m.Groups["u"].Success
+                });
+            }
+        }
 
         // return text minus head and tail
         return text[head.Length..^tail.Length];
@@ -231,18 +243,6 @@ public abstract partial class VarOperation : VarOperationMetadata
             operation = null;
             return false;
         }
-    }
-
-    /// <summary>
-    /// Adds the <see cref="Note"/> property to annotations if it exists.
-    /// </summary>
-    /// <param name="annotations">The annotations.</param>
-    protected void AddNote(IList<Feature> annotations)
-    {
-        ArgumentNullException.ThrowIfNull(annotations);
-
-        if (!string.IsNullOrEmpty(Note))
-            annotations.Add(new Feature { Name = NOTE_KEY, Value = Note });
     }
 
     /// <summary>

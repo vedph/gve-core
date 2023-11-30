@@ -8,7 +8,8 @@ namespace Gve.Text;
 
 public sealed class AnnotateBaseVarOperation : BaseVarOperation
 {
-    public AnnotateBaseVarOperation() : base(VarOperationType.Annotate)
+    public AnnotateBaseVarOperation(CharNodeSet set)
+        : base(VarOperationType.Annotate, set)
     {
     }
 

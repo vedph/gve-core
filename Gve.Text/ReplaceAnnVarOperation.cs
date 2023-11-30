@@ -37,7 +37,6 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
                 "the length of the text plus 1");
         }
 
-        AddNote(annotations);
         AddFeatures(annotations);
 
         int index = At - 1;

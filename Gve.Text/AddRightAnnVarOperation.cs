@@ -9,7 +9,7 @@ namespace Gve.Text;
 public sealed class AddRightAnnVarOperation : AddAnnVarOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AddRightVarOperation"/>
+    /// Initializes a new instance of the <see cref="AddRightAnnVarOperation"/>
     /// class.
     /// </summary>
     public AddRightAnnVarOperation() : base(VarOperationType.AddRight)
