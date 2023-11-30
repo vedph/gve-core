@@ -113,12 +113,6 @@ This approach allows to define each base operation with reference to ordinals, s
 
 >In the implementation, the set of nodes contains an unordered list of nodes and the logic to apply them operations like replace, add, move, and swap text. So, you just get the text to work with, convert it into a set of nodes, and apply the operations on it. Finally, you get the new text out of the set.
 
-The base plane model workflow is:
-
-1. collect all the version tags from all the base operations defined for the plane. These represent the set of text versions we want to generate, as defined by our interpretations.
-2. for each version tag, determine the order of application of base operations.
-3. TODO
-
 #### Base Operations
 
 The operations for the base plane with their syntax are:
@@ -139,6 +133,17 @@ As for parameters:
 - `[TAG=N...]` is a set of version tags separated by spaces. Each tag is followed by `=` and the ordinal number for the application of the rule in the interpretation related to that tag. This is used to determine the order of operations for each text version. For instance, an operation might be the 3rd in the context of version A, and the 5th in the context of version B.
 - `{FEAT=VALUE}` is a set of features to be added as annotations to the output of the operation. Each feature is a name=value pair. Features are separated by space. If a feature value contains spaces, wrap it into double quotes (`"VALUE"`). If a feature with the same name already exists, it is added, so that you can have many features with the same name. When you don't want this behavior, set the feature as unique by using `:=` rather than `=`.
 
+#### Base Operations Flow
+
+The base plane model flow is:
+
+1. create a base text plane from the base text.
+2. collect all the version tags from all the base operations defined for the plane. These represent the set of text versions we want to generate, as defined by our interpretations.
+3. for each version tag, determine the order of application of base operations.
+4. execute each of these operations.
+
+In the end, the base text plane nodes set represents the outcome of all the base operations selected by our version, in the order specified for that version.
+
 ### Annotations Plane Model
 
 An annotations plane contains:
@@ -152,6 +157,24 @@ For instance, in our sample snapshot the base text `D` is replaced by a couple o
 #### Annotation Operations
 
 TODO
+
+### Annotation Operations Flow
+
+TODO
+
+For instance, consider this example:
+
+![sample script](img/text-model_script.png)
+
+Here we could describe the text variants with the following tree ofoperations, starting from the base text `ADEFHGZ`:
+
+- ✏️ `2="TC"`: replace `D` with `TC`:
+  - input:  `ADEFHGZ`
+  - output: `ATCEFGHZ`
+  - ✏️ `1="B"`: replace `T` with `B`:
+    - input:  `TC`
+    - output: `BC`
+- ✏️ `2`
 
 ## Diplomatic Model
 
