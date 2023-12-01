@@ -276,4 +276,64 @@ public sealed class ReplaceBaseVarOperationTest
         Assert.Equal("Xcde", set.GetText());
         Assert.Empty(features);
     }
+
+    [Fact]
+    public void Execute_Mid()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("3=\"X\"",
+            out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set, features);
+
+        Assert.Equal("abXde", set.GetText());
+        Assert.Empty(features);
+    }
+
+    [Fact]
+    public void Execute_End()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("5=\"X\"",
+            out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set, features);
+
+        Assert.Equal("abcdX", set.GetText());
+        Assert.Empty(features);
+    }
+
+    [Fact]
+    public void Execute_Shorter()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("3x2=\"X\"",
+            out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set, features);
+
+        Assert.Equal("abXe", set.GetText());
+        Assert.Empty(features);
+    }
+
+    [Fact]
+    public void Execute_Longer()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("3=\"XY\"",
+            out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set, features);
+
+        Assert.Equal("abXYde", set.GetText());
+        Assert.Empty(features);
+    }
 }
