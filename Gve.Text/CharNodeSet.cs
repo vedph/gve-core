@@ -34,6 +34,36 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="CharNodeSet"/> class.
+    /// </summary>
+    /// <param name="nodes">The nodes to set.</param>
+    public CharNodeSet(IEnumerable<CharNode> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        _maxId = nodes.Max(n => n.Id);
+
+        // clone nodes in the order defined by left nodes,
+        // because when cloning nodes left nodes are not cloned.
+        // So we must ensure that the left nodes of the cloned nodes
+        // are already cloned.
+        List<CharNode> newNodes = [];
+        CharNode? firstNode = nodes.FirstOrDefault(node => node.LeftNode == null);
+
+        if (firstNode != null)
+        {
+            newNodes.Add(firstNode);
+            CharNode? currentNode = firstNode;
+            while ((currentNode = nodes.FirstOrDefault(
+                node => node.LeftNode == currentNode)) != null)
+            {
+                newNodes.Add(currentNode);
+            }
+        }
+        _nodes = newNodes;
+    }
+
+    /// <summary>
     /// Gets the first node in this set.
     /// </summary>
     public CharNode? GetFirstNode() => _nodes.Find(n => n.LeftNode == null);
@@ -530,4 +560,10 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         return true;
     }
+
+    /// <summary>
+    /// Deeply clones this instance.
+    /// </summary>
+    /// <returns>Node set.</returns>
+    public virtual CharNodeSet Clone() => new(_nodes);
 }

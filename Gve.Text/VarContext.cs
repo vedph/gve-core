@@ -1,7 +1,7 @@
 ﻿namespace Gve.Text;
 
 /// <summary>
-/// The data context for <see cref="SpineOperation"/>.
+/// The data context for <see cref="VarOperation"/>.
 /// </summary>
 public class VarContext
 {
