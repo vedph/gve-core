@@ -299,5 +299,16 @@
       <FileName>Annotations\AnnotateAnnOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Gve.Text.VarOperationContext">
+    <Position X="6.75" Y="3.75" Width="1.75" />
+    <Members>
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="VarOperationContext" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAABAAEAAABABAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>VarOperationContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
