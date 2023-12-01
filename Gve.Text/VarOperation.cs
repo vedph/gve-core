@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -203,12 +202,12 @@ public abstract partial class VarOperation : VarOperationMetadata
 
     /// <summary>
     /// Adds <see cref="VarOperationMetadata.Features"/> to the received
-    /// <paramref name="annotations"/>.
+    /// <paramref name="features"/>.
     /// </summary>
-    /// <param name="annotations">The annotations to update.</param>
-    protected void AddFeatures(IList<Feature> annotations)
+    /// <param name="features">The features to update.</param>
+    protected void AddFeatures(IList<Feature> features)
     {
-        ArgumentNullException.ThrowIfNull(annotations);
+        ArgumentNullException.ThrowIfNull(features);
 
         foreach (Feature feature in Features)
         {
@@ -221,9 +220,15 @@ public abstract partial class VarOperation : VarOperationMetadata
                         Features.RemoveAt(i);
                 }
             }
-            annotations.Add(feature);
+            features.Add(feature);
         }
     }
+
+    /// <summary>
+    /// Executes this operation on the specified context.
+    /// </summary>
+    /// <param name="context">The data context.</param>
+    public abstract void Execute(VarOperationContext context);
 }
 
 /// <summary>

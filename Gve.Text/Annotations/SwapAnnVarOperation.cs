@@ -31,47 +31,40 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
     }
 
     /// <summary>
-    /// Executes this operation for the specified nodes, returning a copy of
-    /// them.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes.</returns>
+    /// <param name="context">The data context.</param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="InvalidOperationException">At, Run, With, and WithRun
-    /// must be within the length of the text</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// must be within the length of the text.</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(context);
 
         // ensure At, Run, With, and WithRun are within the valid range
-        if (At < 1 || At + Run - 1 > nodes.Count || With < 1 ||
-            With + WithRun - 1 > nodes.Count)
+        if (At < 1 || At + Run - 1 > context.TreeNodes.Count || With < 1 ||
+            With + WithRun - 1 > context.TreeNodes.Count)
         {
             throw new InvalidOperationException(
                 "At, Run, With, and WithRun must be within the length of the text");
         }
 
-        AddFeatures(annotations);
-        List<CharNode> result = CloneNodes(nodes);
+        AddFeatures(context.Features);
 
         int li = Math.Min(At, With) - 1;
         int ri = Math.Max(At, With) - 1;
 
         // extract the nodes to be swapped
-        List<CharNode> lv = result.GetRange(li, Run);
-        List<CharNode> rv = result.GetRange(ri, WithRun);
+        List<CharNode> lv = context.TreeNodes.GetRange(li, Run);
+        List<CharNode> rv = context.TreeNodes.GetRange(ri, WithRun);
 
         // remove the nodes from their original positions
-        result.RemoveRange(ri, WithRun);
-        result.RemoveRange(li, Run);
+        context.TreeNodes.RemoveRange(ri, WithRun);
+        context.TreeNodes.RemoveRange(li, Run);
 
         // insert the nodes at the new positions
-        result.InsertRange(ri, lv);
-        result.InsertRange(li, rv);
-
-        return result;
+        context.TreeNodes.InsertRange(ri, lv);
+        context.TreeNodes.InsertRange(li, rv);
     }
 
     /// <summary>

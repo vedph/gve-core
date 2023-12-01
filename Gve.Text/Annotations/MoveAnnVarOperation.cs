@@ -25,26 +25,21 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
     }
 
     /// <summary>
-    /// Executes this operation for the specified nodes, returning a copy of
-    /// them.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes.</returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
     /// <exception cref="InvalidOperationException">At, Run, To, and ToRun
-    /// must be within the length of the text</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// must be within the length of the text.</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(annotations);
-        List<CharNode> result = CloneNodes(nodes);
+        AddFeatures(context.Features);
 
         // Ensure At, Run, To, and ToRun are within the valid range
-        if (At < 1 || At + Run - 1 > nodes.Count || To < 1 ||
-            To > nodes.Count)
+        if (At < 1 || At + Run - 1 > context.TreeNodes.Count || To < 1 ||
+            To > context.TreeNodes.Count)
         {
             throw new InvalidOperationException("At, Run, To, and ToRun " +
                 "must be within the length of the text");
@@ -54,13 +49,11 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
         int indexTo = To - 1;
 
         // extract the nodes to be moved
-        List<CharNode> movingNodes = result.GetRange(indexAt, Run);
-        result.RemoveRange(indexAt, Run);
+        List<CharNode> movingNodes = context.TreeNodes.GetRange(indexAt, Run);
+        context.TreeNodes.RemoveRange(indexAt, Run);
 
         // insert the extracted nodes at the new position
-        result.InsertRange(indexTo, movingNodes);
-
-        return result;
+        context.TreeNodes.InsertRange(indexTo, movingNodes);
     }
 
     /// <summary>

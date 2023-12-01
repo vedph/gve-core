@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -20,21 +19,16 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     }
 
     /// <summary>
-    /// Executes this operation on the specified nodes, updating the received
-    /// <paramref name="annotations"/> if required.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="set">The set.</param>
-    /// <param name="annotations">The annotations.</param>
-    /// <returns>New nodes resulting from the execution.</returns>
-    /// <exception cref="ArgumentNullException">set or annotations</exception>
-    public override void Execute(CharNodeSet set,
-        IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(set);
-        ArgumentNullException.ThrowIfNull(annotations);
+        ArgumentNullException.ThrowIfNull(context);
 
-        set.Replace(At, Run, new CharNodeSet(Value!).ToList());
-        AddFeatures(annotations);
+        context.Set.Replace(At, Run, new CharNodeSet(Value!).ToList());
+        AddFeatures(context.Features);
     }
 
     /// <summary>

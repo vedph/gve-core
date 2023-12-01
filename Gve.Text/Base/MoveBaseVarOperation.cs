@@ -26,19 +26,16 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     }
 
     /// <summary>
-    /// Executes this operation on the specified nodes, updating the received
-    /// <paramref name="annotations" /> if required.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="set">The set.</param>
-    /// <param name="annotations">The annotations.</param>
-    /// <exception cref="ArgumentNullException">set or annotations</exception>
-    public override void Execute(CharNodeSet set, IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(set);
-        ArgumentNullException.ThrowIfNull(annotations);
+        ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(annotations);
-        set.Move(At, Run, To);
+        AddFeatures(context.Features);
+        context.Set.Move(At, Run, To);
     }
 
     /// <summary>

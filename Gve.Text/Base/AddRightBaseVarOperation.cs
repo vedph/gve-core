@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Gve.Text.Base;
 
@@ -19,22 +18,16 @@ public sealed class AddRightBaseVarOperation : AddBaseVarOperation
     }
 
     /// <summary>
-    /// Executes this operation on the specified nodes, updating the received
-    /// <paramref name="annotations" /> if required.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="set">The set.</param>
-    /// <param name="annotations">The annotations.</param>
-    /// <returns>
-    /// New nodes resulting from the execution.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(CharNodeSet set, IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(set);
-        ArgumentNullException.ThrowIfNull(annotations);
+        ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(annotations);
-        set.InsertAfter(At, Value ?? "");
+        AddFeatures(context.Features);
+        context.Set.InsertAfter(At, Value ?? "");
     }
 
     /// <summary>

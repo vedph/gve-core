@@ -265,91 +265,85 @@ public sealed class ReplaceBaseVarOperationTest
     [Fact]
     public void Execute_WithFeatures()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("1x2=\"X\" {note=sample}",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("Xcde", set.GetText());
-        Assert.Single(features);
-        Assert.Equal("sample", features[0].Value);
+        Assert.Equal("Xcde", context.Set.GetText());
+        Assert.Single(context.Features);
+        Assert.Equal("sample", context.Features[0].Value);
     }
 
     [Fact]
     public void Execute_Start()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("1x2=\"X\"",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("Xcde", set.GetText());
-        Assert.Empty(features);
+        Assert.Equal("Xcde", context.Set.GetText());
+        Assert.Empty(context.Features);
     }
 
     [Fact]
     public void Execute_Mid()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("3=\"X\"",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("abXde", set.GetText());
-        Assert.Empty(features);
+        Assert.Equal("abXde", context.Set.GetText());
+        Assert.Empty(context.Features);
     }
 
     [Fact]
     public void Execute_End()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("5=\"X\"",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("abcdX", set.GetText());
-        Assert.Empty(features);
+        Assert.Equal("abcdX", context.Set.GetText());
+        Assert.Empty(context.Features);
     }
 
     [Fact]
     public void Execute_Shorter()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("3x2=\"X\"",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("abXe", set.GetText());
-        Assert.Empty(features);
+        Assert.Equal("abXe", context.Set.GetText());
+        Assert.Empty(context.Features);
     }
 
     [Fact]
     public void Execute_Longer()
     {
-        CharNodeSet set = new("abcde");
-        List<Feature> features = [];
+        VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("3=\"XY\"",
             out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set, features);
+        op.Execute(context);
 
-        Assert.Equal("abXYde", set.GetText());
-        Assert.Empty(features);
+        Assert.Equal("abXYde", context.Set.GetText());
+        Assert.Empty(context.Features);
     }
 }

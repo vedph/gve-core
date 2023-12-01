@@ -34,16 +34,6 @@ public abstract class AnnVarOperation : VarOperation
     }
 
     /// <summary>
-    /// Executes this operation for the specified nodes, returning a copy of
-    /// them.
-    /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes.</returns>
-    public abstract IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations);
-
-    /// <summary>
     /// Parses the specified text representing an operation.
     /// </summary>
     /// <param name="text">The text.</param>

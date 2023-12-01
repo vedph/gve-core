@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -21,14 +20,6 @@ public abstract class BaseVarOperation : VarOperation
     protected BaseVarOperation(VarOperationType type) : base(type)
     {
     }
-
-    /// <summary>
-    /// Executes this operation on the specified nodes, updating the received
-    /// <paramref name="annotations"/> if required.
-    /// </summary>
-    /// <param name="set">The set.</param>
-    /// <param name="annotations">The annotations.</param>
-    public abstract void Execute(CharNodeSet set, IList<Feature> annotations);
 
     /// <summary>
     /// Parses the specified text representing an operation.

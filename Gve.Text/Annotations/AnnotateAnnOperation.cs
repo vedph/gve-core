@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Gve.Text.Annotations;
@@ -24,23 +23,15 @@ public partial class AnnotateAnnVarOperation : AnnVarOperation
     private static partial Regex NameValueRegex();
 
     /// <summary>
-    /// Executes this operation. This does not modify the input nodes, but
-    /// only adds annotations to the output.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes. These are equal to <paramref name="nodes"/>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
-        ArgumentNullException.ThrowIfNull(annotations);
+        ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(annotations);
-
-        return nodes;
+        AddFeatures(context.Features);
     }
 
     /// <summary>

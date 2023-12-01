@@ -26,31 +26,23 @@ public abstract class AddAnnVarOperation : AnnVarOperation
     }
 
     /// <summary>
-    /// Executes this operation for the specified nodes, returning a copy of
-    /// them.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes.</returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(annotations);
-        if (string.IsNullOrEmpty(Value)) return nodes;
+        AddFeatures(context.Features);
+        if (string.IsNullOrEmpty(Value)) return;
 
         int index = IsRight ? At : At - 1;
-        List<CharNode> result = CloneNodes(nodes);
-
         if (!string.IsNullOrEmpty(Value))
         {
             List<CharNode> newNodes = Value.Select(c => new CharNode(c, 0)).ToList();
-            result.InsertRange(index, newNodes);
+            context.TreeNodes.InsertRange(index, newNodes);
         }
-
-        return result;
     }
 
     /// <summary>

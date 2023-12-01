@@ -19,42 +19,37 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
     }
 
     /// <summary>
-    /// Executes this operation for the specified nodes, returning a copy of
-    /// them.
+    /// Executes this operation on the specified context.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="annotations">The current annotations.</param>
-    /// <returns>The output nodes.</returns>
-    /// <exception cref="ArgumentNullException">nodes</exception>
-    public override IList<CharNode> Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// <param name="context">The data context.</param>
+    /// <exception cref="ArgumentNullException">context</exception>
+    /// <exception cref="InvalidOperationException">At must be between 1 and
+    /// the length of the text plus 1</exception>
+    public override void Execute(VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(context);
 
-        if (At < 1 || At > nodes.Count + 1)
+        if (At < 1 || At > context.TreeNodes.Count + 1)
         {
             throw new InvalidOperationException("At must be between 1 and " +
                 "the length of the text plus 1");
         }
 
-        AddFeatures(annotations);
+        AddFeatures(context.Features);
 
         int index = At - 1;
-        List<CharNode> text = CloneNodes(nodes);
-        if (index < text.Count)
+        if (index < context.TreeNodes.Count)
         {
-            int count = Math.Min(Run, text.Count - index);
-            text.RemoveRange(index, count);
+            int count = Math.Min(Run, context.TreeNodes.Count - index);
+            context.TreeNodes.RemoveRange(index, count);
         }
 
         if (!string.IsNullOrEmpty(Value))
         {
             List<CharNode> newNodes = Value.Select(
                 c => new CharNode(c, 0)).ToList();
-            text.InsertRange(index, newNodes);
+            context.TreeNodes.InsertRange(index, newNodes);
         }
-
-        return text;
     }
 
     /// <summary>
