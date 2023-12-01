@@ -263,6 +263,22 @@ public sealed class ReplaceBaseVarOperationTest
     }
 
     [Fact]
+    public void Execute_WithFeatures()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("1x2=\"X\" {note=sample}",
+            out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set, features);
+
+        Assert.Equal("Xcde", set.GetText());
+        Assert.Single(features);
+        Assert.Equal("sample", features[0].Value);
+    }
+
+    [Fact]
     public void Execute_Start()
     {
         CharNodeSet set = new("abcde");
