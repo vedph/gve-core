@@ -10,7 +10,7 @@ namespace Gve.Text;
 /// Syntax: <c>ATxRUN:NAME="!VALUE" [TAG ...] {NOTE}</c>.
 /// </summary>
 /// <seealso cref="AnnVarOperation" />
-public partial class AnnotateAnnVarOperation : AnnVarOperation
+public sealed partial class AnnotateAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AnnotateAnnVarOperation"/> class.

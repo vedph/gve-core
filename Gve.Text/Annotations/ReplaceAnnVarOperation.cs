@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Gve.Text.Annotations;
@@ -46,8 +45,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
 
         if (!string.IsNullOrEmpty(Value))
         {
-            List<CharNode> newNodes = Value.Select(
-                c => new CharNode(c, 0)).ToList();
+            IList<CharNode> newNodes = context.Set.GetNodesFor(Value);
             context.TreeNodes.InsertRange(index, newNodes);
         }
     }
