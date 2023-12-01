@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Gve.Text.Annotations;
@@ -131,7 +132,7 @@ public abstract partial class VarOperation : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
-    [GeneratedRegex(@"(?<n>[^=]+)(?<u>:)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
+    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+))")]
     private static partial Regex NameValueRegex();
 
     private static void ParseTaggedOrdinals(string text, VarOperation operation)
@@ -141,8 +142,11 @@ public abstract partial class VarOperation : VarOperationMetadata
         // text is TAG=ORDINAL separated by spaces
         foreach (Match m in NameValueRegex().Matches(text))
         {
+            string value = m.Groups["v1"].Success
+                ? m.Groups["v1"].Value : m.Groups["v2"].Value;
+
             operation.TaggedOrdinals[m.Groups["n"].Value] =
-                int.Parse(m.Groups["v"].Value, CultureInfo.InvariantCulture);
+                int.Parse(value, CultureInfo.InvariantCulture);
         }
     }
 
