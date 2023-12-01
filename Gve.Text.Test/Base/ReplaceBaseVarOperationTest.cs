@@ -1,4 +1,5 @@
 ﻿using Gve.Text.Base;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -267,5 +268,20 @@ public sealed class ReplaceBaseVarOperationTest
             f => f.Name == "note")?.Value);
         Assert.Equal(1, op.TaggedOrdinals["alpha"]);
         Assert.Equal(2, op.TaggedOrdinals["beta"]);
+    }
+
+    [Fact]
+    public void Execute_Start()
+    {
+        CharNodeSet set = new("abcde");
+        List<Feature> features = [];
+        Assert.True(BaseVarOperation.TryParse("1x2=\"X\"",
+            set, out ReplaceBaseVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(set.ToList(), features);
+
+        Assert.Equal("Xcde", set.GetText());
+        Assert.Empty(features);
     }
 }

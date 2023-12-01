@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Gve.Text.Base;
@@ -34,7 +35,7 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
         ArgumentNullException.ThrowIfNull(nodes);
         ArgumentNullException.ThrowIfNull(annotations);
 
-        Set.Replace(At, Run, nodes);
+        Set.Replace(At, Run, new CharNodeSet(Value!).ToList());
         AddFeatures(annotations);
     }
 
