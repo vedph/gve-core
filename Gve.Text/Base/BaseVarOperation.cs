@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 namespace Gve.Text.Base;
 
 /// <summary>
-/// Base for base text variant operations.
+/// Base class for base text variant operations. A base text variant operation
+/// works on a <see cref="CharNodeSet"/> while optionally updating a list of
+/// features.
 /// </summary>
 /// <seealso cref="VarOperation" />
 public abstract class BaseVarOperation : VarOperation
