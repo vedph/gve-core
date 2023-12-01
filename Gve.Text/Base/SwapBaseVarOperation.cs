@@ -26,9 +26,7 @@ public sealed class SwapBaseVarOperation : BaseVarOperation
     /// Initializes a new instance of the <see cref="SwapBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="set">The set.</param>
-    public SwapBaseVarOperation(CharNodeSet set)
-        : base(VarOperationType.Swap, set)
+    public SwapBaseVarOperation() : base(VarOperationType.Swap)
     {
     }
 
@@ -36,34 +34,30 @@ public sealed class SwapBaseVarOperation : BaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations" /> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    public override void Execute(CharNodeSet set, IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        Set.Swap(At, Run, With, WithRun);
+        set.Swap(At, Run, With, WithRun);
     }
 
     /// <summary>
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text or set</exception>
     /// <exception cref="FormatException">Invalid swap operation: {text}</exception>
-    internal static SwapBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
+    internal static SwapBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
 
-        SwapBaseVarOperation op = new(set);
+        SwapBaseVarOperation op = new();
         // ATxRUN
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);

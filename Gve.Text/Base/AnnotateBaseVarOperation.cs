@@ -14,9 +14,7 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
     /// Initializes a new instance of the <see cref="AnnotateBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="set">The set.</param>
-    public AnnotateBaseVarOperation(CharNodeSet set)
-        : base(VarOperationType.Annotate, set)
+    public AnnotateBaseVarOperation() : base(VarOperationType.Annotate)
     {
     }
 
@@ -24,16 +22,15 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations" /> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
     /// <returns>
     /// New nodes resulting from the execution.
     /// </returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    public override void Execute(CharNodeSet set, IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);

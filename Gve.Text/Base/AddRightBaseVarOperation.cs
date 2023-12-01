@@ -13,9 +13,7 @@ public sealed class AddRightBaseVarOperation : AddBaseVarOperation
     /// Initializes a new instance of the <see cref="AddRightBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="set">The set.</param>
-    public AddRightBaseVarOperation(CharNodeSet set)
-        : base(VarOperationType.AddLeft, set)
+    public AddRightBaseVarOperation() : base(VarOperationType.AddLeft)
     {
         IsRight = true;
     }
@@ -24,36 +22,32 @@ public sealed class AddRightBaseVarOperation : AddBaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations" /> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
     /// <returns>
     /// New nodes resulting from the execution.
     /// </returns>
     /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    public override void Execute(CharNodeSet set, IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        Set.InsertAfter(At, nodes);
+        set.InsertAfter(At, Value ?? "");
     }
 
     /// <summary>
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static AddRightBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
+    internal static AddRightBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
 
-        AddRightBaseVarOperation op = new(set);
+        AddRightBaseVarOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Run = 0;

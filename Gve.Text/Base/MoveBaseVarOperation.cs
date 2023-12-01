@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Gve.Text.Base;
 
@@ -23,9 +21,7 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     /// Initializes a new instance of the <see cref="MoveBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="set">The set.</param>
-    public MoveBaseVarOperation(CharNodeSet set) :
-        base(VarOperationType.Move, set)
+    public MoveBaseVarOperation() : base(VarOperationType.Move)
     {
     }
 
@@ -33,34 +29,30 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations" /> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
-    /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// <exception cref="ArgumentNullException">set or annotations</exception>
+    public override void Execute(CharNodeSet set, IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        Set.Move(At, Run, To);
+        set.Move(At, Run, To);
     }
 
     /// <summary>
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text or set</exception>
     /// <exception cref="FormatException">Invalid move operation: {text}</exception>
-    internal static MoveBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
+    internal static MoveBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
 
-        MoveBaseVarOperation op = new(set);
+        MoveBaseVarOperation op = new();
         // AT
         string body = ParseHeadAndTail(text, op);
         Match m = AtRunRegex().Match(body);

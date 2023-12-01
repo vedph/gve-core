@@ -21,9 +21,7 @@ public abstract class AddBaseVarOperation : BaseVarOperation
     /// class.
     /// </summary>
     /// <param name="type">The operation type.</param>
-    /// <param name="set">The set.</param>
-    protected AddBaseVarOperation(VarOperationType type, CharNodeSet set)
-        : base(type, set)
+    protected AddBaseVarOperation(VarOperationType type) : base(type)
     {
     }
 
@@ -31,21 +29,20 @@ public abstract class AddBaseVarOperation : BaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations" /> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
     /// <returns>
     /// New nodes resulting from the execution.
     /// </returns>
-    /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
-        IList<Feature> annotations)
+    /// <exception cref="ArgumentNullException">set or annotations</exception>
+    public override void Execute(CharNodeSet set, IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
         AddFeatures(annotations);
-        if (IsRight) Set.InsertAfter(At, nodes);
-        else Set.InsertBefore(At, nodes);
+        if (IsRight) set.InsertAfter(At, Value ?? "");
+        else set.InsertBefore(At, Value ?? "");
     }
 
     /// <summary>

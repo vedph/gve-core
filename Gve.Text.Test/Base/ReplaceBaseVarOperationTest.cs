@@ -7,24 +7,16 @@ namespace Gve.Text.Test.Base;
 
 public sealed class ReplaceBaseVarOperationTest
 {
-    private readonly CharNodeSet _set;
-
-    public ReplaceBaseVarOperationTest()
-    {
-        _set = new CharNodeSet("alpha beta gamma");
-    }
-
     [Fact]
     public void Parse_Empty_Invalid()
     {
-        Assert.False(BaseVarOperation.TryParse("", _set,
-            out ReplaceBaseVarOperation? _));
+        Assert.False(BaseVarOperation.TryParse("", out ReplaceBaseVarOperation? _));
     }
 
     [Fact]
     public void Parse_Invalid_Invalid()
     {
-        Assert.False(BaseVarOperation.TryParse("invalid", _set,
+        Assert.False(BaseVarOperation.TryParse("invalid",
             out ReplaceBaseVarOperation? _));
     }
 
@@ -32,7 +24,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValue_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\"",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -43,7 +35,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_AValue_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12=\"value\"",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(1, op.Run);
@@ -54,7 +46,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_AValueTags_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12=\"value\" [alpha=1 beta=2]",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(1, op.Run);
@@ -67,7 +59,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValueRank_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\"^2",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -79,7 +71,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValueRankTags_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\"^2 [alpha=1 beta=2]",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -93,7 +85,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValueGroup_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\"@group",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -106,7 +98,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"@group [alpha=1 beta=2]",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -120,7 +112,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValueRankGroup_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\"^2@group",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -133,7 +125,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"^2@group [alpha=1 beta=2]",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -147,7 +139,7 @@ public sealed class ReplaceBaseVarOperationTest
     public void Parse_ARValueNote_Ok()
     {
         Assert.True(BaseVarOperation.TryParse("12x3=\"value\" {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -161,7 +153,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\" [alpha=1 beta=2] {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -177,7 +169,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"^2 {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -192,7 +184,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"^2 [alpha=1 beta=2] {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -209,7 +201,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"^2@group {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -225,7 +217,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"^2@group [alpha=1 beta=2] {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -243,7 +235,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"@group {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -258,7 +250,7 @@ public sealed class ReplaceBaseVarOperationTest
     {
         Assert.True(BaseVarOperation.TryParse(
             "12x3=\"value\"@group [alpha=1 beta=2] {note=\"a note\"}",
-            _set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
         Assert.Equal(12, op.At);
         Assert.Equal(3, op.Run);
@@ -276,10 +268,10 @@ public sealed class ReplaceBaseVarOperationTest
         CharNodeSet set = new("abcde");
         List<Feature> features = [];
         Assert.True(BaseVarOperation.TryParse("1x2=\"X\"",
-            set, out ReplaceBaseVarOperation? op));
+            out ReplaceBaseVarOperation? op));
         Assert.NotNull(op);
 
-        op.Execute(set.ToList(), features);
+        op.Execute(set, features);
 
         Assert.Equal("Xcde", set.GetText());
         Assert.Empty(features);

@@ -15,9 +15,7 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// Initializes a new instance of the <see cref="ReplaceBaseVarOperation"/>
     /// class.
     /// </summary>
-    /// <param name="set">The set.</param>
-    public ReplaceBaseVarOperation(CharNodeSet set) :
-        base(VarOperationType.Replace, set)
+    public ReplaceBaseVarOperation() : base(VarOperationType.Replace)
     {
     }
 
@@ -25,17 +23,17 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// Executes this operation on the specified nodes, updating the received
     /// <paramref name="annotations"/> if required.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The set.</param>
     /// <param name="annotations">The annotations.</param>
     /// <returns>New nodes resulting from the execution.</returns>
-    /// <exception cref="ArgumentNullException">nodes or annotations</exception>
-    public override void Execute(IList<CharNode> nodes,
+    /// <exception cref="ArgumentNullException">set or annotations</exception>
+    public override void Execute(CharNodeSet set,
         IList<Feature> annotations)
     {
-        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
         ArgumentNullException.ThrowIfNull(annotations);
 
-        Set.Replace(At, Run, new CharNodeSet(Value!).ToList());
+        set.Replace(At, Run, new CharNodeSet(Value!).ToList());
         AddFeatures(annotations);
     }
 
@@ -43,16 +41,13 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// Parses the operation.
     /// </summary>
     /// <param name="text">The text.</param>
-    /// <param name="set">The nodes set.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text or set</exception>
-    internal static ReplaceBaseVarOperation ParseOperation(string text,
-        CharNodeSet set)
+    internal static ReplaceBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(set);
 
-        ReplaceBaseVarOperation op = new(set);
+        ReplaceBaseVarOperation op = new();
         // "VALUE"
         string body = ParseHeadAndTail(text, op);
         op.Value = body.Trim('"');
