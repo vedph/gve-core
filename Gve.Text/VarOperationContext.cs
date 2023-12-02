@@ -40,9 +40,44 @@ public class VarOperationContext
     public VarOperationContext(CharNodeSet set)
     {
         Set = set ?? throw new ArgumentNullException(nameof(set));
-        TreeNodes = set.Where(n => !n.IsDeleted).Select(n => n.Clone()).ToList();
+        TreeNodes = GetTreeNodesFromSet(set);
         Features = new List<Feature>();
         Tags = [];
+    }
+
+    /// <summary>
+    /// Gets tree nodes from the specified set.
+    /// </summary>
+    /// <param name="set">The set.</param>
+    /// <returns>Tree nodes.</returns>
+    public static List<CharNode> GetTreeNodesFromSet(CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(set);
+        return set.Where(n => !n.IsDeleted).Select(n => n.Clone()).ToList();
+    }
+
+    /// <summary>
+    /// Merges the specified tree nodes back into their source set.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <param name="set">The source set of nodes.</param>
+    public static void MergeTreeNodesInSet(IList<CharNode> nodes,
+        CharNodeSet set)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(set);
+
+        // ensure that each node in nodes is linked to the its left node
+        for (int i = 1; i < nodes.Count; i++)
+            nodes[i].LeftNode = nodes[i - 1];
+
+        // if any deleted node in set was linked to any of nodes,
+        // then link its right node's left node to the deleted node
+        foreach (CharNode node in set.Where(n => n.IsDeleted))
+        {
+            if (node.LeftNode != null && nodes.Contains(node.LeftNode))
+                set.GetRightNodeOf(node)!.LeftNode = node;
+        }
     }
 
     /// <summary>

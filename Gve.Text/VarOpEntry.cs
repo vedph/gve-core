@@ -6,7 +6,9 @@ using System.Text;
 namespace Gve.Text;
 
 /// <summary>
-/// An entry in a set of variant generation operations.
+/// An entry in a set of variant generation operations. This is a base operation
+/// whose value is either directly specified, or set by a tree of annotation
+/// operations. In the latter case, the tree is rooted at <see cref="Root"/>.
 /// </summary>
 public class VarOpEntry
 {

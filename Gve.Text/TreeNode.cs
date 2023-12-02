@@ -58,6 +58,27 @@ public class TreeNode<T>
     }
 
     /// <summary>
+    /// Gets the Y (depth) and X (sibling ordinal number) coordinates of
+    /// this node.
+    /// </summary>
+    /// <returns>Tuple with Y and X.</returns>
+    /// <exception cref="InvalidOperationException">Parent does not contain
+    /// this node</exception>
+    public Tuple<int, int> GetYX()
+    {
+        int y = GetDepth();
+        if (Parent == null) return Tuple.Create(y, 1);
+
+        int x = 1;
+        foreach (TreeNode<T> sibling in Parent.Children)
+        {
+            if (sibling == this) return Tuple.Create(y, x);
+            x++;
+        }
+        throw new InvalidOperationException("Parent does not contain this node.");
+    }
+
+    /// <summary>
     /// Gets the root node.
     /// </summary>
     /// <returns>Root node.</returns>
@@ -91,6 +112,46 @@ public class TreeNode<T>
         ArgumentNullException.ThrowIfNull(children);
 
         foreach (TreeNode<T> child in children) AddChild(child);
+    }
+
+    /// <summary>
+    /// Adds the specified node before this node.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <exception cref="InvalidOperationException">Parent is null,  or
+    /// Parent does not contain this node.</exception>
+    public void AddBeforeSelf(TreeNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+
+        if (Parent == null)
+            throw new InvalidOperationException("Parent is null.");
+
+        int index = Parent.Children.IndexOf(this);
+        if (index < 0)
+            throw new InvalidOperationException("Parent does not contain this node.");
+
+        Parent.Children.Insert(index, node);
+    }
+
+    /// <summary>
+    /// Adds the specified node after this node.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <exception cref="InvalidOperationException">Parent is null,  or
+    /// Parent does not contain this node.</exception>
+    public void AddAfterSelf(TreeNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+
+        if (Parent == null)
+            throw new InvalidOperationException("Parent is null.");
+
+        int index = Parent.Children.IndexOf(this);
+        if (index < 0)
+            throw new InvalidOperationException("Parent does not contain this node.");
+
+        Parent.Children.Insert(index + 1, node);
     }
 
     /// <summary>
