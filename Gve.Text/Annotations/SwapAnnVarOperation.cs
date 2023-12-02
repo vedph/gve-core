@@ -62,6 +62,10 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
         context.TreeNodes.RemoveRange(ri, WithRun);
         context.TreeNodes.RemoveRange(li, Run);
 
+        // adjust the indexes if necessary
+        if (li < ri) ri -= Run;
+        else li -= WithRun;
+
         // insert the nodes at the new positions
         context.TreeNodes.InsertRange(ri, lv);
         context.TreeNodes.InsertRange(li, rv);

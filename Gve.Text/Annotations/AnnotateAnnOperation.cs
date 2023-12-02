@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using Gve.Text.Annotations;
 
 namespace Gve.Text;
@@ -10,7 +9,7 @@ namespace Gve.Text;
 /// Syntax: <c>ATxRUN:NAME="!VALUE" [TAG ...] {NOTE}</c>.
 /// </summary>
 /// <seealso cref="AnnVarOperation" />
-public sealed partial class AnnotateAnnVarOperation : AnnVarOperation
+public sealed class AnnotateAnnVarOperation : AnnVarOperation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AnnotateAnnVarOperation"/> class.
@@ -18,9 +17,6 @@ public sealed partial class AnnotateAnnVarOperation : AnnVarOperation
     public AnnotateAnnVarOperation() : base(VarOperationType.Annotate)
     {
     }
-
-    [GeneratedRegex(@"^(?<name>[^=]+)=""(?<value>.*)""$")]
-    private static partial Regex NameValueRegex();
 
     /// <summary>
     /// Executes this operation on the specified context.

@@ -36,11 +36,11 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid annotate operation: {text}</exception>
-    internal static AnnotateAnnVarOperation ParseOperation(string text)
+    internal static AnnotateBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        AnnotateAnnVarOperation op = new();
+        AnnotateBaseVarOperation op = new();
         ParseHeadAndTail(text, op);
 
         return op;
