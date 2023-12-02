@@ -10,7 +10,7 @@ public sealed class MoveBaseVarOperationTest
     {
         VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("1>3",
-                                  out MoveBaseVarOperation? op));
+            out MoveBaseVarOperation? op));
         Assert.NotNull(op);
 
         op.Execute(context);
@@ -24,7 +24,7 @@ public sealed class MoveBaseVarOperationTest
     {
         VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("3>2",
-                                  out MoveBaseVarOperation? op));
+            out MoveBaseVarOperation? op));
         Assert.NotNull(op);
 
         op.Execute(context);
@@ -38,7 +38,7 @@ public sealed class MoveBaseVarOperationTest
     {
         VarOperationContext context = new(new("abcde"));
         Assert.True(BaseVarOperation.TryParse("5>2",
-                                  out MoveBaseVarOperation? op));
+            out MoveBaseVarOperation? op));
         Assert.NotNull(op);
 
         op.Execute(context);

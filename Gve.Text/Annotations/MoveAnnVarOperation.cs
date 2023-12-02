@@ -37,7 +37,7 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
 
         AddFeatures(context.Features);
 
-        // Ensure At, Run, To, and ToRun are within the valid range
+        // ensure At, Run, To, and ToRun are within the valid range
         if (At < 1 || At + Run - 1 > context.TreeNodes.Count || To < 1 ||
             To > context.TreeNodes.Count)
         {
@@ -51,6 +51,7 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
         // extract the nodes to be moved
         List<CharNode> movingNodes = context.TreeNodes.GetRange(indexAt, Run);
         context.TreeNodes.RemoveRange(indexAt, Run);
+        if (indexAt < indexTo) indexTo -= Run;
 
         // insert the extracted nodes at the new position
         context.TreeNodes.InsertRange(indexTo, movingNodes);
