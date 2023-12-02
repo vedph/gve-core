@@ -35,4 +35,60 @@ public sealed class ReplaceAnnVarOperationTest
         Assert.Equal("Xcde", context.GetTreeText());
         Assert.Empty(features);
     }
+
+    [Fact]
+    public void Execute_Mid()
+    {
+        VarOperationContext context = new(new("abcde"));
+        Assert.True(AnnVarOperation.TryParse("3=\"X\"",
+            out ReplaceAnnVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(context);
+
+        Assert.Equal("abXde", context.GetTreeText());
+        Assert.Empty(context.Features);
+    }
+
+    [Fact]
+    public void Execute_End()
+    {
+        VarOperationContext context = new(new("abcde"));
+        Assert.True(AnnVarOperation.TryParse("5=\"X\"",
+            out ReplaceAnnVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(context);
+
+        Assert.Equal("abcdX", context.GetTreeText());
+        Assert.Empty(context.Features);
+    }
+
+    [Fact]
+    public void Execute_Shorter()
+    {
+        VarOperationContext context = new(new("abcde"));
+        Assert.True(AnnVarOperation.TryParse("3x2=\"X\"",
+            out ReplaceAnnVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(context);
+
+        Assert.Equal("abXe", context.GetTreeText());
+        Assert.Empty(context.Features);
+    }
+
+    [Fact]
+    public void Execute_Longer()
+    {
+        VarOperationContext context = new(new("abcde"));
+        Assert.True(AnnVarOperation.TryParse("3=\"XY\"",
+            out ReplaceAnnVarOperation? op));
+        Assert.NotNull(op);
+
+        op.Execute(context);
+
+        Assert.Equal("abXYde", context.GetTreeText());
+        Assert.Empty(context.Features);
+    }
 }
