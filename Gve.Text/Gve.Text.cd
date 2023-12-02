@@ -127,6 +127,7 @@
       <Method Name="LocOpRegex" Hidden="true" />
       <Method Name="MetadataRegex" Hidden="true" />
       <Method Name="NameValueRegex" Hidden="true" />
+      <Method Name="ParseTaggedOrdinals" Hidden="true" />
       <Method Name="TailRegex" Hidden="true" />
       <Method Name="VarOperation" Hidden="true" />
     </Members>
