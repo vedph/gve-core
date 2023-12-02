@@ -43,6 +43,21 @@ public class TreeNode<T>
     }
 
     /// <summary>
+    /// Gets the depth.
+    /// </summary>
+    public int GetDepth()
+    {
+        int depth = 0;
+        TreeNode<T>? node = this;
+        while (node.Parent != null)
+        {
+            depth++;
+            node = node.Parent;
+        }
+        return depth;
+    }
+
+    /// <summary>
     /// Gets the root node.
     /// </summary>
     /// <returns>Root node.</returns>
