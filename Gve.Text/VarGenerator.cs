@@ -58,15 +58,42 @@ public sealed class VarGenerator
         return tags.OrderBy(s => s).ToList();
     }
 
+    /// <summary>
+    /// Gets the operation entries for the specified <paramref name="tag"/>,
+    /// sorted by their ordinal for that tag.
+    /// </summary>
+    /// <param name="tag">The tag.</param>
+    /// <returns>The entries.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
+    public IEnumerable<VarOpEntry> GetVersionEntries(string tag)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        return Entries.Where(e => e.Operation.TaggedOrdinals.ContainsKey(tag))
+            .OrderBy(e => e.Operation.TaggedOrdinals[tag]);
+    }
+
+    /// <summary>
+    /// Generates variants from the specified text.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Root node result.</returns>
     public TreeNode<VarOperationResult> Generate(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         TreeNode<VarOperationResult> result = new();
+
         foreach (string tag in GetVersionTags())
         {
             _logger?.LogInformation("Generating variants for tag {tag}", tag);
-            // TODO
+            CharNodeSet set = new(text);
+
+            foreach (VarOpEntry entry in GetVersionEntries(tag))
+            {
+                _logger?.LogInformation("{operation}", entry.Operation.ToString());
+                // TODO
+            }
         }
 
         return result;
