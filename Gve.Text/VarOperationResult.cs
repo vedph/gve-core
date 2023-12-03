@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Gve.Text;
 
@@ -16,36 +15,18 @@ public class VarOperationResult
     /// <summary>
     /// Gets the nodes.
     /// </summary>
-    public IList<CharNode> Nodes { get; }
-
-    /// <summary>
-    /// Gets the features.
-    /// </summary>
-    public IList<Feature> Features { get; }
-
-    /// <summary>
-    /// Gets the tags.
-    /// </summary>
-    public HashSet<string> Tags { get; }
+    public VarOperationContext Context { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperationResult"/> class.
     /// </summary>
     /// <param name="operation">The operation.</param>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="features">The features.</param>
-    /// <param name="tags">The tags.</param>
-    /// <exception cref="ArgumentNullException">operation or nodes or features
-    /// </exception>
-    public VarOperationResult(VarOperation operation, IList<CharNode> nodes,
-        IList<Feature> features, IList<string> tags)
+    /// <param name="context">The current operation context.</param>
+    /// <exception cref="ArgumentNullException">operation or context</exception>
+    public VarOperationResult(VarOperation operation, VarOperationContext context)
     {
-        ArgumentNullException.ThrowIfNull(tags);
-
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
-        Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
-        Features = features ?? throw new ArgumentNullException(nameof(features));
-        Tags = new(tags);
+        Context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>
@@ -56,6 +37,6 @@ public class VarOperationResult
     /// </returns>
     public override string ToString()
     {
-        return $"{Operation} {new CharNodeSet(Nodes)}";
+        return $"{Operation} {Context}";
     }
 }

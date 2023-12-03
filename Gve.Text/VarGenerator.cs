@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Text;
 
@@ -17,7 +15,7 @@ public sealed class VarGenerator
     /// <summary>
     /// Gets the entries.
     /// </summary>
-    public IList<VarOpEntry> Entries { get; }
+    public IList<VarOperationEntry> Entries { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarGenerator"/> class.
@@ -26,7 +24,7 @@ public sealed class VarGenerator
     public VarGenerator(ILogger? logger = null)
     {
         _logger = logger;
-        Entries = new List<VarOpEntry>();
+        Entries = new List<VarOperationEntry>();
     }
 
     /// <summary>
@@ -38,7 +36,7 @@ public sealed class VarGenerator
     {
         HashSet<string> tags = [];
 
-        foreach (VarOpEntry entry in Entries)
+        foreach (VarOperationEntry entry in Entries)
         {
             // base operation
             foreach (string tag in entry.Operation.TaggedOrdinals.Keys)
@@ -65,12 +63,37 @@ public sealed class VarGenerator
     /// <param name="tag">The tag.</param>
     /// <returns>The entries.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public IEnumerable<VarOpEntry> GetVersionEntries(string tag)
+    public IEnumerable<VarOperationEntry> GetVersionEntries(string tag)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
         return Entries.Where(e => e.Operation.TaggedOrdinals.ContainsKey(tag))
             .OrderBy(e => e.Operation.TaggedOrdinals[tag]);
+    }
+
+    public void ExecuteEntry(VarOperationEntry entry, VarOperationContext context,
+        TreeNode<VarOperationResult> result)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(result);
+
+        if (entry.Root != null)
+        {
+            entry.Root.Traverse((node) =>
+            {
+                // TODO
+                node.Payload?.Execute(context);
+                return true;
+            });
+        }
+        else
+        {
+            // just execute the base operation and linearly add the result
+            // as a child of the received node
+            entry.Operation.Execute(context);
+            VarOperationResult r = new(entry.Operation, context.Clone());
+            result.AddChild(new TreeNode<VarOperationResult>(r));
+        }
     }
 
     /// <summary>
@@ -89,7 +112,7 @@ public sealed class VarGenerator
             _logger?.LogInformation("Generating variants for tag {tag}", tag);
             CharNodeSet set = new(text);
 
-            foreach (VarOpEntry entry in GetVersionEntries(tag))
+            foreach (VarOperationEntry entry in GetVersionEntries(tag))
             {
                 _logger?.LogInformation("{operation}", entry.Operation.ToString());
                 // TODO

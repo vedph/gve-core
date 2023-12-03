@@ -10,7 +10,7 @@ namespace Gve.Text;
 /// whose value is either directly specified, or set by a tree of annotation
 /// operations. In the latter case, the tree is rooted at <see cref="Root"/>.
 /// </summary>
-public class VarOpEntry
+public class VarOperationEntry
 {
     /// <summary>
     /// Gets the base operation.
@@ -24,13 +24,13 @@ public class VarOpEntry
     public TreeNode<AnnVarOperation>? Root { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VarOpEntry"/> class.
+    /// Initializes a new instance of the <see cref="VarOperationEntry"/> class.
     /// </summary>
     /// <param name="operation">The base operation.</param>
     /// <param name="root">The optional root node of a tree of annotation
     /// operations stemming from <paramref name="operation"/>.</param>
     /// <exception cref="ArgumentNullException">operation</exception>
-    public VarOpEntry(BaseVarOperation operation,
+    public VarOperationEntry(BaseVarOperation operation,
         TreeNode<AnnVarOperation>? root)
     {
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
@@ -66,7 +66,7 @@ public class VarOpEntry
     }
 
     /// <summary>
-    /// Parses the specified text representing a <see cref="VarOpEntry"/>.
+    /// Parses the specified text representing a <see cref="VarOperationEntry"/>.
     /// In it, the first line is the base operation, and the rest is the
     /// annotations tree, where each node is indented according to its depth
     /// and prefixed by a dash and a space.
@@ -74,7 +74,7 @@ public class VarOpEntry
     /// <param name="text">The text.</param>
     /// <returns>Entry.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    public static VarOpEntry Parse(string text)
+    public static VarOperationEntry Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -127,6 +127,6 @@ public class VarOpEntry
             }
         }
 
-        return new VarOpEntry(operation, root);
+        return new VarOperationEntry(operation, root);
     }
 }

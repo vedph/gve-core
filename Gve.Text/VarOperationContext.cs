@@ -90,6 +90,18 @@ public class VarOperationContext
     }
 
     /// <summary>
+    /// Deeply clones this instance.
+    /// </summary>
+    /// <returns>New context.</returns>
+    public virtual VarOperationContext Clone()
+    {
+        return new VarOperationContext(Set.Clone())
+        {
+            Tags = new HashSet<string>(Tags)
+        };
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>String.</returns>
