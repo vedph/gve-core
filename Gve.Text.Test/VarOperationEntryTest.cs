@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Gve.Text.Annotations;
+using Xunit;
 
 namespace Gve.Text.Test;
 
@@ -13,8 +14,33 @@ public sealed class VarOperationEntryTest
             "    - 1=\"B\" [a]\n" +
             "  - 1=\"P\" [b]\n";
 
-        VarOperationEntry entry = VarOperationEntry.Parse(text);
+        VarOperationEntry? entry = VarOperationEntry.Parse(text);
 
+        Assert.NotNull(entry);
         Assert.Equal(2, entry.Operation.TaggedOrdinals.Count);
+
+        Assert.NotNull(entry.Root);
+
+        // root has no payload and 2 children
+        Assert.Null(entry.Root.Payload);
+        Assert.Equal(2, entry.Root.Children.Count);
+
+        // 1st child has payload and 1 child
+        TreeNode<AnnVarOperation> node = entry.Root.Children[0];
+        Assert.NotNull(node.Payload);
+        Assert.Single(node.Children);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
+
+        // child of 1st child has payload and no children
+        node = node.Children[0];
+        Assert.NotNull(node.Payload);
+        Assert.Empty(node.Children);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
+
+        // 2nd child has payload and no children
+        node = entry.Root.Children[1];
+        Assert.NotNull(node.Payload);
+        Assert.Empty(node.Children);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
     }
 }

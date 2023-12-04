@@ -48,7 +48,7 @@ public partial class VarOperationEntry
     {
         StringBuilder sb = new();
 
-        sb.Append(Operation.ToString());
+        sb.Append("- ").Append(Operation.ToString());
 
         if (Root != null)
         {
@@ -80,7 +80,7 @@ public partial class VarOperationEntry
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Tree is allowed only for replacements.
     /// </exception>
-    public static VarOperationEntry Parse(string text)
+    public static VarOperationEntry? Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -141,6 +141,9 @@ public partial class VarOperationEntry
                 }
             }
         }
+
+        // if root (which has no payload) has 1 child, then it is redundant
+        if (root?.Children.Count == 1) root = root.Children[0];
 
         return new VarOperationEntry(operation, root);
     }
