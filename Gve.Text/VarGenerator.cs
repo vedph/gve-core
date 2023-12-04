@@ -13,7 +13,8 @@ public sealed class VarGenerator
     private readonly ILogger? _logger;
 
     /// <summary>
-    /// Gets the entries.
+    /// Gets the unsorted base operation entries to apply to the base text
+    /// to generate its variants.
     /// </summary>
     public IList<VarOperationEntry> Entries { get; }
 
@@ -71,28 +72,49 @@ public sealed class VarGenerator
             .OrderBy(e => e.Operation.TaggedOrdinals[tag]);
     }
 
-    public void ExecuteEntry(VarOperationEntry entry, VarOperationContext context,
-        TreeNode<VarOperationResult> result)
+    private void ProcessNextEntry(VarGeneratorContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
-        ArgumentNullException.ThrowIfNull(result);
 
-        if (entry.Root != null)
+        _logger?.LogInformation("EntryIndex {index}", context.EntryIndex);
+
+        // get the entry to process: if there are no more entries, we're done
+        if (context.EntryIndex >= context.Entries.Count)
         {
-            entry.Root.Traverse((node) =>
-            {
-                // TODO
-                node.Payload?.Execute(context);
-                return true;
-            });
+            _logger?.LogInformation("Result {count}", context.Results.Count);
+            context.Results.Add(context.OpContext.Set.Clone());
+            return;
         }
+        VarOperationEntry entry = context.Entries[context.EntryIndex];
+
+        // if we just have a simple base operation, execute it
+        if (entry.Root == null)
+        {
+            _logger?.LogInformation("Operation {op}", entry.Operation);
+            entry.Operation.Execute(context.OpContext);
+            context.EntryIndex++;
+        }
+        // otherwise, we have a tree of operations to process recursively
         else
         {
-            // just execute the base operation and linearly add the result
-            // as a child of the received node
-            entry.Operation.Execute(context);
-            VarOperationResult r = new(entry.Operation, context.Clone());
-            result.AddChild(new TreeNode<VarOperationResult>(r));
+            _logger?.LogInformation("Tree {root}", entry.Root);
+            entry.Root.Traverse((node) =>
+            {
+                _logger?.LogInformation("Node {node}", node);
+                if (node.Payload != null)
+                {
+                    // create a new context for this node
+                    VarGeneratorContext newContext = new(context);
+
+                    // execute the operation
+                    node.Payload.Execute(newContext.OpContext);
+
+                    // process the next entry
+                    newContext.EntryIndex++;
+                    ProcessNextEntry(newContext);
+                }
+                return true;
+            });
         }
     }
 
@@ -101,24 +123,28 @@ public sealed class VarGenerator
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Root node result.</returns>
-    public TreeNode<VarOperationResult> Generate(string text)
+    public IDictionary<string, IList<CharNodeSet>> Generate(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        TreeNode<VarOperationResult> result = new();
+        Dictionary<string, IList<CharNodeSet>> results = [];
 
+        // for each version tag
         foreach (string tag in GetVersionTags())
         {
-            _logger?.LogInformation("Generating variants for tag {tag}", tag);
-            CharNodeSet set = new(text);
+            _logger?.LogInformation("Version {tag}", tag);
 
-            foreach (VarOperationEntry entry in GetVersionEntries(tag))
-            {
-                _logger?.LogInformation("{operation}", entry.Operation.ToString());
-                // TODO
-            }
+            // create a new context for this tag
+            VarGeneratorContext context = new(
+                text, tag, GetVersionEntries(tag).ToList());
+
+            // process all the entries recursively
+            ProcessNextEntry(context);
+
+            // store the results
+            results[tag] = context.Results;
         }
 
-        return result;
+        return results;
     }
 }

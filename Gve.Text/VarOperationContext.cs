@@ -10,14 +10,17 @@ namespace Gve.Text;
 public class VarOperationContext
 {
     /// <summary>
-    /// Gets the set of character nodes to work on for base operations.
+    /// Gets the set of character nodes to work on for base operations. This
+    /// is derived from the input base text.
     /// </summary>
     public CharNodeSet Set { get; }
 
     /// <summary>
     /// Gets the tree nodes to work on for annotation operations. These are
     /// initially cloned from the <see cref="Set"/> and then modified by the
-    /// annotation operations.
+    /// annotation operations, and represent the base text characters ordered
+    /// into a list. Annotation operations work on this list relying on the
+    /// indexes of each node in it, rather than on the left link of each node.
     /// </summary>
     public List<CharNode> TreeNodes { get; }
 

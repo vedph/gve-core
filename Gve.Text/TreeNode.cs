@@ -90,6 +90,19 @@ public class TreeNode<T>
     }
 
     /// <summary>
+    /// Deeply clones this instance and all its descendants. This creates a new
+    /// tree node from this node, and clones all the descendants recursively.
+    /// Payloads are not cloned.
+    /// </summary>
+    /// <returns>New node.</returns>
+    public TreeNode<T> Clone()
+    {
+        TreeNode<T> newNode = new(Payload);
+        foreach (TreeNode<T> child in Children) newNode.AddChild(child.Clone());
+        return newNode;
+    }
+
+    /// <summary>
     /// Adds the specified node as a child of this node.
     /// </summary>
     /// <param name="child">The child.</param>
