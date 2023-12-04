@@ -24,6 +24,8 @@ public partial class VarOperationEntry
     /// </summary>
     public TreeNode<AnnVarOperation>? Root { get; }
 
+    private static readonly string[] _newlines = ["\r\n", "\r", "\n"];
+
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperationEntry"/> class.
     /// </summary>
@@ -42,7 +44,7 @@ public partial class VarOperationEntry
     /// Converts to string.
     /// </summary>
     /// <returns>
-    /// A <see cref="string" /> that represents this instance.
+    /// A <see cref="string"/> that represents this instance.
     /// </returns>
     public override string ToString()
     {
@@ -85,7 +87,9 @@ public partial class VarOperationEntry
         ArgumentNullException.ThrowIfNull(text);
 
         Regex prefixRegex = EntryPrefixRegex();
-        string[] lines = text.Split('\n');
+        string[] lines = text.Split(_newlines,
+            StringSplitOptions.RemoveEmptyEntries);
+
         BaseVarOperation operation = BaseVarOperation.Parse<BaseVarOperation>(
             prefixRegex.Replace(lines[0], ""));
 

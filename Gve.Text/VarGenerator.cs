@@ -11,6 +11,8 @@ namespace Gve.Text;
 /// </summary>
 public sealed class VarGenerator
 {
+    private static readonly string[] _newlines = ["\r\n", "\r", "\n"];
+
     private readonly ILogger? _logger;
 
     /// <summary>
@@ -54,7 +56,7 @@ public sealed class VarGenerator
         Entries.Clear();
 
         // split the text into lines
-        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" },
+        string[] lines = text.Split(_newlines,
             StringSplitOptions.RemoveEmptyEntries);
 
         // for each line, collect it and all the lines that follow until they

@@ -63,7 +63,7 @@ public abstract partial class VarOperation : VarOperationMetadata
     private static partial Regex HeadRegex();
 
     [GeneratedRegex(
-        @"(?:\^(?<rank>[0-9]+))?(?:@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^\]]+)\])?(?:\s*\{(?<meta>[^\}]+)\})?$")]
+        @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^]}]+)\])?(?:\s*\{(?<meta>[^}]+)\})?$")]
     private static partial Regex TailRegex();
 
     [GeneratedRegex(@"(?<n>[^=]+)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
@@ -135,7 +135,7 @@ public abstract partial class VarOperation : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
-    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))")]
+    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))?")]
     private static partial Regex NameValueRegex();
 
     private static void ParseTaggedOrdinals(string text, VarOperation operation)
@@ -187,7 +187,7 @@ public abstract partial class VarOperation : VarOperationMetadata
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
 
-        operation.Rank = tail.Groups["rank"].Length > 0
+        operation.Rank = tail.Groups["rank"].Success
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
