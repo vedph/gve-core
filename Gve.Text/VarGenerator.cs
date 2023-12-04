@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Gve.Text;
 
@@ -26,6 +27,55 @@ public sealed class VarGenerator
     {
         _logger = logger;
         Entries = new List<VarOperationEntry>();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VarGenerator"/> class.
+    /// </summary>
+    /// <param name="entryText">The text representing the entries to be set.</param>
+    /// <param name="logger">The optional logger.</param>
+    public VarGenerator(string entryText, ILogger? logger = null)
+    {
+        _logger = logger;
+        Entries = new List<VarOperationEntry>();
+        SetEntries(entryText);
+    }
+
+    /// <summary>
+    /// Set the entries from the specified text.
+    /// </summary>
+    /// <param name="text">The text to parse.</param>
+    /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="FormatException">Invalid entry line.</exception>
+    public void SetEntries(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        Entries.Clear();
+
+        // split the text into lines
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" },
+            StringSplitOptions.RemoveEmptyEntries);
+
+        // for each line, collect it and all the lines that follow until they
+        // do not start with a dash, then parse the collected lines as an entry
+        // via VarOperationEntry.Parse and add to the entries
+        StringBuilder sb = new();
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i];
+            if (!line.StartsWith('-'))
+            {
+                sb.AppendLine(line);
+            }
+            else if (sb.Length > 0)
+            {
+                VarOperationEntry? entry = VarOperationEntry.Parse(sb.ToString())
+                    ?? throw new FormatException("Invalid entry line: " + line);
+                Entries.Add(entry);
+                sb.Clear();
+            }
+        }
     }
 
     /// <summary>
@@ -137,15 +187,17 @@ public sealed class VarGenerator
     /// Generates variants from the specified text.
     /// </summary>
     /// <param name="text">The text.</param>
+    /// <param name="tags">The optional version tags filter.</param>
     /// <returns>Root node result.</returns>
-    public IDictionary<string, IList<CharNodeSet>> Generate(string text)
+    public IDictionary<string, IList<CharNodeSet>> Generate(string text,
+        IList<string>? tags = null)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         Dictionary<string, IList<CharNodeSet>> results = [];
 
         // for each version tag
-        foreach (string tag in GetVersionTags())
+        foreach (string tag in tags ?? GetVersionTags())
         {
             _logger?.LogInformation("Version {tag}", tag);
 
