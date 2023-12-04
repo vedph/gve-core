@@ -197,6 +197,25 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Collects the nodes in the specified range.
+    /// </summary>
+    /// <param name="at">The ordinal of the character to start from.</param>
+    /// <param name="run">The run of characters to include starting from
+    /// <paramref name="at"/>.</param>
+    /// <returns>Nodes.</returns>
+    public IList<CharNode> CollectNodes(short at, short run)
+    {
+        List<CharNode> nodes = [];
+        for (int i = 0; i < run; i++)
+        {
+            CharNode? node = _nodes.Find(n => n.Ordinal == at + i);
+            if (node == null && i == 0) return Array.Empty<CharNode>();
+            if (node != null) nodes.Add(node);
+        }
+        return nodes;
+    }
+
+    /// <summary>
     /// Gets the node at the left of the specified node.
     /// </summary>
     /// <param name="node">The node.</param>

@@ -177,19 +177,26 @@ public sealed class VarGenerator
                 _logger?.LogInformation("Node {node}", node);
                 if (node.Payload != null)
                 {
-                    if (!node.Payload.TaggedOrdinals.ContainsKey(context.VersionTag))
+                    if (!node.Payload.TaggedOrdinals.ContainsKey(
+                        context.VersionTag))
                     {
                         _logger?.LogInformation("Skipping node {node}", node);
                         return true;
                     }
 
-                    // create a new context for this node
-                    VarGeneratorContext newContext = new(context);
+                    // create the operation context from the text selected
+                    // by the base operation
+                    // TODO
 
                     // execute the operation
-                    node.Payload.Execute(newContext.OpContext);
+                    node.Payload.Execute(context.OpContext);
+
+                    // merge results back into base set
+                    // TODO
 
                     // process the next entry
+                    // create a new context for this node
+                    VarGeneratorContext newContext = new(context);
                     newContext.EntryIndex++;
                     ProcessNextEntry(newContext);
                 }
