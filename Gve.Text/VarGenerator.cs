@@ -87,11 +87,20 @@ public sealed class VarGenerator
         }
         VarOperationEntry entry = context.Entries[context.EntryIndex];
 
-        // if we just have a simple base operation, execute it
+        // if we just have a simple base operation, execute it if matches version
         if (entry.Root == null)
         {
             _logger?.LogInformation("Operation {op}", entry.Operation);
-            entry.Operation.Execute(context.OpContext);
+
+            if (entry.Operation.TaggedOrdinals.ContainsKey(context.VersionTag))
+            {
+                entry.Operation.Execute(context.OpContext);
+            }
+            else
+            {
+                _logger?.LogInformation("Skipping operation {op}", entry.Operation);
+            }
+
             context.EntryIndex++;
         }
         // otherwise, we have a tree of operations to process recursively
@@ -103,6 +112,12 @@ public sealed class VarGenerator
                 _logger?.LogInformation("Node {node}", node);
                 if (node.Payload != null)
                 {
+                    if (!node.Payload.TaggedOrdinals.ContainsKey(context.VersionTag))
+                    {
+                        _logger?.LogInformation("Skipping node {node}", node);
+                        return true;
+                    }
+
                     // create a new context for this node
                     VarGeneratorContext newContext = new(context);
 
