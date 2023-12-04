@@ -13,6 +13,8 @@ namespace Gve.Text;
 /// </summary>
 public partial class VarOperationEntry
 {
+    private static readonly string[] _newlines = ["\r\n", "\r", "\n"];
+
     /// <summary>
     /// Gets the base operation.
     /// </summary>
@@ -23,8 +25,6 @@ public partial class VarOperationEntry
     /// representing the tree of annotation operations stemming from this entry.
     /// </summary>
     public TreeNode<AnnVarOperation>? Root { get; }
-
-    private static readonly string[] _newlines = ["\r\n", "\r", "\n"];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperationEntry"/> class.
@@ -41,7 +41,7 @@ public partial class VarOperationEntry
     }
 
     /// <summary>
-    /// Converts to string.
+    /// Converts this entry to a parsable string.
     /// </summary>
     /// <returns>
     /// A <see cref="string"/> that represents this instance.

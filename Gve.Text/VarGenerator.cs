@@ -125,15 +125,16 @@ public sealed class VarGenerator
     /// Gets the operation entries for the specified <paramref name="tag"/>,
     /// sorted by their ordinal for that tag.
     /// </summary>
-    /// <param name="tag">The tag.</param>
+    /// <param name="tag">The tag(s).</param>
     /// <returns>The entries.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public IEnumerable<VarOperationEntry> GetVersionEntries(string tag)
+    public IList<VarOperationEntry> GetVersionEntries(string tag)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
         return Entries.Where(e => e.Operation.TaggedOrdinals.ContainsKey(tag))
-            .OrderBy(e => e.Operation.TaggedOrdinals[tag]);
+            .OrderBy(e => e.Operation.TaggedOrdinals[tag])
+            .ToList();
     }
 
     private void ProcessNextEntry(VarGeneratorContext context)
