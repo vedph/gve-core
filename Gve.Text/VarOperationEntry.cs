@@ -2,6 +2,7 @@
 using Gve.Text.Base;
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Gve.Text;
 
@@ -10,7 +11,7 @@ namespace Gve.Text;
 /// whose value is either directly specified, or set by a tree of annotation
 /// operations. In the latter case, the tree is rooted at <see cref="Root"/>.
 /// </summary>
-public class VarOperationEntry
+public partial class VarOperationEntry
 {
     /// <summary>
     /// Gets the base operation.
@@ -65,6 +66,9 @@ public class VarOperationEntry
         return sb.ToString();
     }
 
+    [GeneratedRegex(@"^\s*-\s+")]
+    private static partial Regex EntryPrefixRegex();
+
     /// <summary>
     /// Parses the specified text representing a <see cref="VarOperationEntry"/>.
     /// In it, the first line is the base operation, and the rest is the
@@ -74,36 +78,47 @@ public class VarOperationEntry
     /// <param name="text">The text.</param>
     /// <returns>Entry.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="FormatException">Tree is allowed only for replacements.
+    /// </exception>
     public static VarOperationEntry Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
+        Regex prefixRegex = EntryPrefixRegex();
         string[] lines = text.Split('\n');
-        BaseVarOperation operation =
-            BaseVarOperation.Parse<BaseVarOperation>(lines[0]);
+        BaseVarOperation operation = BaseVarOperation.Parse<BaseVarOperation>(
+            prefixRegex.Replace(lines[0], ""));
 
         // tree if any
         TreeNode<AnnVarOperation>? root = null;
         if (lines.Length > 1)
         {
+            // tree is allowed only for replacements
+            if (operation.Type != VarOperationType.Replace)
+                throw new FormatException("Tree is allowed only for replacements");
+
+            // value is coerced to empty because it will be set by tree nodes
+            operation.Value = "";
+
             root = new TreeNode<AnnVarOperation>();
             TreeNode<AnnVarOperation>? current = root;
             int currentDepth = 0;
             for (int i = 1; i < lines.Length; i++)
             {
+                if (string.IsNullOrWhiteSpace(lines[i])) continue;
                 string line = lines[i];
-                int depth = 0;
-                while (line.StartsWith("  "))
-                {
-                    depth++;
-                    line = line[2..];
-                }
+
+                // calculate depth and remove prefix
+                int j = line.IndexOf('-');
+                if (j < 0) throw new FormatException($"Invalid tree line: {line}");
+                int depth = j / 2;
+                line = prefixRegex.Replace(line, "");
 
                 if (depth > currentDepth)
                 {
                     // add a child
                     TreeNode<AnnVarOperation> child = new(
-                        AnnVarOperation.Parse<AnnVarOperation>(line[2..]));
+                        AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.AddChild(child);
                     current = child;
                     currentDepth = depth;
@@ -112,7 +127,7 @@ public class VarOperationEntry
                 {
                     // add a sibling
                     TreeNode<AnnVarOperation> sibling = new(
-                        AnnVarOperation.Parse<AnnVarOperation>(line[2..]));
+                        AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.Parent?.AddChild(sibling);
                     current = sibling;
                 }
@@ -120,7 +135,7 @@ public class VarOperationEntry
                 {
                     // add a sibling of a parent
                     TreeNode<AnnVarOperation> sibling = new(
-                        AnnVarOperation.Parse<AnnVarOperation>(line[2..]));
+                        AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.Parent?.Parent?.AddChild(sibling);
                     current = sibling;
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -95,7 +96,12 @@ public abstract partial class VarOperation : VarOperationMetadata
             if (!string.IsNullOrEmpty(GroupId)) sb.Append('@').Append(GroupId);
 
             if (TaggedOrdinals.Count > 0)
-                sb.Append(" [").AppendJoin(" ", TaggedOrdinals).Append(']');
+            {
+                sb.Append(" [")
+                  .AppendJoin(" ", TaggedOrdinals.Select(p =>
+                    p.Value != 0? $"{p.Key}={p.Value}" : p.Key))
+                  .Append(']');
+            }
 
             if (Features.Count > 0)
                 sb.Append(" {").AppendJoin(" ", Features).Append('}');
@@ -129,18 +135,22 @@ public abstract partial class VarOperation : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
-    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+))")]
+    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))")]
     private static partial Regex NameValueRegex();
 
     private static void ParseTaggedOrdinals(string text, VarOperation operation)
     {
         operation.TaggedOrdinals.Clear();
 
-        // text is TAG=ORDINAL separated by spaces
+        // text is TAG[=ORDINAL] separated by spaces
         foreach (Match m in NameValueRegex().Matches(text))
         {
-            string value = m.Groups["v1"].Success
-                ? m.Groups["v1"].Value : m.Groups["v2"].Value;
+            string value = "0";
+            if (m.Groups["v1"].Success || m.Groups["v2"].Success)
+            {
+                value = m.Groups["v1"].Success
+                    ? m.Groups["v1"].Value : m.Groups["v2"].Value;
+            }
 
             operation.TaggedOrdinals[m.Groups["n"].Value] =
                 int.Parse(value, CultureInfo.InvariantCulture);
@@ -229,6 +239,17 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// </summary>
     /// <param name="context">The data context.</param>
     public abstract void Execute(VarOperationContext context);
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return $"{At}x{Run}" + TYPE_SYMBOLS[(int)Type] + Value;
+    }
 }
 
 /// <summary>
