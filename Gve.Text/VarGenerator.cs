@@ -48,7 +48,7 @@ public sealed class VarGenerator
     /// </summary>
     /// <param name="text">The text to parse.</param>
     /// <exception cref="ArgumentNullException">text</exception>
-    /// <exception cref="FormatException">Invalid entry line.</exception>
+    /// <exception cref="FormatException">Invalid entry.</exception>
     public void SetEntries(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -66,17 +66,29 @@ public sealed class VarGenerator
         for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i];
-            if (!line.StartsWith('-'))
+            if (line.StartsWith('-'))
+            {
+                if (sb.Length > 0)
+                {
+                    VarOperationEntry? entry = VarOperationEntry.Parse(
+                        sb.ToString())
+                        ?? throw new FormatException("Invalid entry: " + sb);
+                    Entries.Add(entry);
+                    sb.Clear();
+                }
+                sb.AppendLine(line);
+            }
+            else
             {
                 sb.AppendLine(line);
             }
-            else if (sb.Length > 0)
-            {
-                VarOperationEntry? entry = VarOperationEntry.Parse(sb.ToString())
-                    ?? throw new FormatException("Invalid entry line: " + line);
-                Entries.Add(entry);
-                sb.Clear();
-            }
+        }
+        if (sb.Length > 0)
+        {
+            VarOperationEntry? entry = VarOperationEntry.Parse(
+                sb.ToString())
+                ?? throw new FormatException("Invalid entry: " + sb);
+            Entries.Add(entry);
         }
     }
 
