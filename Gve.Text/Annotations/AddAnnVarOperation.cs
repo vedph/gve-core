@@ -41,7 +41,7 @@ public abstract class AddAnnVarOperation : AnnVarOperation
         if (!string.IsNullOrEmpty(Value))
         {
             IList<CharNode> newNodes = context.Set.CreateNodesFor(Value);
-            context.TreeNodes.InsertRange(index, newNodes);
+            context.AnnNodes.InsertRange(index, newNodes);
         }
     }
 

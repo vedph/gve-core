@@ -42,8 +42,8 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(context);
 
         // ensure At, Run, With, and WithRun are within the valid range
-        if (At < 1 || At + Run - 1 > context.TreeNodes.Count || With < 1 ||
-            With + WithRun - 1 > context.TreeNodes.Count)
+        if (At < 1 || At + Run - 1 > context.AnnNodes.Count || With < 1 ||
+            With + WithRun - 1 > context.AnnNodes.Count)
         {
             throw new InvalidOperationException(
                 "At, Run, With, and WithRun must be within the length of the text");
@@ -56,20 +56,20 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
         int ri = Math.Max(At, With) - 1;
 
         // extract the nodes to be swapped
-        List<CharNode> lv = context.TreeNodes.GetRange(li, Run);
-        List<CharNode> rv = context.TreeNodes.GetRange(ri, WithRun);
+        List<CharNode> lv = context.AnnNodes.GetRange(li, Run);
+        List<CharNode> rv = context.AnnNodes.GetRange(ri, WithRun);
 
         // remove the nodes from their original positions
-        context.TreeNodes.RemoveRange(ri, WithRun);
-        context.TreeNodes.RemoveRange(li, Run);
+        context.AnnNodes.RemoveRange(ri, WithRun);
+        context.AnnNodes.RemoveRange(li, Run);
 
         // adjust the indexes if necessary
         if (li < ri) ri -= Run;
         else li -= WithRun;
 
         // insert the nodes at the new positions
-        context.TreeNodes.InsertRange(ri, lv);
-        context.TreeNodes.InsertRange(li, rv);
+        context.AnnNodes.InsertRange(ri, lv);
+        context.AnnNodes.InsertRange(li, rv);
     }
 
     /// <summary>

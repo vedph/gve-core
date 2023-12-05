@@ -86,12 +86,14 @@ public sealed class VarGenerator
                 sb.AppendLine(line);
             }
         }
+
+        // last pending operation if any
         if (sb.Length > 0)
         {
             VarOperationEntry? entry = VarOperationEntry.Parse(
                 sb.ToString())
                 ?? throw new FormatException("Invalid entry: " + sb);
-            entry.Operation.Id = id++;
+            entry.Operation.Id = id;
             Entries.Add(entry);
         }
     }

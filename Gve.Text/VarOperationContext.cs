@@ -16,13 +16,13 @@ public class VarOperationContext
     public CharNodeSet Set { get; }
 
     /// <summary>
-    /// Gets the tree nodes to work on for annotation operations. These are
-    /// initially cloned from the <see cref="Set"/> and then modified by the
+    /// Gets the annotation nodes to work on for annotation operations. These are
+    /// extracted from <see cref="Set"/>, and then modified by the
     /// annotation operations, and represent the base text characters ordered
     /// into a list. Annotation operations work on this list relying on the
     /// indexes of each node in it, rather than on the left link of each node.
     /// </summary>
-    public List<CharNode> TreeNodes { get; }
+    public List<CharNode> AnnNodes { get; }
 
     /// <summary>
     /// Gets or sets the tags attached to the context by the various operations
@@ -37,19 +37,32 @@ public class VarOperationContext
     public VarOperationContext(CharNodeSet set)
     {
         Set = set ?? throw new ArgumentNullException(nameof(set));
-        TreeNodes = GetTreeNodesFromSet(set);
+        AnnNodes = [];
         Tags = [];
     }
 
     /// <summary>
-    /// Gets tree nodes from the specified set.
+    /// Sets tree nodes from the specified set.
     /// </summary>
     /// <param name="set">The set.</param>
+    /// <param name="at">The ordinal of the first node to get.</param>
+    /// <param name="run">The number of nodes to get starting from the first
+    /// one.</param>
     /// <returns>Tree nodes.</returns>
-    public static List<CharNode> GetTreeNodesFromSet(CharNodeSet set)
+    /// <remarks>Getting tree nodes from the set means to get them in the order
+    /// defined by their left-node links, excluding the deleted nodes, for the
+    /// range defined by <paramref name="at"/> and <paramref name="run"/>.
+    /// </remarks>
+    public void SetAnnNodes(CharNodeSet set, short at, short run)
     {
-        ArgumentNullException.ThrowIfNull(set);
-        return set.Where(n => !n.IsDeleted).Select(n => n.Clone()).ToList();
+        AnnNodes.Clear();
+
+        List<CharNode> ordered = set.Where(n => !n.IsDeleted)
+            .Select(n => n.Clone())
+            .ToList();
+
+        int i = ordered.FindIndex(n => n.Ordinal == at);
+        if (i > -1) AnnNodes.AddRange(ordered.Skip(i).Take(run).ToList());
     }
 
     /// <summary>
@@ -77,12 +90,12 @@ public class VarOperationContext
     }
 
     /// <summary>
-    /// Gets the text represented by <see cref="TreeNodes"/>.
+    /// Gets the text represented by <see cref="AnnNodes"/>.
     /// </summary>
     /// <returns>String.</returns>
     public string GetTreeText()
     {
-        return string.Join("", TreeNodes.Select(n => n.Value));
+        return string.Join("", AnnNodes.Select(n => n.Value));
     }
 
     /// <summary>

@@ -118,7 +118,7 @@ As for parameters:
 - `^RANK` is the probability rank value for the operation in our interpretation: 1=most probable, 2=less probable, etc.
 - `@GROUP` is an arbitrary string representing a group ID. When two or more operations belong to the same group, they are treated as if they were a unique single operation, so no intermediate output is generated.
 - `[TAG=N...]` is a set of version tags separated by spaces. Each tag is followed by `=` and the ordinal number for the application of the rule in the interpretation related to that tag. This is used to determine the order of operations for each text version. For instance, an operation might be the 3rd in the context of version A, and the 5th in the context of version B.
-- `{FEAT=VALUE}` is a set of features to be added as annotations to the output of the operation. Each feature is a name=value pair. Features are separated by space. If a feature value contains spaces, wrap it into double quotes (`"VALUE"`). If a feature with the same name already exists, it is added, so that you can have many features with the same name. When you don't want this behavior, set the feature as unique by using `:=` rather than `=`.
+- `{FEAT=VALUE}` is a set of features to be added as annotations to the output of the operation. Each feature is a name=value pair. Features are separated by space. If a feature value contains spaces, wrap it into double quotes (`"VALUE"`). If a feature with the same name already exists, it is added, so that you can have many features with the same name. When you don't want this behavior, set the feature as unique by using `:=` rather than `=`. Also, you can remove a feature by prefixing its name with `!` (in this case, of course you don't need to specify the value).
 
 #### Base Operations Flow
 
@@ -133,13 +133,37 @@ In the end, the base text plane nodes set represents the outcome of all the base
 
 ### Annotations Plane Model
 
-An annotations plane contains:
+An annotations plane contains a root node representing the **tree of annotation operations** which work on the text selected from the base text.
 
-- a root node representing the **tree of annotation operations** which work on the text selected from the base text. Unlike base text operations, these operations are nested, so that each works on the result produced by the previous operation, and refers to it as its input. Thus, if you have a starting selection `D` and you replace it with `TC`, the operation is defined with reference to its input text, `D`. Then, if there is another operation child of this one, which replaces `T` in `TC` with `B`, it refers to `TC` (and longer to `D`) as its input; and so forth. This is because in the annotations plane operations are structured in a tree, and thus executed in the order defined by traversing it, rather than working all at once on the same base text.
+Unlike base text operations, these operations are _nested_, so that each works on the result produced by the previous operation, and refers to it as its input. Thus, if you have a starting selection `D` and you replace it with `TC`, the operation is defined with reference to its input text, `D`. Then, if there is another operation child of this one, which replaces `T` in `TC` with `B`, it refers to `TC` (and longer to `D`) as its input; and so forth.
 
-Annotation operations work on a text, but they do not work on its representation as a plain string of characters. This is because in the end we need to provide a result built of character nodes belonging to the base text.
+This is because in the annotations plane operations are structured in a _tree_, and thus executed in the order defined by traversing it, rather than working all at once on the same base text.
 
-For instance, in our sample snapshot the base text `D` is replaced by a couple of variants defined by two replacements, generating `TC` and then `BC`. So, both these variants will be returned to the base text after the tree has been traversed; so that the base operation will be executed a first time for `TC`, and another for `BC`. This effectively branches the procedure, which will continue on different lines until end. Also, this means that annotation operations must preserve metadata attached to each input character: `D` has its ordinal, and we need to put it back in our output (in `T` of `TC` and `B` of `BC`).
+As a consequence, your interpretations cannot alter the order of the operations like in the base plane, because here the order is defined by the tree. This is consistent from the fact that this tree corresponds to a graphical representation of annotations, where at least the relative order of these annotations is out of question (e.g. if you write a word X on top of a base text word, and then another word Y on top of Y, it should be clear that at least Y is after X).
+
+Anyway, you are still free to filter the annotations in the tree, so that only some of them are applied according to the interpretations you define. This is why also the operations on this plane have their version tags.
+
+Annotation operations work on a text, but they do not work on its representation as a plain string of characters. This is because in the end we need to provide a result built of character nodes belonging to the base text. Anyway, while in the base plane the order of nodes is determined by their left node link, here nodes are just selected from the base text and placed into a linear sequence (an array): so, here their order is the order in which they are found in this sequence: at its index 0 we find the first node, at its index 2 the second node, etc. Thus, neither the left link nor the ordinal number are taken into account here; we just manipulate the sequence.
+
+The following diagram shows the difference between the structures containing nodes in the two planes:
+
+![planes](img/planes.png)
+
+In the base plane (_BP_ for short), the nodes are not ordered in any way, but just added to a set. Their left-node link defines their order (while their ordinal number is just the effect of the original order in the input base text, used only as the reference system for operations on this plane).
+
+In the annotations plane instead (_AP_), a subset of the nodes set from the base plane is extracted and placed in a linear sequence. The order of the nodes in the sequence is also the order of the characters in the text.
+
+We can **switch between planes** as follows:
+
+- when switching _from BP to AP_, the nodes selected by the base text operation are taken in the order defined by their left link, from the first node at the specified ordinal (the AT operation parameter), for the count specified by run (the RUN operation parameter). Deleted nodes are not taken into account.
+
+- when switching _from AP to BP_, the nodes in the AP are put back into the BP set. This implies resetting all their left links, ensuring that each node in the AP sequence is linked to its left node; if anyway any deleted node in BP was linked to any of the AP nodes, then we link its right node to the deleted node. This effectively re-inserts the deleted node in the order. For instance, say we have a base text like `ABC`, where `B` was deleted; we then extract `A` into the AP, and replace it with `a`. When switching back to BP, we have `a` TODO
+
+```txt
+ABC
+```
+
+TODO For instance, in our sample snapshot the base text `D` is replaced by a couple of variants defined by two replacements, generating `TC` and then `BC`. So, both these variants will be returned to the base text after the tree has been traversed; so that the base operation will be executed a first time for `TC`, and another for `BC`. This effectively branches the procedure, which will continue on different lines until end. Also, this means that annotation operations must preserve metadata attached to each input character: `D` has its ordinal, and we need to put it back in our output (in `T` of `TC` and `B` of `BC`).
 
 #### Annotation Operations
 

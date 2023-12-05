@@ -36,8 +36,8 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
         ArgumentNullException.ThrowIfNull(context);
 
         // ensure At, Run, To, and ToRun are within the valid range
-        if (At < 1 || At + Run - 1 > context.TreeNodes.Count || To < 1 ||
-            To > context.TreeNodes.Count)
+        if (At < 1 || At + Run - 1 > context.AnnNodes.Count || To < 1 ||
+            To > context.AnnNodes.Count)
         {
             throw new InvalidOperationException("At, Run, To, and ToRun " +
                 "must be within the length of the text");
@@ -49,12 +49,12 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
         AddFeatures(context.Set.CollectNodes(At, Run));
 
         // extract the nodes to be moved
-        List<CharNode> movingNodes = context.TreeNodes.GetRange(indexAt, Run);
-        context.TreeNodes.RemoveRange(indexAt, Run);
+        List<CharNode> movingNodes = context.AnnNodes.GetRange(indexAt, Run);
+        context.AnnNodes.RemoveRange(indexAt, Run);
         if (indexAt < indexTo) indexTo -= Run;
 
         // insert the extracted nodes at the new position
-        context.TreeNodes.InsertRange(indexTo, movingNodes);
+        context.AnnNodes.InsertRange(indexTo, movingNodes);
     }
 
     /// <summary>

@@ -28,7 +28,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        if (At < 1 || At > context.TreeNodes.Count + 1)
+        if (At < 1 || At > context.AnnNodes.Count + 1)
         {
             throw new InvalidOperationException("At must be between 1 and " +
                 "the length of the text plus 1");
@@ -40,7 +40,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
 
         for (int i = 0; i < Run && i < value.Length; i++)
         {
-            CharNode node = context.TreeNodes[index + i];
+            CharNode node = context.AnnNodes[index + i];
             node.Value = value[i];
             AddFeatures(node);
         }
@@ -48,7 +48,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
         // delete extra nodes if needed
         if (Run > value.Length)
         {
-            context.TreeNodes.RemoveRange(index + value.Length,
+            context.AnnNodes.RemoveRange(index + value.Length,
                 Run - value.Length);
         }
         // add new nodes if needed
@@ -56,7 +56,7 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
         {
             IList<CharNode> newNodes = context.Set.CreateNodesFor(
                 value[Run..], Features);
-            context.TreeNodes.InsertRange(index + Run, newNodes);
+            context.AnnNodes.InsertRange(index + Run, newNodes);
         }
     }
 
