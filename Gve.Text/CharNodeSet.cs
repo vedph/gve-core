@@ -75,7 +75,12 @@ public class CharNodeSet : IEnumerable<CharNode>
         // add if not already present
         foreach (CharNode node in nodes)
         {
-            if (!_nodes.Contains(node)) _nodes.Add(node);
+            // defensive, usually we have different objects
+            if (_nodes.Contains(node)) continue;
+
+            CharNode? old = _nodes.Find(n => n.Id == node.Id);
+            if (old == null) _nodes.Add(node);
+            else old.CopyFrom(node);
         }
     }
 

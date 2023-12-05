@@ -93,6 +93,22 @@ public class CharNode
     }
 
     /// <summary>
+    /// Copies data (except ID and ordinal) from the specified node.
+    /// </summary>
+    /// <param name="node">The source node.</param>
+    public void CopyFrom(CharNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+
+        Value = node.Value;
+        IsDeleted = node.IsDeleted;
+        LeftNode = node.LeftNode;
+        Features = node.Features;
+        _prevValues = node._prevValues?.ToList();
+        _coords = node._coords?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    /// <summary>
     /// Adds the specified coordinate.
     /// </summary>
     /// <param name="name">The coordinate name.</param>
