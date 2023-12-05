@@ -16,7 +16,13 @@ public sealed class AnnotateAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcde", context.GetTreeText());
-        Assert.Single(context.Features);
-        Assert.Equal("sample", context.Features[0].Value);
+
+        for (int n = 1; n <= 2; n++)
+        {
+            CharNode? node = context.Set.GetNode(n);
+            Assert.NotNull(node);
+            Assert.Single(node.Features);
+            Assert.Equal("sample", node.Features[0].Value);
+        }
     }
 }

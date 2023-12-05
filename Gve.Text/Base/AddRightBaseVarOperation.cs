@@ -26,8 +26,7 @@ public sealed class AddRightBaseVarOperation : AddBaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
-        context.Set.InsertAfter(At, Value ?? "");
+        context.Set.InsertAfter(At, Value ?? "", Features);
     }
 
     /// <summary>

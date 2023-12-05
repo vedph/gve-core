@@ -33,9 +33,8 @@ public abstract class AddBaseVarOperation : BaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
-        if (IsRight) context.Set.InsertAfter(At, Value ?? "");
-        else context.Set.InsertBefore(At, Value ?? "");
+        if (IsRight) context.Set.InsertAfter(At, Value ?? "", Features);
+        else context.Set.InsertBefore(At, Value ?? "", Features);
     }
 
     /// <summary>

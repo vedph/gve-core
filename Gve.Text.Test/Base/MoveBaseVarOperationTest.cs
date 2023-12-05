@@ -16,7 +16,6 @@ public sealed class MoveBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("bacde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -30,7 +29,6 @@ public sealed class MoveBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("acbde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -44,6 +42,5 @@ public sealed class MoveBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("aebcd", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 }

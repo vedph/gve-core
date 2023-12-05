@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -39,7 +38,9 @@ public sealed class SwapBaseVarOperation : BaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
+        AddFeatures(context.Set.CollectNodes(With, WithRun));
+
         context.Set.Swap(At, Run, With, WithRun);
     }
 

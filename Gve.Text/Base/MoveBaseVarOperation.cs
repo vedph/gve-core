@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -34,7 +33,7 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
         context.Set.Move(At, Run, To);
     }
 

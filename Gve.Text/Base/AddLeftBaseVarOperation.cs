@@ -26,8 +26,7 @@ public sealed class AddLeftBaseVarOperation : AddBaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
-        context.Set.InsertBefore(At, Value ?? "");
+        context.Set.InsertBefore(At, Value ?? "", Features);
     }
 
     /// <summary>

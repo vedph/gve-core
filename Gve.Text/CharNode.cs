@@ -76,6 +76,11 @@ public class CharNode
     public CharNode? LeftNode { get; set; }
 
     /// <summary>
+    /// Gets the features attached to this node.
+    /// </summary>
+    public List<Feature> Features { get; protected set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CharNode"/> class.
     /// </summary>
     /// <param name="id">The identifier.</param>
@@ -84,6 +89,7 @@ public class CharNode
     {
         Id = id;
         Ordinal = ordinal;
+        Features = [];
     }
 
     /// <summary>
@@ -141,6 +147,7 @@ public class CharNode
             Value = Value,
             IsDeleted = IsDeleted,
             LeftNode = LeftNode,
+            Features = Features,
             _prevValues = _prevValues?.ToList(),
             _coords = _coords?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
         };

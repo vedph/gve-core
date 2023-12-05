@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,6 +26,13 @@ public abstract partial class VarOperation : VarOperationMetadata
         ">",
         "<>"
     ];
+
+    /// <summary>
+    /// Gets or sets the operation identifier. This is used to reference
+    /// a specific operation in a transformation, essentially for diagnostic
+    /// purposes.
+    /// </summary>
+    public int Id { get; set; }
 
     /// <summary>
     /// Gets or sets the type.
@@ -56,12 +64,15 @@ public abstract partial class VarOperation : VarOperationMetadata
         Type = type;
     }
 
+    // at, [run]
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
     protected static partial Regex AtRunRegex();
 
+    // at, [run], op
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
     private static partial Regex HeadRegex();
 
+    // [rank], [group], [tags], [meta]
     [GeneratedRegex(
         @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^]}]+)\])?(?:\s*\{(?<meta>[^}]+)\})?$")]
     private static partial Regex TailRegex();
@@ -71,9 +82,11 @@ public abstract partial class VarOperation : VarOperationMetadata
     private static partial Regex TaggedOrdinalRegex();
 
     // n=name, [u=unique], [v1 or v2=value]
-    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))?")]
-    private static partial Regex TagRegex();
+    // conventionally n starts with ! to remove the feature
+    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?:(?:""(?<v1>[^""]+)"")|(?<v2>[^\s]+)))?")]
+    private static partial Regex FeatureRegex();
 
+    // 1=operator
     [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
     protected static partial Regex LocOpRegex();
 
@@ -151,7 +164,7 @@ public abstract partial class VarOperation : VarOperationMetadata
         {
             string value = groups["v"].Success? groups["v"].Value : "0";
 
-            operation.TaggedOrdinals[groups["n"].Value] =
+            operation.TaggedOrdinals[groups["t"].Value] =
                 int.Parse(value, CultureInfo.InvariantCulture);
         }
     }
@@ -194,13 +207,15 @@ public abstract partial class VarOperation : VarOperationMetadata
 
         if (tail.Groups["meta"].Success)
         {
-            foreach (var groups in TagRegex()
+            foreach (var groups in FeatureRegex()
                 .Matches(tail.Groups["meta"].Value).Select(m => m.Groups))
             {
                 operation.Features.Add(new Feature
                 {
                     Name = groups["n"].Value,
-                    Value = groups["v"].Value.Trim('"'),
+                    Value = groups["v1"].Success
+                        ? groups["v1"].Value.Trim()
+                        : groups["v2"].Value.Trim(),
                     IsUnique = groups["u"].Success
                 });
             }
@@ -215,35 +230,31 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <paramref name="features"/>.
     /// </summary>
     /// <param name="features">The features to update.</param>
+    /// <exception cref="ArgumentNullException">features</exception>
     protected void AddFeatures(IList<Feature> features)
     {
         ArgumentNullException.ThrowIfNull(features);
+        Feature.UpdateFeatures(Features, features);
+    }
 
-        foreach (Feature feature in Features)
-        {
-            // if feature name starts with !, remove it from the features
-            if (feature.Name.StartsWith('!'))
-            {
-                string name = feature.Name[1..];
-                for (int i = features.Count - 1; i >= 0; i--)
-                {
-                    if (features[i].Name == name)
-                        features.RemoveAt(i);
-                }
-                continue;
-            }
+    /// <summary>
+    /// Adds <see cref="VarOperationMetadata.Features"/> to the received node.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    protected void AddFeatures(CharNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        Feature.UpdateFeatures(Features, node.Features);
+    }
 
-            // else if unique, first remove all the features with the same name
-            if (feature.IsUnique)
-            {
-                for (int i = Features.Count - 1; i >= 0; i--)
-                {
-                    if (Features[i].Name == feature.Name)
-                        Features.RemoveAt(i);
-                }
-            }
-            Features.Add(feature);
-        }
+    /// <summary>
+    /// Adds <see cref="VarOperationMetadata.Features"/> to the received nodes.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    protected void AddFeatures(IEnumerable<CharNode> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+        foreach (CharNode node in nodes) AddFeatures(node);
     }
 
     /// <summary>

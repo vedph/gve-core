@@ -16,7 +16,6 @@ public sealed class AddRightAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("aXbcde", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -30,7 +29,6 @@ public sealed class AddRightAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcXde", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -44,6 +42,5 @@ public sealed class AddRightAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcdeX", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 }

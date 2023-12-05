@@ -164,21 +164,27 @@ public class CharNodeSet : IEnumerable<CharNode>
         this.Where(n => !n.IsDeleted).Select(n => n.Value));
 
     /// <summary>
-    /// Gets one new node for each character in <paramref name="text"/>.
+    /// Creates one new node for each character in <paramref name="text"/>.
     /// </summary>
     /// <param name="text">The text.</param>
+    /// <param name="features">The optional features to attach to the new nodes.
+    /// </param>
     /// <returns>Nodes.</returns>
-    public IList<CharNode> GetNodesFor(string text)
+    public IList<CharNode> CreateNodesFor(string text,
+        IList<Feature>? features = null)
     {
         List<CharNode> nodes = [];
 
         for (int i = 0; i < text.Length; i++)
         {
-            nodes.Add(new CharNode(GetNextId(), 0)
+            CharNode node = new(GetNextId(), 0)
             {
                 Value = text[i],
-                LeftNode = i > 0 ? nodes[i - 1] : null
-            });
+                LeftNode = i > 0 ? nodes[i - 1] : null,
+            };
+            if (features?.Count > 0)
+                Feature.UpdateFeatures(features, node.Features);
+            nodes.Add(node);
         }
 
         return nodes;
@@ -318,20 +324,25 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="text">The text to insert.</param>
+    /// <param name="features">The optional features to attach to the text.</param>
     /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public IList<CharNode> InsertBefore(int at, string text)
-        => InsertBefore(at, GetNodesFor(text));
+    public IList<CharNode> InsertBefore(int at, string text,
+        IList<Feature>? features = null)
+        => InsertBefore(at, CreateNodesFor(text, features));
 
     /// <summary>
     /// Inserts the specified new char before the node at the specified ordinal.
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="c">The character to insert.</param>
+    /// <param name="features">The optional features to attach to the character.
+    /// </param>
     /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public IList<CharNode> InsertBefore(int at, char c)
-        => InsertBefore(at, GetNodesFor(c.ToString()));
+    public IList<CharNode> InsertBefore(int at, char c,
+        IList<Feature>? features = null)
+        => InsertBefore(at, CreateNodesFor(c.ToString(), features));
 
     /// <summary>
     /// Inserts the specified nodes after the node at the specified ordinal.
@@ -368,20 +379,25 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="text">The text to insert.</param>
+    /// <param name="features">The optional features to attach to the text.</param>
     /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public IList<CharNode> InsertAfter(int at, string text)
-        => InsertAfter(at, GetNodesFor(text));
+    public IList<CharNode> InsertAfter(int at, string text,
+        IList<Feature>? features = null)
+        => InsertAfter(at, CreateNodesFor(text, features));
 
     /// <summary>
     /// Inserts the specified new char after the node at the specified ordinal.
     /// </summary>
     /// <param name="at">The reference node ordinal.</param>
     /// <param name="c">The character to insert.</param>
+    /// <param name="features">The optional features to attach to the character.
+    /// </param>
     /// <returns>The inserted nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
-    public IList<CharNode> InsertAfter(int at, char c)
-        => InsertAfter(at, GetNodesFor(c.ToString()));
+    public IList<CharNode> InsertAfter(int at, char c,
+        IList<Feature>? features = null)
+        => InsertAfter(at, CreateNodesFor(c.ToString(), features));
 
     /// <summary>
     /// Replaces the nodes starting from the specified ordinal, for the specified
@@ -448,12 +464,14 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="at">The start ordinal.</param>
     /// <param name="run">The run.</param>
     /// <param name="text">The new text to replace.</param>
+    /// <param name="features">The optional features to attach to the text.</param>
     /// <returns>The replaced nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public IList<CharNode> Replace(int at, int run, string text)
-        => Replace(at, run, GetNodesFor(text));
+    public IList<CharNode> Replace(int at, int run, string text,
+        IList<Feature>? features = null)
+        => Replace(at, run, CreateNodesFor(text, features));
 
     /// <summary>
     /// Replaces the nodes starting from the specified ordinal, for the specified
@@ -462,12 +480,15 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <param name="at">The start ordinal.</param>
     /// <param name="run">The run.</param>
     /// <param name="c">The new character to replace.</param>
+    /// <param name="features">The optional features to attach to the character.
+    /// </param>
     /// <returns>The replaced nodes.</returns>
     /// <exception cref="ArgumentNullException">nodes</exception>
     /// <exception cref="ArgumentOutOfRangeException">at less than 1 or
     /// negative run</exception>
-    public IList<CharNode> Replace(int at, int run, char c)
-        => Replace(at, run, GetNodesFor(c.ToString()));
+    public IList<CharNode> Replace(int at, int run, char c,
+        IList<Feature>? features = null)
+        => Replace(at, run, CreateNodesFor(c.ToString(), features));
 
     /// <summary>
     /// Moves the nodes starting with the node with ordinal <paramref name="from"/>

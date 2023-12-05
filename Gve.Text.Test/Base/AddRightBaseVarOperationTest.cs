@@ -16,7 +16,6 @@ public sealed class AddRightBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("aXbcde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -30,7 +29,6 @@ public sealed class AddRightBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcXde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -44,6 +42,5 @@ public sealed class AddRightBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcdeX", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 }

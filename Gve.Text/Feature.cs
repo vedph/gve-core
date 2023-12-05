@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -99,6 +100,48 @@ public partial class Feature
         catch (FormatException)
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Updates the target features with the source features. Features whose
+    /// name starts with <c>!</c> are removed from the target features; features
+    /// marked as unique imply removing all the features with the same name
+    /// before adding them.
+    /// </summary>
+    /// <param name="sources">The source features.</param>
+    /// <param name="targets">The target features.</param>
+    /// <exception cref="ArgumentNullException">sources or targets</exception>
+    public static void UpdateFeatures(IList<Feature> sources,
+        IList<Feature> targets)
+    {
+        ArgumentNullException.ThrowIfNull(sources);
+        ArgumentNullException.ThrowIfNull(targets);
+
+        foreach (Feature feature in sources)
+        {
+            // if feature name starts with !, remove it from the features
+            if (feature.Name.StartsWith('!'))
+            {
+                string name = feature.Name[1..];
+                for (int i = targets.Count - 1; i >= 0; i--)
+                {
+                    if (targets[i].Name == name)
+                        targets.RemoveAt(i);
+                }
+                continue;
+            }
+
+            // else if unique, first remove all the features with the same name
+            if (feature.IsUnique)
+            {
+                for (int i = sources.Count - 1; i >= 0; i--)
+                {
+                    if (sources[i].Name == feature.Name)
+                        sources.RemoveAt(i);
+                }
+            }
+            sources.Add(feature);
         }
     }
 

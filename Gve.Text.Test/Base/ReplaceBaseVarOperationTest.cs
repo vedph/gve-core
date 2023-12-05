@@ -272,8 +272,11 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("Xcde", context.Set.GetText());
-        Assert.Single(context.Features);
-        Assert.Equal("sample", context.Features[0].Value);
+
+        CharNode? node = context.Set.GetNode(1);
+        Assert.NotNull(node);
+        Assert.Single(node.Features);
+        Assert.Equal("sample", node.Features[0].Value);
     }
 
     [Fact]
@@ -287,7 +290,6 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("Xcde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -301,7 +303,6 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -315,7 +316,6 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcdX", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -329,7 +329,6 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXe", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -343,6 +342,5 @@ public sealed class ReplaceBaseVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXYde", context.Set.GetText());
-        Assert.Empty(context.Features);
     }
 }

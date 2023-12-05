@@ -17,8 +17,10 @@ public sealed class ReplaceAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("Xcde", context.GetTreeText());
-        Assert.Single(context.Features);
-        Assert.Equal("sample", context.Features[0].Value);
+        CharNode? node = context.Set.GetNode(1);
+        Assert.NotNull(node);
+        Assert.Single(node.Features);
+        Assert.Equal("sample", node.Features[0].Value);
     }
 
     [Fact]
@@ -47,7 +49,6 @@ public sealed class ReplaceAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXde", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -61,7 +62,6 @@ public sealed class ReplaceAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abcdX", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -75,7 +75,6 @@ public sealed class ReplaceAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXe", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -89,6 +88,5 @@ public sealed class ReplaceAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("abXYde", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 }

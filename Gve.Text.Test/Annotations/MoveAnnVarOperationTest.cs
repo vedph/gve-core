@@ -32,7 +32,6 @@ public sealed class MoveAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("acbde", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 
     [Fact]
@@ -46,6 +45,5 @@ public sealed class MoveAnnVarOperationTest
         op.Execute(context);
 
         Assert.Equal("aebcd", context.GetTreeText());
-        Assert.Empty(context.Features);
     }
 }

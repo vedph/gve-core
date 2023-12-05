@@ -25,12 +25,6 @@ public class VarOperationContext
     public List<CharNode> TreeNodes { get; }
 
     /// <summary>
-    /// Gets the features attached to the context by the various operations
-    /// executed on it.
-    /// </summary>
-    public IList<Feature> Features { get; }
-
-    /// <summary>
     /// Gets or sets the tags attached to the context by the various operations
     /// executed on it.
     /// </summary>
@@ -44,7 +38,6 @@ public class VarOperationContext
     {
         Set = set ?? throw new ArgumentNullException(nameof(set));
         TreeNodes = GetTreeNodesFromSet(set);
-        Features = new List<Feature>();
         Tags = [];
     }
 
@@ -110,6 +103,6 @@ public class VarOperationContext
     /// <returns>String.</returns>
     public override string ToString()
     {
-        return $"[{string.Join(" ", Tags)}] {Set.GetText()} ({Features.Count})";
+        return $"[{string.Join(" ", Tags)}] {Set.GetText()}";
     }
 }

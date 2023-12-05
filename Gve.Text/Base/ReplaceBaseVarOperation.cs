@@ -27,8 +27,9 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        context.Set.Replace(At, Run, new CharNodeSet(Value!).ToList());
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
+        context.Set.Replace(At, Run,
+            context.Set.CreateNodesFor(Value ?? "", Features));
     }
 
     /// <summary>

@@ -26,7 +26,7 @@ public sealed class AnnotateBaseVarOperation : BaseVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
     }
 
     /// <summary>

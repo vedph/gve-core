@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Gve.Text.VarDiplomatic">
-    <Position X="13.75" Y="0.5" Width="1.5" />
+    <Position X="16" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>VarDiplomatic.cs</FileName>
@@ -11,7 +11,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.TextPosition">
-    <Position X="16.25" Y="0.5" Width="1.75" />
+    <Position X="18.5" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -30,7 +30,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQAABAAAIAAEBAIAIhAAAAAEAEFSAAEAAAAAgAACTA=</HashCode>
+      <HashCode>EAQAABAAAIAAABAIAIhAAAAAEAEFSAAEAAAEAgAACTA=</HashCode>
       <FileName>CharNodeSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -51,6 +51,9 @@
       <HashCode>ghACAAAAQAAAAEAEABABAAAAAAAAAAACAAAgAQAAEBI=</HashCode>
       <FileName>CharNode.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Features" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.TreeNode&lt;T&gt;">
     <Position X="0.75" Y="6.5" Width="1.75" />
@@ -69,7 +72,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.VarOperationMetadata">
-    <Position X="10.75" Y="1" Width="2" />
+    <Position X="13" Y="1" Width="2" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -86,17 +89,17 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.Feature">
-    <Position X="13.75" Y="1.75" Width="1.5" />
+    <Position X="10.5" Y="0.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIIgAAAAAAAAAAAEgAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>AIIgAAAAAAAAAAEEgAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Feature.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.VarSource">
-    <Position X="13.75" Y="3.75" Width="1.5" />
+    <Position X="16" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -106,15 +109,15 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.VarOperation">
-    <Position X="10.75" Y="3.75" Width="2" />
+    <Position X="13" Y="3.5" Width="2" />
     <Members>
       <Method Name="AtRunRegex" Hidden="true" />
+      <Method Name="FeatureRegex" Hidden="true" />
       <Method Name="GetOptionalArgValue" Hidden="true" />
       <Method Name="HeadRegex" Hidden="true" />
       <Method Name="LocOpRegex" Hidden="true" />
-      <Method Name="MetadataRegex" Hidden="true" />
-      <Method Name="NameValueRegex" Hidden="true" />
       <Method Name="ParseTaggedOrdinals" Hidden="true" />
+      <Method Name="TaggedOrdinalRegex" Hidden="true" />
       <Method Name="TailRegex" Hidden="true" />
       <Method Name="VarOperation" Hidden="true" />
     </Members>
@@ -122,7 +125,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAJQABAAAAAgAAQIAAAAAAAAAQCCBAAACQAgIIAQIAI=</HashCode>
+      <HashCode>AABSABAAAAAgAAQMAAAAAAAAAQCCAAAACQAoIIIQIAI=</HashCode>
       <FileName>VarOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -287,29 +290,30 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.VarOperationContext">
-    <Position X="8.25" Y="2.25" Width="1.75" />
+    <Position X="8.25" Y="2.25" Width="2" />
     <Members>
       <Method Name="ToString" Hidden="true" />
       <Method Name="VarOperationContext" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAABAAEAQABABAAAAAAAkAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAACAAAAAAABAAEAQAAABAAAAAAAkAAAAAAAAAAABA=</HashCode>
       <FileName>VarOperationContext.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Set" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Features" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.VarOperationEntry">
     <Position X="3.25" Y="8.25" Width="1.75" />
     <Members>
+      <Method Name="EntryPrefixRegex" Hidden="true" />
       <Method Name="VarOperationEntry" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAAAAACAEAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <HashCode>EAAgAAAAAAAAACAEAAAAAAAgAAAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>VarOperationEntry.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -326,7 +330,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAACAAAAAAACAAAAAAAAAAIAAAAAAAAAAAAEEEAAA=</HashCode>
+      <HashCode>AAgAACAAAAAAACAAAAAAAAAgIAAAAAAAAAAAAEEEAAA=</HashCode>
       <FileName>VarGenerator.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>

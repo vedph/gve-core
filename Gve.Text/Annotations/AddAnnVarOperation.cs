@@ -33,13 +33,14 @@ public abstract class AddAnnVarOperation : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
+
         if (string.IsNullOrEmpty(Value)) return;
 
         int index = IsRight ? At : At - 1;
         if (!string.IsNullOrEmpty(Value))
         {
-            IList<CharNode> newNodes = context.Set.GetNodesFor(Value);
+            IList<CharNode> newNodes = context.Set.CreateNodesFor(Value);
             context.TreeNodes.InsertRange(index, newNodes);
         }
     }

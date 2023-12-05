@@ -27,7 +27,7 @@ public sealed class AnnotateAnnVarOperation : AnnVarOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
     }
 
     /// <summary>

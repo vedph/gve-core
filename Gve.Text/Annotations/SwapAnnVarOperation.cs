@@ -49,7 +49,8 @@ public sealed class SwapAnnVarOperation : AnnVarOperation
                 "At, Run, With, and WithRun must be within the length of the text");
         }
 
-        AddFeatures(context.Features);
+        AddFeatures(context.Set.CollectNodes(At, Run));
+        AddFeatures(context.Set.CollectNodes(With, WithRun));
 
         int li = Math.Min(At, With) - 1;
         int ri = Math.Max(At, With) - 1;
