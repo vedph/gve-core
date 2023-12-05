@@ -179,18 +179,35 @@ The flow which starts from a base input text and generates all its variants is d
    - whenever we come to a branch end, as no more base operations remain to be processed, we add the result to the collected results.
 5. once all the branches have come to an end, the collected results represent all the generated variants.
 
-TODO
+So in the end with this model and flow we are not just collecting text variants in a repository; rather, we are providing the recipe for generating them. This recipe connects many operations into a network, built by combining a linear sequence with tree-based sub-sequences. These define the roads which connect our nodes; then, it is up to our interpretations to decide where to start and end, and which nodes to visit and which not. We are free to build our trip as we prefer, but within the constraints posed by the roads infrastructure, i.e. our set of base operations nodes and their tree-shaped annotations.
 
-For instance, consider this example:
+### Flow Example
 
-![sample script](img/text-model_script.png)
+Let us consider this abstract example, where we start with this simple base text:
 
-Here we could describe the text variants with the following tree ofoperations, starting from the base text `ADEFHGZ`:
+```txt
+ARZDC
+12345
+```
 
-- ✏️ `2="TC"`: replace `D` with `TC`:
-  - input:  `ADEFHGZ`
-  - output: `ATCEFGHZ`
-  - ✏️ `1="B"`: replace `T` with `B`:
-    - input:  `TC`
-    - output: `BC`
-- ✏️ `2`
+Our operations are:
+
+```txt
+- 2="" [x=2 y=2]
+  - 1="V" [x]
+    - 1="B" [x]
+  - 1="P" [y]
+- 3="" [x=1 y=1]
+- 5>4 [x=3 y=3]
+```
+
+which can be read as:
+
+✏️ (1) [a,b] delete `E`;
+✏️ (2) [a,b] replace `A` with the results of the following annotations operations tree:
+
+- [a] 🌳 replace `A` with `V`;
+  - [b] 🌳 replace `V` with `B`;
+- [b] 🌳 replace `A` with `P`.
+
+✏️ (3) [] move `C` before `D`.

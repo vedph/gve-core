@@ -10,12 +10,12 @@ public sealed class VarGeneratorTest
     private const string TEXT = "ARZDC";
 
     private const string ENTRIES =
-        "- 2=\"\" [a=2 b=2]\n" +
-        "  - 1=\"V\" [a]\n" +
-        "    - 1=\"B\" [a]\n" +
-        "  - 1=\"P\" [b]\n" +
-        "- 3=\"\" [a=1 b=1]\n" +
-        "- 5>4 [a=3 b=3]\n";
+        "- 2=\"\" [x=2 y=2]\n" +
+        "  - 1=\"V\" [x]\n" +
+        "    - 1=\"B\" [x]\n" +
+        "  - 1=\"P\" [y]\n" +
+        "- 3=\"\" [x=1 y=1]\n" +
+        "- 5>4 [x=3 y=3]\n";
 
     [Fact]
     public void GetVersionTags_Ok()
@@ -25,16 +25,16 @@ public sealed class VarGeneratorTest
         IList<string> tags = generator.GetVersionTags();
 
         Assert.Equal(2, tags.Count);
-        Assert.Equal("a", tags[0]);
-        Assert.Equal("b", tags[1]);
+        Assert.Equal("x", tags[0]);
+        Assert.Equal("y", tags[1]);
     }
 
     [Fact]
-    public void GetVersionEntries_A_Ok()
+    public void GetVersionEntries_Ok()
     {
         VarGenerator generator = new(ENTRIES);
 
-        IList<VarOperationEntry> entries = generator.GetVersionEntries("a");
+        IList<VarOperationEntry> entries = generator.GetVersionEntries("x");
 
         Assert.Equal(3, entries.Count);
         // [0] = 3=""
