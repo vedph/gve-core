@@ -28,12 +28,6 @@ public class VarOperationContext
     public List<CharNode> AnnNodes { get; }
 
     /// <summary>
-    /// Gets or sets the tags attached to the context by the various operations
-    /// executed on it.
-    /// </summary>
-    public HashSet<string> Tags { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="VarOperationContext"/> class.
     /// </summary>
     /// <param name="set">The set.</param>
@@ -41,7 +35,6 @@ public class VarOperationContext
     {
         Set = set ?? throw new ArgumentNullException(nameof(set));
         AnnNodes = [];
-        Tags = [];
     }
 
     /// <summary>
@@ -103,12 +96,7 @@ public class VarOperationContext
     /// </summary>
     /// <returns>New context.</returns>
     public virtual VarOperationContext Clone()
-    {
-        return new VarOperationContext(Set.Clone())
-        {
-            Tags = new HashSet<string>(Tags)
-        };
-    }
+        => new VarOperationContext(Set.Clone());
 
     /// <summary>
     /// Converts to string.
@@ -116,6 +104,6 @@ public class VarOperationContext
     /// <returns>String.</returns>
     public override string ToString()
     {
-        return $"[{string.Join(" ", Tags)}] {Set.GetText()}";
+        return $"{Set.GetText()} ({AnnNodes.Count})";
     }
 }
