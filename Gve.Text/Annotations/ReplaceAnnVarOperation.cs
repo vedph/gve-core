@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Gve.Text.Annotations;
@@ -35,24 +34,29 @@ public sealed class ReplaceAnnVarOperation : AnnVarOperation
                 "the length of the text plus 1");
         }
 
+        // replace value in existing nodes
         int index = At - 1;
-        if (index < context.TreeNodes.Count)
+        string value = Value ?? "";
+
+        for (int i = 0; i < Run && i < value.Length; i++)
         {
-            int count = Math.Min(Run, context.TreeNodes.Count - index);
-
-            for (int i = 0; i < count; i++)
-            {
-                CharNode node = context.TreeNodes[index];
-                AddFeatures(node.Features);
-            }
-
-            context.TreeNodes.RemoveRange(index, count);
+            CharNode node = context.TreeNodes[index + i];
+            node.Value = value[i];
+            AddFeatures(node);
         }
 
-        if (!string.IsNullOrEmpty(Value))
+        // delete extra nodes if needed
+        if (Run > value.Length)
         {
-            IList<CharNode> newNodes = context.Set.CreateNodesFor(Value, Features);
-            context.TreeNodes.InsertRange(index, newNodes);
+            context.TreeNodes.RemoveRange(index + value.Length,
+                Run - value.Length);
+        }
+        // add new nodes if needed
+        else if (Run < value.Length)
+        {
+            IList<CharNode> newNodes = context.Set.CreateNodesFor(
+                value[Run..], Features);
+            context.TreeNodes.InsertRange(index + Run, newNodes);
         }
     }
 
