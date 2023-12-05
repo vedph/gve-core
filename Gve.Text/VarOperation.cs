@@ -66,8 +66,13 @@ public abstract partial class VarOperation : VarOperationMetadata
         @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^]}]+)\])?(?:\s*\{(?<meta>[^}]+)\})?$")]
     private static partial Regex TailRegex();
 
-    [GeneratedRegex(@"(?<n>[^=]+)=(?<v>(?:""[^""]+"")|(?:[^\s]+))")]
-    private static partial Regex MetadataRegex();
+    // t=tag, [v=value]
+    [GeneratedRegex(@"\s*(?<t>[^=]+)\s*(?:=\s*(?<v>[0-9]+))?")]
+    private static partial Regex TaggedOrdinalRegex();
+
+    // n=name, [u=unique], [v1 or v2=value]
+    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))?")]
+    private static partial Regex TagRegex();
 
     [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
     protected static partial Regex LocOpRegex();
@@ -88,7 +93,8 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <param name="sb">The target.</param>
     protected void AppendTail(StringBuilder sb)
     {
-        // ^RANK@GROUP [TAG,...] {NAME=VALUE or NAME="VALUE"}
+        // ^RANK@GROUP [TAG,...] {NAME[=VALUE] or NAME[="VALUE"]}
+        // (if NAME starts with !, remove it from the features)
         if (GroupId != null || TaggedOrdinals.Count > 0 || Features.Count > 0)
         {
             if (Rank != 0) sb.Append('^').Append(Rank);
@@ -135,24 +141,17 @@ public abstract partial class VarOperation : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
-    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?<v1>(?:""[^""]+"")|(?<v2>[^\s]+)))?")]
-    private static partial Regex NameValueRegex();
-
     private static void ParseTaggedOrdinals(string text, VarOperation operation)
     {
         operation.TaggedOrdinals.Clear();
 
         // text is TAG[=ORDINAL] separated by spaces
-        foreach (Match m in NameValueRegex().Matches(text))
+        foreach (var groups in TaggedOrdinalRegex().Matches(text)
+            .Select(m => m.Groups))
         {
-            string value = "0";
-            if (m.Groups["v1"].Success || m.Groups["v2"].Success)
-            {
-                value = m.Groups["v1"].Success
-                    ? m.Groups["v1"].Value : m.Groups["v2"].Value;
-            }
+            string value = groups["v"].Success? groups["v"].Value : "0";
 
-            operation.TaggedOrdinals[m.Groups["n"].Value] =
+            operation.TaggedOrdinals[groups["n"].Value] =
                 int.Parse(value, CultureInfo.InvariantCulture);
         }
     }
@@ -195,13 +194,14 @@ public abstract partial class VarOperation : VarOperationMetadata
 
         if (tail.Groups["meta"].Success)
         {
-            foreach (Match m in MetadataRegex().Matches(tail.Groups["meta"].Value))
+            foreach (var groups in TagRegex()
+                .Matches(tail.Groups["meta"].Value).Select(m => m.Groups))
             {
                 operation.Features.Add(new Feature
                 {
-                    Name = m.Groups["n"].Value,
-                    Value = m.Groups["v"].Value.Trim('"'),
-                    IsUnique = m.Groups["u"].Success
+                    Name = groups["n"].Value,
+                    Value = groups["v"].Value.Trim('"'),
+                    IsUnique = groups["u"].Success
                 });
             }
         }
@@ -221,7 +221,19 @@ public abstract partial class VarOperation : VarOperationMetadata
 
         foreach (Feature feature in Features)
         {
-            // if unique, first remove all the features with the same name
+            // if feature name starts with !, remove it from the features
+            if (feature.Name.StartsWith('!'))
+            {
+                string name = feature.Name[1..];
+                for (int i = features.Count - 1; i >= 0; i--)
+                {
+                    if (features[i].Name == name)
+                        features.RemoveAt(i);
+                }
+                continue;
+            }
+
+            // else if unique, first remove all the features with the same name
             if (feature.IsUnique)
             {
                 for (int i = Features.Count - 1; i >= 0; i--)
@@ -230,7 +242,7 @@ public abstract partial class VarOperation : VarOperationMetadata
                         Features.RemoveAt(i);
                 }
             }
-            features.Add(feature);
+            Features.Add(feature);
         }
     }
 
