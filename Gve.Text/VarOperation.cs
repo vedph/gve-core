@@ -210,14 +210,11 @@ public abstract partial class VarOperation : VarOperationMetadata
             foreach (var groups in FeatureRegex()
                 .Matches(tail.Groups["meta"].Value).Select(m => m.Groups))
             {
-                operation.Features.Add(new Feature
-                {
-                    Name = groups["n"].Value,
-                    Value = groups["v1"].Success
+                operation.Features.Add(new Feature(groups["n"].Value,
+                    groups["v1"].Success
                         ? groups["v1"].Value.Trim()
                         : groups["v2"].Value.Trim(),
-                    IsUnique = groups["u"].Success
-                });
+                    groups["u"].Success));
             }
         }
 

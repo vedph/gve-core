@@ -8,27 +8,27 @@ namespace Gve.Text;
 /// <summary>
 /// A generic name=value feature.
 /// </summary>
-public partial class Feature
+public partial record Feature
 {
     /// <summary>
-    /// Gets or sets the name.
+    /// Gets the name.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; }
 
     /// <summary>
-    /// Gets or sets the value.
+    /// Gets the value.
     /// </summary>
-    public string Value { get; set; }
+    public string Value { get; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the feature is unique in a set
+    /// Gets a value indicating whether the feature is unique in a set
     /// i.e. if it already exists in a set, it should be replaced rather than
     /// just added.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this annotation is unique; otherwise, <c>false</c>.
     /// </value>
-    public bool IsUnique { get; set; }
+    public bool IsUnique { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Feature"/> class.
@@ -72,12 +72,9 @@ public partial class Feature
         Match m = NameValueRegex().Match(text);
         if (!m.Success) throw new FormatException($"Invalid feature: {text}");
 
-        return new()
-        {
-            Name = m.Groups["n"].Value,
-            Value = m.Groups["v"].Value.Trim('"'),
-            IsUnique = m.Groups["u"].Success
-        };
+        return new(m.Groups["n"].Value,
+            m.Groups["v"].Value.Trim('"'),
+            m.Groups["u"].Success);
     }
 
     /// <summary>

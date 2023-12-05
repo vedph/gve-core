@@ -51,9 +51,6 @@
       <HashCode>ghACAAAAQAAAAEAEABABAAAAAAAAAAACAAAgAQAAEBI=</HashCode>
       <FileName>CharNode.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Features" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.TreeNode&lt;T&gt;">
     <Position X="0.75" Y="6.5" Width="1.75" />
@@ -84,19 +81,8 @@
       <Property Name="Diplomatic" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Features" />
       <Property Name="Sources" />
     </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Gve.Text.Feature">
-    <Position X="10.5" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AIIgAAAAAAAAAAEEgAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>Feature.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.VarSource">
     <Position X="16" Y="2" Width="1.5" />
@@ -296,7 +282,7 @@
       <Method Name="VarOperationContext" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAABAAEAQAAABAAAAAAAkAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAACAAAAAAABAAEAAAAAAAAAAAAAkBAAAQAAAAAABA=</HashCode>
       <FileName>VarOperationContext.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
