@@ -135,13 +135,13 @@ public partial class Feature
             // else if unique, first remove all the features with the same name
             if (feature.IsUnique)
             {
-                for (int i = sources.Count - 1; i >= 0; i--)
+                for (int i = targets.Count - 1; i >= 0; i--)
                 {
-                    if (sources[i].Name == feature.Name)
-                        sources.RemoveAt(i);
+                    if (targets[i].Name == feature.Name)
+                        targets.RemoveAt(i);
                 }
             }
-            sources.Add(feature);
+            targets.Add(feature);
         }
     }
 
