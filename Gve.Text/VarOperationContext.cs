@@ -66,26 +66,20 @@ public class VarOperationContext
     }
 
     /// <summary>
-    /// Merges the specified tree nodes back into their source set.
+    /// Merges the annotation nodes back into their source set.
     /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    /// <param name="set">The source set of nodes.</param>
-    public static void MergeTreeNodesInSet(IList<CharNode> nodes,
-        CharNodeSet set)
+    public void MergeAnnNodes()
     {
-        ArgumentNullException.ThrowIfNull(nodes);
-        ArgumentNullException.ThrowIfNull(set);
-
         // ensure that each node in nodes is linked to the its left node
-        for (int i = 1; i < nodes.Count; i++)
-            nodes[i].LeftNode = nodes[i - 1];
+        for (int i = 1; i < AnnNodes.Count; i++)
+            AnnNodes[i].LeftNode = AnnNodes[i - 1];
 
         // if any deleted node in set was linked to any of nodes,
         // then link its right node's left node to the deleted node
-        foreach (CharNode node in set.Where(n => n.IsDeleted))
+        foreach (CharNode node in Set.Where(n => n.IsDeleted))
         {
-            if (node.LeftNode != null && nodes.Contains(node.LeftNode))
-                set.GetRightNodeOf(node)!.LeftNode = node;
+            if (node.LeftNode != null && AnnNodes.Contains(node.LeftNode))
+                Set.GetRightNodeOf(node)!.LeftNode = node;
         }
     }
 

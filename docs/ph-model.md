@@ -104,11 +104,11 @@ This approach allows to define each base operation with reference to ordinals, s
 
 The operations for the base plane with their syntax are:
 
-- replace: `ATxRUN="VALUE"^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: replace the specified span of text with the specified value. The value length can be less than, equal to, or greater than the length of the span to replace.
-- add left, add right: `AT+<"value"^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: operator is `+<` or `+>`. Add the specified value to the left or to the right of the specified character.
-- move: `ATxRUN>TO^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: move the specified span of text before the specified character.
-- swap: `AT1xRUN1<>AT2xRUN2^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: swap the specified span of text with another one.
-- annotate: `ATxRUN: [TAG=N...] {FEAT=VALUE...}`: just add annotations without changing the text.
+- **replace**: `ATxRUN="VALUE"^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: replace the specified span of text with the specified value. The value length can be less than, equal to, or greater than the length of the span to replace.
+- **add left**, **add right**: `AT+<"value"^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: operator is `+<` or `+>`. Add the specified value to the left or to the right of the specified character.
+- **move**: `ATxRUN>TO^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: move the specified span of text before the specified character.
+- **swap**: `AT1xRUN1<>AT2xRUN2^RANK@GROUP [TAG=N...] {FEAT=VALUE...}`: swap the specified span of text with another one.
+- **annotate**: `ATxRUN: [TAG=N...] {FEAT=VALUE...}`: just add annotations without changing the text.
 
 As for parameters:
 
@@ -119,17 +119,6 @@ As for parameters:
 - `@GROUP` is an arbitrary string representing a group ID. When two or more operations belong to the same group, they are treated as if they were a unique single operation, so no intermediate output is generated.
 - `[TAG=N...]` is a set of version tags separated by spaces. Each tag is followed by `=` and the ordinal number for the application of the rule in the interpretation related to that tag. This is used to determine the order of operations for each text version. For instance, an operation might be the 3rd in the context of version A, and the 5th in the context of version B.
 - `{FEAT=VALUE}` is a set of features to be added as annotations to the output of the operation. Each feature is a name=value pair. Features are separated by space. If a feature value contains spaces, wrap it into double quotes (`"VALUE"`). If a feature with the same name already exists, it is added, so that you can have many features with the same name. When you don't want this behavior, set the feature as unique by using `:=` rather than `=`. Also, you can remove a feature by prefixing its name with `!` (in this case, of course you don't need to specify the value).
-
-#### Base Operations Flow
-
-The base plane model flow is:
-
-1. create a base text plane from the base text.
-2. collect all the version tags from all the base operations defined for the plane. These represent the set of text versions we want to generate, as defined by our interpretations.
-3. for each version tag, determine the order of application of base operations.
-4. execute each of these operations.
-
-In the end, the base text plane nodes set represents the outcome of all the base operations selected by our version, in the order specified for that version.
 
 ### Annotations Plane Model
 
@@ -157,19 +146,38 @@ We can **switch between planes** as follows:
 
 - when switching _from BP to AP_, the nodes selected by the base text operation are taken in the order defined by their left link, from the first node at the specified ordinal (the AT operation parameter), for the count specified by run (the RUN operation parameter). Deleted nodes are not taken into account.
 
-- when switching _from AP to BP_, the nodes in the AP are put back into the BP set. This implies resetting all their left links, ensuring that each node in the AP sequence is linked to its left node; if anyway any deleted node in BP was linked to any of the AP nodes, then we link its right node to the deleted node. This effectively re-inserts the deleted node in the order. For instance, say we have a base text like `ABC`, where `B` was deleted; we then extract `A` into the AP, and replace it with `a`. When switching back to BP, we have `a` TODO
+- when switching _from AP to BP_, the nodes in the AP are put back into the BP set. This implies resetting all their left links, ensuring that each node in the AP sequence is linked to its left node; if anyway any deleted node in BP was linked to any of the AP nodes, then we link its right node to the deleted node. This effectively re-inserts the deleted node in the order.
 
-```txt
-ABC
-```
+For instance, say we have a base text like `ABC`, where `B` was deleted; we then extract `A` into the AP, and replace it with `a` plus a new character, `X`. When switching back to BP, we have these links:
 
-TODO For instance, in our sample snapshot the base text `D` is replaced by a couple of variants defined by two replacements, generating `TC` and then `BC`. So, both these variants will be returned to the base text after the tree has been traversed; so that the base operation will be executed a first time for `TC`, and another for `BC`. This effectively branches the procedure, which will continue on different lines until end. Also, this means that annotation operations must preserve metadata attached to each input character: `D` has its ordinal, and we need to put it back in our output (in `T` of `TC` and `B` of `BC`).
+- a <- X
+- a <- B†
+- B† <- C
+
+The old `B` character was linked to `A` (whose value has been now changed into `a`); so we need to adjust the links now, because the added `X` has `A` as its left node. We thus unlink `B` from `a`, and link it to the character to its right, i.e. `X`:
+
+- a <- X
+- X <- B†
+- B† <- C
+
+which represents a text `aXC`. This is the product of replacing `A` with `aX` and deleting `B`.
 
 #### Annotation Operations
 
-TODO
+Annotations operations have the same syntax as base operations. The only difference is that their coordinates refer to the linear sequence of nodes rather than to the unordered set of nodes of the BP; and that their tags do not have ordinals, because they are not used to determine their order of application but only to filter them in or out.
 
-#### Annotation Operations Flow
+## Operations Flow
+
+The flow which starts from a base input text and generates all its variants is defined as follows:
+
+1. create a BP from the base text.
+2. collect all the version tags from all the base operations defined for the plane. These represent the set of text versions we want to generate, as defined by our interpretations.
+3. for each version tag, determine the order of application of base operations, filtering out those which do not match the tag.
+4. execute each of these operations in their order:
+   - if the operation is simple (has no projection on the AP plane via a tree of annotations), just run it and move on the next operation;
+   - else, start traversing the tree and for each generated result create a new working branch with a copy of the current state and the result of the operation merged back into the BP. This branch will continue on its own, moving on the next base operation and continuing from point 4.
+   - whenever we come to a branch end, as no more base operations remain to be processed, we add the result to the collected results.
+5. once all the branches have come to an end, the collected results represent all the generated variants.
 
 TODO
 

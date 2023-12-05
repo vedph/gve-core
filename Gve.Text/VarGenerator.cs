@@ -143,7 +143,7 @@ public sealed class VarGenerator
             .ToList();
     }
 
-    private void ProcessNextEntry(VarGeneratorContext context)
+    private bool ProcessNextEntry(VarGeneratorContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -154,7 +154,7 @@ public sealed class VarGenerator
         {
             _logger?.LogInformation("Result {count}", context.Results.Count);
             context.Results.Add(context.OpContext.Set.Clone());
-            return;
+            return false;
         }
         VarOperationEntry entry = context.Entries[context.EntryIndex];
 
@@ -171,44 +171,50 @@ public sealed class VarGenerator
             {
                 _logger?.LogInformation("Skipping operation {op}", entry.Operation);
             }
-
-            context.EntryIndex++;
         }
+
         // otherwise, we have a tree of operations to process recursively
         else
         {
+            // traverse the tree
             _logger?.LogInformation("Tree {root}", entry.Root);
             entry.Root.Traverse((node) =>
             {
                 _logger?.LogInformation("Node {node}", node);
-                if (node.Payload != null)
+
+                // just continue if no operation for this node
+                if (node.Payload == null) return true;
+
+                // operation's tag must match
+                if (!node.Payload.TaggedOrdinals.ContainsKey(
+                    context.VersionTag))
                 {
-                    if (!node.Payload.TaggedOrdinals.ContainsKey(
-                        context.VersionTag))
-                    {
-                        _logger?.LogInformation("Skipping node {node}", node);
-                        return true;
-                    }
+                    _logger?.LogInformation("Skipping node {node}", node);
+                    return true;
+                }
 
-                    // create the operation context from the text selected
-                    // by the base operation
-                    // TODO
+                // create a new context for this node
+                VarGeneratorContext newContext = new(context);
+                newContext.OpContext.SetAnnNodes(newContext.OpContext.Set,
+                    node.Payload.At, node.Payload.Run);
 
-                    // execute the operation
-                    node.Payload.Execute(context.OpContext);
+                // execute the operation
+                node.Payload.Execute(newContext.OpContext);
 
-                    // merge results back into base set
-                    // TODO
+                // merge results back into base set
+                newContext.OpContext.MergeAnnNodes();
+                newContext.EntryIndex++;
 
-                    // process the next entry
-                    // create a new context for this node
-                    VarGeneratorContext newContext = new(context);
+                // recursively process the next entry on the new branch
+                while (ProcessNextEntry(newContext))
+                {
                     newContext.EntryIndex++;
-                    ProcessNextEntry(newContext);
                 }
                 return true;
             });
         }
+
+        return true;
     }
 
     /// <summary>
@@ -233,8 +239,8 @@ public sealed class VarGenerator
             VarGeneratorContext context = new(
                 text, tag, GetVersionEntries(tag).ToList());
 
-            // process all the entries recursively
-            ProcessNextEntry(context);
+            // process all the entries
+            while (ProcessNextEntry(context)) context.EntryIndex++;
 
             // store the results
             results[tag] = context.Results;
