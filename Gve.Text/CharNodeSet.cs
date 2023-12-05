@@ -64,6 +64,22 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Merges the specified nodes back into this node.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    /// <exception cref="ArgumentNullException">nodes</exception>
+    public void MergeNodes(List<CharNode> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        // add if not already present
+        foreach (CharNode node in nodes)
+        {
+            if (!_nodes.Contains(node)) _nodes.Add(node);
+        }
+    }
+
+    /// <summary>
     /// Gets the first node in this set.
     /// </summary>
     public CharNode? GetFirstNode() => _nodes.Find(n => n.LeftNode == null);

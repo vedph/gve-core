@@ -1,5 +1,7 @@
 ﻿using Gve.Text.Annotations;
 using Gve.Text.Base;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Xunit;
 
@@ -8,7 +10,6 @@ namespace Gve.Text.Test;
 public sealed class VarGeneratorTest
 {
     private const string TEXT = "ARZDC";
-
     private const string ENTRIES =
         "- 2=\"\" [x=2 y=2]\n" +
         "  - 1=\"V\" [x]\n" +
@@ -16,6 +17,16 @@ public sealed class VarGeneratorTest
         "  - 1=\"P\" [y]\n" +
         "- 3=\"\" [x=1 y=1]\n" +
         "- 5>4 [x=3 y=3]\n";
+
+    private readonly ILogger<VarGeneratorTest>? _logger;
+
+    public VarGeneratorTest()
+    {
+        _logger = new ServiceCollection()
+            .AddLogging(builder => builder.AddConsole())
+            .BuildServiceProvider()
+            .GetService<ILogger<VarGeneratorTest>>();
+    }
 
     [Fact]
     public void GetVersionTags_Ok()
@@ -32,7 +43,7 @@ public sealed class VarGeneratorTest
     [Fact]
     public void GetVersionEntries_Ok()
     {
-        VarGenerator generator = new(ENTRIES);
+        VarGenerator generator = new(ENTRIES, _logger);
 
         IList<VarOperationEntry> entries = generator.GetVersionEntries("x");
 
@@ -70,7 +81,7 @@ public sealed class VarGeneratorTest
     [Fact]
     public void Generate_AllVersions_Ok()
     {
-        VarGenerator generator = new(ENTRIES);
+        VarGenerator generator = new(ENTRIES, _logger);
 
         IDictionary<string, IList<CharNodeSet>> results =
             generator.Generate(TEXT);

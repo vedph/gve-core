@@ -5,7 +5,10 @@ using System.Linq;
 namespace Gve.Text;
 
 /// <summary>
-/// Data context for any variant text generation operation.
+/// Data context for any variant text generation operation. This contains both
+/// the nodes of the base text, and the nodes of the annotation text, which are
+/// derived from the base text nodes according to its selection as specified
+/// by an annotation operation.
 /// </summary>
 public class VarOperationContext
 {
@@ -81,6 +84,9 @@ public class VarOperationContext
             if (node.LeftNode != null && AnnNodes.Contains(node.LeftNode))
                 Set.GetRightNodeOf(node)!.LeftNode = node;
         }
+
+        // add the nodes to the set unless already present
+        Set.MergeNodes(AnnNodes);
     }
 
     /// <summary>

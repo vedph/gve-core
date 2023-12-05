@@ -179,7 +179,7 @@ The flow which starts from a base input text and generates all its variants is d
    - whenever we come to a branch end, as no more base operations remain to be processed, we add the result to the collected results.
 5. once all the branches have come to an end, the collected results represent all the generated variants.
 
-So in the end with this model and flow we are not just collecting text variants in a repository; rather, we are providing the recipe for generating them. This recipe connects many operations into a network, built by combining a linear sequence with tree-based sub-sequences. These define the roads which connect our nodes; then, it is up to our interpretations to decide where to start and end, and which nodes to visit and which not. We are free to build our trip as we prefer, but within the constraints posed by the roads infrastructure, i.e. our set of base operations nodes and their tree-shaped annotations.
+So in the end with this model and flow we are not just collecting text variants in a repository; rather, we are providing the recipe for generating them. This recipe connects many operations into a network, built by combining a linear sequence with tree-based sub-sequences. These define the roads which connect our nodes; then, it is up to our interpretations to decide where to start and end, and which nodes to visit and which not. We are free to build our trip as we prefer, but only within the constraints posed by the roads infrastructure, i.e. our set of base operations nodes and their tree-shaped annotations.
 
 ### Flow Example
 
@@ -203,7 +203,7 @@ Our operations are:
 
 which can be read as:
 
-✏️ (1) [a,b] delete `E`;
+✏️ (1) [a,b] delete `Z`;
 ✏️ (2) [a,b] replace `A` with the results of the following annotations operations tree:
 
 - [a] 🌳 replace `A` with `V`;
