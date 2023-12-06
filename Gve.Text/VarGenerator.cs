@@ -152,7 +152,7 @@ public sealed class VarGenerator
         // get the entry to process: if there are no more entries, we're done
         if (context.EntryIndex >= context.Entries.Count)
         {
-            _logger?.LogInformation("Adding to results: {result} ({count})",
+            _logger?.LogInformation("+Adding to results: {result} ({count})",
                 context.OpContext.Set.GetText(true),
                 context.Results.Count + 1);
             context.Results.Add(context.OpContext.Set.Clone());
@@ -216,7 +216,7 @@ public sealed class VarGenerator
                 // merge results back into base set
                 newContext.OpContext.MergeAnnNodes();
                 _logger?.LogInformation("Merged set: {text}",
-                    context.OpContext.Set.GetText(true));
+                    newContext.OpContext.Set.GetText(true));
 
                 newContext.EntryIndex++;
 

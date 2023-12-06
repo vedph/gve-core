@@ -217,20 +217,20 @@ If we inspect the whole set of operations, we find that we have 2 interpretation
 #### Version x
 
 ```txt
----Version x
-EntryIndex 0
+== Version x
+-- EntryIndex 0
 B-Operation 3×1="" [x=1 y=1]
 B-Result: ARZ†DC
 ```
 
-(1) we start with rule (1) at 3, which deletes Z (`3×1="" [x=1 y=1]`). The result is `ARZ†DC` (here I mark deleted characters with a dagger).
+(1) we start with rule `3×1="" [x=1 y=1]`, which deletes Z at 3. The result is `ARZ†DC` (I mark deleted characters with a dagger).
 
 ```txt
-EntryIndex 1
+-- EntryIndex 1
 B-Operation 2×1="" [x=2 y=2]...
 ```
 
-(2) we then move to rule (2) at 2 (`2×1="" [x=2 y=2]`), which replaces `R` with the various branches of a tree of annotations. So here we must start traversing the tree, and whenever an operation is applied we merge its result back into the base plane, and continue with the next base operation.
+(2) we then move to rule (2) at 2 (`2×1="" [x=2 y=2]`), which will replace `R` with the various branches of a tree of annotations. So here we must start _traversing_ the tree, and whenever an operation is applied merge its result back into the base plane, and continue with the next base operation.
 
 ```txt
 Traversing tree
@@ -239,10 +239,10 @@ Node with 1×1="V" [x]
 A-Operation 1×1="V" [x]
 A-Nodes: R
 A-Result: V
-Merged set: AVZ†DC
+Merged set: ARZ†DC
 ```
 
-(3) the first node in the annotations tree is just an empty node which allows branching. So it is skipped, until we reach the first non-empty child, the operation `1×1="V" [x]`. The nodes projected into the annotations plane from the base plane are just one, corresponding to `R`, as per rule (2) selection. The operation replaces this `R` with `V`. Then, this result is merged back into the base plane, whence `AVZ†DC`, starting a new branch of the generation process.
+(3) the first node in the annotations tree is just an empty node which is there just to allow branching. So we skip it, and we get the first non-empty child node, with operation `1×1="V" [x]`. The nodes projected into the annotations plane from the base plane are just one, corresponding to `R`, as per rule (2) selection. The operation replaces this `R` with `V`. Then, this result is merged back into the base plane, whence `AVZ†DC`, starting a new branch of the generation process.
 
 ```txt
 EntryIndex 2
