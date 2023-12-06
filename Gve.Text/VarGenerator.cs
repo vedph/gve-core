@@ -185,9 +185,10 @@ public sealed class VarGenerator
             _logger?.LogInformation("Traversing tree");
             entry.Root.Traverse((node) =>
             {
-                _logger?.LogInformation("A-Node with {payload}", node.Payload);
-                _logger?.LogInformation("A-Nodes: {text}",
-                    context.OpContext.GetAnnText());
+                _logger?.LogInformation(":A-Node with {payload}", node.Payload);
+                _logger?.LogInformation("B-Nodes: {text}@{at}x{run}",
+                    context.OpContext.Set.GetText(),
+                    entry.Operation.At, entry.Operation.Run);
 
                 // just continue if no operation for this node
                 if (node.Payload == null) return true;

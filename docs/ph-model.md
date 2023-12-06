@@ -234,8 +234,10 @@ B-Operation 2×1="" [x=2 y=2]...
 
 ```txt
 Traversing tree
-A-Node with (null)
-A-Node with 1×1="V" [x]
+:A-Node with (null)
+B-Nodes: ARDC@2x1
+:A-Node with 1×1="V" [x]
+B-Nodes: ARDC@2x1
 A-Operation 1×1="V" [x]
 A-Nodes: R
 A-Result: V
@@ -258,16 +260,21 @@ B-Result: AVZ†CD
 +Adding to results: AVZ†CD (1)
 ```
 
+>Results: AVCD.
+
 (5) we move on the next base operation, but there are no more of them. So we have finished with this branch, and we can add the current text to the generated results: `AVZ†CD`.
 
 ```txt
-A-Node with 1×1="B" [x]
+:A-Node with 1×1="B" [x]
+B-Nodes: ARDC@2x1
 A-Operation 1×1="B" [x]
 A-Nodes: R
 A-Result: B
 Merged set: ABZ†DC
 Recursing...
 ```
+
+TODO
 
 (6) now we are back to our operations tree in the annotations plane. We have just processed the first child node, so we move to its child (this is a depth-first traversal), which corresponds to operation `1×1="B" [x]`. The current value of nodes in the annotations plane is `R`; and this operation replaces it with `B`. The result is then merged back to the base plane, whence `ABZ†CD`.
 
