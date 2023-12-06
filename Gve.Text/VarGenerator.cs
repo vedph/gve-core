@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Gve.Text.Annotations;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,11 +162,13 @@ public sealed class VarGenerator
         // if we just have a simple base operation, execute it if matches version
         if (entry.Root == null)
         {
-            _logger?.LogInformation("Operation {op}", entry.Operation);
+            _logger?.LogInformation("B-Operation {op}", entry.Operation);
 
             if (entry.Operation.TaggedOrdinals.ContainsKey(context.VersionTag))
             {
                 entry.Operation.Execute(context.OpContext);
+                _logger?.LogInformation("Result: {text}",
+                    context.OpContext.Set.GetText());
             }
             else
             {
@@ -177,32 +180,40 @@ public sealed class VarGenerator
         else
         {
             // traverse the tree
-            _logger?.LogInformation("Tree {root}", entry.Root);
+            _logger?.LogInformation("Traversing tree");
             entry.Root.Traverse((node) =>
             {
-                _logger?.LogInformation("Node {node}", node);
+                _logger?.LogInformation("Node with {payload}", node.Payload);
 
                 // just continue if no operation for this node
                 if (node.Payload == null) return true;
 
                 // operation's tag must match
+                _logger?.LogInformation("A-Operation {op}", node.Payload);
+
                 if (!node.Payload.TaggedOrdinals.ContainsKey(
                     context.VersionTag))
                 {
-                    _logger?.LogInformation("Skipping node {node}", node);
+                    _logger?.LogInformation("Skipping operation {op}",
+                        node.Payload);
                     return true;
                 }
 
                 // create a new context for this node
                 VarGeneratorContext newContext = new(context);
                 newContext.OpContext.SetAnnNodes(newContext.OpContext.Set,
-                    node.Payload.At, node.Payload.Run);
+                    entry.Operation.At, entry.Operation.Run);
 
                 // execute the operation
                 node.Payload.Execute(newContext.OpContext);
+                _logger?.LogInformation("Result: {text}",
+                    string.Join("", context.OpContext.AnnNodes.Select(n => n.Value)));
 
                 // merge results back into base set
                 newContext.OpContext.MergeAnnNodes();
+                _logger?.LogInformation("Merged set: {text}",
+                    context.OpContext.Set.GetText());
+
                 newContext.EntryIndex++;
 
                 // recursively process the next entry on the new branch
@@ -237,7 +248,7 @@ public sealed class VarGenerator
         // for each version tag
         foreach (string tag in tags ?? GetVersionTags())
         {
-            _logger?.LogInformation("Version {tag}", tag);
+            _logger?.LogInformation("---Version {tag}", tag);
 
             // create a new context for this tag
             VarGeneratorContext context = new(

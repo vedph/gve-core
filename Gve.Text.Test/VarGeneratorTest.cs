@@ -9,6 +9,7 @@ namespace Gve.Text.Test;
 
 public sealed class VarGeneratorTest
 {
+    //                           12345
     private const string TEXT = "ARZDC";
     private const string ENTRIES =
         "- 2=\"\" [x=2 y=2]\n" +
@@ -23,7 +24,7 @@ public sealed class VarGeneratorTest
     public VarGeneratorTest()
     {
         _logger = new ServiceCollection()
-            .AddLogging(builder => builder.AddConsole())
+            .AddLogging(builder => builder.AddDebug())
             .BuildServiceProvider()
             .GetService<ILogger<VarGeneratorTest>>();
     }

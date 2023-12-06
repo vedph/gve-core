@@ -82,7 +82,7 @@ public class TreeNode<T>
     /// Gets the root node.
     /// </summary>
     /// <returns>Root node.</returns>
-    public TreeNode<T> GetRootNode()
+    public TreeNode<T> GetRoot()
     {
         TreeNode<T> node = this;
         while (node.Parent != null) node = node.Parent;
