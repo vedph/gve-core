@@ -212,6 +212,10 @@ public sealed class VarGenerator
                 }
                 return true;
             });
+
+            // once we're done with the tree, we're done with the generation
+            // because all the next entries have been processed recursively
+            return false;
         }
 
         return true;
