@@ -15,7 +15,7 @@ public sealed class AnnotateAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("abcde", context.GetTreeText());
+        Assert.Equal("abcde", context.GetAnnText());
 
         for (int n = 1; n <= 2; n++)
         {

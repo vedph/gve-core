@@ -168,7 +168,7 @@ public sealed class VarGenerator
             if (entry.Operation.TaggedOrdinals.ContainsKey(context.VersionTag))
             {
                 entry.Operation.Execute(context.OpContext);
-                _logger?.LogInformation("Result: {text}",
+                _logger?.LogInformation("B-Result: {text}",
                     context.OpContext.Set.GetText());
             }
             else
@@ -204,11 +204,13 @@ public sealed class VarGenerator
                 VarGeneratorContext newContext = new(context);
                 newContext.OpContext.SetAnnNodes(newContext.OpContext.Set,
                     entry.Operation.At, entry.Operation.Run);
+                _logger?.LogInformation("A-Nodes: {text}",
+                    newContext.OpContext.GetAnnText());
 
                 // execute the operation
                 node.Payload.Execute(newContext.OpContext);
-                _logger?.LogInformation("Result: {text}",
-                    string.Join("", context.OpContext.AnnNodes.Select(n => n.Value)));
+                _logger?.LogInformation("A-Result: {text}",
+                    newContext.OpContext.GetAnnText());
 
                 // merge results back into base set
                 newContext.OpContext.MergeAnnNodes();

@@ -86,7 +86,7 @@ public class VarOperationContext
     /// Gets the text represented by <see cref="AnnNodes"/>.
     /// </summary>
     /// <returns>String.</returns>
-    public string GetTreeText()
+    public string GetAnnText()
     {
         return string.Join("", AnnNodes.Select(n => n.Value));
     }

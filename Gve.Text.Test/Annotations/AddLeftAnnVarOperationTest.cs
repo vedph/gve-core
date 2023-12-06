@@ -15,7 +15,7 @@ public sealed class AddLeftAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("Xabcde", context.GetTreeText());
+        Assert.Equal("Xabcde", context.GetAnnText());
     }
 
     [Fact]
@@ -28,7 +28,7 @@ public sealed class AddLeftAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("abXcde", context.GetTreeText());
+        Assert.Equal("abXcde", context.GetAnnText());
     }
 
     [Fact]
@@ -41,6 +41,6 @@ public sealed class AddLeftAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("abcdXe", context.GetTreeText());
+        Assert.Equal("abcdXe", context.GetAnnText());
     }
 }

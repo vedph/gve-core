@@ -17,7 +17,7 @@ public sealed class SwapAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("edabc", context.GetTreeText());
+        Assert.Equal("edabc", context.GetAnnText());
         Assert.Empty(features);
     }
 
@@ -31,7 +31,7 @@ public sealed class SwapAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("aedbc", context.GetTreeText());
+        Assert.Equal("aedbc", context.GetAnnText());
     }
 
     [Fact]
@@ -44,6 +44,6 @@ public sealed class SwapAnnVarOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("aecdb", context.GetTreeText());
+        Assert.Equal("aecdb", context.GetAnnText());
     }
 }
