@@ -234,12 +234,13 @@ B-Operation 2×1="" [x=2 y=2]...
 
 ```txt
 Traversing tree
-Node with (null)
-Node with 1×1="V" [x]
+A-Node with (null)
+A-Node with 1×1="V" [x]
 A-Operation 1×1="V" [x]
 A-Nodes: R
 A-Result: V
-Merged set: ARZ†DC
+Merged set: AVZ†DC
+Recursing...
 ```
 
 (3) the first node in the annotations tree is just an empty node which is there just to allow branching. So we skip it, and we get the first non-empty child node, with operation `1×1="V" [x]`. The nodes projected into the annotations plane from the base plane are just one, corresponding to `R`, as per rule (2) selection. The operation replaces this `R` with `V`. Then, this result is merged back into the base plane, whence `AVZ†DC`, starting a new branch of the generation process.
@@ -253,18 +254,19 @@ B-Result: AVZ†CD
 (4) as we are back on the base plane, we move on the next base operation, which is `5×1>4 [x=3 y=3]`. This moves `D` before `C`, whence the result `AVZ†CD`.
 
 ```txt
-EntryIndex 3
-Adding to results: AVZ†CD (1)
+-- EntryIndex 3
++Adding to results: AVZ†CD (1)
 ```
 
 (5) we move on the next base operation, but there are no more of them. So we have finished with this branch, and we can add the current text to the generated results: `AVZ†CD`.
 
 ```txt
-Node with 1×1="B" [x]
+A-Node with 1×1="B" [x]
 A-Operation 1×1="B" [x]
-A-Nodes: V
+A-Nodes: R
 A-Result: B
-Merged set: ABZ†CD
+Merged set: ABZ†DC
+Recursing...
 ```
 
 (6) now we are back to our operations tree in the annotations plane. We have just processed the first child node, so we move to its child (this is a depth-first traversal), which corresponds to operation `1×1="B" [x]`. The current value of nodes in the annotations plane is `V`; and this operation replaces it with `B`. The result is then merged back to the base plane, whence `ABZ†CD`.
