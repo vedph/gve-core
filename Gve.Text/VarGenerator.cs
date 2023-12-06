@@ -185,7 +185,7 @@ public sealed class VarGenerator
             _logger?.LogInformation("Traversing tree");
             entry.Root.Traverse((node) =>
             {
-                _logger?.LogInformation("Node with {payload}", node.Payload);
+                _logger?.LogInformation("A-Node with {payload}", node.Payload);
 
                 // just continue if no operation for this node
                 if (node.Payload == null) return true;
@@ -221,6 +221,7 @@ public sealed class VarGenerator
                 newContext.EntryIndex++;
 
                 // recursively process the next entry on the new branch
+                _logger?.LogInformation("Recursing...");
                 while (ProcessNextEntry(newContext))
                 {
                     newContext.EntryIndex++;
