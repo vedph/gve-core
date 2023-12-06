@@ -12,6 +12,9 @@ namespace Gve.Text;
 /// </summary>
 public class VarOperationContext
 {
+    private short _at;
+    private short _run;
+
     /// <summary>
     /// Gets the set of character nodes to work on for base operations. This
     /// is derived from the input base text.
@@ -38,9 +41,8 @@ public class VarOperationContext
     }
 
     /// <summary>
-    /// Sets tree nodes from the specified set.
+    /// Sets tree nodes from the <see cref="Set"/>.
     /// </summary>
-    /// <param name="set">The set.</param>
     /// <param name="at">The ordinal of the first node to get.</param>
     /// <param name="run">The number of nodes to get starting from the first
     /// one.</param>
@@ -49,16 +51,21 @@ public class VarOperationContext
     /// defined by their left-node links, excluding the deleted nodes, for the
     /// range defined by <paramref name="at"/> and <paramref name="run"/>.
     /// </remarks>
-    public void SetAnnNodes(CharNodeSet set, short at, short run)
+    public void SetAnnNodes(short at, short run)
     {
+        _at = at;
+        _run = run;
         AnnNodes.Clear();
+        if (_run == 0) return;
 
-        List<CharNode> ordered = set.Where(n => !n.IsDeleted)
-            .Select(n => n.Clone())
-            .ToList();
+        List<CharNode> ordered = Set.Where(n => !n.IsDeleted).ToList();
 
         int i = ordered.FindIndex(n => n.Ordinal == at);
-        if (i > -1) AnnNodes.AddRange(ordered.Skip(i).Take(run).ToList());
+        if (i > -1)
+        {
+            AnnNodes.AddRange(ordered.Skip(i).Take(run)
+                .Select(n => n.Clone()).ToList());
+        }
     }
 
     /// <summary>
@@ -96,7 +103,11 @@ public class VarOperationContext
     /// </summary>
     /// <returns>New context.</returns>
     public virtual VarOperationContext Clone()
-        => new VarOperationContext(Set.Clone());
+    {
+        VarOperationContext context = new(Set.Clone());
+        context.SetAnnNodes(_at, _run);
+        return context;
+    }
 
     /// <summary>
     /// Converts to string.

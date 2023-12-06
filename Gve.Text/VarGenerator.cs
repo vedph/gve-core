@@ -1,5 +1,4 @@
-﻿using Gve.Text.Annotations;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,32 +147,34 @@ public sealed class VarGenerator
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        _logger?.LogInformation("EntryIndex {index}", context.EntryIndex);
+        _logger?.LogInformation("-- EntryIndex {index}", context.EntryIndex);
 
         // get the entry to process: if there are no more entries, we're done
         if (context.EntryIndex >= context.Entries.Count)
         {
-            _logger?.LogInformation("Adding to results: {result}",
-                context.OpContext.Set.GetText());
+            _logger?.LogInformation("Adding to results: {result} ({count})",
+                context.OpContext.Set.GetText(true),
+                context.Results.Count + 1);
             context.Results.Add(context.OpContext.Set.Clone());
             return false;
         }
         VarOperationEntry entry = context.Entries[context.EntryIndex];
+        _logger?.LogInformation("B-Operation {op}{tree}",
+            entry.Operation, entry.Root != null ? "..." : "");
 
         // if we just have a simple base operation, execute it if matches version
         if (entry.Root == null)
         {
-            _logger?.LogInformation("B-Operation {op}", entry.Operation);
-
             if (entry.Operation.TaggedOrdinals.ContainsKey(context.VersionTag))
             {
                 entry.Operation.Execute(context.OpContext);
                 _logger?.LogInformation("B-Result: {text}",
-                    context.OpContext.Set.GetText());
+                    context.OpContext.Set.GetText(true));
             }
             else
             {
-                _logger?.LogInformation("Skipping operation {op}", entry.Operation);
+                _logger?.LogInformation("Skipping B-operation {op}",
+                    entry.Operation);
             }
         }
 
@@ -195,14 +196,14 @@ public sealed class VarGenerator
                 if (!node.Payload.TaggedOrdinals.ContainsKey(
                     context.VersionTag))
                 {
-                    _logger?.LogInformation("Skipping operation {op}",
+                    _logger?.LogInformation("Skipping A-operation {op}",
                         node.Payload);
                     return true;
                 }
 
                 // create a new context for this node
                 VarGeneratorContext newContext = new(context);
-                newContext.OpContext.SetAnnNodes(newContext.OpContext.Set,
+                newContext.OpContext.SetAnnNodes(
                     entry.Operation.At, entry.Operation.Run);
                 _logger?.LogInformation("A-Nodes: {text}",
                     newContext.OpContext.GetAnnText());
@@ -215,7 +216,7 @@ public sealed class VarGenerator
                 // merge results back into base set
                 newContext.OpContext.MergeAnnNodes();
                 _logger?.LogInformation("Merged set: {text}",
-                    context.OpContext.Set.GetText());
+                    context.OpContext.Set.GetText(true));
 
                 newContext.EntryIndex++;
 
@@ -251,7 +252,7 @@ public sealed class VarGenerator
         // for each version tag
         foreach (string tag in tags ?? GetVersionTags())
         {
-            _logger?.LogInformation("---Version {tag}", tag);
+            _logger?.LogInformation("== Version {tag}", tag);
 
             // create a new context for this tag
             VarGeneratorContext context = new(

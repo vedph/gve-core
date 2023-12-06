@@ -52,12 +52,15 @@ public class CharNodeSet : IEnumerable<CharNode>
 
         if (firstNode != null)
         {
-            newNodes.Add(firstNode);
+            newNodes.Add(firstNode.Clone());
             CharNode? currentNode = firstNode;
+
             while ((currentNode = nodes.FirstOrDefault(
                 node => node.LeftNode == currentNode)) != null)
             {
-                newNodes.Add(currentNode);
+                CharNode sibling = currentNode.Clone();
+                sibling.LeftNode = newNodes[^1];
+                newNodes.Add(sibling);
             }
         }
         _nodes = newNodes;
@@ -180,9 +183,11 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// <summary>
     /// Gets the text from the characters in this set.
     /// </summary>
+    /// <param name="deleted">True to include also deleted characters.</param>
     /// <returns>String.</returns>
-    public string GetText() => string.Join("",
-        this.Where(n => !n.IsDeleted).Select(n => n.Value));
+    public string GetText(bool deleted = false) => string.Join("",
+        this.Where(n => deleted || !n.IsDeleted)
+            .Select(n => n.Value + (n.IsDeleted? "†" : "")));
 
     /// <summary>
     /// Creates one new node for each character in <paramref name="text"/>.
@@ -627,4 +632,13 @@ public class CharNodeSet : IEnumerable<CharNode>
     /// </summary>
     /// <returns>Node set.</returns>
     public virtual CharNodeSet Clone() => new(_nodes);
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>String.</returns>
+    public override string ToString()
+    {
+        return GetText(true);
+    }
 }

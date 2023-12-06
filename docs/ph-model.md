@@ -203,11 +203,78 @@ Our operations are:
 
 which can be read as:
 
-✏️ (1) [a,b] delete `Z`;
-✏️ (2) [a,b] replace `A` with the results of the following annotations operations tree:
+✏️ (1) [x,y] delete `Z`;
+✏️ (2) [x,y] replace `A` with the results of the following annotations operations tree:
 
-- [a] 🌳 replace `A` with `V`;
-  - [b] 🌳 replace `V` with `B`;
-- [b] 🌳 replace `A` with `P`.
+- [x] 🌳 replace `A` with `V`;
+  - [y] 🌳 replace `V` with `B`;
+- [x] 🌳 replace `A` with `P`.
 
-✏️ (3) [] move `C` before `D`.
+✏️ (3) [x,y] move `C` before `D`.
+
+If we inspect the whole set of operations, we find that we have 2 interpretations, tagged `x` and `y`. So, we will have to follow the generation recipe twice, once for each interpretation. In what follows, I copy the portion of diagnostic log preceding each operation.
+
+#### Version x
+
+```txt
+---Version x
+EntryIndex 0
+B-Operation 3×1="" [x=1 y=1]
+B-Result: ARZ†DC
+```
+
+(1) we start with rule (1) at 3, which deletes Z (`3×1="" [x=1 y=1]`). The result is `ARZ†DC` (here I mark deleted characters with a dagger).
+
+```txt
+EntryIndex 1
+B-Operation 2×1="" [x=2 y=2]...
+```
+
+(2) we then move to rule (2) at 2 (`2×1="" [x=2 y=2]`), which replaces `R` with the various branches of a tree of annotations. So here we must start traversing the tree, and whenever an operation is applied we merge its result back into the base plane, and continue with the next base operation.
+
+```txt
+Traversing tree
+Node with (null)
+Node with 1×1="V" [x]
+A-Operation 1×1="V" [x]
+A-Nodes: R
+A-Result: V
+Merged set: AVZ†DC
+```
+
+(3) the first node in the annotations tree is just an empty node which allows branching. So it is skipped, until we reach the first non-empty child, the operation `1×1="V" [x]`. The nodes projected into the annotations plane from the base plane are just one, corresponding to `R`, as per rule (2) selection. The operation replaces this `R` with `V`. Then, this result is merged back into the base plane, whence `AVZ†DC`, starting a new branch of the generation process.
+
+```txt
+EntryIndex 2
+B-Operation 5×1>4 [x=3 y=3]
+B-Result: AVZ†CD
+```
+
+(4) as we are back on the base plane, we move on the next base operation, which is `5×1>4 [x=3 y=3]`. This moves `D` before `C`, whence the result `AVZ†CD`.
+
+```txt
+EntryIndex 3
+Adding to results: AVZ†CD (1)
+```
+
+(5) we move on the next base operation, but there are no more of them. So we have finished with this branch, and we can add the current text to the generated results: `AVZ†CD`.
+
+```txt
+Node with 1×1="B" [x]
+A-Operation 1×1="B" [x]
+A-Nodes: V
+A-Result: B
+Merged set: ABZ†CD
+```
+
+(6) now we are back to our operations tree in the annotations plane. We have just processed the first child node, so we move to its child (this is a depth-first traversal), which corresponds to operation `1×1="B" [x]`. The current value of nodes in the annotations plane is `V`; and this operation replaces it with `B`. The result is then merged back to the base plane, whence `ABZ†CD`.
+
+```txt
+EntryIndex 2
+B-Operation 5×1>4 [x=3 y=3]
+B-Result: ABZ†CD
+```
+
+(7) again, on a new processing branch stemming from our tree node we move on the next base operation, which as above is `5×1>4 [x=3 y=3]`. The result is thus TODO
+
+#### Version y

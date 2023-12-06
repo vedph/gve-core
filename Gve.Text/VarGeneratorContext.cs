@@ -73,4 +73,16 @@ internal class VarGeneratorContext
         OpContext = source.OpContext.Clone();
         Results = source.Results;
     }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return $"[{VersionTag}] {EntryIndex}/{Entries.Count}: " +
+            $"{OpContext} ({Results.Count})";
+    }
 }
