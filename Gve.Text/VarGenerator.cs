@@ -186,6 +186,8 @@ public sealed class VarGenerator
             entry.Root.Traverse((node) =>
             {
                 _logger?.LogInformation("A-Node with {payload}", node.Payload);
+                _logger?.LogInformation("A-Nodes: {text}",
+                    context.OpContext.GetAnnText());
 
                 // just continue if no operation for this node
                 if (node.Payload == null) return true;

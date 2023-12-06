@@ -269,7 +269,7 @@ Merged set: ABZ†DC
 Recursing...
 ```
 
-(6) now we are back to our operations tree in the annotations plane. We have just processed the first child node, so we move to its child (this is a depth-first traversal), which corresponds to operation `1×1="B" [x]`. The current value of nodes in the annotations plane is `V`; and this operation replaces it with `B`. The result is then merged back to the base plane, whence `ABZ†CD`.
+(6) now we are back to our operations tree in the annotations plane. We have just processed the first child node, so we move to its child (this is a depth-first traversal), which corresponds to operation `1×1="B" [x]`. The current value of nodes in the annotations plane is `R`; and this operation replaces it with `B`. The result is then merged back to the base plane, whence `ABZ†CD`.
 
 ```txt
 EntryIndex 2

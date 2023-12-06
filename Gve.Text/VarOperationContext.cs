@@ -115,6 +115,6 @@ public class VarOperationContext
     /// <returns>String.</returns>
     public override string ToString()
     {
-        return $"{Set.GetText()} ({AnnNodes.Count})";
+        return $"{Set.GetText(true)} ({AnnNodes.Count})";
     }
 }
