@@ -153,7 +153,8 @@ public sealed class VarGenerator
         // get the entry to process: if there are no more entries, we're done
         if (context.EntryIndex >= context.Entries.Count)
         {
-            _logger?.LogInformation("Result {count}", context.Results.Count);
+            _logger?.LogInformation("Adding to results: {result}",
+                context.OpContext.Set.GetText());
             context.Results.Add(context.OpContext.Set.Clone());
             return false;
         }
