@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Gve.Text.Annotations;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +144,29 @@ public sealed class VarGenerator
             .ToList();
     }
 
+    private static void ReplayAscendants(TreeNode<AnnVarOperation> node,
+        VarOperationContext context, short at, short run)
+    {
+        // collect ascendants up to root in a stack
+        Stack<TreeNode<AnnVarOperation>> stack = new();
+        TreeNode<AnnVarOperation>? parent = node.Parent;
+        while (parent != null)
+        {
+            if (parent.Payload != null) stack.Push(parent);
+            parent = parent.Parent;
+        }
+
+        // execute all the operations from stack on context
+        if (stack.Count == 0) return;
+
+        context.SetAnnNodes(at, run);
+        while (stack.Count > 0)
+        {
+            TreeNode<AnnVarOperation> n = stack.Pop();
+            n.Payload?.Execute(context);
+        }
+    }
+
     private bool ProcessNextEntry(VarGeneratorContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -186,12 +210,20 @@ public sealed class VarGenerator
             entry.Root.Traverse((node) =>
             {
                 _logger?.LogInformation(":A-Node with {payload}", node.Payload);
-                _logger?.LogInformation("B-Nodes: {text}@{at}x{run}",
-                    context.OpContext.Set.GetText(),
+                // just continue if no operation for this node
+                if (node.Payload == null)
+                {
+                    _logger?.LogInformation("Skipping empty A-node");
+                    return true;
+                }
+
+                // replay ascendants operations on context to get in synch
+                // with the position of the current node in tree
+                ReplayAscendants(node, context.OpContext,
                     entry.Operation.At, entry.Operation.Run);
 
-                // just continue if no operation for this node
-                if (node.Payload == null) return true;
+                _logger?.LogInformation("A-Nodes: {text}",
+                    context.OpContext.GetAnnText());
 
                 // operation's tag must match
                 _logger?.LogInformation("A-Operation {op}", node.Payload);

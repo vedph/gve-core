@@ -235,9 +235,9 @@ B-Operation 2×1="" [x=2 y=2]...
 ```txt
 Traversing tree
 :A-Node with (null)
-B-Nodes: ARDC@2x1
+Skipping empty A-node
 :A-Node with 1×1="V" [x]
-B-Nodes: ARDC@2x1
+A-Nodes: 
 A-Operation 1×1="V" [x]
 A-Nodes: R
 A-Result: V
@@ -260,13 +260,13 @@ B-Result: AVZ†CD
 +Adding to results: AVZ†CD (1)
 ```
 
->Results: AVCD.
-
 (5) we move on the next base operation, but there are no more of them. So we have finished with this branch, and we can add the current text to the generated results: `AVZ†CD`.
+
+>Results: `AVCD`.
 
 ```txt
 :A-Node with 1×1="B" [x]
-B-Nodes: ARDC@2x1
+A-Nodes: V
 A-Operation 1×1="B" [x]
 A-Nodes: R
 A-Result: B
