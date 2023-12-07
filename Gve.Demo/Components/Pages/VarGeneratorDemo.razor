@@ -1,0 +1,12 @@
+﻿@page "/demo/var-generator"
+
+<PageTitle>Variant Generator Demo</PageTitle>
+
+<h1>Variant Generator Demo</h1>
+
+<EditForm Model="@this" OnValidSubmit="@ParseText">
+    <FluentTextField @bind-Value="Text" Label="Text" Required="true"
+        ErrorMessage="Text must be non-empty"></FluentTextField>
+
+    <FluentButton OnClick="@ParseText">Submit</FluentButton>
+</EditForm>
