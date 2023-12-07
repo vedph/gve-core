@@ -30,7 +30,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>EAQAABAAAIAAABAIAIhAAQAAEAEFSAAEAAAEAgAACTA=</HashCode>
+      <HashCode>EAQAABAAAIAAABAMAIhAAQAAEAEFSAAEAAAEAgAACTA=</HashCode>
       <FileName>CharNodeSet.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -58,7 +58,7 @@
       <Method Name="TreeNode" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAKAIkAAAAAEAAAAAAUQgAgAEAAAAAAAAAAACAAGBA=</HashCode>
+      <HashCode>AIAKAIkAAAAAEAAAAAAUQgAgAEAAAAAAAAAAACAACBA=</HashCode>
       <FileName>TreeNode.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -281,8 +281,11 @@
       <Method Name="ToString" Hidden="true" />
       <Method Name="VarOperationContext" Hidden="true" />
     </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAABAAEAAAAAAAAAAAAAABAAAUAAAAAABA=</HashCode>
+      <HashCode>AAAAAIAAAAAARAAEAAAAAAAAAAAAAABAAAUAAAAAABA=</HashCode>
       <FileName>VarOperationContext.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -311,12 +314,13 @@
     <Position X="0.75" Y="3.5" Width="1.75" />
     <Members>
       <Method Name="ProcessNextEntry" Hidden="true" />
+      <Method Name="ReplayAscendants" Hidden="true" />
     </Members>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAgAACAAAAAAACAAAAAAAAAgIAAAAAAAAAAAAEEEAAA=</HashCode>
+      <HashCode>gAgAACAAAAAAACAAAAAAAAAgIAAAAAAAAAAAAEEEAAA=</HashCode>
       <FileName>VarGenerator.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
