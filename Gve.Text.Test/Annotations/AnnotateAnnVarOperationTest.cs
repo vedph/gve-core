@@ -12,6 +12,7 @@ public sealed class AnnotateAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("1x2: {note=sample}",
             out AnnotateAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 

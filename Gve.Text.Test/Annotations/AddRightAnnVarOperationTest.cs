@@ -12,6 +12,7 @@ public sealed class AddRightAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("1+>\"X\"",
                        out AddRightAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -25,6 +26,7 @@ public sealed class AddRightAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("3+>\"X\"",
                        out AddRightAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -38,6 +40,7 @@ public sealed class AddRightAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("5+>\"X\"",
                        out AddRightAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 

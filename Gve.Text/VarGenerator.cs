@@ -23,6 +23,13 @@ public sealed class VarGenerator
     public bool IsTrackingEnabled { get; set; }
 
     /// <summary>
+    /// Gets the history of generation steps. This is filled only when tracking
+    /// is enabled.
+    /// </summary>
+    public IDictionary<string, IList<VarGenerationStep>>? Steps
+        { get; private set; }
+
+    /// <summary>
     /// Gets the unsorted base operation entries to apply to the base text
     /// to generate its variants.
     /// </summary>
@@ -150,6 +157,20 @@ public sealed class VarGenerator
             .ToList();
     }
 
+    private void AddStep(VarGenerationStep step)
+    {
+        Steps ??= new Dictionary<string, IList<VarGenerationStep>>();
+
+        if (!Steps.TryGetValue(step.VersionTag,
+            out IList<VarGenerationStep>? steps))
+        {
+            steps = new List<VarGenerationStep>();
+            Steps[step.VersionTag] = steps;
+        }
+
+        steps.Add(step);
+    }
+
     private static void ReplayAscendants(TreeNode<AnnVarOperation> node,
         VarOperationContext context, short at, short run)
     {
@@ -200,6 +221,16 @@ public sealed class VarGenerator
                 entry.Operation.Execute(context.OpContext);
                 _logger?.LogInformation("B-Result: {text}",
                     context.OpContext.Set.GetText(true));
+
+                // track if required
+                if (IsTrackingEnabled)
+                {
+                    AddStep(new VarGenerationStep(
+                        context.VersionTag,
+                        entry,
+                        entry.Operation,
+                        context.OpContext.Clone()));
+                }
             }
             else
             {
@@ -258,6 +289,16 @@ public sealed class VarGenerator
                 newContext.OpContext.MergeAnnNodes();
                 _logger?.LogInformation("Merged set: {text}",
                     newContext.OpContext.Set.GetText(true));
+
+                // track if required
+                if (IsTrackingEnabled)
+                {
+                    AddStep(new VarGenerationStep(
+                        newContext.VersionTag,
+                        entry,
+                        entry.Operation,
+                        newContext.OpContext.Clone()));
+                }
 
                 newContext.EntryIndex++;
 

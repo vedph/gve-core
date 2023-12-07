@@ -14,6 +14,7 @@ public sealed class SwapAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("1x3<>5",
             out SwapAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -28,6 +29,7 @@ public sealed class SwapAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("2x2<>5",
             out SwapAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -41,6 +43,7 @@ public sealed class SwapAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("5<>2",
             out SwapAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 

@@ -14,6 +14,7 @@ public sealed class MoveAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("1>3",
             out MoveAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -28,6 +29,7 @@ public sealed class MoveAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("3>2",
             out MoveAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
@@ -41,6 +43,7 @@ public sealed class MoveAnnVarOperationTest
         Assert.True(AnnVarOperation.TryParse("5>2",
             out MoveAnnVarOperation? op));
         Assert.NotNull(op);
+        context.SetAnnNodes(1, 5);
 
         op.Execute(context);
 
