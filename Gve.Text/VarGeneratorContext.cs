@@ -37,6 +37,12 @@ internal class VarGeneratorContext
     public IList<CharNodeSet> Results { get; }
 
     /// <summary>
+    /// Gets the history of generation steps. This is filled only when tracking
+    /// is enabled.
+    /// </summary>
+    public IDictionary<string, IList<VarGenerationStep>>? Steps { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="VarGeneratorContext"/> class.
     /// </summary>
     /// <remarks>This constructor is used when starting a new generation

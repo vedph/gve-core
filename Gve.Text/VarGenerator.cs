@@ -17,6 +17,12 @@ public sealed class VarGenerator
     private readonly ILogger? _logger;
 
     /// <summary>
+    /// Gets or sets a value indicating whether this generator should track
+    /// its generation steps into <see cref="VarGenerationStep"/> objects.
+    /// </summary>
+    public bool IsTrackingEnabled { get; set; }
+
+    /// <summary>
     /// Gets the unsorted base operation entries to apply to the base text
     /// to generate its variants.
     /// </summary>
