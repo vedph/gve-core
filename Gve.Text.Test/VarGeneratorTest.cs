@@ -88,6 +88,14 @@ public sealed class VarGeneratorTest
             generator.Generate(TEXT);
 
         Assert.Equal(2, results.Keys.Count);
-        // TODO other assertions
+        // x
+        IList<CharNodeSet> r = results["x"];
+        Assert.Equivalent(2, r.Count);
+        Assert.Equal("AVCD", r[0].GetText());
+        Assert.Equal("ABCD", r[1].GetText());
+        // y
+        r = results["y"];
+        Assert.Single(r);
+        Assert.Equal("APCD", r[0].GetText());
     }
 }

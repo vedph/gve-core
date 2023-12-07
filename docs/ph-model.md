@@ -313,3 +313,51 @@ If you recall the operations defined, for `x` we had:
 So from `ARZDC` we got `AVCD` and `ABCD`.
 
 #### Version y
+
+(1) as for `x` above, we start with rule `3×1="" [x=1 y=1]`, which deletes Z at 3. The result is `ARZ†DC`:
+
+```txt
+-- EntryIndex 0
+B-Operation 3×1="" [x=1 y=1]
+B-Result: ARZ†DC
+```
+
+(2) we then find the base operation `2×1="" [x=2 y=2]` which is projected into a tree of annotation operations. This tree is traversed, but the only node matching version `y` is the last one, with operation `1×1="P" [y]`. So, this just replaces `R` with `P`:
+
+```txt
+-- EntryIndex 1
+B-Operation 2×1="" [x=2 y=2]...
+Traversing tree
+:A-Node with (null)
+Skipping empty A-node
+:A-Node with 1×1="V" [x]
+A-Nodes:
+A-Operation 1×1="V" [x]
+Skipping A-operation 1×1="V" [x]
+:A-Node with 1×1="B" [x]
+A-Nodes: V
+A-Operation 1×1="B" [x]
+Skipping A-operation 1×1="B" [x]
+:A-Node with 1×1="P" [y]
+A-Nodes: V
+A-Operation 1×1="P" [y]
+A-Nodes: R
+A-Result: P
+Merged set: APZ†DC
+Recursing...
+```
+
+(3) on the processing branch stemming from the `P` tree node, we move to the next base operation, `5×1>4 [x=3 y=3]`, which moves `D` before `C`:
+
+```txt
+-- EntryIndex 2
+B-Operation 5×1>4 [x=3 y=3]
+B-Result: APZ†CD
+```
+
+(4) as there are no more base operations after this, we are done: the result is just `APZ†CD`:
+
+-- EntryIndex 3
++Adding to results: APZ†CD (1)
+
+>Results: `APCD`.
