@@ -8,6 +8,10 @@ dotnet new install Microsoft.FluentUI.AspNetCore.Templates
 
 The corresponding code repository is at <https://github.com/microsoft/fluentui-blazor>.
 
+Other Razor packages:
+
+- `Microsoft.FluentUI.AspNetCore.Components.Icons`
+
 ## Documentation
 
 - [Text Model](docs/text_model.md)

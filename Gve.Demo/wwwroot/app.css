@@ -122,3 +122,9 @@ footer {
 code {
     color: #c02d76;
 }
+
+/* My custom styles */
+
+.full-width {
+    width: 100%;
+}

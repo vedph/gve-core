@@ -5,8 +5,15 @@
 <h1>Variant Generator Demo</h1>
 
 <EditForm Model="@this" OnValidSubmit="@ParseText">
-    <FluentTextField @bind-Value="Text" Label="Text" Required="true"
-        ErrorMessage="Text must be non-empty"></FluentTextField>
+    <FluentGrid>
+        <FluentGridItem xs="12" sm="12">
+            <FluentTextArea @bind-Value="Text" class="full-width"
+                Label="Text" Required="true"
+                ErrorMessage="Text must be non-empty"></FluentTextArea>
+        </FluentGridItem>
 
-    <FluentButton OnClick="@ParseText">Submit</FluentButton>
+        <FluentGridItem>
+            <FluentButton OnClick="@ParseText">Submit</FluentButton>
+        </FluentGridItem>
+    </FluentGrid>
 </EditForm>
