@@ -1,0 +1,29 @@
+﻿@using Gve.Text
+
+@code {
+    [Parameter]
+    public CharNodeSet? Set { get; set; }
+}
+
+@if (Set != null)
+{
+    <FluentDataGrid Items="Set.AsQueryable()">
+        <PropertyColumn Title="v" Property="@(c => c.Value)" />
+        <TemplateColumn Title="pv">
+            @string.Join(" < ", context.PreviousValues)
+        </TemplateColumn>
+        <TemplateColumn Title="features">
+            @if (context.Features?.Count > 0)
+            {
+                <ul>
+                    @foreach (Feature feature in context.Features)
+                    {
+                        <li>
+                            <span>@feature.Name</span>=<span>@feature.Value</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </TemplateColumn>
+    </FluentDataGrid>
+}

@@ -53,9 +53,7 @@ public class CharNode
     {
         get
         {
-            return _prevValues == null
-                ? Array.Empty<char>()
-                : _prevValues;
+            return (IList<char>?)_prevValues ?? Array.Empty<char>();
         }
     }
 

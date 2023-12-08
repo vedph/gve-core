@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Text;
 
 namespace Gve.Demo.Components.Pages;
 
@@ -30,7 +29,8 @@ public partial class VarGeneratorDemo
 
     public bool CanGenerate { get; set; }
     public bool IsGenerating { get; set; }
-    public string? GeneratedText { get; set; }
+    public List<Tuple<string, CharNodeSet>> Results { get; set; }
+    public Tuple<string, CharNodeSet>? SelectedResult { get; set; }
 
     public VarGeneratorDemo()
     {
@@ -39,9 +39,10 @@ public partial class VarGeneratorDemo
             "  - 1=\"V\" [x]\n" +
             "    - 1=\"B\" [x]\n" +
             "  - 1=\"P\" [y]\n" +
-            "- 3=\"\" [x=1 y=1]\n" +
+            "- 3=\"\" [x=1 y=1] {reason=\"don't like Z\"}\n" +
             "- 5>4 [x=3 y=3]\n";
         VariantTags = [];
+        Results = [];
     }
 
     public TreeNode<VarOperation> BuildTree(IList<VarOperationEntry> entries)
@@ -84,22 +85,14 @@ public partial class VarGeneratorDemo
         }
     }
 
-    private static string GetGeneratedText(IDictionary<string, IList<CharNodeSet>>
-        results)
+    private void SetResults(IDictionary<string, IList<CharNodeSet>> results)
     {
-        if (results.Count == 0) return "";
-
-        StringBuilder sb = new();
+        Results.Clear();
         foreach (string tag in results.Keys)
         {
-            sb.Append('[').Append(tag).AppendLine("]");
             foreach (CharNodeSet set in results[tag])
-            {
-                sb.AppendLine(set.ToString());
-            }
+                Results.Add(new(tag, set));
         }
-
-        return sb.ToString();
     }
 
     public void Generate()
@@ -109,17 +102,17 @@ public partial class VarGeneratorDemo
         try
         {
             IsGenerating = true;
-
             IDictionary<string, IList<CharNodeSet>> results;
+
             if (SelectedVariantTag != null && SelectedVariantTag != "*")
             {
-                results = _generator!.Generate(Text, new[] { SelectedVariantTag });
+                SetResults(results = _generator!.Generate(Text,
+                    new[] { SelectedVariantTag }));
             }
             else
             {
-                results = _generator!.Generate(Text);
+                SetResults(results = _generator!.Generate(Text));
             }
-            GeneratedText = GetGeneratedText(results);
         }
         catch (Exception ex)
         {
