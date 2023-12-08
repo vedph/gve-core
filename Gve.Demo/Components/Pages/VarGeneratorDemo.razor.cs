@@ -6,10 +6,12 @@ namespace Gve.Demo.Components.Pages;
 
 public partial class VarGeneratorDemo
 {
-    [Required(ErrorMessage = "Base text required")]
+    [Required]
+    [MaxLength(5000)]
     public string Text { get; set; }
 
-    [Required(ErrorMessage = "Operations definition required")]
+    [Required]
+    [MaxLength(1000)]
     public string OpText { get; set; } 
 
     public TreeNode<VarOperation>? Root { get; set; }
@@ -32,21 +34,13 @@ public partial class VarGeneratorDemo
 
         foreach (VarOperationEntry entry in entries)
         {
-            TreeNode<VarOperation> child;
-            if (entry.Operation != null)
+            TreeNode<VarOperation> child = new(entry.Operation);
+
+            if (entry.Root != null)
             {
-                child = new TreeNode<VarOperation>(entry.Operation);
-            }
-            else if (entry.Root != null)
-            {
-                child = entry.Root.Clone<VarOperation>((op) =>
-                {
-                    return op;
-                });
-            }
-            else
-            {
-                continue;
+                TreeNode<VarOperation> tree = entry.Root.Clone<VarOperation>
+                    ((op) => { return op; });
+                child.AddChild(tree);
             }
 
             root.AddChild(child);
@@ -59,6 +53,7 @@ public partial class VarGeneratorDemo
     {
         try
         {
+            Error = null;
             VarGenerator generator = new();
             generator.SetEntries(OpText);
             Root = BuildTree(generator.Entries);

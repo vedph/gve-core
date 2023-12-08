@@ -9,25 +9,22 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <FluentGrid>
-        <FluentGridItem xs="12" sm="12">
-            <FluentTextArea @bind-Value="Text" class="full-width"
-                            Label="Text" Required="true"
-                            ErrorMessage="Text must be non-empty">
-                        </FluentTextArea>
-        </FluentGridItem>
+    <FluentStack Orientation="Orientation.Vertical">
+        <FluentTextArea @bind-Value="Text" class="full-width"
+                        Label="Text" Required="true"
+                        ErrorMessage="Text must be non-empty">
+        </FluentTextArea>
 
-        <FluentGridItem xs="12" sm="12">
-            <FluentTextArea @bind-Value="OpText" class="full-width"
-                            Label="Operations" Required="true"
-                            ErrorMessage="Operations must be non-empty">
-                        </FluentTextArea>
-        </FluentGridItem>
+        <FluentTextArea @bind-Value="OpText" class="full-width"
+                        Label="Operations" Required="true"
+                        Style="min-height:200px"
+                        ErrorMessage="Operations must be non-empty">
+        </FluentTextArea>
 
-        <FluentGridItem>
-            <input type="submit" value="Submit" />
-            @* <FluentButton Disabled="@(!IsValid)">Submit</FluentButton> *@
-        </FluentGridItem>
-    </FluentGrid>
-    
+        <input type="submit" value="Submit" />
+        @* <FluentButton Disabled="@(!IsValid)">Submit</FluentButton> *@
+    </FluentStack>
+
+    <FluentTreeView Items="@Root" />
+
 </EditForm>
