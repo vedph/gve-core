@@ -8,6 +8,11 @@ namespace Gve.Text;
 public class VarOperationMetadata
 {
     /// <summary>
+    /// The key for the rank feature.
+    /// </summary>
+    public const string RANK_KEY = "rank";
+
+    /// <summary>
     /// Gets or sets the certainty rank for this operation: 0=not specified,
     /// 1=most probable, 2=less probable, etc.
     /// </summary>

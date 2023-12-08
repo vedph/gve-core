@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -227,21 +226,35 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <paramref name="features"/>.
     /// </summary>
     /// <param name="features">The features to update.</param>
+    /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
+    /// 0 is added as a unique feature; anyway, it can be overridden by another
+    /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
+    /// </remarks>
     /// <exception cref="ArgumentNullException">features</exception>
     protected void AddFeatures(IList<Feature> features)
     {
         ArgumentNullException.ThrowIfNull(features);
-        Feature.UpdateFeatures(Features, features);
+        Feature.UpdateFeatures(Rank != 0
+            ? [new Feature(RANK_KEY, $"{Rank}", true), ..Features]
+            : Features,
+            features);
     }
 
     /// <summary>
     /// Adds <see cref="VarOperationMetadata.Features"/> to the received node.
     /// </summary>
     /// <param name="node">The node.</param>
+    /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
+    /// 0 is added as a unique feature; anyway, it can be overridden by another
+    /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
+    /// </remarks>
     protected void AddFeatures(CharNode node)
     {
         ArgumentNullException.ThrowIfNull(node);
-        Feature.UpdateFeatures(Features, node.Features);
+        Feature.UpdateFeatures(Rank != 0
+            ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
+            : Features,
+            node.Features);
     }
 
     /// <summary>
