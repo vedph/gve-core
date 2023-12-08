@@ -18,7 +18,7 @@
 
         <FluentTextArea @bind-Value="OpText" class="full-width"
                         Label="Operations" Required="true"
-                        Rows="5" Style="font-family: monospace"
+                        Rows="10" Style="font-family: monospace"
                         ErrorMessage="Operations must be non-empty">
         </FluentTextArea>
 
@@ -33,7 +33,8 @@
     @if (CanGenerate)
     {
         <FluentToolbar>
-            <FluentSelect Items="@VariantTags" SelectedOption="SelectedVariantTag" />
+            <FluentSelect Items="@VariantTags"
+                @bind-SelectedOption="SelectedVariantTag" />
             <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
                           Type="ButtonType.Button"
                           Appearance="Appearance.Accent"
