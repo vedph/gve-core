@@ -103,6 +103,23 @@ public class TreeNode<T>
     }
 
     /// <summary>
+    /// Deeply clones this instance and all its descendants, applying to each
+    /// node's payload the specified transform function.
+    /// </summary>
+    /// <typeparam name="P">The type of payload to transform to.</typeparam>
+    /// <param name="transformFunc">The transform function.</param>
+    /// <returns>Node.</returns>
+    public TreeNode<P> Clone<P>(Func<T?, P> transformFunc)
+    {
+        TreeNode<P> newNode = new(transformFunc(Payload));
+        foreach (TreeNode<T> child in Children)
+        {
+            newNode.AddChild(child.Clone(transformFunc));
+        }
+        return newNode;
+    }
+
+    /// <summary>
     /// Adds the specified node as a child of this node.
     /// </summary>
     /// <param name="child">The child.</param>
