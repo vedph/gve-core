@@ -203,14 +203,14 @@ Our operations are:
 
 which can be read as:
 
-✏️ (1) [x,y] delete `Z`;
-✏️ (2) [x,y] replace `A` with the results of the following annotations operations tree:
+✏️ (1) [tags: x,y] delete `Z`;
+✏️ (2) [tags: x,y] replace `A` with the results of the following annotations operations tree:
 
-- [x] 🌳 replace `A` with `V`;
-  - [x] 🌳 replace `V` with `B`;
-- [y] 🌳 replace `A` with `P`.
+- [tags: x] 🌳 replace `A` with `V`;
+  - [tags: x] 🌳 replace `V` with `B`;
+- [tags: y] 🌳 replace `A` with `P`.
 
-✏️ (3) [x,y] move `C` before `D`.
+✏️ (3) [tags: x,y] move `C` before `D`.
 
 If we inspect the whole set of operations, we find that we have 2 interpretations, tagged `x` and `y`. So, we will have to follow the generation recipe twice, once for each interpretation. In what follows, I copy the portion of diagnostic log for each operation.
 
