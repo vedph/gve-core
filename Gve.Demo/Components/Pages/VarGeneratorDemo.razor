@@ -17,7 +17,6 @@
 
         <FluentTextArea @bind-Value="OpText" class="full-width"
                         Label="Operations" Required="true"
-                        Style="min-height:200px"
                         ErrorMessage="Operations must be non-empty">
         </FluentTextArea>
 
@@ -25,6 +24,8 @@
         @* <FluentButton Disabled="@(!IsValid)">Submit</FluentButton> *@
     </FluentStack>
 
-    <FluentTreeView Items="@Root" />
+    <FluentTreeView Items="@Root">
+        <VarOpTreeNode Node="Root"/>
+    </FluentTreeView>
 
 </EditForm>
