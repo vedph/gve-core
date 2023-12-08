@@ -4,16 +4,29 @@
 
 <h1>Variant Generator Demo</h1>
 
-<EditForm Model="@this" OnValidSubmit="@ParseText">
+<EditForm Model="@this" FormName="demo"
+          OnValidSubmit="@ParseText">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
     <FluentGrid>
         <FluentGridItem xs="12" sm="12">
             <FluentTextArea @bind-Value="Text" class="full-width"
-                Label="Text" Required="true"
-                ErrorMessage="Text must be non-empty"></FluentTextArea>
+                            Label="Text" Required="true"
+                            ErrorMessage="Text must be non-empty">
+                        </FluentTextArea>
+        </FluentGridItem>
+
+        <FluentGridItem xs="12" sm="12">
+            <FluentTextArea @bind-Value="OpText" class="full-width"
+                            Label="Operations" Required="true"
+                            ErrorMessage="Operations must be non-empty">
+                        </FluentTextArea>
         </FluentGridItem>
 
         <FluentGridItem>
-            <FluentButton OnClick="@ParseText">Submit</FluentButton>
+            <input type="submit" value="Submit" />
+            @* <FluentButton Disabled="@(!IsValid)">Submit</FluentButton> *@
         </FluentGridItem>
     </FluentGrid>
     

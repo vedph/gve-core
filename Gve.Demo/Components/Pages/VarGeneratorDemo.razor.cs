@@ -1,20 +1,32 @@
 ﻿using Gve.Text;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 namespace Gve.Demo.Components.Pages;
 
 public partial class VarGeneratorDemo
 {
+    [Required(ErrorMessage = "Base text required")]
     public string Text { get; set; }
-    public string? Error { get; set; }
+
+    [Required(ErrorMessage = "Operations definition required")]
+    public string OpText { get; set; } 
+
     public TreeNode<VarOperation>? Root { get; set; }
+    public string? Error { get; set; }
 
     public VarGeneratorDemo()
     {
         Text = "ARZDC";
+        OpText = "- 2=\"\" [x=2 y=2]\n" +
+            "  - 1=\"V\" [x]\n" +
+            "    - 1=\"B\" [x]\n" +
+            "  - 1=\"P\" [y]\n" +
+            "- 3=\"\" [x=1 y=1]\n" +
+            "- 5>4 [x=3 y=3]\n";
     }
 
-    public TreeNode<VarOperation> BuildTree(List<VarOperationEntry> entries)
+    public TreeNode<VarOperation> BuildTree(IList<VarOperationEntry> entries)
     {
         TreeNode<VarOperation> root = new(null);
 
@@ -37,8 +49,7 @@ public partial class VarGeneratorDemo
                 continue;
             }
 
-            root.Children.Add(child);
-            child.Parent = root;
+            root.AddChild(child);
         }
 
         return root;
@@ -49,18 +60,8 @@ public partial class VarGeneratorDemo
         try
         {
             VarGenerator generator = new();
-            generator.SetEntries(Text);
-            TreeNode<VarOperation> root = new();
-            foreach (var entry in generator.Entries)
-            {
-                TreeNode<VarOperation> child = new(entry.Operation);
-                root.AddChild(child);
-                if (entry.Root != null)
-                {
-                    // TODO
-                }
-            }
-            Root = root;
+            generator.SetEntries(OpText);
+            Root = BuildTree(generator.Entries);
         }
         catch (Exception ex)
         {
