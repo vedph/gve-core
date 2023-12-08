@@ -73,7 +73,7 @@ public partial class VarGeneratorDemo
             _generator = new();
             _generator.SetEntries(OpText);
             Root = BuildTree(_generator.Entries);
-            VariantTags = _generator.GetVersionTags();
+            VariantTags = ["*", .._generator.GetVersionTags()];
             CanGenerate = true;
         }
         catch (Exception ex)
@@ -84,7 +84,7 @@ public partial class VarGeneratorDemo
         }
     }
 
-    private string GetGeneratedText(IDictionary<string, IList<CharNodeSet>>
+    private static string GetGeneratedText(IDictionary<string, IList<CharNodeSet>>
         results)
     {
         if (results.Count == 0) return "";
@@ -92,7 +92,7 @@ public partial class VarGeneratorDemo
         StringBuilder sb = new();
         foreach (string tag in results.Keys)
         {
-            sb.AppendLine($"[{tag}]");
+            sb.Append('[').Append(tag).AppendLine("]");
             foreach (CharNodeSet set in results[tag])
             {
                 sb.AppendLine(set.ToString());
@@ -111,7 +111,7 @@ public partial class VarGeneratorDemo
             IsGenerating = true;
 
             IDictionary<string, IList<CharNodeSet>> results;
-            if (SelectedVariantTag != null)
+            if (SelectedVariantTag != null && SelectedVariantTag != "*")
             {
                 results = _generator!.Generate(Text, new[] { SelectedVariantTag });
             }

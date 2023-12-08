@@ -311,8 +311,9 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarGenerator">
-    <Position X="0.75" Y="3.5" Width="1.75" />
+    <Position X="0.75" Y="2.75" Width="1.75" />
     <Members>
+      <Method Name="AddStep" Hidden="true" />
       <Method Name="ProcessNextEntry" Hidden="true" />
       <Method Name="ReplayAscendants" Hidden="true" />
     </Members>
@@ -320,7 +321,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>gAgAACAAAAAAACAAAAAAAAAgIAAAAAAAAAAAAEEEAAA=</HashCode>
+      <HashCode>gAgBACAAAAAAACAAAAAAAAAgIAIAAAAAAAABAEEEAAA=</HashCode>
       <FileName>VarGenerator.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>

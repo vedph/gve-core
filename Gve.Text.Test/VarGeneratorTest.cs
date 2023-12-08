@@ -82,7 +82,10 @@ public sealed class VarGeneratorTest
     [Fact]
     public void Generate_AllVersions_Ok()
     {
-        VarGenerator generator = new(ENTRIES, _logger);
+        VarGenerator generator = new(ENTRIES, _logger)
+        {
+            IsTrackingEnabled = true
+        };
 
         IDictionary<string, IList<CharNodeSet>> results =
             generator.Generate(TEXT);

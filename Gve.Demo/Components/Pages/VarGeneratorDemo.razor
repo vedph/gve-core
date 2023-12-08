@@ -41,4 +41,11 @@
             Generate
         </FluentButton>
     </FluentToolbar>
+
+    @if (GeneratedText != null)
+    {
+        <code>
+            <pre>@GeneratedText</pre>
+        </code>
+    }
 }
