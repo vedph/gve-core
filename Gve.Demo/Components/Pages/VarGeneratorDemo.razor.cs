@@ -125,4 +125,9 @@ public partial class VarGeneratorDemo
             IsGenerating = false;
         }
     }
+
+    public void SelectResult(Tuple<string, CharNodeSet> result)
+    {
+        SelectedResult = result;
+    }
 }

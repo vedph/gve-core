@@ -53,7 +53,7 @@
             <PropertyColumn Title="value" Property="@(t => t.Item2.GetText(false))" />
             <TemplateColumn Title="" Align="@Align.End" Context="t">
                 <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
-                              @onclick="@(()=> { SelectedResult = t; })" />
+                              @onclick="@(()=> { SelectResult(t); })" />
             </TemplateColumn>
         </FluentDataGrid>
 
