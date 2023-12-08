@@ -47,7 +47,7 @@ public class TreeNode<T>
     /// </summary>
     public int GetDepth()
     {
-        int depth = 0;
+        int depth = 1;
         TreeNode<T>? node = this;
         while (node.Parent != null)
         {
