@@ -25,42 +25,43 @@
         <FluentButton Type="ButtonType.Submit"
                       Appearance="Appearance.Accent">Submit</FluentButton>
     </FluentStack>
+</EditForm>
 
-    <FluentTreeView Items="@Root">
-        <VarOpTreeNode Node="Root" />
-    </FluentTreeView>
+<FluentTreeView Items="@Root">
+    <VarOpTreeNode Node="Root" />
+</FluentTreeView>
 
-    @if (CanGenerate)
+@if (CanGenerate)
+{
+    <FluentToolbar>
+        <FluentSelect Items="@VariantTags"
+                      @bind-SelectedOption="SelectedVariantTag" />
+        <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
+                      Type="ButtonType.Button"
+                      Appearance="Appearance.Accent"
+                      Loading="@IsGenerating"
+                      OnClick="Generate">
+            Generate
+        </FluentButton>
+    </FluentToolbar>
+
+    @if (Results != null)
     {
-        <FluentToolbar>
-            <FluentSelect Items="@VariantTags"
-                          @bind-SelectedOption="SelectedVariantTag" />
-            <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
-                          Type="ButtonType.Button"
-                          Appearance="Appearance.Accent"
-                          Loading="@IsGenerating"
-                          OnClick="Generate">
-                Generate
-            </FluentButton>
-        </FluentToolbar>
+        <FluentDataGrid Items="Results.AsQueryable()"
+                        GenerateHeader="GenerateHeaderOption.Default">
+            <PropertyColumn Title="tag" Property="@(t => t.Item1)" />
+            <PropertyColumn Title="value" Property="@(t => t.Item2.GetText(false))" />
+            <TemplateColumn Title="" Align="@Align.End" Context="t">
+                <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
+                              @onclick="@(()=> { SelectedResult = t; })" />
+            </TemplateColumn>
+        </FluentDataGrid>
 
-        @if (Results != null)
+        @if (SelectedResult != null)
         {
-            <FluentDataGrid Items="Results.AsQueryable()"
-                            GenerateHeader="GenerateHeaderOption.Default">
-                <PropertyColumn Title="tag" Property="@(t => t.Item1)" />
-                <PropertyColumn Title="tag" Property="@(t => t.Item2.GetText(false))" />
-                <TemplateColumn Title="" Align="@Align.End" Context="ctx">
-                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
-                                  @onclick="@(()=> { SelectedResult = ctx; })" />
-                </TemplateColumn>
-            </FluentDataGrid>
-
-            @if (SelectedResult != null)
-            {
-                <hr />
-                <CharNodeSetTable Set="SelectedResult.Item2" />
-            }
+            <hr />
+            <CharNodeSetTable Set="SelectedResult.Item2" />
         }
     }
-</EditForm>
+}
+

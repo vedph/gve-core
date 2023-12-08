@@ -12,6 +12,7 @@
         <TemplateColumn Title="pv">
             @string.Join(" < ", context.PreviousValues)
         </TemplateColumn>
+        <PropertyColumn Title="o" Property="@(c => c.Ordinal)" />
         <TemplateColumn Title="features">
             @if (context.Features?.Count > 0)
             {

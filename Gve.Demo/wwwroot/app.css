@@ -128,3 +128,8 @@ code {
 .full-width {
     width: 100%;
 }
+
+.fit-content-cell {
+    width: fit-content;
+    white-space: nowrap;
+}
