@@ -5,11 +5,15 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 
 <nav>
-    <FluentNavMenu Width="250" Collapsible="true" Title="Custom navigation menu">
-        <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icon.FromImageUrl("/images/home.svg")" IconColor="Color.Accent">Home</FluentNavLink>
-        <FluentNavLink Href="demo/var-generator" Icon="@(new Icons.Regular.Size24.Run())">Variant Generator</FluentNavLink>
-        <FluentNavLink Href="counter" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Counter</FluentNavLink>
-        <FluentNavLink Href="weather" Icon="@Icon.FromImageUrl("/images/weather.svg")" IconColor="Color.Accent">Weather</FluentNavLink>
+    <FluentNavMenu Width="250" Collapsible="true" Title="Navigation menu">
+        <FluentNavLink Href="/" Match="NavLinkMatch.All"
+                       Icon="@Icon.FromImageUrl("/images/home.svg")"
+                       IconColor="Color.Accent">Home</FluentNavLink>
+
+        <FluentNavLink Href="demo/var-generator"
+                       Icon="@(new Icons.Regular.Size24.Document())">
+            Variant Generator
+        </FluentNavLink>
     </FluentNavMenu>
 </nav>
 
