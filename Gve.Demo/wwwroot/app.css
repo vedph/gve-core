@@ -139,7 +139,12 @@ code {
     color: royalblue;
     white-space: nowrap;
 }
-
+span.fname {
+    color: seagreen;
+}
+span.fvalue {
+    color: orangered;
+}
 ul.compact {
     list-style-type: none;
     padding: 0;
