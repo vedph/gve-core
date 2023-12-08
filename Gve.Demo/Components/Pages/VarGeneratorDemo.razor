@@ -29,4 +29,14 @@
         <VarOpTreeNode Node="Root"/>
     </FluentTreeView>
 
+    <FluentToolbar>
+        <FluentSelect Items="@VariantTags"/>
+        <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
+                      Appearance="Appearance.Accent"
+                      Loading="@IsGenerating"
+                      OnClick="@Generate">
+            Generate
+        </FluentButton>
+    </FluentToolbar>
+
 </EditForm>
