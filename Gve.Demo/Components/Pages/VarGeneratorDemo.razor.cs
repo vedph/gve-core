@@ -55,7 +55,7 @@ public partial class VarGeneratorDemo
             if (entry.Root != null)
             {
                 TreeNode<VarOperation> tree = entry.Root.Clone<VarOperation>
-                    ((op) => { return op; });
+                    ((op) => op);
                 child.AddChild(tree);
             }
 
@@ -65,7 +65,7 @@ public partial class VarGeneratorDemo
         return root;
     }
 
-    public void ParseText()
+    public void Parse()
     {
         try
         {
