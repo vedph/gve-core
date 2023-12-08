@@ -1,12 +1,18 @@
 ﻿using Gve.Text;
+using Microsoft.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Text;
 
 namespace Gve.Demo.Components.Pages;
 
 public partial class VarGeneratorDemo
 {
     private VarGenerator? _generator;
+
+    [Inject]
+    public IToastService? ToastService { get; set; }
 
     [Required]
     [MaxLength(5000)]
@@ -22,7 +28,9 @@ public partial class VarGeneratorDemo
 
     public string? SelectedVariantTag { get; set; }
 
+    public bool CanGenerate { get; set; }
     public bool IsGenerating { get; set; }
+    public string? GeneratedText { get; set; }
 
     public VarGeneratorDemo()
     {
@@ -33,6 +41,7 @@ public partial class VarGeneratorDemo
             "  - 1=\"P\" [y]\n" +
             "- 3=\"\" [x=1 y=1]\n" +
             "- 5>4 [x=3 y=3]\n";
+        VariantTags = [];
     }
 
     public TreeNode<VarOperation> BuildTree(IList<VarOperationEntry> entries)
@@ -65,17 +74,37 @@ public partial class VarGeneratorDemo
             _generator.SetEntries(OpText);
             Root = BuildTree(_generator.Entries);
             VariantTags = _generator.GetVersionTags();
+            CanGenerate = true;
         }
         catch (Exception ex)
         {
             Error = ex.Message;
+            ToastService?.ShowError(ex.Message);
             Debug.WriteLine(ex);
         }
     }
 
+    private string GetGeneratedText(IDictionary<string, IList<CharNodeSet>>
+        results)
+    {
+        if (results.Count == 0) return "";
+
+        StringBuilder sb = new();
+        foreach (string tag in results.Keys)
+        {
+            sb.AppendLine($"[{tag}]");
+            foreach (CharNodeSet set in results[tag])
+            {
+                sb.AppendLine(set.ToString());
+            }
+        }
+
+        return sb.ToString();
+    }
+
     public void Generate()
     {
-        if (_generator == null || IsGenerating) return;
+        if (!CanGenerate || IsGenerating) return;
 
         try
         {
@@ -84,17 +113,18 @@ public partial class VarGeneratorDemo
             IDictionary<string, IList<CharNodeSet>> results;
             if (SelectedVariantTag != null)
             {
-                results = _generator.Generate(Text, new[] { SelectedVariantTag });
+                results = _generator!.Generate(Text, new[] { SelectedVariantTag });
             }
             else
             {
-                results = _generator.Generate(Text);
+                results = _generator!.Generate(Text);
             }
-            // TODO
+            GeneratedText = GetGeneratedText(results);
         }
         catch (Exception ex)
         {
             Error = ex.Message;
+            ToastService?.ShowError(ex.Message);
             Debug.WriteLine(ex);
         }
         finally

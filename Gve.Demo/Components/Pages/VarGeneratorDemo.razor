@@ -21,16 +21,19 @@
                         ErrorMessage="Operations must be non-empty">
         </FluentTextArea>
 
-        <input type="submit" value="Submit" />
-        @* <FluentButton Disabled="@(!IsValid)">Submit</FluentButton> *@
+        <FluentButton Type="ButtonType.Submit"
+                      Appearance="Appearance.Accent">Submit</FluentButton>
     </FluentStack>
+</EditForm>
 
-    <FluentTreeView Items="@Root">
-        <VarOpTreeNode Node="Root"/>
-    </FluentTreeView>
+<FluentTreeView Items="@Root">
+    <VarOpTreeNode Node="Root" />
+</FluentTreeView>
 
+@if (CanGenerate)
+{
     <FluentToolbar>
-        <FluentSelect Items="@VariantTags"/>
+        <FluentSelect Items="@VariantTags" />
         <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
                       Appearance="Appearance.Accent"
                       Loading="@IsGenerating"
@@ -38,5 +41,4 @@
             Generate
         </FluentButton>
     </FluentToolbar>
-
-</EditForm>
+}
