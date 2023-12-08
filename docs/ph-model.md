@@ -51,7 +51,7 @@ So, our model should be able to:
 - superimpose one or more interpretations to the tree operations for the resulting variants, and their combinations with the base operation they stem from.
 - provide an approximate representation (a virtual snapshot) of the graphical layout which puts together the base text and the annotations on top of it, combined with the operations represented by it.
 
-This is a challenging task, so let us face it one piece at a time. Let us first start from the model for the base text plane.
+This is a challenging task, so let us face it one piece at a time. We first start from the model for the base text plane.
 
 ### Base Plane Model
 
@@ -115,7 +115,7 @@ As for parameters:
 - `AT` is the ordinal number referring to the original ordinal position of each character of the base text.
 - `RUN` is the count of characters to grab from `AT`. If not specified, it defaults to 1.
 - `"VALUE"` is the text value, where applicable.
-- `^RANK` is the probability rank value for the operation in our interpretation: 1=most probable, 2=less probable, etc.
+- `^RANK` is the probability rank value for the operation in our interpretation: 1=most probable, 2=less probable, etc. This is just a shortcut for setting a feature named `rank` to the specified value. If you specify the rank via `{FEAT=VALUE}` argument, this will override the feature value as set by the rank argument.
 - `@GROUP` is an arbitrary string representing a group ID. When two or more operations belong to the same group, they are treated as if they were a unique single operation, so no intermediate output is generated.
 - `[TAG=N...]` is a set of version tags separated by spaces. Each tag is followed by `=` and the ordinal number for the application of the rule in the interpretation related to that tag. This is used to determine the order of operations for each text version. For instance, an operation might be the 3rd in the context of version A, and the 5th in the context of version B.
 - `{FEAT=VALUE}` is a set of features to be added as annotations to the output of the operation. Each feature is a name=value pair. Features are separated by space. If a feature value contains spaces, wrap it into double quotes (`"VALUE"`). If a feature with the same name already exists, it is added, so that you can have many features with the same name. When you don't want this behavior, set the feature as unique by using `:=` rather than `=`. Also, you can remove a feature by prefixing its name with `!` (in this case, of course you don't need to specify the value).

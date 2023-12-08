@@ -151,8 +151,8 @@ public partial record Feature
     public override string ToString()
     {
         string op = IsUnique? ":=" : "=";
-        return Value.Any(c => char.IsWhiteSpace(c))
-            ? Name + op + Value
-            : $"{Name}{op}\"{Value}\"";
+        return Value.Any(char.IsWhiteSpace)
+            ? $"{Name}{op}\"{Value}\""
+            : Name + op + Value;
     }
 }
