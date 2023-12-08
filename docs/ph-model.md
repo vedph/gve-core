@@ -183,7 +183,11 @@ So in the end with this model and flow we are not just collecting text variants 
 
 ### Flow Example
 
-Let us consider this abstract example, where we start with this simple base text:
+Let us consider this abstract example:
+
+![sample](img/text-model_sample1.png)
+
+We start with this simple base text:
 
 ```txt
 ARZDC
@@ -203,16 +207,18 @@ Our operations are:
 
 which can be read as:
 
-✏️ (1) [tags: x,y] delete `Z`;
-✏️ (2) [tags: x,y] replace `A` with the results of the following annotations operations tree:
-
-- [tags: x] 🌳 replace `A` with `V`;
-  - [tags: x] 🌳 replace `V` with `B`;
-- [tags: y] 🌳 replace `A` with `P`.
-
-✏️ (3) [tags: x,y] move `C` before `D`.
+- ✏️ (1) [tags: x,y] delete `Z`;
+- ✏️ (2) [tags: x,y] replace `A` with the results of the following annotations operations tree:
+  - 🌳 [tags: x]  replace `A` with `V`;
+    - 🌳 [tags: x] replace `V` with `B`;
+  - 🌳 [tags: y] replace `A` with `P`.
+- ✏️ (3) [tags: x,y] move `C` before `D`.
 
 If we inspect the whole set of operations, we find that we have 2 interpretations, tagged `x` and `y`. So, we will have to follow the generation recipe twice, once for each interpretation. In what follows, I copy the portion of diagnostic log for each operation.
+
+In a more schematic way, we can represent this document as:
+
+![sample](img/text-model_sample2.png)
 
 #### Version x
 
