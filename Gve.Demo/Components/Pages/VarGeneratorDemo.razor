@@ -47,21 +47,26 @@
 
     @if (Results != null)
     {
-        <FluentDataGrid Items="Results.AsQueryable()"
-                        GenerateHeader="GenerateHeaderOption.Default">
-            <PropertyColumn Title="tag" Property="@(t => t.Item1)"/>
-            <PropertyColumn Title="value" Property="@(t => t.Item2.GetText(false))"/>
-            <TemplateColumn Title="" Align="@Align.End" Context="t">
-                <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
-                              @onclick="@(()=> { SelectResult(t); })" />
-            </TemplateColumn>
-        </FluentDataGrid>
+        <FluentGrid>
+            <FluentGridItem xs="12" sm="6">
+                <FluentDataGrid Items="Results.AsQueryable()"
+                                GenerateHeader="GenerateHeaderOption.Default">
+                    <PropertyColumn Title="tag" Property="@(t => t.Item1)" />
+                    <PropertyColumn Title="value" Property="@(t => t.Item2.GetText(false))" />
+                    <TemplateColumn Title="" Align="@Align.End" Context="t">
+                        <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
+                                      @onclick="@(()=> { SelectResult(t); })" />
+                    </TemplateColumn>
+                </FluentDataGrid>
+            </FluentGridItem>
 
-        @if (SelectedResult != null)
-        {
-            <hr />
-            <CharNodeSetTable Set="SelectedResult.Item2" />
-        }
+            @if (SelectedResult != null)
+            {
+                <FluentGridItem xs="12" sm="6">
+                    <CharNodeSetTable Set="SelectedResult.Item2" />
+                </FluentGridItem>
+            }
+        </FluentGrid>
     }
 }
 
