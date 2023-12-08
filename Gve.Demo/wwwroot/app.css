@@ -133,3 +133,8 @@ code {
     width: fit-content;
     white-space: nowrap;
 }
+.char-cell {
+    font-weight: bold;
+    color: royalblue;
+    white-space: nowrap;
+}

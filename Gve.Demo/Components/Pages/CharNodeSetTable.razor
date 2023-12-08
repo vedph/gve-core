@@ -9,7 +9,7 @@
 {
     <FluentDataGrid Items="Set.AsQueryable()">
         <PropertyColumn Title="v" Property="@(c => c.Value)"
-            TooltipText="@(c => "Value")" Style="font-weight: bold;" />
+            TooltipText="@(c => "Value")" Class="char-cell" />
         <TemplateColumn Title="pv"
             TooltipText="@(c => "Previous values")">
             @string.Join(" < ", context.PreviousValues)
