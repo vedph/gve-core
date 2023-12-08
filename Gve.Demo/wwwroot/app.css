@@ -133,8 +133,15 @@ code {
     width: fit-content;
     white-space: nowrap;
 }
+
 .char-cell {
     font-weight: bold;
     color: royalblue;
     white-space: nowrap;
+}
+
+ul.compact {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }

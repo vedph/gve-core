@@ -19,7 +19,7 @@
         <TemplateColumn Title="features">
             @if (context.Features?.Count > 0)
             {
-                <ul>
+                <ul class="compact">
                     @foreach (Feature feature in context.Features)
                     {
                         <li>
