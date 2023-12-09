@@ -156,3 +156,16 @@ fluent-data-grid-row:nth-child(odd) {
 fluent-data-grid-row:nth-child(even) {
     background-color: #EFEAE3;
 }
+fluent-accordion {
+    border: 1px solid silver;
+    border-radius: 6px;
+}
+fluent-accordion-item {
+    border: 1px solid silver;
+    border-radius: 6px;
+}
+fluent-accordion-item ol {
+    column-count: auto;
+    column-width: 400px;
+    column-gap: 24px;
+}
