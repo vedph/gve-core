@@ -126,14 +126,78 @@ public sealed class VarGeneratorTest
         Assert.Single(cn.Features);
         Assert.Equal("reason", cn.Features[0].Name);
         Assert.Equal("don't like Z", cn.Features[0].Value);
+        // C
+        cn = nodes[3];
+        Assert.NotNull(cn);
+        Assert.Equal(5, cn.Ordinal);
+        Assert.Equal('C', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // D
+        cn = nodes[4];
+        Assert.NotNull(cn);
+        Assert.Equal(4, cn.Ordinal);
+        Assert.Equal('D', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
 
         // ABZCD
         Assert.Equal("ABCD", r[1].GetText());
         Assert.Equal("ABZ†CD", r[1].GetText(true));
+        // A
+        nodes = r[1].ToList();
+        cn = nodes[0];
+        Assert.NotNull(cn);
+        Assert.Equal(1, cn.Ordinal);
+        Assert.Equal('A', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // B
+        cn = nodes[1];
+        Assert.NotNull(cn);
+        Assert.Equal(2, cn.Ordinal);
+        Assert.Equal('B', cn.Value);
+        Assert.Equal(2, cn.PreviousValues.Count);
+        Assert.Equal('V', cn.PreviousValues[0]);
+        Assert.Equal('R', cn.PreviousValues[1]);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // Z
+        cn = nodes[2];
+        Assert.NotNull(cn);
+        Assert.Equal(3, cn.Ordinal);
+        Assert.Equal('Z', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.True(cn.IsDeleted);
+        Assert.Single(cn.Features);
+        Assert.Equal("reason", cn.Features[0].Name);
+        Assert.Equal("don't like Z", cn.Features[0].Value);
+        // C
+        cn = nodes[3];
+        Assert.NotNull(cn);
+        Assert.Equal(5, cn.Ordinal);
+        Assert.Equal('C', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // D
+        cn = nodes[4];
+        Assert.NotNull(cn);
+        Assert.Equal(4, cn.Ordinal);
+        Assert.Equal('D', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+
         // y
         r = results["y"];
         Assert.Single(r);
         Assert.Equal("APCD", r[0].GetText());
         Assert.Equal("APZ†CD", r[0].GetText(true));
+
+        // TODO assert steps
     }
 }
