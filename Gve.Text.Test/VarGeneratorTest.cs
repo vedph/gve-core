@@ -3,6 +3,7 @@ using Gve.Text.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -97,6 +98,35 @@ public sealed class VarGeneratorTest
         // AVZCD
         Assert.Equal("AVCD", r[0].GetText());
         Assert.Equal("AVZ†CD", r[0].GetText(true));
+        // A
+        IList<CharNode> nodes = r[0].ToList();
+        CharNode? cn = nodes[0];
+        Assert.NotNull(cn);
+        Assert.Equal(1, cn.Ordinal);
+        Assert.Equal('A', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // V
+        cn = nodes[1];
+        Assert.NotNull(cn);
+        Assert.Equal(2, cn.Ordinal);
+        Assert.Equal('V', cn.Value);
+        Assert.Single(cn.PreviousValues);
+        Assert.Equal('R', cn.PreviousValues[0]);
+        Assert.False(cn.IsDeleted);
+        Assert.Empty(cn.Features);
+        // Z
+        cn = nodes[2];
+        Assert.NotNull(cn);
+        Assert.Equal(3, cn.Ordinal);
+        Assert.Equal('Z', cn.Value);
+        Assert.Empty(cn.PreviousValues);
+        Assert.True(cn.IsDeleted);
+        Assert.Single(cn.Features);
+        Assert.Equal("reason", cn.Features[0].Name);
+        Assert.Equal("don't like Z", cn.Features[0].Value);
+
         // ABZCD
         Assert.Equal("ABCD", r[1].GetText());
         Assert.Equal("ABZ†CD", r[1].GetText(true));

@@ -229,6 +229,17 @@ public class CharNodeSet : IEnumerable<CharNode>
     }
 
     /// <summary>
+    /// Gets the node at the specified index in the order of nodes of this set.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    /// <returns>Node or null if not found.</returns>
+    public CharNode? GetNodeAtIndex(int index)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
+        return _nodes.Skip(index).FirstOrDefault();
+    }
+
+    /// <summary>
     /// Collects the nodes in the specified range.
     /// </summary>
     /// <param name="at">The ordinal of the character to start from.</param>
