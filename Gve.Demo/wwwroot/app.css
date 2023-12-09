@@ -150,3 +150,9 @@ ul.compact {
     padding: 0;
     margin: 0;
 }
+fluent-data-grid-row:nth-child(odd) {
+    background-color: #ede6dd;
+}
+fluent-data-grid-row:nth-child(even) {
+    background-color: #EFEAE3;
+}
