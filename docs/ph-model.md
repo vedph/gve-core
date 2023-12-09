@@ -5,7 +5,7 @@ In this model, we start by distinguishing two separate planes:
 - the **base text**, as produced in the first act of writing on the document.
 - the **annotations** on top of it, representing all the changes to be applied to the base text to get to any of its variants.
 
->>"First act of writing" is only a pragmatic device; it does not imply that the whole original text has been written out, and then another version came out. It is just a graphical, descriptive concept: it's the token which was written first, relative to other tokens which were added later. In a sequence like ABC, where B has been deleted and replaced by X, maybe the author just wrote A; then B; then he immediately changed his mind, deleting it and writing X above it; and then continued with C; or any other possible scenario. Here we are just seeing the resulting text from the perspective of an observer who looks at the final state of the text, with all its annotations, and just discriminates between tokens in the original, "normal" layout, and all the others.
+>>"First act of writing" is only a pragmatic device; it does not imply that the whole original text has been written out, and then another version came out. It is just a graphical, descriptive concept: it's the token which was written first, relative to other tokens which were added later. In a sequence like ABC, where B has been deleted and replaced by X, maybe the author just wrote A; then B; then he immediately changed his mind, deleting it and writing X above it; and then continued with C; or any other possible scenario. Here we are just seeing the resulting text from the perspective of an observer who looks at the final state of the text (a "snapshot"), with all its annotations, and just discriminates between tokens in the original, "normal" layout, and all the others.
 
 Consider this abstract example:
 
@@ -13,11 +13,11 @@ Consider this abstract example:
 
 Here, the base text is `ADEFHGZ`. Then, a number of operations are graphically represented as changes to be applied to it; it's a like having a recipe for its transformations.
 
-These transformations have a different behavior according to the plane they are located on.
+These transformations have a different behavior according to the plane they are located on. In this model we distinguish two planes: the _base plane_ (BP for short), and the _annotations plane_ (AP for short).
 
 ## Base Plane
 
-On the **base** text plane, the model assumes that:
+On the **base** text plane you have the base text and any operation or annotation immediately attached to it. The BP model assumes that:
 
 (1) **the order of base operations is not determined in advance**. This is data which will be superimposed by interpretation(s) on top of them; but as they all are on the same original support in the same base plane, they just belong to a snapshot, as if they were all happening at the same time on the same text.
 
