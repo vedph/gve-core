@@ -46,7 +46,6 @@ public class VarOperationContext
     /// <param name="at">The ordinal of the first node to get.</param>
     /// <param name="run">The number of nodes to get starting from the first
     /// one.</param>
-    /// <returns>Tree nodes.</returns>
     /// <remarks>Getting tree nodes from the set means to get them in the order
     /// defined by their left-node links, excluding the deleted nodes, for the
     /// range defined by <paramref name="at"/> and <paramref name="run"/>.
@@ -65,6 +64,35 @@ public class VarOperationContext
         {
             AnnNodes.AddRange(ordered.Skip(i).Take(run)
                 .Select(n => n.Clone()).ToList());
+        }
+    }
+
+    /// <summary>
+    /// Sets tree nodes from the <see cref="Set"/>, replacing any matching
+    /// node got from <see cref="Set"/> with the one received in
+    /// <paramref name="oldAnnNodes"/>.
+    /// </summary>
+    /// <param name="at">The ordinal of the first node to get.</param>
+    /// <param name="run">The number of nodes to get starting from the first
+    /// one.</param>
+    /// <param name="oldAnnNodes">The old ann nodes.</param>
+    /// <exception cref="ArgumentNullException">oldAnnNodes</exception>
+    public void SetAnnNodes(short at, short run, IList<CharNode> oldAnnNodes)
+    {
+        ArgumentNullException.ThrowIfNull(oldAnnNodes);
+
+        SetAnnNodes(at, run);
+
+        // replace all the new nodes with old nodes when they match by ID,
+        // so that we can preserve changes applied by previous ann-operations
+        // in the same tree
+        for (int i = 0; i < AnnNodes.Count; i++)
+        {
+            CharNode? oldNode = oldAnnNodes.FirstOrDefault(n => n.Id == AnnNodes[i].Id);
+            if (oldNode != null)
+            {
+                AnnNodes[i] = oldNode;
+            }
         }
     }
 
@@ -105,7 +133,7 @@ public class VarOperationContext
     public virtual VarOperationContext Clone()
     {
         VarOperationContext context = new(Set.Clone());
-        context.SetAnnNodes(_at, _run);
+        context.SetAnnNodes(_at, _run, AnnNodes);
         return context;
     }
 

@@ -16,7 +16,7 @@ public sealed class VarGeneratorTest
         "  - 1=\"V\" [x]\n" +
         "    - 1=\"B\" [x]\n" +
         "  - 1=\"P\" [y]\n" +
-        "- 3=\"\" [x=1 y=1]\n" +
+        "- 3=\"\" [x=1 y=1] {reason=\"don't like Z\"}\n" +
         "- 5>4 [x=3 y=3]\n";
 
     private readonly ILogger<VarGeneratorTest>? _logger;
@@ -94,11 +94,16 @@ public sealed class VarGeneratorTest
         // x
         IList<CharNodeSet> r = results["x"];
         Assert.Equivalent(2, r.Count);
+        // AVZCD
         Assert.Equal("AVCD", r[0].GetText());
+        Assert.Equal("AVZ†CD", r[0].GetText(true));
+        // ABZCD
         Assert.Equal("ABCD", r[1].GetText());
+        Assert.Equal("ABZ†CD", r[1].GetText(true));
         // y
         r = results["y"];
         Assert.Single(r);
         Assert.Equal("APCD", r[0].GetText());
+        Assert.Equal("APZ†CD", r[0].GetText(true));
     }
 }

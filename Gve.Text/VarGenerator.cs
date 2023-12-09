@@ -256,6 +256,7 @@ public sealed class VarGenerator
 
                 // replay ascendants operations on context to get in synch
                 // with the position of the current node in tree
+                _logger?.LogInformation("Replaying ascendants");
                 ReplayAscendants(node, context.OpContext,
                     entry.Operation.At, entry.Operation.Run);
 
