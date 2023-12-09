@@ -257,6 +257,9 @@ public sealed class VarGenerator
                 // replay ascendants operations on context to get in synch
                 // with the position of the current node in tree
                 _logger?.LogInformation("Replaying ascendants");
+                context.OpContext.SetAnnNodes(
+                    entry.Operation.At, entry.Operation.Run);
+
                 ReplayAscendants(node, context.OpContext,
                     entry.Operation.At, entry.Operation.Run);
 
@@ -277,8 +280,9 @@ public sealed class VarGenerator
                 // create a new context for this node
                 VarGeneratorContext newContext = new(context);
                 newContext.OpContext.SetAnnNodes(
-                    entry.Operation.At, entry.Operation.Run);
-                _logger?.LogInformation("A-Nodes: {text}",
+                    entry.Operation.At, entry.Operation.Run,
+                    context.OpContext.AnnNodes);
+                _logger?.LogInformation("Branch: A-Nodes: {text}",
                     newContext.OpContext.GetAnnText());
 
                 // execute the operation

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Gve.Text;
 
@@ -16,11 +18,7 @@ namespace Gve.Text;
 public class RamLogger : ILogger
 {
     private readonly LogLevel _minLevel;
-
-    /// <summary>
-    /// Gets the logs.
-    /// </summary>
-    public ConcurrentBag<string> Logs { get; } = [];
+    private readonly ConcurrentQueue<string> _logs;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RamLogger"/> class.
@@ -29,6 +27,7 @@ public class RamLogger : ILogger
     public RamLogger(LogLevel minLevel = LogLevel.Information)
     {
         _minLevel = minLevel;
+        _logs = new();
     }
 
     /// <summary>
@@ -72,6 +71,25 @@ public class RamLogger : ILogger
         }
 
         string message = formatter(state, exception);
-        Logs.Add(message);
+        _logs.Enqueue(message);
+    }
+
+    /// <summary>
+    /// Clears all the entries collected in this logger.
+    /// </summary>
+    public void Clear() => _logs.Clear();
+
+    /// <summary>
+    /// Gets the entries clearing the log.
+    /// </summary>
+    /// <returns>Entries.</returns>
+    public IList<string> GetEntries()
+    {
+        List<string> entries = [];
+        while (_logs.TryDequeue(out string? entry))
+        {
+            entries.Add(entry);
+        }
+        return entries;
     }
 }

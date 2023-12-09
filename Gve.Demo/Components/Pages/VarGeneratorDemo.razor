@@ -45,6 +45,17 @@
         </FluentButton>
     </FluentToolbar>
 
+    <FluentAccordion>
+        <FluentAccordionItem Heading="Log">
+            <ol>
+                @foreach (var entry in LogEntries)
+                {
+                    <li>@entry</li>
+                }
+            </ol>
+        </FluentAccordionItem>
+    </FluentAccordion>
+
     <FluentGrid>
         <FluentGridItem xs="12" sm="6">
             <FluentDataGrid Items="Results.AsQueryable()"

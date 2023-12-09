@@ -91,6 +91,7 @@ public class VarOperationContext
             CharNode? oldNode = oldAnnNodes.FirstOrDefault(n => n.Id == AnnNodes[i].Id);
             if (oldNode != null)
             {
+                oldNode.LeftNode = AnnNodes[i].LeftNode;
                 AnnNodes[i] = oldNode;
             }
         }

@@ -8,6 +8,7 @@ namespace Gve.Demo.Components.Pages;
 
 public partial class VarGeneratorDemo
 {
+    private readonly RamLogger _logger;
     private VarGenerator? _generator;
 
     [Inject]
@@ -31,9 +32,11 @@ public partial class VarGeneratorDemo
     public bool IsGenerating { get; set; }
     public List<Tuple<string, CharNodeSet>> Results { get; set; }
     public Tuple<string, CharNodeSet>? SelectedResult { get; set; }
+    public IList<string> LogEntries { get; set; }
 
     public VarGeneratorDemo()
     {
+        _logger = new(LogLevel.Information);
         Text = "ARZDC";
         OpText = "- 2=\"\" [x=2 y=2]\n" +
             "  - 1=\"V\" [x]\n" +
@@ -43,6 +46,7 @@ public partial class VarGeneratorDemo
             "- 5>4 [x=3 y=3]\n";
         VariantTags = [];
         Results = [];
+        LogEntries = [];
     }
 
     public TreeNode<VarOperation> BuildTree(IList<VarOperationEntry> entries)
@@ -71,7 +75,7 @@ public partial class VarGeneratorDemo
         try
         {
             Error = null;
-            _generator = new();
+            _generator = new(_logger);
             _generator.SetEntries(OpText);
             Root = BuildTree(_generator.Entries);
             VariantTags = ["*", .._generator.GetVersionTags()];
@@ -101,6 +105,7 @@ public partial class VarGeneratorDemo
 
         try
         {
+            _logger.Clear();
             IsGenerating = true;
             IDictionary<string, IList<CharNodeSet>> results;
 
@@ -113,6 +118,7 @@ public partial class VarGeneratorDemo
             {
                 SetResults(results = _generator!.Generate(Text));
             }
+            LogEntries = _logger.GetEntries();
         }
         catch (Exception ex)
         {
