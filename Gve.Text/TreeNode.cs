@@ -66,7 +66,7 @@ public class TreeNode<T>
     /// the new expanded state to all the descendants of this node.</param>
     public void ToggleExpanded(bool expanded, bool recursive = false)
     {
-        if (IsExpanded == expanded) return;
+        if (IsExpanded == expanded || (expanded && Children.Count == 0)) return;
 
         IsExpanded = expanded;
         if (recursive)
