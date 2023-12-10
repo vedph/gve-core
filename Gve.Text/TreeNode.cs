@@ -9,6 +9,8 @@ namespace Gve.Text;
 /// <typeparam name="T">The type of payload data for each node.</typeparam>
 public class TreeNode<T>
 {
+    private bool _expanded;
+
     /// <summary>
     /// Gets or sets the payload.
     /// </summary>
@@ -28,7 +30,15 @@ public class TreeNode<T>
     /// Gets or sets a value indicating whether this node is expanded in some
     /// kind of visual representation.
     /// </summary>
-    public bool IsExpanded { get; set; }
+    public bool IsExpanded
+    {
+        get => _expanded;
+        set
+        {
+            if (_expanded == value) return;
+            _expanded = value && Children.Count > 0;
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
