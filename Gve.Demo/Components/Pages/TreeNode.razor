@@ -1,0 +1,13 @@
+﻿@using Gve.Text
+
+<ul class="tree-node-root">
+    @if (Root != null)
+    {
+        <TreeNodeItem Node = "@Root"/>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public TreeNode<object>? Root { get; set; }
+}

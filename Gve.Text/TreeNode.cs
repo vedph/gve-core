@@ -25,6 +25,12 @@ public class TreeNode<T>
     public List<TreeNode<T>> Children { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether this node is expanded in some
+    /// kind of visual representation.
+    /// </summary>
+    public bool IsExpanded { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
     /// </summary>
     public TreeNode()
@@ -40,6 +46,27 @@ public class TreeNode<T>
     {
         Payload = payload;
         Children = [];
+    }
+
+    /// <summary>
+    /// Toggles the expanded state for this node and all its descendants.
+    /// </summary>
+    /// <param name="expanded">the new state for expanded.</param>
+    /// <param name="recursive">if set to <c>true</c>, recursively propagate
+    /// the new expanded state to all the descendants of this node.</param>
+    public void ToggleExpanded(bool expanded, bool recursive = false)
+    {
+        if (IsExpanded == expanded) return;
+
+        IsExpanded = expanded;
+        if (recursive)
+        {
+            Traverse(node =>
+            {
+                node.IsExpanded = IsExpanded;
+                return true;
+            });
+        }
     }
 
     /// <summary>

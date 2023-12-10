@@ -22,7 +22,7 @@ public partial class VarGeneratorDemo
     [MaxLength(1000)]
     public string OpText { get; set; }
 
-    public TreeNode<VarOperation>? Root { get; set; }
+    public TreeNode<object>? Root { get; set; }
     public IList<string> VariantTags { get; set; }
     public string? Error { get; set; }
 
@@ -49,18 +49,17 @@ public partial class VarGeneratorDemo
         LogEntries = [];
     }
 
-    public TreeNode<VarOperation> BuildTree(IList<VarOperationEntry> entries)
+    public TreeNode<object> BuildTree(IList<object> entries)
     {
-        TreeNode<VarOperation> root = new(null);
+        TreeNode<object> root = new(null);
 
         foreach (VarOperationEntry entry in entries)
         {
-            TreeNode<VarOperation> child = new(entry.Operation);
+            TreeNode<object> child = new(entry.Operation);
 
             if (entry.Root != null)
             {
-                TreeNode<VarOperation> tree = entry.Root.Clone<VarOperation>
-                    ((op) => op);
+                TreeNode<object> tree = entry.Root.Clone<object>((op) => op);
                 child.AddChild(tree);
             }
 
@@ -77,7 +76,7 @@ public partial class VarGeneratorDemo
             Error = null;
             _generator = new(_logger);
             _generator.SetEntries(OpText);
-            Root = BuildTree(_generator.Entries);
+            Root = BuildTree(_generator.Entries.Select(e => e as object).ToList());
             VariantTags = ["*", .._generator.GetVersionTags()];
             CanGenerate = true;
         }

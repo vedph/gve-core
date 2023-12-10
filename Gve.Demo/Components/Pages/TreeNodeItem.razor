@@ -1,0 +1,17 @@
+﻿@using Gve.Text
+
+@if (Node != null)
+{
+    <li class="tree-node-item">
+        <span @onclick="Toggle">@(Node.Payload?.ToString() ?? Node.GetYX().ToString())</span>
+        @if (Node.Children.Count > 0 && Node.IsExpanded)
+        {
+            <ul class="tree-node-set">
+                @foreach (var child in Node.Children)
+                {
+                    <TreeNodeItem Node="child" />
+                }
+            </ul>
+        }
+    </li>
+}
