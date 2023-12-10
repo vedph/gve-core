@@ -1,4 +1,4 @@
-@import '/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
+﻿@import '/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
 
 body {
     --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
@@ -139,33 +139,67 @@ code {
     color: royalblue;
     white-space: nowrap;
 }
+
 span.fname {
     color: seagreen;
 }
+
 span.fvalue {
     color: orangered;
 }
+
 ul.compact {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
+
 fluent-data-grid-row:nth-child(odd) {
     background-color: #ede6dd;
 }
+
 fluent-data-grid-row:nth-child(even) {
     background-color: #EFEAE3;
 }
+
 fluent-accordion {
     border: 1px solid silver;
     border-radius: 6px;
 }
+
 fluent-accordion-item {
     border: 1px solid silver;
     border-radius: 6px;
 }
-fluent-accordion-item ol {
-    column-count: auto;
-    column-width: 400px;
-    column-gap: 24px;
+
+    fluent-accordion-item ol {
+        column-count: auto;
+        column-width: 400px;
+        column-gap: 24px;
+    }
+
+/**
+    TreeNode
+*/
+ul.tree-node,
+ul.tree-node ul,
+ul.tree-node li {
+    list-style-type: none;
 }
+
+li.tree-node-item {
+    position: relative;
+    cursor: pointer;
+}
+
+    li.tree-node-item.collapsed::before {
+        content: '▶';
+        position: absolute;
+        left: -20px;
+    }
+
+    li.tree-node-item.expanded::before {
+        content: '▼';
+        position: absolute;
+        left: -20px;
+    }

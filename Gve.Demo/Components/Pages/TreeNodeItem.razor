@@ -2,11 +2,11 @@
 
 @if (Node != null)
 {
-    <li class="tree-node-item">
+    <li class="@ItemClass">
         <span @onclick="Toggle">@(Node.Payload?.ToString() ?? Node.GetYX().ToString())</span>
         @if (Node.Children.Count > 0 && Node.IsExpanded)
         {
-            <ul class="tree-node-set">
+            <ul class="tree-node">
                 @foreach (var child in Node.Children)
                 {
                     <TreeNodeItem Node="child" />
