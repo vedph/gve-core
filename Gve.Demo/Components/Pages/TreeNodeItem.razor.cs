@@ -10,8 +10,15 @@ public partial class TreeNodeItem
 
     public string ItemClass
     {
-        get => Node?.IsExpanded == true?
-            "tree-node-item expanded" : "tree-node-item collapsed";
+        get
+        {
+            if (Node == null) return "tree-node-item";
+
+            if (Node.Children.Count == 0) return "tree-node-item leaf";
+
+            return Node.IsExpanded?
+                "tree-node-item expanded" : "tree-node-item collapsed";
+        }
     }
 
     public void Toggle()

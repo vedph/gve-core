@@ -192,6 +192,12 @@ li.tree-node-item {
     cursor: pointer;
 }
 
+    li.tree-node-item.leaf::before {
+        content: '●';
+        position: absolute;
+        left: -20px;
+    }
+
     li.tree-node-item.collapsed::before {
         content: '▶';
         position: absolute;
