@@ -3,7 +3,7 @@
 @if (Node != null)
 {
     <li class="@ItemClass">
-        <span @onclick="Toggle">@(Node.Payload?.ToString() ?? Node.GetYX().ToString())</span>
+        <span @onclick="Toggle">@(Node.Label)</span>
         @if (Node.Children.Count > 0 && Node.IsExpanded)
         {
             <ul class="tree-node">

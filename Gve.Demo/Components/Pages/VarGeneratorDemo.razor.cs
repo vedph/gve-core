@@ -1,8 +1,11 @@
-﻿using Gve.Text;
+﻿using Gve.Demo.Models;
+using Gve.Text;
+using Gve.Text.Annotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace Gve.Demo.Components.Pages;
 
@@ -22,7 +25,7 @@ public partial class VarGeneratorDemo
     [MaxLength(1000)]
     public string OpText { get; set; }
 
-    public TreeNode<object>? Root { get; set; }
+    public ITreeNode? Root { get; set; }
     public IList<string> VariantTags { get; set; }
     public string? Error { get; set; }
 
@@ -49,18 +52,30 @@ public partial class VarGeneratorDemo
         LogEntries = [];
     }
 
-    public TreeNode<object> BuildTree(IList<object> entries)
+    public TreeNode BuildTreeNode(TreeNode<AnnVarOperation> node)
     {
-        TreeNode<object> root = new(null);
+        TreeNode newNode = new()
+        {
+            Label = node.Payload?.ToString() ?? node.GetYX().ToString(),
+            Data = node.Payload
+        };
+        foreach (TreeNode<AnnVarOperation> child in node.Children)
+            newNode.AddChild(BuildTreeNode(child));
+        return newNode;
+    }
+
+    public TreeNode BuildTree(IList<VarOperationEntry> entries)
+    {
+        TreeNode root = new() { Label = "root" };
 
         foreach (VarOperationEntry entry in entries)
         {
-            TreeNode<object> child = new(entry.Operation);
+            TreeNode child = new() { Label = entry.Operation.ToString() };
 
             if (entry.Root != null)
             {
-                TreeNode<object> tree = entry.Root.Clone<object>((op) => op);
-                child.AddChild(tree);
+                TreeNode tn = BuildTreeNode(entry.Root);
+                child.AddChild(tn);
             }
 
             root.AddChild(child);
@@ -76,7 +91,7 @@ public partial class VarGeneratorDemo
             Error = null;
             _generator = new(_logger);
             _generator.SetEntries(OpText);
-            Root = BuildTree(_generator.Entries.Select(e => e as object).ToList());
+            Root = BuildTree(_generator.Entries);
             VariantTags = ["*", .._generator.GetVersionTags()];
             CanGenerate = true;
         }

@@ -1,4 +1,4 @@
-﻿using Gve.Text;
+﻿using Gve.Demo.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Gve.Demo.Components.Pages;
@@ -6,7 +6,7 @@ namespace Gve.Demo.Components.Pages;
 public partial class TreeNodeItem
 {
     [Parameter]
-    public TreeNode<object>? Node { get; set; }
+    public ITreeNode? Node { get; set; }
 
     public string ItemClass
     {
