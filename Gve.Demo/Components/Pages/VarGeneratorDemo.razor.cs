@@ -35,6 +35,7 @@ public partial class VarGeneratorDemo
     public List<Tuple<string, CharNodeSet>> Results { get; set; }
     public Tuple<string, CharNodeSet>? SelectedResult { get; set; }
     public IList<string> LogEntries { get; set; }
+    public IList<VarGenerationStep> Steps { get; set; }
 
     public VarGeneratorDemo()
     {
@@ -49,6 +50,7 @@ public partial class VarGeneratorDemo
         VariantTags = [];
         Results = [];
         LogEntries = [];
+        Steps = [];
     }
 
     public TreeNode BuildTreeNode(TreeNode<AnnVarOperation> node)
@@ -88,7 +90,7 @@ public partial class VarGeneratorDemo
         try
         {
             Error = null;
-            _generator = new(_logger);
+            _generator = new(_logger) { IsTrackingEnabled = true };
             _generator.SetEntries(OpText);
             Root = BuildTree(_generator.Entries);
             VariantTags = ["*", .._generator.GetVersionTags()];
@@ -120,18 +122,19 @@ public partial class VarGeneratorDemo
         {
             _logger.Clear();
             IsGenerating = true;
-            IDictionary<string, IList<CharNodeSet>> results;
 
             if (SelectedVariantTag != null && SelectedVariantTag != "*")
             {
-                SetResults(results = _generator!.Generate(Text,
+                SetResults(_generator!.Generate(Text,
                     new[] { SelectedVariantTag }));
             }
             else
             {
-                SetResults(results = _generator!.Generate(Text));
+                SetResults(_generator!.Generate(Text));
             }
             LogEntries = _logger.GetEntries();
+            Steps = _generator.GetSteps(
+                SelectedVariantTag == "*" ? null : SelectedVariantTag);
         }
         catch (Exception ex)
         {

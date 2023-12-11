@@ -15,19 +15,13 @@ public sealed class VarGenerator
     private static readonly string[] _newlines = ["\r\n", "\r", "\n"];
 
     private readonly ILogger? _logger;
+    private Dictionary<string, IList<VarGenerationStep>>? _steps;
 
     /// <summary>
     /// Gets or sets a value indicating whether this generator should track
     /// its generation steps into <see cref="VarGenerationStep"/> objects.
     /// </summary>
     public bool IsTrackingEnabled { get; set; }
-
-    /// <summary>
-    /// Gets the history of generation steps. This is filled only when tracking
-    /// is enabled.
-    /// </summary>
-    public IDictionary<string, IList<VarGenerationStep>>? Steps
-        { get; private set; }
 
     /// <summary>
     /// Gets the unsorted base operation entries to apply to the base text
@@ -112,6 +106,36 @@ public sealed class VarGenerator
         }
     }
 
+    private void AddStep(VarGenerationStep step)
+    {
+        _steps ??= [];
+
+        if (!_steps.TryGetValue(step.VersionTag,
+            out IList<VarGenerationStep>? steps))
+        {
+            steps = new List<VarGenerationStep>();
+            _steps[step.VersionTag] = steps;
+        }
+
+        steps.Add(step);
+    }
+
+    /// <summary>
+    /// Gets the specified steps.
+    /// </summary>
+    /// <param name="tag">The version tag, or null to get all the steps at once.
+    /// </param>
+    /// <returns>Steps.</returns>
+    public IList<VarGenerationStep> GetSteps(string? tag)
+    {
+        if (_steps == null) return [];
+
+        // if tag is null, get all the steps, else get only thos from tag
+        return tag == null
+            ? _steps.Values.SelectMany(s => s).ToList()
+            : _steps[tag];
+    }
+
     /// <summary>
     /// Gets an ordered list of all the distinct version tags in the generator
     /// entries.
@@ -155,20 +179,6 @@ public sealed class VarGenerator
         return Entries.Where(e => e.Operation.TaggedOrdinals.ContainsKey(tag))
             .OrderBy(e => e.Operation.TaggedOrdinals[tag])
             .ToList();
-    }
-
-    private void AddStep(VarGenerationStep step)
-    {
-        Steps ??= new Dictionary<string, IList<VarGenerationStep>>();
-
-        if (!Steps.TryGetValue(step.VersionTag,
-            out IList<VarGenerationStep>? steps))
-        {
-            steps = new List<VarGenerationStep>();
-            Steps[step.VersionTag] = steps;
-        }
-
-        steps.Add(step);
     }
 
     private static void ReplayAscendants(TreeNode<AnnVarOperation> node,
