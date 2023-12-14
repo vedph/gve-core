@@ -15,3 +15,7 @@ Other Razor packages:
 ## Documentation
 
 - [Text Model](docs/text_model.md)
+
+## History
+
+- 2023-12-14: updated packages.
