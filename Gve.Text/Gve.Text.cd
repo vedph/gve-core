@@ -2,22 +2,12 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Gve.Text.VarDiplomatic">
     <Position X="16" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
-      <FileName>VarDiplomatic.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Position" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="Gve.Text.TextPosition">
-    <Position X="18.5" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAACEAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>TextPositiion.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAAAAAAAAAAACCAAAAAA=</HashCode>
+      <FileName>VarDiplomatic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.CharNodeSet">
@@ -88,7 +78,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Gve.Text.VarSource">
-    <Position X="16" Y="2" Width="1.5" />
+    <Position X="16" Y="2.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>

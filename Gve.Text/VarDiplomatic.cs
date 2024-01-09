@@ -1,28 +1,50 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Gve.Text;
 
 /// <summary>
-/// Diplomatic data for a text variant.
+/// Diplomatic data for a text variant. This defines the graphical representation
+/// of the variant, as well as the features attached to it.
 /// </summary>
 public class VarDiplomatic
 {
     /// <summary>
-    /// Gets or sets the position.
+    /// Gets or sets the SVG <c>g</c> element graphically representing this
+    /// diplomatic information.
     /// </summary>
-    public TextPosition? Position { get; set; }
+    public string? G { get; set; }
 
     /// <summary>
-    /// Gets or sets the optional text representing the variant. This is the
-    /// original text found attached to the variant, optionally multiline.
+    /// Gets or sets the optional generic set of features attached to the text
+    /// variant as a whole (e.g. type, size, etc.).
     /// </summary>
-    public string? Text { get; set; }
+    public IList<Feature>? Features { get; set; }
 
     /// <summary>
-    /// Gets or sets the features, keyed by type (e.g. <c>style</c>,
-    /// <c>class</c>, <c>shape</c>, etc.). Each value is a dictionary where
-    /// the key is the version tag, and the value a list of features.
+    /// Gets or sets the optional features attached to elements defined in
+    /// <see cref="G"/>. Each element is identified by its <c>id</c> attribute,
+    /// which is a key in the dictionary.
     /// </summary>
-    public Dictionary<string, Dictionary<string, IList<Feature>>>
-        Features { get; set; } = [];
+    public IDictionary<string, List<Feature>>? ElementFeatures { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+
+        if (!string.IsNullOrEmpty(G))
+            sb.Append(G.Length > 50 ? G[..50] + "..." : G);
+        if (Features != null)
+            sb.Append(" F=").Append(Features.Count);
+        if (ElementFeatures != null)
+            sb.Append(" EF=").Append(ElementFeatures.Count);
+
+        return sb.ToString();
+    }
 }

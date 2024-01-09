@@ -20,4 +20,5 @@ Other Razor packages:
   - updated packages.
   - make `Feature`'s `Value` optional.
   - more tests.
+  - refactored diplomatic models.
 - 2023-12-14: updated packages.
