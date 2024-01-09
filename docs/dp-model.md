@@ -27,17 +27,40 @@ So, descriptively this means that:
 
 The underlying structure for this description is a tree model. Each origin token is the root of a tree which may indefinitely branch; so that we have variants, but also variants of variants.
 
-So, the **diplomatic metadata** attached to each operation have these properties:
+The [philological model](ph-model.md) already provides a tree-based structure for its annotations plane. Diplomatic metadata are just additions on top of this model, as properties of each variant generation operation.
 
-- an SVG **text position**, including any of these properties:
-  - text anchor (start, middle, end);
-  - dominant baseline (the baseline used to align the box's text: values are like `auto`, `text-bottom`, `middle`, `central`, `mathematical`, `hanging`, `text-top`, etc.);
-  - transformations applied to the position.
-- a set of generic **features**. These are grouped as follows (as a dictionary of dictionaries, where the outer key is the feature type, and the inner key is the version tag, the end value being a `Feature` object):
-  - functional groups, representing features like _styles_, _classes_ names, or _shapes_, as encoded in SVG.
-    - version tag sub-groups: this allows applying the features conditionally, according to the version of the text being generated.
+## Metadata
 
-## SVG Features
+Any variant generation operation has these metadata:
+
+- `rank`
+- `groupId`
+- `features` (list):
+  - `name`
+  - `value`
+  - `isUnique`
+- `taggedOrdinals`
+- `sources` (list):
+  - `id`
+  - `type`
+  - `rank`
+  - `note`
+- `diplomatic`:
+  - SVG `textPosition`:
+    - text anchor (start, middle, end);
+    - dominant baseline (the baseline used to align the box's text: values are like `auto`, `text-bottom`, `middle`, `central`, `mathematical`, `hanging`, `text-top`, etc.);
+    - transformations applied to the position.
+  - `text`: the optional text representing the variant. This is the original text found attached to the variant, optionally multiline.
+  - `features`: generic features grouped as follows (as a dictionary of dictionaries, where the outer key is the feature type, and the inner key is the version tag, the end value being a `Feature` object):
+    - functional groups, representing features like _styles_, _classes_ names, or _shapes_, as encoded in SVG.
+      - version tag sub-groups: this allows applying the features conditionally, according to the version of the text being generated.
+        - `name`
+        - `value`
+        - `isUnique`
+
+While other properties belong to the philological model, diplomatic metadata are all represented by `diplomatic`.
+
+### SVG Features
 
 The most relevant aspects of SVG you can encode as features are listed here as a quick reference. The general structure of diplomatic features is summarized in this JSON example:
 
@@ -46,8 +69,8 @@ The most relevant aspects of SVG you can encode as features are listed here as a
   "styles": {
     "x": [
       {
-        "name": "style-name",
-        "value": "style-value"
+        "name": "style CSS selector",
+        "value": "style CSS value"
       }
     ]
   },
@@ -62,14 +85,36 @@ The most relevant aspects of SVG you can encode as features are listed here as a
     "x": [
       {
         "name": "some-name",
-        "value": "<rect x=\"10\" y=\"20\" width=\"50\" height=\"10\"/>"
+        "value": "shape SVG code"
+      }
+    ]
+  },
+  "texts": {
+    "x": [
+      {
+        "name": "some-name",
+        "value": "text SVG code"
+      }
+    ]
+  },
+  "images": {
+    "x": [
+      {
+        "name": "some-name",
+        "value": "image SVG code"
       }
     ]
   }
 }
 ```
 
-### Shapes
+#### SVG Styles and Classes
+
+In addition to setting attributes on objects, you can also use CSS to style fills and strokes. Anyway, not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
+
+You can also wrap several CSS properties into a class and add it to each SVG element.
+
+#### SVG Shapes
 
 - `rect`: `x` `y` `width` `height`, plus `rx` `ry` for radius of the corners.
 - `circle`: `cx`, `cy` (center), `r` (radius).
@@ -84,7 +129,7 @@ The most relevant aspects of SVG you can encode as features are listed here as a
   - `C`, `Q`, `S`, `T` = Bezier curves.
   - `A` = arc (section of ellipses).
 
-### Text
+#### SVG Texts
 
 The `text` element has `x` and `y`, and the text is its content. Other attributes:
 
@@ -105,7 +150,13 @@ The `text` element has `x` and `y`, and the text is its content. Other attribute
 </text>
 ```
 
-### Fills and Strokes
+#### Images
+
+SVG has an `image` element to embed raster/vector images. The specification requests applications to support at least PNG, JPEG and SVG format files.
+
+The embedded picture becomes a normal SVG element. This means, that you can use clips, masks, filters, rotations and all other tools of SVG on the content.
+
+#### Attributes
 
 Most important attributes:
 
@@ -118,13 +169,7 @@ Most important attributes:
 - `stroke-linejoin`: `miter`, `round`, `bevel`.
 - `stroke-dasharray`: comma separated numbers (first for the filled area, second for the unfilled area).
 
-You can also color with linear and radial gradients (both requiring an `id` attribute to be referenced by other elements, and usually defined in a `defs` section), or with patterns (a fill pattern with its `id` as for gradients).
-
-### CSS Styles
-
-In addition to setting attributes on objects, you can also use CSS to style fills and strokes. Not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
-
-### Transforms
+#### Transforms
 
 You can use `g` to group elements for transformations. The `transform` attribute can use one or more functions, separated by spaces, like:
 
@@ -134,29 +179,3 @@ You can use `g` to group elements for transformations. The `transform` attribute
 - `skewX(d)`
 - `skewY(d)`
 - `matrix`: a 2x3 transformation matrix. To combine several transformations, we can set the resulting matrix directly with the `matrix(a, b, c, d, e, f)` transformation which maps coordinates from a previous coordinate system into a new coordinate system. See [here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#General_Transformation) for more.
-
-### Clipping and Masking
-
-Clipping refers to removing parts of elements defined by other parts. In this case, any half-transparent effects are not possible, it's an all-or-nothing approach. For instance:
-
-```xml
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <clipPath id="cut-off-bottom">
-      <rect x="0" y="0" width="200" height="100" />
-    </clipPath>
-  </defs>
-
-  <circle cx="100" cy="100" r="100" clip-path="url(#cut-off-bottom)" />
-</svg>
-```
-
-Masking on the other hand allows soft edges by taking transparency and grey values of the mask into account.
-
-You can also set the transparency for a whole element using its `opacity` attribute.
-
-### Images
-
-SVG has an `image` element to embed raster/vector images. The specification requests applications to support at least PNG, JPEG and SVG format files.
-
-The embedded picture becomes a normal SVG element. This means, that you can use clips, masks, filters, rotations and all other tools of SVG on the content.
