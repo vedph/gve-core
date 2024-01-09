@@ -10,8 +10,8 @@ namespace Gve.Text;
 public class VarDiplomatic
 {
     /// <summary>
-    /// Gets or sets the SVG <c>g</c> element graphically representing this
-    /// diplomatic information.
+    /// Gets or sets the SVG <c>g</c> element graphically representing the
+    /// operation this diplomatic information is attached to.
     /// </summary>
     public string? G { get; set; }
 

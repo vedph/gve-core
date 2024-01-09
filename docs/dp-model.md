@@ -2,7 +2,7 @@
 
 The diplomatic model represents the graphical layout of the variants attached to the base text. Essentially, it is a set of metadata optionally attached to each operation, whatever its plane.
 
-As for the general layout, the main assumptions are:
+As for the _general layout_, the main assumptions are:
 
 - the **base text tokens** ("words" in a graphical sense, i.e. sequences of characters delimited by whitespace) are laid out linearly on a single row, until line end; after line end, they continue on the next row. Line end is represented by a newline character in the base text. So, the base text tokens position is automatically determined by the layout algorithm.
 - the **annotations** on top of each base text selection are always positioned _relative_ to the starting point of that selection.
@@ -25,10 +25,6 @@ So, descriptively this means that:
 - then two variants came out from `two`, `c1` and `c2`, not necessarily in this order.
 - then, another variant `c1.c1` came out of `c1`.
 
-The underlying structure for this description is a tree model. Each origin token is the root of a tree which may indefinitely branch; so that we have variants, but also variants of variants.
-
-The [philological model](ph-model.md) already provides a tree-based structure for its annotations plane. Diplomatic metadata are just additions on top of this model, as properties of each variant generation operation.
-
 ## Metadata
 
 Any variant generation operation has these metadata:
@@ -45,74 +41,31 @@ Any variant generation operation has these metadata:
   - `type`
   - `rank`
   - `note`
-- `diplomatic`:
-  - SVG `textPosition`:
-    - text anchor (start, middle, end);
-    - dominant baseline (the baseline used to align the box's text: values are like `auto`, `text-bottom`, `middle`, `central`, `mathematical`, `hanging`, `text-top`, etc.);
-    - transformations applied to the position.
-  - `text`: the optional text representing the variant. This is the original text found attached to the variant, optionally multiline.
-  - `features`: generic features grouped as follows (as a dictionary of dictionaries, where the outer key is the feature type, and the inner key is the version tag, the end value being a `Feature` object):
-    - functional groups, representing features like _styles_, _classes_ names, or _shapes_, as encoded in SVG.
-      - version tag sub-groups: this allows applying the features conditionally, according to the version of the text being generated.
-        - `name`
-        - `value`
-        - `isUnique`
 
-While other properties belong to the philological model, diplomatic metadata are all represented by `diplomatic`.
+The diplomatic model adds a `diplomatic` property which is a complex object:
+
+- `diplomatic`:
+  - `g`: the SVG `g` element graphically representing the operation.
+  - `features`: the optional generic set of features attached to the text variant as a whole (e.g. type, size, etc.):
+    - `name`
+    - `value`
+    - `isUnique`
+  - `elementFeatures`: the optional features attached to elements defined in `g`. Each element is identified by its `id` attribute, which is a key in this dictionary of Feature objects:
+    - `name`
+    - `value`
+    - `isUnique`
 
 ### SVG Features
 
-The most relevant aspects of SVG you can encode as features are listed here as a quick reference. The general structure of diplomatic features is summarized in this JSON example:
-
-```json
-{
-  "styles": {
-    "x": [
-      {
-        "name": "style CSS selector",
-        "value": "style CSS value"
-      }
-    ]
-  },
-  "classes": {
-    "x": [
-      {
-        "name": "class-name"
-      }
-    ]
-  },
-  "shapes": {
-    "x": [
-      {
-        "name": "some-name",
-        "value": "shape SVG code"
-      }
-    ]
-  },
-  "texts": {
-    "x": [
-      {
-        "name": "some-name",
-        "value": "text SVG code"
-      }
-    ]
-  },
-  "images": {
-    "x": [
-      {
-        "name": "some-name",
-        "value": "image SVG code"
-      }
-    ]
-  }
-}
-```
+The most relevant aspects of SVG you can encode as features are listed here as a quick reference.
 
 #### SVG Styles and Classes
 
-In addition to setting attributes on objects, you can also use CSS to style fills and strokes. Anyway, not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
+In addition to setting attributes on objects, you can use CSS to style fills and strokes. Anyway, not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
 
 You can also wrap several CSS properties into a class and add it to each SVG element.
+
+In GVE, styles can be used for specific formatting, while classes refer to general classes globally shared among all the GVE elements.
 
 #### SVG Shapes
 
@@ -179,3 +132,27 @@ You can use `g` to group elements for transformations. The `transform` attribute
 - `skewX(d)`
 - `skewY(d)`
 - `matrix`: a 2x3 transformation matrix. To combine several transformations, we can set the resulting matrix directly with the `matrix(a, b, c, d, e, f)` transformation which maps coordinates from a previous coordinate system into a new coordinate system. See [here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#General_Transformation) for more.
+
+## Flow
+
+The general flow for building diplomatic models is as follows:
+
+(1) a GUI editor assists users in editing diplomatic data for each text variant operation.
+
+![diplomatic editor](img/diplo-edit-mock.png)
+
+This editor is structured into three main sections:
+
+- features: the generic features belonging to the operation as a whole are edited here.
+- svg: the SVG code is pasted here from a SVG editor, or loaded from a file, or directly typed when it's trivial. We can imagine also a preview for it.
+- payloads: the payload features associated with each element in the SVG code having an `id` attribute. The elements list is parsed from SVG via an API service, and users can pick any of the listed elements to edit their features.
+
+(2) data are saved into a database.
+
+(3) the visualization app gets a base text and all its variant operations. It displays the base text, and then also each operation having diplomatic data.
+
+To display each operation:
+
+1. the app requests its diplomatic data to the API.
+2. the API fetches data from the database, and parses the SVG code from the `g` property, building a hierarchy of objects, each with its `id`, and with all its features as merged from the payloads in the element features dictionary. It then returns the SVG code and this parsed hierarchy.
+3. the app injects the SVG code in its visualization (it will be a `g` child element of the main `svg` element), and updates its list of element viewmodels, as specified by the received hierarchy. For each of these viewmodels, it queries the DOM to get a reference to the element representing it, as defined in SVG. It then attaches this reference to the viewmodel (via the shared `id`), so that later we can add interactivity to these elements in the SVG diagram.
