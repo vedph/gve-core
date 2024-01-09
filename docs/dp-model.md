@@ -36,3 +36,114 @@ So, the **diplomatic metadata** attached to each operation have these properties
 - a set of generic **features**. These are grouped as follows (as a dictionary of dictionaries, where the outer key is the feature type, and the inner key is the version tag, the end value being a `Feature` object):
   - functional groups, representing features like _styles_, _classes_ names, or _shapes_, as encoded in SVG.
     - version tag sub-groups: this allows applying the features conditionally, according to the version of the text being generated.
+
+## SVG Features
+
+The most relevant aspects of SVG you can encode as features are listed here as a quick reference.
+
+### Shapes
+
+- `rect`: `x` `y` `width` `height`, plus `rx` `ry` for radius of the corners.
+- `circle`: `cx`, `cy` (center), `r` (radius).
+- `ellipse`: `cx`, `cy` (center), `rx`, `ry` (radius).
+- `line`: `x1`, `y1`, `x2`, `y2`.
+- `polyline`: group of connected straight lines: `points` is a list of points where each number is whitespace/comma separated: e.g. `10 15, 30, 40`.
+- `polygon`: a closed `polyline`. The path automatically connects the last point with the first, creating a closed shape.
+- `path`: the most general shape, `d` contains drawing instructions. It combines multiple straight lines or curved lines. Each command is a single letter; uppercase for absolute coordinates, lowercase for relative coordinates (with reference to the last point). Coordinates here are always unitless.
+  - `M` = move to: `x y`, without drawing a line.
+  - `L` = line to: `x y` (from the current position). Abbreviated forms with a single parameter are `H` = horizontal line, `V` = vertical line.
+  - `Z` = close path.
+  - `C`, `Q`, `S`, `T` = Bezier curves.
+  - `A` = arc (section of ellipses).
+
+### Text
+
+The `text` element has `x` and `y`, and the text is its content. Other attributes:
+
+- `text-anchor`: `start`, `middle`, `end` or `inherit`.
+- `dominant-baseline`: vertical alignment.
+- `fill`
+- `stroke`
+- CSS-like attributes for font: `font-family`, `font-style`, `font-weight`, `font-variant`, `font-stretch`, `font-size`, `font-size-adjust`, `kerning`, `letter-spacing`, `word-spacing` and `text-decoration`.
+- `tspan` used inside a `text`, like `span` in HTML.
+- `textPath` draws text on a path, e.g.:
+
+```xml
+<path id="my_path" d="M 20,20 C 80,60 100,40 120,20" fill="transparent" />
+<text>
+  <textPath xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#my_path">
+    A curve.
+  </textPath>
+</text>
+```
+
+### Fills and Strokes
+
+Most important attributes:
+
+- `fill`
+- `stroke`
+- `fill-opacity`
+- `stroke-opacity`
+- `stroke-width`: the width of the stroke from its path to both edges.
+- `stroke-linecap`: `butt`, `square` (stretches the stroke), `round` (rounded at end).
+- `stroke-linejoin`: `miter`, `round`, `bevel`.
+- `stroke-dasharray`: comma separated numbers (first for the filled area, second for the unfilled area).
+
+You can also color with linear and radial gradients (both requiring an `id` attribute to be referenced by other elements, and usually defined in a `defs` section), or with patterns (a fill pattern with its `id` as for gradients).
+
+### CSS Styles
+
+In addition to setting attributes on objects, you can also use CSS to style fills and strokes. Not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
+
+In GVE, styles are set under the key `styles`, in a structure like this:
+
+```json
+{
+  "styles": {
+    "x": [
+      {
+        "name": "style-name",
+        "value": "style-value"
+      }
+    ]
+  }
+}
+```
+
+### Transforms
+
+You can use `g` to group elements for transformations. The `transform` attribute can use one or more functions, separated by spaces, like:
+
+- `translate(x,y)`
+- `rotate(d)`
+- `scale(x,y)`
+- `skewX(d)`
+- `skewY(d)`
+- `matrix`: a 2x3 transformation matrix. To combine several transformations, we can set the resulting matrix directly with the `matrix(a, b, c, d, e, f)` transformation which maps coordinates from a previous coordinate system into a new coordinate system. See [here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#General_Transformation) for more.
+
+### Clipping and Masking
+
+Clipping refers to removing parts of elements defined by other parts. In this case, any half-transparent effects are not possible, it's an all-or-nothing approach. For instance:
+
+```xml
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <clipPath id="cut-off-bottom">
+      <rect x="0" y="0" width="200" height="100" />
+    </clipPath>
+  </defs>
+
+  <circle cx="100" cy="100" r="100" clip-path="url(#cut-off-bottom)" />
+</svg>
+```
+
+Masking on the other hand allows soft edges by taking transparency and grey values of the mask into account.
+
+You can also set the transparency for a whole element using its `opacity` attribute.
+
+### Images
+
+SVG has an `image` element to embed raster/vector images. The specification requests applications to support at least PNG, JPEG and SVG format files.
+
+The embedded picture becomes a normal SVG element. This means, that you can use clips, masks, filters, rotations and all other tools of SVG on the content.
