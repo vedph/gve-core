@@ -1,0 +1,42 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": ".",
+          "files": ["**/*.csproj"],
+          "exclude": ["**/*.Test.csproj", "**/bin/**", "**/obj/**"]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "toc.yml",
+          "index.md",
+          "docs/**/*.md",
+          "docs/**/*.yml",
+          "api/**.yml",
+          "api/index.md"
+        ],
+        "exclude": ["_site/**"]
+      }
+    ],
+    "resource": [
+      {
+        "files": ["docs/img/**"]
+      }
+    ],
+    "output": "_site",
+    "template": ["default", "modern"],
+    "globalMetadata": {
+      "_appName": "gve-doc",
+      "_appTitle": "GVE Documentation",
+      "_enableSearch": true,
+      "pdf": true
+    }
+  }
+}

@@ -1,0 +1,8 @@
+- name: Introduction
+  href: introduction.md
+- name: Getting Started
+  href: getting-started.md
+- name: Philological Model
+  href: ph-model.md
+- name: Diplomatic Model
+  href: dp-model.md

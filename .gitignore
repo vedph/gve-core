@@ -36,3 +36,5 @@ packages/
 *.csdat
 *.scgdat
 .vs/
+_site/
+api/
