@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Gve.Text;
 
 /// <summary>
-/// A generic name=value feature.
+/// A generic name=value (or just name) feature.
 /// </summary>
 public partial record Feature
 {
@@ -16,9 +16,10 @@ public partial record Feature
     public string Name { get; }
 
     /// <summary>
-    /// Gets the value.
+    /// Gets the value. Usually there is a value, but in some cases a feature
+    /// is used just as a flag, in which case the value is null.
     /// </summary>
-    public string Value { get; }
+    public string? Value { get; }
 
     /// <summary>
     /// Gets a value indicating whether the feature is unique in a set
@@ -36,7 +37,6 @@ public partial record Feature
     public Feature()
     {
         Name = "";
-        Value = "";
     }
 
     /// <summary>
@@ -45,21 +45,22 @@ public partial record Feature
     /// <param name="name">The name.</param>
     /// <param name="value">The value.</param>
     /// <param name="isUnique"><c>true</c> if feature is unique.</param>
-    /// <exception cref="ArgumentNullException">name or value</exception>
-    public Feature(string name, string value, bool isUnique = false)
+    /// <exception cref="ArgumentNullException">name</exception>
+    public Feature(string name, string? value, bool isUnique = false)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
-        Value = value ?? throw new ArgumentNullException(nameof(value));
+        Value = value;
         IsUnique = isUnique;
     }
 
-    [GeneratedRegex(@"^(?<n>[^=]+)(?<u>:)=(?<v>(?:""[^""]+"")|(?:[^\s]+))$")]
+    [GeneratedRegex(@"^(?<n>[^:=]+)(?<u>:)?(?:=(?<v>(?:""[^""]+"")|(?:[^\s]+)))?$")]
     private static partial Regex NameValueRegex();
 
     /// <summary>
     /// Parses the specified text representing a feature, with syntax
     /// <c>name=value or name="value"</c>, where <c>=</c> can be replaced by
-    /// <c>:=</c> for a unique feature.
+    /// <c>:=</c> for a unique feature. When value is null, the text is
+    /// just its name.
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Feature.</returns>
@@ -73,7 +74,7 @@ public partial record Feature
         if (!m.Success) throw new FormatException($"Invalid feature: {text}");
 
         return new(m.Groups["n"].Value,
-            m.Groups["v"].Value.Trim('"'),
+            m.Groups["v"].Success? m.Groups["v"].Value.Trim('"') : null,
             m.Groups["u"].Success);
     }
 
@@ -123,8 +124,7 @@ public partial record Feature
                 string name = feature.Name[1..];
                 for (int i = targets.Count - 1; i >= 0; i--)
                 {
-                    if (targets[i].Name == name)
-                        targets.RemoveAt(i);
+                    if (targets[i].Name == name) targets.RemoveAt(i);
                 }
                 continue;
             }
@@ -134,8 +134,7 @@ public partial record Feature
             {
                 for (int i = targets.Count - 1; i >= 0; i--)
                 {
-                    if (targets[i].Name == feature.Name)
-                        targets.RemoveAt(i);
+                    if (targets[i].Name == feature.Name) targets.RemoveAt(i);
                 }
             }
             targets.Add(feature);
@@ -150,7 +149,9 @@ public partial record Feature
     /// </returns>
     public override string ToString()
     {
-        string op = IsUnique? ":=" : "=";
+        if (Value == null) return Name;
+
+        string op = IsUnique ? ":=" : "=";
         return Value.Any(char.IsWhiteSpace)
             ? $"{Name}{op}\"{Value}\""
             : Name + op + Value;

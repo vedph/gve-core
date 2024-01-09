@@ -39,7 +39,35 @@ So, the **diplomatic metadata** attached to each operation have these properties
 
 ## SVG Features
 
-The most relevant aspects of SVG you can encode as features are listed here as a quick reference.
+The most relevant aspects of SVG you can encode as features are listed here as a quick reference. The general structure of diplomatic features is summarized in this JSON example:
+
+```json
+{
+  "styles": {
+    "x": [
+      {
+        "name": "style-name",
+        "value": "style-value"
+      }
+    ]
+  },
+  "classes": {
+    "x": [
+      {
+        "name": "class-name"
+      }
+    ]
+  },
+  "shapes": {
+    "x": [
+      {
+        "name": "some-name",
+        "value": "<rect x=\"10\" y=\"20\" width=\"50\" height=\"10\"/>"
+      }
+    ]
+  }
+}
+```
 
 ### Shapes
 
@@ -95,21 +123,6 @@ You can also color with linear and radial gradients (both requiring an `id` attr
 ### CSS Styles
 
 In addition to setting attributes on objects, you can also use CSS to style fills and strokes. Not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
-
-In GVE, styles are set under the key `styles`, in a structure like this:
-
-```json
-{
-  "styles": {
-    "x": [
-      {
-        "name": "style-name",
-        "value": "style-value"
-      }
-    ]
-  }
-}
-```
 
 ### Transforms
 
