@@ -5,6 +5,9 @@ using System.Xml.Linq;
 
 namespace Gve.Api.Services;
 
+/// <summary>
+/// The model of a variant's diplomatic information.
+/// </summary>
 public class VarDiplomaticModel
 {
     /// <summary>
