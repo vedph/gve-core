@@ -1,5 +1,6 @@
 ﻿using Cadmus.Core.Layers;
 using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Gve.Cadmus;
 
@@ -102,6 +103,39 @@ public static class TokenTextLocationConverter
         }
     }
 
+    private static TokenTextLocation SetTextLocationEnd(string text,
+        int i, int y, int x, int at, TokenTextLocation location)
+    {
+        int tokenLength = GetTokenLength(text, i);
+
+        // if in same token, set run if required and exit
+        if (location.A.Y == y && location.A.X == x)
+        {
+            // set run only when token is not fully selected
+            if (location.A.At > 1 || at < tokenLength)
+            {
+                if (location.A.At == 0) location.A.At = 1;
+                location.A.Run = (short)(tokenLength - location.A.At + 1);
+            }
+            return location;
+        }
+
+        // otherwise, set B and exit
+        location.B = new TokenTextPoint
+        {
+            Y = y,
+            X = x,
+        };
+        // if token is not fully selected, set at=1 and run
+        if (at > 1 || at < tokenLength)
+        {
+            location.B.At = 1;
+            location.B.Run = (short)(tokenLength - location.A.At + 1);
+        }
+
+        return location;
+    }
+
     /// <summary>
     /// Convert the specified character-based ordinals and run into a token-based
     /// text location.
@@ -111,12 +145,14 @@ public static class TokenTextLocationConverter
     /// <param name="r">The run.</param>
     /// <returns>The location.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    /// <exception cref="ArgumentOutOfRangeException">n or r less than 0</exception>
-    /// <exception cref="InvalidOperationException">Invalid location</exception>
+    /// <exception cref="ArgumentOutOfRangeException">n or r less than 0, or
+    /// n + r greater than text length</exception>
     public static TokenTextLocation OrdinalToLocation(string text, int n, int r)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(n, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(r, 1);
+        if (n + r - 1 > text.Length)
+            throw new ArgumentOutOfRangeException(nameof(r));
         ArgumentNullException.ThrowIfNull(text);
 
         TokenTextLocation location = new();
@@ -153,36 +189,10 @@ public static class TokenTextLocationConverter
             // if we got to selection end, set A/B and exit
             if (i == endIndex)
             {
-                int tokenLength = GetTokenLength(text, i);
-
-                // if in same token, set run if required and exit
-                if (location.A.Y == y && location.A.X == x)
-                {
-                    // set run only when token is not fully selected
-                    if (location.A.At > 1 || at < tokenLength)
-                    {
-                        if (location.A.At == 0) location.A.At = 1;
-                        location.A.Run = (short)(tokenLength - location.A.At + 1);
-                    }
-                    return location;
-                }
-
-                // otherwise, set B and exit
-                location.B = new TokenTextPoint
-                {
-                    Y = y,
-                    X = x,
-                };
-                // if token is not fully selected, set at=1 and run
-                if (at > 1 || at < tokenLength)
-                {
-                    location.B.At = 1;
-                    location.B.Run = (short)(tokenLength - location.A.At + 1);
-                }
-                return location;
+                return SetTextLocationEnd(text, i, y, x, at, location);
             }
         }
-        throw new InvalidOperationException(
-            $"Invalid location: {n}x{r} in \"{text}\"");
+
+        return SetTextLocationEnd(text, text.Length, y, x, at, location);
     }
 }
