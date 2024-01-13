@@ -1,6 +1,5 @@
 ﻿using Cadmus.Core.Layers;
 using System;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Gve.Cadmus;
 
@@ -32,6 +31,9 @@ public static class TokenTextLocationConverter
 
     private static int GetTokenIndex(string text, int tokenY, int tokenX)
     {
+        if (!text.Contains(' ') && !text.Contains('\n'))
+            return tokenY == 1 && tokenX == 1 ? 0 : -1;
+
         int y = 1, x = 1;
 
         for (int i = 0; i < text.Length; i++)
@@ -88,7 +90,7 @@ public static class TokenTextLocationConverter
         }
         else
         {
-            int i = (GetTokenIndex(text, location.A.Y, location.A.X));
+            int i = GetTokenIndex(text, location.A.Y, location.A.X);
             int r;
             if (location.A.At > 0)
             {
@@ -97,7 +99,7 @@ public static class TokenTextLocationConverter
             }
             else
             {
-                r = GetTokenLength(text, i - 1);
+                r = GetTokenLength(text, i);
             }
             return (i + 1, r);
         }
@@ -115,7 +117,7 @@ public static class TokenTextLocationConverter
             if (location.A.At > 1 || at < tokenLength)
             {
                 if (location.A.At == 0) location.A.At = 1;
-                location.A.Run = (short)(tokenLength - location.A.At + 1);
+                location.A.Run = (short)(i - (location.A.At - 1));
             }
             return location;
         }
@@ -130,7 +132,7 @@ public static class TokenTextLocationConverter
         if (at > 1 || at < tokenLength)
         {
             location.B.At = 1;
-            location.B.Run = (short)(tokenLength - location.A.At + 1);
+            location.B.Run = (short)(i - (location.A.At - 1));
         }
 
         return location;

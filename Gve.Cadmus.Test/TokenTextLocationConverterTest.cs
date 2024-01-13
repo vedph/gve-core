@@ -6,7 +6,19 @@ namespace Gve.Cadmus.Test;
 public class TokenTextLocationConverterTest
 {
     [Fact]
-    public void LocationToOrdinal_SingleToken()
+    public void LocationToOrdinal_SingleToken_Whole()
+    {
+        // ph
+        const string text = "alpha";
+        TokenTextLocation location = TokenTextLocation.Parse("1.1");
+        (int n, int r) = TokenTextLocationConverter.LocationToOrdinal(
+            text, location);
+        Assert.Equal(1, n);
+        Assert.Equal(5, r);
+    }
+
+    [Fact]
+    public void LocationToOrdinal_SingleToken_Partial()
     {
         // ph
         const string text = "alpha";
