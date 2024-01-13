@@ -14,12 +14,19 @@ public static class TokenTextLocationConverter
 {
     private static int GetTokenLength(string text, int index)
     {
-        int i = index;
-        while (i < text.Length && text[i] != ' ' && text[i] != '\n')
+        // find start
+        while (index > 0 && text[index - 1] != ' ' && text[index - 1] != '\n')
         {
-            i++;
+            index--;
         }
-        return i - index;
+
+        // find end
+        int end = index;
+        while (end < text.Length && text[end] != ' ' && text[end] != '\n')
+        {
+            end++;
+        }
+        return end - index;
     }
 
     private static int GetTokenIndex(string text, int tokenY, int tokenX)
@@ -95,15 +102,25 @@ public static class TokenTextLocationConverter
         }
     }
 
+    /// <summary>
+    /// Convert the specified character-based ordinals and run into a token-based
+    /// text location.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="n">The ordinal.</param>
+    /// <param name="r">The run.</param>
+    /// <returns>The location.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="ArgumentOutOfRangeException">n or r less than 0</exception>
+    /// <exception cref="InvalidOperationException">Invalid location</exception>
     public static TokenTextLocation OrdinalToLocation(string text, int n, int r)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(n, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(r, 1);
         ArgumentNullException.ThrowIfNull(text);
 
-        TokenTextLocation location = new()
-        {
-            A = new TokenTextPoint()
-        };
-        int y = 1, x = 1, at = 0;
+        TokenTextLocation location = new();
+        int y = 1, x = 1, at = 0, startIndex = n - 1, endIndex = n + r - 1;
 
         for (int i = 0; i < text.Length; i++)
         {
@@ -124,25 +141,48 @@ public static class TokenTextLocationConverter
             {
                 at++;
             }
-            if (i == n - 1)
+
+            // if we got to selection start, set A and continue
+            if (i == startIndex)
             {
                 location.A.Y = y;
                 location.A.X = x;
-                location.A.At = (short)at;
+                if (at > 1) location.A.At = (short)at;
             }
-            if (i == n + r - 1)
+
+            // if we got to selection end, set A/B and exit
+            if (i == endIndex)
             {
+                int tokenLength = GetTokenLength(text, i);
+
+                // if in same token, set run if required and exit
+                if (location.A.Y == y && location.A.X == x)
+                {
+                    // set run only when token is not fully selected
+                    if (location.A.At > 1 || at < tokenLength)
+                    {
+                        if (location.A.At == 0) location.A.At = 1;
+                        location.A.Run = (short)(tokenLength - location.A.At + 1);
+                    }
+                    return location;
+                }
+
+                // otherwise, set B and exit
                 location.B = new TokenTextPoint
                 {
                     Y = y,
                     X = x,
-                    At = (short)at,
-                    Run = 0
                 };
-                break;
+                // if token is not fully selected, set at=1 and run
+                if (at > 1 || at < tokenLength)
+                {
+                    location.B.At = 1;
+                    location.B.Run = (short)(tokenLength - location.A.At + 1);
+                }
+                return location;
             }
         }
-        location.A.Run = (short)(location.B!.At - location.A.At);
-        return location;
+        throw new InvalidOperationException(
+            $"Invalid location: {n}x{r} in \"{text}\"");
     }
 }

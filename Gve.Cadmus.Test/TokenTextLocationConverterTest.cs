@@ -67,49 +67,107 @@ public class TokenTextLocationConverterTest
     }
 
     [Fact]
-    public void OrdinalToLocation_SingleToken()
+    public void OrdinalToLocation_SingleToken_Whole()
     {
         const string text = "alpha";
         TokenTextLocation location =
-            TokenTextLocationConverter.OrdinalToLocation(text, 2, 2);
+            TokenTextLocationConverter.OrdinalToLocation(text, 1, 5);
         Assert.Equal(1, location.A.Y);
         Assert.Equal(1, location.A.X);
-        Assert.Equal(2, location.A.At);
+        Assert.Equal(0, location.A.At);
+        Assert.Equal(0, location.A.Run);
+        Assert.Null(location.B);
+    }
+
+    [Fact]
+    public void OrdinalToLocation_SingleToken_Partial()
+    {
+        const string text = "alpha";
+        TokenTextLocation location =
+            TokenTextLocationConverter.OrdinalToLocation(text, 3, 2);
+        Assert.Equal(1, location.A.Y);
+        Assert.Equal(1, location.A.X);
+        Assert.Equal(3, location.A.At);
         Assert.Equal(2, location.A.Run);
         Assert.Null(location.B);
     }
 
     [Fact]
-    public void OrdinalToLocation_MultipleTokens()
+    public void OrdinalToLocation_MultipleTokens_Whole()
     {
+        // beta_gamma        1234567890123456
         const string text = "alpha beta gamma";
         TokenTextLocation location =
-            TokenTextLocationConverter.OrdinalToLocation(text, 7, 7);
+            TokenTextLocationConverter.OrdinalToLocation(text, 7, 10);
         Assert.Equal(1, location.A.Y);
         Assert.Equal(2, location.A.X);
-        Assert.Equal(1, location.A.At);
-        Assert.Equal(3, location.A.Run);
+        Assert.Equal(0, location.A.At);
+        Assert.Equal(0, location.A.Run);
+
         Assert.NotNull(location.B);
         Assert.Equal(1, location.B.Y);
         Assert.Equal(3, location.B.X);
-        Assert.Equal(2, location.B.At);
+        Assert.Equal(0, location.B.At);
         Assert.Equal(0, location.B.Run);
     }
 
     [Fact]
-    public void OrdinalToLocation_MultipleLines()
+    public void OrdinalToLocation_MultipleTokens_Partial()
     {
+        // ta_gam           1234567890123456
+        const string text = "alpha beta gamma";
+        TokenTextLocation location =
+            TokenTextLocationConverter.OrdinalToLocation(text, 10, 6);
+        Assert.Equal(1, location.A.Y);
+        Assert.Equal(2, location.A.X);
+        Assert.Equal(3, location.A.At);
+        Assert.Equal(2, location.A.Run);
+
+        Assert.NotNull(location.B);
+        Assert.Equal(1, location.B.Y);
+        Assert.Equal(3, location.B.X);
+        Assert.Equal(1, location.B.At);
+        Assert.Equal(3, location.B.Run);
+    }
+
+    [Fact]
+    public void OrdinalToLocation_MultipleLines_WholeTokens()
+    {
+        // delta|epsilon_zeta
+        //                   12345678901 234567890123 456789012345
         const string text = "alpha beta\ngamma delta\nepsilon zeta";
         TokenTextLocation location =
-            TokenTextLocationConverter.OrdinalToLocation(text, 13, 19);
+            TokenTextLocationConverter.OrdinalToLocation(text, 18, 18);
         Assert.Equal(2, location.A.Y);
-        Assert.Equal(1, location.A.X);
-        Assert.Equal(1, location.A.At);
-        Assert.Equal(4, location.A.Run);
+        Assert.Equal(2, location.A.X);
+        Assert.Equal(0, location.A.At);
+        Assert.Equal(0, location.A.Run);
+
         Assert.NotNull(location.B);
         Assert.Equal(3, location.B.Y);
         Assert.Equal(2, location.B.X);
-        Assert.Equal(2, location.B.At);
+        Assert.Equal(0, location.B.At);
         Assert.Equal(0, location.B.Run);
     }
+
+    [Fact]
+    public void OrdinalToLocation_MultipleLines_PartialTokens()
+    {
+        // ta|epsilon_ze
+        //                   12345678901 234567890123 456789012345
+        const string text = "alpha beta\ngamma delta\nepsilon zeta";
+        TokenTextLocation location =
+            TokenTextLocationConverter.OrdinalToLocation(text, 21, 13);
+        Assert.Equal(2, location.A.Y);
+        Assert.Equal(2, location.A.X);
+        Assert.Equal(4, location.A.At);
+        Assert.Equal(2, location.A.Run);
+        
+        Assert.NotNull(location.B);
+        Assert.Equal(3, location.B.Y);
+        Assert.Equal(2, location.B.X);
+        Assert.Equal(1, location.B.At);
+        Assert.Equal(2, location.B.Run);
+    }
+
 }
