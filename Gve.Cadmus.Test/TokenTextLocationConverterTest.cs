@@ -126,10 +126,10 @@ public class TokenTextLocationConverterTest
     [Fact]
     public void OrdinalToLocation_MultipleTokens_Partial()
     {
-        // ta_gam           1234567890123456
+        // ta_gam            1234567890123456
         const string text = "alpha beta gamma";
         TokenTextLocation location =
-            TokenTextLocationConverter.OrdinalToLocation(text, 10, 6);
+            TokenTextLocationConverter.OrdinalToLocation(text, 9, 6);
         Assert.Equal(1, location.A.Y);
         Assert.Equal(2, location.A.X);
         Assert.Equal(3, location.A.At);

@@ -56,6 +56,15 @@ public static class TokenTextLocationConverter
         return -1;
     }
 
+    private static int GetTokenStartIndex(string text, int index)
+    {
+        while (index > 0 && text[index - 1] != ' ' && text[index - 1] != '\n')
+        {
+            index--;
+        }
+        return index;
+    }
+
     /// <summary>
     /// Convert the specified token-based text location into ordinal and run.
     /// </summary>
@@ -106,34 +115,43 @@ public static class TokenTextLocationConverter
     }
 
     private static TokenTextLocation SetTextLocationEnd(string text,
-        int i, int y, int x, int at, TokenTextLocation location)
+        int first, int last, int y, int x, int at, TokenTextLocation location)
     {
-        int tokenLength = GetTokenLength(text, i);
+        int tokenStart = GetTokenStartIndex(text, last);
+        int tokenLength = GetTokenLength(text, last);
 
-        // if in same token, set run if required and exit
+        // if start and end token is the same, set run if required and exit
         if (location.A.Y == y && location.A.X == x)
         {
             // set run only when token is not fully selected
             if (location.A.At > 1 || at < tokenLength)
             {
                 if (location.A.At == 0) location.A.At = 1;
-                location.A.Run = (short)(i - (location.A.At - 1));
+                location.A.Run = (short)
+                    (last + 1 - tokenStart - (location.A.At - 1));
+
+                // if whole token is selected, reset at and run
+                if (location.A.At == 1 && location.A.Run == tokenLength)
+                {
+                    location.A.At = 0;
+                    location.A.Run = 0;
+                }
             }
             return location;
         }
 
-        // otherwise, set B and exit
-        location.B = new TokenTextPoint
+        // else we have A-B, adjust A if partial
+        if (location.A.At > 1)
         {
-            Y = y,
-            X = x,
-        };
-        // if token is not fully selected, set at=1 and run
-        if (at > 1 || at < tokenLength)
-        {
-            location.B.At = 1;
-            location.B.Run = (short)(i - (location.A.At - 1));
+            location.A.Run = (short)
+                (GetTokenLength(text, first) - (location.A.At - 1));
         }
+
+        // set B
+        location.B = at < tokenLength
+            // if token B is not fully selected, set at=1 and run up to last char
+            ? new TokenTextPoint(y, x, 1, (short)(last + 1 - tokenStart))
+            : new TokenTextPoint(y, x);
 
         return location;
     }
@@ -149,6 +167,7 @@ public static class TokenTextLocationConverter
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="ArgumentOutOfRangeException">n or r less than 0, or
     /// n + r greater than text length</exception>
+    /// <exception cref="InvalidOperationException">Invalid text location</exception>
     public static TokenTextLocation OrdinalToLocation(string text, int n, int r)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(n, 1);
@@ -158,7 +177,7 @@ public static class TokenTextLocationConverter
         ArgumentNullException.ThrowIfNull(text);
 
         TokenTextLocation location = new();
-        int y = 1, x = 1, at = 0, startIndex = n - 1, endIndex = n + r - 1;
+        int y = 1, x = 1, at = 0, firstIndex = n - 1, lastIndex = n + r - 2;
 
         for (int i = 0; i < text.Length; i++)
         {
@@ -181,7 +200,7 @@ public static class TokenTextLocationConverter
             }
 
             // if we got to selection start, set A and continue
-            if (i == startIndex)
+            if (i == firstIndex)
             {
                 location.A.Y = y;
                 location.A.X = x;
@@ -189,12 +208,13 @@ public static class TokenTextLocationConverter
             }
 
             // if we got to selection end, set A/B and exit
-            if (i == endIndex)
+            if (i == lastIndex)
             {
-                return SetTextLocationEnd(text, i, y, x, at, location);
+                return SetTextLocationEnd(text, firstIndex, i, y, x, at, location);
             }
         }
 
-        return SetTextLocationEnd(text, text.Length, y, x, at, location);
+        throw new InvalidOperationException(
+            $"Invalid text location {n}x{r} for \"{text}\"");
     }
 }
