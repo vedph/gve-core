@@ -60,7 +60,7 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
         {
             // op type
             builder.AddValue(PartBase.FR_PREFIX + "op-type",
-                nameof(Operation.Type));
+                Enum.GetName(Operation.Type));
 
             // op value
             builder.AddValue(PartBase.FR_PREFIX + "op-value",
@@ -109,7 +109,7 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
             }
         }
 
-        throw new NotImplementedException();
+        return builder.Build(null);
     }
 
     /// <summary>
