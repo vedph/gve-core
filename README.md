@@ -16,6 +16,8 @@ Other Razor packages:
 
 ## History
 
+- 2024-01-15:
+  - added Cadmus-related packages.
 - 2024-01-09:
   - updated packages.
   - make `Feature`'s `Value` optional.

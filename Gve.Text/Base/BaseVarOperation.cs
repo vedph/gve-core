@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Gve.Text.Base;
@@ -10,6 +11,12 @@ namespace Gve.Text.Base;
 /// features.
 /// </summary>
 /// <seealso cref="VarOperation" />
+[JsonDerivedType(typeof(ReplaceBaseVarOperation), nameof(VarOperationType.Replace))]
+[JsonDerivedType(typeof(AddLeftBaseVarOperation), nameof(VarOperationType.AddLeft))]
+[JsonDerivedType(typeof(AddRightBaseVarOperation), nameof(VarOperationType.AddRight))]
+[JsonDerivedType(typeof(AnnotateBaseVarOperation), nameof(VarOperationType.Annotate))]
+[JsonDerivedType(typeof(MoveBaseVarOperation), nameof(VarOperationType.Move))]
+[JsonDerivedType(typeof(SwapBaseVarOperation), nameof(VarOperationType.Swap))]
 public abstract class BaseVarOperation : VarOperation
 {
     /// <summary>

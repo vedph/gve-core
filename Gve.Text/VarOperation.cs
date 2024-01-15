@@ -34,7 +34,7 @@ public abstract partial class VarOperation : VarOperationMetadata
     public int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the type.
+    /// Gets or sets the operation type.
     /// </summary>
     public VarOperationType Type { get; protected set; }
 

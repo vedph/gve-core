@@ -16,9 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Demo", "Gve.Demo\Gve.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Api.Services", "Gve.Api.Services\Gve.Api.Services.csproj", "{11A0264B-419F-43C4-B9A9-25191F701D0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gve.Cadmus", "Gve.Cadmus\Gve.Cadmus.csproj", "{085B7430-321A-4CA4-B2C4-13C6CDD23D64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Cadmus", "Gve.Cadmus\Gve.Cadmus.csproj", "{085B7430-321A-4CA4-B2C4-13C6CDD23D64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gve.Cadmus.Test", "Gve.Cadmus.Test\Gve.Cadmus.Test.csproj", "{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Cadmus.Test", "Gve.Cadmus.Test\Gve.Cadmus.Test.csproj", "{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Gve.Parts", "Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj", "{DA249C8B-13D6-4049-B189-8AB7E5388ECF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA249C8B-13D6-4049-B189-8AB7E5388ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA249C8B-13D6-4049-B189-8AB7E5388ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA249C8B-13D6-4049-B189-8AB7E5388ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA249C8B-13D6-4049-B189-8AB7E5388ECF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

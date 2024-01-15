@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Gve.Text.Annotations;
@@ -9,6 +10,12 @@ namespace Gve.Text.Annotations;
 /// A variant generation operation on the annotations plane.
 /// </summary>
 /// <seealso cref="VarOperationMetadata" />
+[JsonDerivedType(typeof(ReplaceAnnVarOperation), nameof(VarOperationType.Replace))]
+[JsonDerivedType(typeof(AddLeftAnnVarOperation), nameof(VarOperationType.AddLeft))]
+[JsonDerivedType(typeof(AddRightAnnVarOperation), nameof(VarOperationType.AddRight))]
+[JsonDerivedType(typeof(AnnotateAnnVarOperation), nameof(VarOperationType.Annotate))]
+[JsonDerivedType(typeof(MoveAnnVarOperation), nameof(VarOperationType.Move))]
+[JsonDerivedType(typeof(SwapAnnVarOperation), nameof(VarOperationType.Swap))]
 public abstract class AnnVarOperation : VarOperation
 {
     /// <summary>
