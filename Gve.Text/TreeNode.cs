@@ -271,6 +271,46 @@ public class TreeNode<T>
     }
 
     /// <summary>
+    /// Gets the first ascendant node matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentNullException">predicate</exception>
+    public TreeNode<T>? GetFirstAscendant(Func<TreeNode<T>, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        TreeNode<T> node = this;
+        while (node.Parent != null)
+        {
+            if (predicate(node.Parent)) return node.Parent;
+            node = node.Parent;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Gets either this node or the first ascendant node matching the
+    /// specified predicate.
+    /// </summary>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentNullException">predicate</exception>
+    public TreeNode<T>? GetFirstAscendantOrSelf(
+        Func<TreeNode<T>, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        TreeNode<T>? node = this;
+        while (node != null)
+        {
+            if (predicate(node)) return node;
+            node = node.Parent;
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Gets all the descendants of this node.
     /// </summary>
     /// <returns>Nodes.</returns>
@@ -282,6 +322,47 @@ public class TreeNode<T>
             foreach (TreeNode<T> grandchild in child.GetDescendants())
                 yield return grandchild;
         }
+    }
+
+    /// <summary>
+    /// Gets the first descendant node matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentNullException">predicate</exception>
+    public TreeNode<T>? GetFirstDescendant(Func<TreeNode<T>, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        foreach (TreeNode<T> child in Children)
+        {
+            if (predicate(child)) return child;
+            TreeNode<T>? descendant = child.GetFirstDescendant(predicate);
+            if (descendant != null) return descendant;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Gets either this node or the first descendant node matching the
+    /// specified predicate.
+    /// </summary>
+    /// <param name="predicate">The predicate.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentNullException">predicate</exception>
+    public TreeNode<T>? GetFirstDescendantOrSelf(
+        Func<TreeNode<T>, bool> predicate)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        if (predicate(this)) return this;
+
+        foreach (TreeNode<T> child in Children)
+        {
+            TreeNode<T>? descendant = child.GetFirstDescendantOrSelf(predicate);
+            if (descendant != null) return descendant;
+        }
+        return null;
     }
 
     /// <summary>
