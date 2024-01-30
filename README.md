@@ -1,4 +1,4 @@
-# GVE
+﻿# GVE
 
 ## Demo
 
@@ -14,8 +14,25 @@ Other Razor packages:
 
 - `Microsoft.FluentUI.AspNetCore.Components.Icons`
 
+## Docker
+
+🐋 Quick Docker image build:
+
+```bash
+docker build . -t vedph2020/gve-demo:0.0.1 -t vedph2020/gve-demo:latest
+```
+
+(replace with the current version).
+
+To run the demo in Docker, use this command:
+
+```ps1
+docker run -it --rm -p 8080:80 --name gve-demo gve-demo
+```
+
 ## History
 
+- 2024-01-30: added Docker for demo.
 - 2024-01-15:
   - added Cadmus-related packages.
 - 2024-01-09:

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Text", "Gve.Text\Gve.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CB913250-FF37-4647-99C7-27095DC32BF8}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -20,9 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Cadmus", "Gve.Cadmus\Gv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Cadmus.Test", "Gve.Cadmus.Test\Gve.Cadmus.Test.csproj", "{8B2F95E4-39F7-41CE-AAAC-9E200515B8CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Gve.Parts", "Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj", "{DA249C8B-13D6-4049-B189-8AB7E5388ECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Gve.Parts", "Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj", "{DA249C8B-13D6-4049-B189-8AB7E5388ECF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Gve.Parts.Test", "Cadmus.Gve.Parts.Test\Cadmus.Gve.Parts.Test.csproj", "{FA268FC7-8F72-4987-9E46-DA19C7A86D68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Gve.Parts.Test", "Cadmus.Gve.Parts.Test\Cadmus.Gve.Parts.Test.csproj", "{FA268FC7-8F72-4987-9E46-DA19C7A86D68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
