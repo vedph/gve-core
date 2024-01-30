@@ -6,4 +6,4 @@ services:
     image: vedph2020/gve-demo:0.0.1
     container_name: gve-demo
     ports:
-      - 5094:80
+      - 5094:8080
