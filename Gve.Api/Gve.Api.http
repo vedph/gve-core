@@ -1,0 +1,14 @@
+@Gve.Api_HostAddress = http://localhost:5239
+
+GET {{Gve.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+POST {{Gve.Api_HostAddress}}/text/operations/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "text": "ARZDC",
+  "operationsText": "- 2=\"\" [x=2 y=2]\n  - 1=\"V\" [x]\n    - 1=\"B\" [x]\n  - 1=\"P\" [y]\n- 3=\"\" [x=1 y=1] {reason=\"don't like Z\"}\n- 5>4 [x=3 y=3]\n"
+}

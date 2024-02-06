@@ -106,12 +106,13 @@ public partial class VarGeneratorDemo
 
     private void SetResults(IDictionary<string, IList<CharNodeSet>> results)
     {
-        Results.Clear();
+        List<Tuple<string, CharNodeSet>> newResults = [];
         foreach (string tag in results.Keys)
         {
             foreach (CharNodeSet set in results[tag])
-                Results.Add(new(tag, set));
+                newResults.Add(new(tag, set));
         }
+        Results = newResults;
     }
 
     public void Generate()

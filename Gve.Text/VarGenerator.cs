@@ -345,6 +345,7 @@ public sealed class VarGenerator
     {
         ArgumentNullException.ThrowIfNull(text);
 
+        _steps?.Clear();
         Dictionary<string, IList<CharNodeSet>> results = [];
 
         // for each version tag

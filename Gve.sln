@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Gve.Parts", "Cadmus.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Gve.Parts.Test", "Cadmus.Gve.Parts.Test\Cadmus.Gve.Parts.Test.csproj", "{FA268FC7-8F72-4987-9E46-DA19C7A86D68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gve.Api", "Gve.Api\Gve.Api.csproj", "{4AF7895E-72BF-4584-AD0D-48A252A91015}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{FA268FC7-8F72-4987-9E46-DA19C7A86D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA268FC7-8F72-4987-9E46-DA19C7A86D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA268FC7-8F72-4987-9E46-DA19C7A86D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF7895E-72BF-4584-AD0D-48A252A91015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF7895E-72BF-4584-AD0D-48A252A91015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF7895E-72BF-4584-AD0D-48A252A91015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF7895E-72BF-4584-AD0D-48A252A91015}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
