@@ -33,12 +33,12 @@
 {
     <FluentToolbar>
         <FluentSelect Items="@VariantTags"
-                      @bind-SelectedOption="SelectedVariantTag" />
+        @bind-SelectedOption="SelectedVariantTag" />
         <FluentButton IconStart="@(new Icons.Regular.Size16.ArrowClockwise())"
-                      Type="ButtonType.Button"
-                      Appearance="Appearance.Accent"
-                      Loading="@IsGenerating"
-                      OnClick="Generate">
+        Type="ButtonType.Button"
+        Appearance="Appearance.Accent"
+        Loading="@IsGenerating"
+        OnClick="Generate">
             Generate
         </FluentButton>
     </FluentToolbar>
@@ -65,7 +65,7 @@
             <FluentAccordionItem Heading="Steps">
                 <ChildContent>
                     <FluentDataGrid Items="Steps.AsQueryable()"
-                                    GenerateHeader="GenerateHeaderOption.Default">
+                    GenerateHeader="GenerateHeaderOption.Default">
                         <PropertyColumn Title="tag" Property="@(s => s.VersionTag)" />
                         <PropertyColumn Title="operation" Property="@(s => s.Operation)" />
                         <PropertyColumn Title="set" Property="@(s => s.Context.Set.GetText(true))" />
@@ -78,6 +78,29 @@
 
     <h3>Results</h3>
     <p>@Results.Count</p>
+    <table>
+        <thead>
+            <tr>
+                <th>tag</th>
+                <th>value</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Results)
+            {
+                <tr>
+                    <td class="fit-width">@result.Item1</td>
+                    <td class="fit-width">@result.Item2.GetText(false)</td>
+                    <td class="fit-width">
+                        <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
+                        @onclick="@(()=> { SelectResult(result); })" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*
     <FluentGrid>
         <FluentGridItem xs="12" sm="6">
             <FluentDataGrid Items="Results.AsQueryable()"
@@ -98,5 +121,11 @@
             </FluentGridItem>
         }
     </FluentGrid>
+ *@
+    @if (SelectedResult != null)
+    {
+        <div>
+            <CharNodeSetTable Set="SelectedResult.Item2" />
+        </div>
+    }
 }
-
