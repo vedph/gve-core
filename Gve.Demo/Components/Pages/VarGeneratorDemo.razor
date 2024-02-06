@@ -76,31 +76,32 @@
         </FluentAccordion>
     }
 
-    <h3>Results</h3>
-    <p>@Results.Count</p>
-    <table>
-        <thead>
-            <tr>
-                <th>tag</th>
-                <th>value</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var result in Results)
-            {
+    <fieldset>
+        <legend>results</legend>
+        <table>
+            <thead>
                 <tr>
-                    <td class="fit-width">@result.Item1</td>
-                    <td class="fit-width">@result.Item2.GetText(false)</td>
-                    <td class="fit-width">
-                        <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
-                        @onclick="@(()=> { SelectResult(result); })" />
-                    </td>
+                    <th>tag</th>
+                    <th>value</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    @*
+            </thead>
+            <tbody>
+                @foreach (var result in Results)
+                {
+                    <tr>
+                        <td class="fit-width">@result.Item1</td>
+                        <td class="fit-width">@result.Item2.GetText(false)</td>
+                        <td class="fit-width">
+                            <FluentButton IconEnd="@(new Icons.Regular.Size16.Eye())"
+                            @onclick="@(()=> { SelectResult(result); })" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </fieldset>
+@*    
     <FluentGrid>
         <FluentGridItem xs="12" sm="6">
             <FluentDataGrid Items="Results.AsQueryable()"
@@ -113,19 +114,13 @@
                 </TemplateColumn>
             </FluentDataGrid>
         </FluentGridItem>
-
-        @if (SelectedResult != null)
-        {
-            <FluentGridItem xs="12" sm="6">
-                <CharNodeSetTable Set="SelectedResult.Item2" />
-            </FluentGridItem>
-        }
     </FluentGrid>
  *@
     @if (SelectedResult != null)
     {
-        <div>
+        <fieldset>
+            <legend>details</legend>
             <CharNodeSetTable Set="SelectedResult.Item2" />
-        </div>
+        </fieldset>
     }
 }
