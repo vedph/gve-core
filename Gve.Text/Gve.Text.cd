@@ -43,7 +43,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.TreeNode&lt;T&gt;">
-    <Position X="0.75" Y="5.25" Width="1.75" />
+    <Position X="0.75" Y="4.75" Width="1.75" />
     <Members>
       <Method Name="TreeNode" Hidden="true" />
     </Members>
@@ -51,7 +51,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AIBKgYkAAAAAEAAQAAAUSgAgAEAEAAAAAAAAACAQCBA=</HashCode>
+      <HashCode>AIBKgYkAEAAAEAAQAAAUSgAgAEAGAAAAAAAEACAQCBA=</HashCode>
       <FileName>TreeNode.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -307,7 +307,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarGenerator">
-    <Position X="0.75" Y="2" Width="1.75" />
+    <Position X="0.75" Y="1.5" Width="1.75" />
     <Members>
       <Method Name="AddStep" Hidden="true" />
       <Method Name="ProcessNextEntry" Hidden="true" />
