@@ -50,7 +50,7 @@ The diplomatic model adds a `diplomatic` property which is a complex object:
     - `name`
     - `value`
     - `isUnique`
-  - `elementFeatures`: the optional features attached to elements defined in `g`. Each element is identified by its `id` attribute, which is a key in this dictionary of Feature objects:
+  - `elementFeatures`: the optional features attached to elements defined in `g`. Each element is identified by its `id` attribute, which is a key in this dictionary of `Feature` objects:
     - `name`
     - `value`
     - `isUnique`
@@ -61,11 +61,9 @@ The most relevant aspects of SVG you can encode as features are listed here as a
 
 #### SVG Styles and Classes
 
-In addition to setting attributes on objects, you can use CSS to style fills and strokes. Anyway, not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc... can all be set this way.
+In addition to setting attributes on objects, you can use CSS to style fills and strokes. Anyway, not all attributes can be set via CSS. Attributes that deal with painting and filling are usually available, so fill, stroke, stroke-dasharray, etc. can all be set this way.
 
 You can also wrap several CSS properties into a class and add it to each SVG element.
-
-In GVE, styles can be used for specific formatting, while classes refer to general classes globally shared among all the GVE elements.
 
 #### SVG Shapes
 
@@ -139,14 +137,6 @@ The general flow for building diplomatic models is as follows:
 
 (1) a GUI editor assists users in editing diplomatic data for each text variant operation.
 
-![diplomatic editor](img/diplo-edit-mock.png)
-
-This editor is structured into three main sections:
-
-- features: the generic features belonging to the operation as a whole are edited here.
-- svg: the SVG code is pasted here from a SVG editor, or loaded from a file, or directly typed when it's trivial. We can imagine also a preview for it.
-- payloads: the payload features associated with each element in the SVG code having an `id` attribute. The elements list is parsed from SVG via an API service, and users can pick any of the listed elements to edit their features.
-
 (2) data are saved into a database.
 
 (3) the visualization app gets a base text and all its variant operations. It displays the base text, and then also each operation having diplomatic data.
@@ -156,3 +146,33 @@ To display each operation:
 1. the app requests its diplomatic data to the API.
 2. the API fetches data from the database, and parses the SVG code from the `g` property, building a hierarchy of objects, each with its `id`, and with all its features as merged from the payloads in the element features dictionary. It then returns the SVG code and this parsed hierarchy.
 3. the app injects the SVG code in its visualization (it will be a `g` child element of the main `svg` element), and updates its list of element viewmodels, as specified by the received hierarchy. For each of these viewmodels, it queries the DOM to get a reference to the element representing it, as defined in SVG. It then attaches this reference to the viewmodel (via the shared `id`), so that later we can add interactivity to these elements in the SVG diagram.
+
+## Operation Editor
+
+The operation editor is structured into 6 sections:
+
+- **general**: operation type, arguments and coordinates, tagged ordinals, and features.
+
+![operation editor - general](img/oped01.png)
+
+- **sources**: the optional sources attached to this operation. Each source has a type, an ID, and a probability rank when its identification is dubious. Also, it can have a free-text annotation.
+
+![operation editor - sources](img/oped02.png)
+
+- **diplomatic**: this contains the SVG code with the visual representation of this operation. The visual representation is referred to the base text. Here you are free to type or paste the SVG code you want, provided that its root element is a `g` element.
+
+![operation editor - diplomatic](img/oped03.png)
+
+The toolbar allows to save, load, copy, or paste code, or to open a user-defined SVG editor to use (the default is <https://editor.method.ac/>).
+
+At the bottom you can see the rendition of the SVG code.
+
+- **elements**: this contains the list of all the elements having an ID in the SVG code, so that you can add features to each of them.
+
+![operation editor - elements](img/oped04.png)
+
+- **diplomatic features**: features for the diplomatic model as a whole, rather than attached to specific elements of it.
+
+![operation editor - d-features](img/oped05.png)
+
+- **children**: for operations stemming into a tree, this contains the tree of its descendants.
