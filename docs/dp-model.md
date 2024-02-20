@@ -1,5 +1,17 @@
 # Diplomatic Model
 
+- [Diplomatic Model](#diplomatic-model)
+  - [Metadata](#metadata)
+    - [SVG Features](#svg-features)
+      - [SVG Styles and Classes](#svg-styles-and-classes)
+      - [SVG Shapes](#svg-shapes)
+      - [SVG Texts](#svg-texts)
+      - [Images](#images)
+      - [Attributes](#attributes)
+      - [Transforms](#transforms)
+  - [Flow](#flow)
+  - [Operation Editor](#operation-editor)
+
 The diplomatic model represents the graphical layout of the variants attached to the base text. Essentially, it is a set of metadata optionally attached to each operation, whatever its plane.
 
 As for the _general layout_, the main assumptions are:

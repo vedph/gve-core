@@ -1,5 +1,18 @@
 # Philological Model
 
+- [Philological Model](#philological-model)
+  - [Base Plane](#base-plane)
+  - [Annotations Plane](#annotations-plane)
+  - [Structures](#structures)
+    - [Base Plane Model](#base-plane-model)
+      - [Base Operations](#base-operations)
+    - [Annotations Plane Model](#annotations-plane-model)
+      - [Annotation Operations](#annotation-operations)
+  - [Operations Flow](#operations-flow)
+    - [Flow Example](#flow-example)
+      - [Version x](#version-x)
+      - [Version y](#version-y)
+
 In this model, we start by distinguishing two separate planes:
 
 - the **base text**, as produced in the first act of writing on the document.
