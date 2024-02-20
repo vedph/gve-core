@@ -70,7 +70,6 @@ public sealed class VarGenerator
         // for each line, collect it and all the lines that follow until they
         // do not start with a dash, then parse the collected lines as an entry
         // via VarOperationEntry.Parse and add to the entries
-        int id = 1;
         StringBuilder sb = new();
 
         for (int i = 0; i < lines.Length; i++)
@@ -83,7 +82,7 @@ public sealed class VarGenerator
                     VarOperationEntry? entry = VarOperationEntry.Parse(
                         sb.ToString())
                         ?? throw new FormatException("Invalid entry: " + sb);
-                    entry.Operation.Id = id++;
+                    entry.Operation.Id = VarOperation.GenerateId();
                     Entries.Add(entry);
                     sb.Clear();
                 }
@@ -101,7 +100,7 @@ public sealed class VarGenerator
             VarOperationEntry? entry = VarOperationEntry.Parse(
                 sb.ToString())
                 ?? throw new FormatException("Invalid entry: " + sb);
-            entry.Operation.Id = id;
+            entry.Operation.Id = VarOperation.GenerateId();
             Entries.Add(entry);
         }
     }

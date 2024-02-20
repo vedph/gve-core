@@ -19,7 +19,7 @@ public sealed class SpineApparatusLayerFragmentTest
             Location = "1.23",
             Operation = new ReplaceBaseVarOperation
             {
-                Id = 1,
+                Id = VarOperation.GenerateId(),
                 GroupId = "g",
                 Rank = 1,
                 At = 2,

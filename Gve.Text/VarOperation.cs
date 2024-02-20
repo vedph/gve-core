@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NanoidDotNet;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -31,7 +32,7 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// a specific operation in a transformation, essentially for diagnostic
     /// purposes.
     /// </summary>
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// Gets or sets the operation type.
@@ -60,8 +61,15 @@ public abstract partial class VarOperation : VarOperationMetadata
     /// <param name="type">The operation type.</param>
     protected VarOperation(VarOperationType type)
     {
+        Id = GenerateId();
         Type = type;
     }
+
+    /// <summary>
+    /// Generates a new identifier for an operation.
+    /// </summary>
+    /// <returns>Identifier.</returns>
+    public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 
     // at, [run]
     [GeneratedRegex(@"^(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
