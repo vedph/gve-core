@@ -118,8 +118,8 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
     /// <returns>Data pins definitions.</returns>
     public IList<DataPinDefinition> GetDataPinDefinitions()
     {
-        return new List<DataPinDefinition>(new[]
-        {
+        return new List<DataPinDefinition>(
+        [
             new DataPinDefinition(DataPinValueType.String,
                 PartBase.FR_PREFIX + "op-type", "The operation type."),
             new DataPinDefinition(DataPinValueType.String,
@@ -136,7 +136,7 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
             new DataPinDefinition(DataPinValueType.String,
                 PartBase.FR_PREFIX + "op-source-<type>",
                 "The operation source ID.", "M")
-        });
+        ]);
     }
 
     /// <summary>

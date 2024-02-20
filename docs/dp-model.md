@@ -29,6 +29,7 @@ So, descriptively this means that:
 
 Any variant generation operation has these metadata:
 
+- `id`
 - `rank`
 - `groupId`
 - `features` (list):
@@ -153,13 +154,21 @@ The operation editor is structured into 6 sections:
 
 - **general**: operation type, arguments and coordinates, tagged ordinals, and features.
 
+Each operation has an ID, automatically assigned. This is not used in the context of the operation or of its transformations, but is provided as a reference. Most general parameters represent the arguments for the operation.
+
+Tagged ordinals represent the interpretation level, and provide 1 or more tag=ordinal pairs, which link a specific text version tag (which is an arbitrary string) to an ordinal number. This number specifies the order of execution of operations. So, if you have two versions A and B, it might happen that for version A an operation is executed as the first one (A=1), while for B it's executed as the third one (B=3). For quicker edit, tagged ordinals are input as tag=ordinal pairs, separated by space.
+
+Features represent metadata attached to this operation. These can be any type of name=value pairs.
+
 ![operation editor - general](img/oped01.png)
 
-- **sources**: the optional sources attached to this operation. Each source has a type, an ID, and a probability rank when its identification is dubious. Also, it can have a free-text annotation.
+- **sources**: a special type of metadata used when your text versions come from more than a single source. In this case, you can specify the source(s) for each operation, just like in a traditional apparatus you specify witnesses for each variant. Each source has an ID, a type, a probability rank (0=not specified, else 1-N), and an optional free text note.
 
 ![operation editor - sources](img/oped02.png)
 
 - **diplomatic**: this contains the SVG code with the visual representation of this operation. The visual representation is referred to the base text. Here you are free to type or paste the SVG code you want, provided that its root element is a `g` element.
+
+The diplomatic section is the approximate diplomatic representation of the layout of the annotated text. It essentially consists in a freely editable SVG code, always grouped into a single root `g` element, encoding all the graphical traits representing this operation.
 
 ![operation editor - diplomatic](img/oped03.png)
 
@@ -167,7 +176,25 @@ The toolbar allows to save, load, copy, or paste code, or to open a user-defined
 
 At the bottom you can see the rendition of the SVG code.
 
-- **elements**: this contains the list of all the elements having an ID in the SVG code, so that you can add features to each of them.
+As we want to position this representation with reference to the base text, you also have two coordinate pairs for the upper left corners of the base text (`tox`, `toy`) and of the annotation area for this operation (`aox`, `aoy`).
+
+>In the model, these data are stored as _features_ of the operation; but in the UI they appear in their own controls, so you can directly act on them and see the results. In fact, whenever you change any of these values, base text or annotations will be translated accordingly.
+
+These coordinate pairs are used locally for each edited operation, independently from the others. This allows users focusing on the edited operation, without caring about its synchronization with all the other operations on the same base text.
+
+When editing a single operation, you just setup these coordinates so that the topleft object origin (either it refers to the base text or to its annotations) is aligned with the SVG root `g` element origin. When rendering the operation preview, this is all what is required. Then, when rendering a set of operations on top of the same base text, the renderer will take care of recalculating the origins accordingly to fit all the operations and their base text.
+
+![translating origins](img/ta-coords.png)
+
+The above figure shows the procedure used by the renderer for translating the origins of the various operations in the chosen set. This is sampled by 3 annotations A1, A2, A3 on top of a base text T. Each operation has its own set of tox and toy coordinates (listed to the right of the picture).
+
+1. collect the max values for `tox` and `toy`. In this example the values are 3 and 2.
+2. for each operation, calculate `max(tox) - tox` and `max(toy) - toy` (`δt` in the figure).
+3. for each operation, translate operation origins (`tox`, `toy`, `aox`, `aoy`) by `δt`.
+
+- **elements**: lists all the SVG elements having an `id` attribute in the SVG code of the diplomatic section. The ID allows you to attach any number of features (metadata modeled as name=value pairs) to each of these elements.
+
+Among these features, you may use `style` or `class` for renditional purposes, and any other name for your own metadata.
 
 ![operation editor - elements](img/oped04.png)
 
@@ -175,4 +202,6 @@ At the bottom you can see the rendition of the SVG code.
 
 ![operation editor - d-features](img/oped05.png)
 
-- **children**: for operations stemming into a tree, this contains the tree of its descendants.
+- **children**: for operations stemming into a tree, this contains the tree of its descendants. The children section is available only when the operation type is `replace`, and is used for those operations stemming into a tree of descendant operations, on the annotations plane. In this case, you start by adding a root operation, and any number of descendants on top of it. Each operation can be fully edited in an embedded operation editor.
+
+>The embedded editor lacks the children section, because the full tree of operations is edited at the top level.
