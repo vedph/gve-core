@@ -3,7 +3,6 @@ using Gve.Text.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -99,7 +98,7 @@ public sealed class VarGeneratorTest
         Assert.Equal("AVCD", r[0].GetText());
         Assert.Equal("AVZ†CD", r[0].GetText(true));
         // A
-        IList<CharNode> nodes = r[0].ToList();
+        IList<CharNode> nodes = [.. r[0]];
         CharNode? cn = nodes[0];
         Assert.NotNull(cn);
         Assert.Equal(1, cn.Ordinal);
@@ -147,7 +146,7 @@ public sealed class VarGeneratorTest
         Assert.Equal("ABCD", r[1].GetText());
         Assert.Equal("ABZ†CD", r[1].GetText(true));
         // A
-        nodes = r[1].ToList();
+        nodes = [.. r[1]];
         cn = nodes[0];
         Assert.NotNull(cn);
         Assert.Equal(1, cn.Ordinal);
