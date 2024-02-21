@@ -233,7 +233,7 @@ In a more schematic way, we can represent this document as:
 
 ![sample](img/text-model_sample2.png)
 
->Note that a base operation which projects a tree corresponds to the model of a base replacement operation, whose `value` is replaced by the root node of a tree hosting annotation operations. Each node in the tree (except the root node) has a `payload` equal to an annotation operation. So, operation (2) above is a replacement operation having a root node with no payload, and two children nodes; each of these children has a payload with an annotation replacement operation (for A=V and A=P). In turn, these nodes may have children (like `R=V` having child `V=B`).
+>Note that a base operation which projects a tree corresponds to the model of a base replacement operation, whose `value` is replaced by the root node of a tree hosting annotation operations. Each node in the tree (except the root node) has a `payload` equal to an annotation operation. So, operation (2) above is a replacement operation having a root node with no payload, and two child nodes; each of these children has a payload with an annotation replacement operation (for A=V and A=P). In turn, these nodes may have children, too (like `R=V` having child `V=B`).
 
 #### Version x
 
