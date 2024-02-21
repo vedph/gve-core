@@ -221,10 +221,10 @@ Our operations are:
 which can be read as:
 
 - ✏️ (1) [tags: x,y] delete `Z`;
-- ✏️ (2) [tags: x,y] replace `A` with the results of the following annotations operations tree:
-  - 🌳 [tags: x]  replace `A` with `V`;
+- ✏️ (2) [tags: x,y] replace `R` with the results of the following annotations operations tree:
+  - 🌳 [tags: x]  replace `R` with `V`;
     - 🌳 [tags: x] replace `V` with `B`;
-  - 🌳 [tags: y] replace `A` with `P`.
+  - 🌳 [tags: y] replace `R` with `P`.
 - ✏️ (3) [tags: x,y] move `C` before `D`.
 
 If we inspect the whole set of operations, we find that we have 2 interpretations, tagged `x` and `y`. So, we will have to follow the generation recipe twice, once for each interpretation. In what follows, I copy the portion of diagnostic log for each operation.
@@ -232,6 +232,8 @@ If we inspect the whole set of operations, we find that we have 2 interpretation
 In a more schematic way, we can represent this document as:
 
 ![sample](img/text-model_sample2.png)
+
+>Note that a base operation which projects a tree corresponds to the model of a base replacement operation, whose `value` is replaced by the root node of a tree hosting annotation operations. Each node in the tree (except the root node) has a `payload` equal to an annotation operation. So, operation (2) above is a replacement operation having a root node with no payload, and two children nodes; each of these children has a payload with an annotation replacement operation (for A=V and A=P). In turn, these nodes may have children (like `R=V` having child `V=B`).
 
 #### Version x
 
