@@ -22,25 +22,25 @@ public sealed class VarOperationEntryTest
         Assert.NotNull(entry.Root);
 
         // root has no payload and 2 children
-        Assert.Null(entry.Root.Payload);
+        Assert.Null(entry.Root.Data);
         Assert.Equal(2, entry.Root.Children.Count);
 
         // 1st child has payload and 1 child
-        TreeNode<AnnVarOperation> node = entry.Root.Children[0];
-        Assert.NotNull(node.Payload);
+        TreeNode node = entry.Root.Children[0];
+        Assert.NotNull(node.Data);
         Assert.Single(node.Children);
-        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Data);
 
         // child of 1st child has payload and no children
         node = node.Children[0];
-        Assert.NotNull(node.Payload);
+        Assert.NotNull(node.Data);
         Assert.Empty(node.Children);
-        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Data);
 
         // 2nd child has payload and no children
         node = entry.Root.Children[1];
-        Assert.NotNull(node.Payload);
+        Assert.NotNull(node.Data);
         Assert.Empty(node.Children);
-        Assert.IsType<ReplaceAnnVarOperation>(node.Payload);
+        Assert.IsType<ReplaceAnnVarOperation>(node.Data);
     }
 }

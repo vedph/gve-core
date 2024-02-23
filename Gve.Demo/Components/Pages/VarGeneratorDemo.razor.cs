@@ -1,10 +1,9 @@
-﻿using Gve.Demo.Models;
-using Gve.Text;
-using Gve.Text.Annotations;
+﻿using Gve.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using TreeNode = Gve.Text.TreeNode;
 
 namespace Gve.Demo.Components.Pages;
 
@@ -24,7 +23,7 @@ public partial class VarGeneratorDemo
     [MaxLength(1000)]
     public string OpText { get; set; }
 
-    public ITreeNode? Root { get; set; }
+    public TreeNode? Root { get; set; }
     public IList<string> VariantTags { get; set; }
     public string? Error { get; set; }
 
@@ -53,14 +52,14 @@ public partial class VarGeneratorDemo
         Steps = [];
     }
 
-    public TreeNode BuildTreeNode(TreeNode<AnnVarOperation> node)
+    public TreeNode BuildTreeNode(TreeNode node)
     {
         TreeNode newNode = new()
         {
-            Label = node.Payload?.ToString() ?? node.GetYX().ToString(),
-            Data = node.Payload
+            Label = node.Data?.ToString() ?? node.GetYX().ToString(),
+            Data = node.Data
         };
-        foreach (TreeNode<AnnVarOperation> child in node.Children)
+        foreach (TreeNode child in node.Children)
             newNode.AddChild(BuildTreeNode(child));
         return newNode;
     }

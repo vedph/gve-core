@@ -42,25 +42,6 @@
       <FileName>CharNode.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Gve.Text.TreeNode&lt;T&gt;">
-    <Position X="0.75" Y="4.75" Width="1.75" />
-    <Members>
-      <Method Name="TreeNode" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AIBKgYkAEAAAEAAQAAAUSgAgAEAGAAAAAAAEACAQCBA=</HashCode>
-      <FileName>TreeNode.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Parent" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="Children" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="Gve.Text.VarOperationMetadata">
     <Position X="13" Y="0.5" Width="2" />
     <Compartments>
@@ -104,7 +85,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AABSABAAAAAgAAQMAAAAAAAAAQCCAAAACQAoIIIQIAI=</HashCode>
+      <HashCode>AABSABAAAAAgAAQMAAAAAAAAQQCCAAAACQAoIIIQIAI=</HashCode>
       <FileName>VarOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -303,7 +284,6 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Operation" />
-      <Property Name="Root" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Gve.Text.VarGenerator">

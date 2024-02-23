@@ -8,7 +8,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void IsFirstSibling_WhenFirst_ShouldReturnTrue()
     {
-        TreeNode<string> root = new("A");
+        TreeNode root = new("A");
         root.AddChildFromPayload("B");
         root.AddChildFromPayload("C");
 
@@ -19,7 +19,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void IsLastSibling_WhenLast_ShouldReturnTrue()
     {
-        TreeNode<string> root = new("A");
+        TreeNode root = new("A");
         root.AddChildFromPayload("B");
         root.AddChildFromPayload("C");
 
@@ -31,7 +31,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void ToggleExpanded_WhenCollapsed_ShouldExpand()
     {
-        TreeNode<string> node = new("A");
+        TreeNode node = new("A");
         node.AddChildFromPayload("B");
         node.AddChildFromPayload("C");
 
@@ -45,7 +45,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void ToggleExpandedRecursive_WhenCollapsed_ShouldExpand()
     {
-        TreeNode<string> node = new("A");
+        TreeNode node = new("A");
         node.AddChildFromPayload("B");
         node.AddChildFromPayload("C");
 
@@ -59,7 +59,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void ToggleExpanded_WhenExpanded_ShouldCollapse()
     {
-        TreeNode<string> node = new("A");
+        TreeNode node = new("A");
         node.AddChildFromPayload("B");
         node.AddChildFromPayload("C");
         node.SetExpanded(true);
@@ -72,7 +72,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void ToggleExpandedRecursive_WhenExpanded_ShouldCollapse()
     {
-        TreeNode<string> node = new("A");
+        TreeNode node = new("A");
         node.AddChildFromPayload("B");
         node.AddChildFromPayload("C");
         node.SetExpanded(true);
@@ -89,7 +89,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetY_WhenCalled_ShouldReturnCorrectDepth()
     {
-        TreeNode<string> root = new("Root");
+        TreeNode root = new("Root");
         root.AddChildFromPayload("Child");
 
         Assert.Equal(1, root.GetY());
@@ -99,8 +99,8 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetMaxY_WhenCalled_ShouldReturnMaxDepth()
     {
-        TreeNode<string> root = new("A");
-        TreeNode<string> b = root.AddChildFromPayload("B");
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromPayload("B");
         b.AddChildFromPayload("C");
 
         Assert.Equal(3, root.GetMaxY());
@@ -109,7 +109,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetYX_WhenCalled_ShouldReturnCorrectCoordinates()
     {
-        TreeNode<string> root = new("A");
+        TreeNode root = new("A");
         root.AddChildFromPayload("B");
         root.AddChildFromPayload("C");
 
@@ -121,7 +121,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void HasChildren_WhenHasChildren_ShouldReturnTrue()
     {
-        TreeNode<string> root = new("root");
+        TreeNode root = new("root");
         root.AddChildFromPayload("Child");
 
         Assert.True(root.HasChildren);
@@ -130,7 +130,7 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnRoot_ShouldReturnRootOnly()
     {
-        TreeNode<string> root = new("Root");
+        TreeNode root = new("Root");
 
         string path = root.GetPath();
 
@@ -140,8 +140,8 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnChild_Ok()
     {
-        TreeNode<string> root = new("Root");
-        TreeNode<string> child = root.AddChildFromPayload("Child");
+        TreeNode root = new("Root");
+        TreeNode child = root.AddChildFromPayload("Child");
 
         string path = child.GetPath();
 
@@ -151,9 +151,9 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnGrandchild_Ok()
     {
-        TreeNode<string> root = new("Root");
-        TreeNode<string> child = root.AddChildFromPayload("Child");
-        TreeNode<string> grandchild = child.AddChildFromPayload("Grandchild");
+        TreeNode root = new("Root");
+        TreeNode child = root.AddChildFromPayload("Child");
+        TreeNode grandchild = child.AddChildFromPayload("Grandchild");
 
         string path = grandchild.GetPath();
 
@@ -163,9 +163,9 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnSecondChild_Ok()
     {
-        TreeNode<string> root = new("Root");
+        TreeNode root = new("Root");
         root.AddChildFromPayload("Child1");
-        TreeNode<string> child2 = root.AddChildFromPayload("Child2");
+        TreeNode child2 = root.AddChildFromPayload("Child2");
 
         string path = child2.GetPath();
 
@@ -175,10 +175,10 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnThirdChild_Ok()
     {
-        TreeNode<string> root = new("Root");
+        TreeNode root = new("Root");
         root.AddChildFromPayload("Child1");
         root.AddChildFromPayload("Child2");
-        TreeNode<string> child3 = root.AddChildFromPayload("Child3");
+        TreeNode child3 = root.AddChildFromPayload("Child3");
 
         string path = child3.GetPath();
 
@@ -188,13 +188,13 @@ public sealed class TreeNodeTest
     [Fact]
     public void GetPath_WhenCalledOnSecondGrandchildOfSecondChild_Ok()
     {
-        TreeNode<string> root = new("Root");
+        TreeNode root = new("Root");
         // children
         root.AddChildFromPayload("Child1");
-        TreeNode<string> child2 = root.AddChildFromPayload("Child2");
+        TreeNode child2 = root.AddChildFromPayload("Child2");
         // grandchildren
         child2.AddChildFromPayload("Grandchild1");
-        TreeNode<string> grandchild2 = child2.AddChildFromPayload("Grandchild2");
+        TreeNode grandchild2 = child2.AddChildFromPayload("Grandchild2");
 
         string path = grandchild2.GetPath();
 

@@ -1,5 +1,4 @@
-﻿using Gve.Text.Annotations;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +35,7 @@ public sealed class VarGenerator
     public VarGenerator(ILogger? logger = null)
     {
         _logger = logger;
-        Entries = new List<VarOperationEntry>();
+        Entries = [];
     }
 
     /// <summary>
@@ -47,7 +46,7 @@ public sealed class VarGenerator
     public VarGenerator(string entryText, ILogger? logger = null)
     {
         _logger = logger;
-        Entries = new List<VarOperationEntry>();
+        Entries = [];
         SetEntries(entryText);
     }
 
@@ -112,7 +111,7 @@ public sealed class VarGenerator
         if (!_steps.TryGetValue(step.VersionTag,
             out IList<VarGenerationStep>? steps))
         {
-            steps = new List<VarGenerationStep>();
+            steps = [];
             _steps[step.VersionTag] = steps;
         }
 
@@ -153,10 +152,13 @@ public sealed class VarGenerator
             // tree operations
             entry.Root?.Traverse((node) =>
                 {
-                    if (node.Payload != null)
+                    if (node.Data != null)
                     {
-                        foreach (string tag in node.Payload.TaggedOrdinals.Keys)
+                        foreach (string tag in node.GetData<VarOperation>()!
+                            .TaggedOrdinals.Keys)
+                        {
                             tags.Add(tag);
+                        }
                     }
                     return true;
                 });
@@ -180,15 +182,15 @@ public sealed class VarGenerator
             .ToList();
     }
 
-    private static void ReplayAscendants(TreeNode<AnnVarOperation> node,
+    private static void ReplayAscendants(TreeNode node,
         VarOperationContext context, short at, short run)
     {
         // collect ascendants up to root in a stack
-        Stack<TreeNode<AnnVarOperation>> stack = new();
-        TreeNode<AnnVarOperation>? parent = node.Parent;
+        Stack<TreeNode> stack = new();
+        TreeNode? parent = node.Parent;
         while (parent != null)
         {
-            if (parent.Payload != null) stack.Push(parent);
+            if (parent.Data != null) stack.Push(parent);
             parent = parent.Parent;
         }
 
@@ -198,8 +200,8 @@ public sealed class VarGenerator
         context.SetAnnNodes(at, run);
         while (stack.Count > 0)
         {
-            TreeNode<AnnVarOperation> n = stack.Pop();
-            n.Payload?.Execute(context);
+            TreeNode n = stack.Pop();
+            (n.Data as VarOperation)?.Execute(context);
         }
     }
 
@@ -255,9 +257,9 @@ public sealed class VarGenerator
             _logger?.LogInformation("Traversing tree");
             entry.Root.Traverse((node) =>
             {
-                _logger?.LogInformation(":A-Node with {payload}", node.Payload);
+                _logger?.LogInformation(":A-Node with {payload}", node.Data);
                 // just continue if no operation for this node
-                if (node.Payload == null)
+                if (node.Data == null)
                 {
                     _logger?.LogInformation("Skipping empty A-node");
                     return true;
@@ -276,13 +278,13 @@ public sealed class VarGenerator
                     context.OpContext.GetAnnText());
 
                 // operation's tag must match
-                _logger?.LogInformation("A-Operation {op}", node.Payload);
+                _logger?.LogInformation("A-Operation {op}", node.Data);
 
-                if (!node.Payload.TaggedOrdinals.ContainsKey(
+                if (!node.GetData<VarOperation>()!.TaggedOrdinals.ContainsKey(
                     context.VersionTag))
                 {
                     _logger?.LogInformation("Skipping A-operation {op}",
-                        node.Payload);
+                        node.Data);
                     return true;
                 }
 
@@ -295,7 +297,7 @@ public sealed class VarGenerator
                     newContext.OpContext.GetAnnText());
 
                 // execute the operation
-                node.Payload.Execute(newContext.OpContext);
+                node.GetData<VarOperation>()!.Execute(newContext.OpContext);
                 _logger?.LogInformation("A-Result: {text}",
                     newContext.OpContext.GetAnnText());
 

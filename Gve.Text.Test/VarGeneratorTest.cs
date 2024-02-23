@@ -65,7 +65,7 @@ public sealed class VarGeneratorTest
         Assert.Equal("", entry.Operation.Value);
 
         Assert.NotNull(entry.Root);
-        TreeNode<AnnVarOperation> root = entry.Root;
+        TreeNode root = entry.Root;
         Assert.Equal(2, root.Children.Count);
         Assert.Single(root.Children[0].Children);
         Assert.Empty(root.Children[1].Children);

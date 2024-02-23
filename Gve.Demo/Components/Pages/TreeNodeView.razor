@@ -1,4 +1,4 @@
-﻿@using Gve.Demo.Models
+﻿@using Gve.Text;
 
 <ul class="tree-node">
     @if (Root != null)
@@ -9,5 +9,5 @@
 
 @code {
     [Parameter]
-    public ITreeNode? Root { get; set; }
+    public TreeNode? Root { get; set; }
 }
