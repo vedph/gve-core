@@ -9,8 +9,8 @@ public sealed class TreeNodeTest
     public void IsFirstSibling_WhenFirst_ShouldReturnTrue()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        root.AddChildFromData("C");
 
         Assert.True(root.Children[0].IsFirstSibling());
         Assert.False(root.Children[1].IsFirstSibling());
@@ -20,8 +20,8 @@ public sealed class TreeNodeTest
     public void IsLastSibling_WhenLast_ShouldReturnTrue()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        root.AddChildFromData("C");
 
         Assert.False(root.Children[0].IsLastSibling());
         Assert.True(root.Children[1].IsLastSibling());
@@ -32,8 +32,8 @@ public sealed class TreeNodeTest
     public void ToggleExpanded_WhenCollapsed_ShouldExpand()
     {
         TreeNode node = new("A");
-        node.AddChildFromPayload("B");
-        node.AddChildFromPayload("C");
+        node.AddChildFromData("B");
+        node.AddChildFromData("C");
 
         node.ToggleExpanded();
 
@@ -46,8 +46,8 @@ public sealed class TreeNodeTest
     public void ToggleExpandedRecursive_WhenCollapsed_ShouldExpand()
     {
         TreeNode node = new("A");
-        node.AddChildFromPayload("B");
-        node.AddChildFromPayload("C");
+        node.AddChildFromData("B");
+        node.AddChildFromData("C");
 
         node.ToggleExpanded(true);
 
@@ -60,8 +60,8 @@ public sealed class TreeNodeTest
     public void ToggleExpanded_WhenExpanded_ShouldCollapse()
     {
         TreeNode node = new("A");
-        node.AddChildFromPayload("B");
-        node.AddChildFromPayload("C");
+        node.AddChildFromData("B");
+        node.AddChildFromData("C");
         node.SetExpanded(true);
 
         node.ToggleExpanded();
@@ -73,8 +73,8 @@ public sealed class TreeNodeTest
     public void ToggleExpandedRecursive_WhenExpanded_ShouldCollapse()
     {
         TreeNode node = new("A");
-        node.AddChildFromPayload("B");
-        node.AddChildFromPayload("C");
+        node.AddChildFromData("B");
+        node.AddChildFromData("C");
         node.SetExpanded(true);
 
         node.ToggleExpanded(true);
@@ -90,7 +90,7 @@ public sealed class TreeNodeTest
     public void GetY__ShouldReturnCorrectDepth()
     {
         TreeNode root = new("Root");
-        root.AddChildFromPayload("Child");
+        root.AddChildFromData("Child");
 
         Assert.Equal(1, root.GetY());
         Assert.Equal(2, root.Children[0].GetY());
@@ -100,8 +100,8 @@ public sealed class TreeNodeTest
     public void GetMaxY__ShouldReturnMaxDepth()
     {
         TreeNode root = new("A");
-        TreeNode b = root.AddChildFromPayload("B");
-        b.AddChildFromPayload("C");
+        TreeNode b = root.AddChildFromData("B");
+        b.AddChildFromData("C");
 
         Assert.Equal(3, root.GetMaxY());
     }
@@ -110,8 +110,8 @@ public sealed class TreeNodeTest
     public void GetYX_ShouldReturnCorrectCoordinates()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        root.AddChildFromData("C");
 
         Assert.Equal(Tuple.Create(1, 1), root.GetYX());
         Assert.Equal(Tuple.Create(2, 1), root.Children[0].GetYX());
@@ -122,7 +122,7 @@ public sealed class TreeNodeTest
     public void HasChildren_WhenHasChildren_ShouldReturnTrue()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
+        root.AddChildFromData("B");
 
         Assert.True(root.HasChildren);
     }
@@ -141,7 +141,7 @@ public sealed class TreeNodeTest
     public void GetPath_OnFirstChild_Ok()
     {
         TreeNode root = new("A");
-        TreeNode child = root.AddChildFromPayload("B");
+        TreeNode child = root.AddChildFromData("B");
 
         string path = child.GetPath();
 
@@ -152,8 +152,8 @@ public sealed class TreeNodeTest
     public void GetPath_OnFirstGrandchild_Ok()
     {
         TreeNode root = new("A");
-        TreeNode child = root.AddChildFromPayload("B");
-        TreeNode grandchild = child.AddChildFromPayload("C");
+        TreeNode child = root.AddChildFromData("B");
+        TreeNode grandchild = child.AddChildFromData("C");
 
         string path = grandchild.GetPath();
 
@@ -164,8 +164,8 @@ public sealed class TreeNodeTest
     public void GetPath_OnSecondChild_Ok()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        TreeNode c = root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
 
         string path = c.GetPath();
 
@@ -176,9 +176,9 @@ public sealed class TreeNodeTest
     public void GetPath_OnThirdChild_Ok()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        root.AddChildFromPayload("C");
-        TreeNode d = root.AddChildFromPayload("D");
+        root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        TreeNode d = root.AddChildFromData("D");
 
         string path = d.GetPath();
 
@@ -190,11 +190,11 @@ public sealed class TreeNodeTest
     {
         TreeNode root = new("A");
         // children
-        root.AddChildFromPayload("B");
-        TreeNode c = root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
         // grandchildren
-        c.AddChildFromPayload("D");
-        TreeNode e = c.AddChildFromPayload("E");
+        c.AddChildFromData("D");
+        TreeNode e = c.AddChildFromData("E");
 
         string path = e.GetPath();
 
@@ -215,10 +215,22 @@ public sealed class TreeNodeTest
     public void WalkPathTo_SecondChild_ShouldReturnIt()
     {
         TreeNode root = new("A");
-        root.AddChildFromPayload("B");
-        TreeNode c = root.AddChildFromPayload("C");
+        root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
 
         TreeNode? node = root.WalkPathTo("/2");
+
+        Assert.Equal(c, node);
+    }
+
+    [Fact]
+    public void WalkPathTo_MalformedSecondChild_ShouldReturnIt()
+    {
+        TreeNode root = new("A");
+        root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
+
+        TreeNode? node = root.WalkPathTo("2");
 
         Assert.Equal(c, node);
     }
@@ -229,7 +241,7 @@ public sealed class TreeNodeTest
     public void Clone_ShouldReturnClone()
     {
         TreeNode root = new("Root");
-        root.AddChildFromPayload("Child");
+        root.AddChildFromData("Child");
 
         TreeNode clone = root.Clone();
 
@@ -240,6 +252,91 @@ public sealed class TreeNodeTest
         Assert.Equal(root.Children[0].Id, clone.Children[0].Id);
         Assert.Equal(root.Children[0].Label, clone.Children[0].Label);
         Assert.Equal(root.Children[0].Data, clone.Children[0].Data);
+    }
+    #endregion
+
+    #region Add or Remove
+    [Fact]
+    public void AddChild_ShouldAddChild()
+    {
+        TreeNode root = new("A");
+
+        TreeNode child = new("B");
+        root.AddChild(child);
+
+        Assert.Single(root.Children);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal(child, root.Children[0]);
+        Assert.Equal(root, child.Parent);
+    }
+
+    [Fact]
+    public void AddChildFromData_ShouldAddChild()
+    {
+        TreeNode root = new("A");
+
+        TreeNode child = root.AddChildFromData("B");
+
+        Assert.Single(root.Children);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal(child, root.Children[0]);
+        Assert.Equal(root, child.Parent);
+    }
+
+    [Fact]
+    public void AddChildren_ShouldAddChildren()
+    {
+        TreeNode root = new("A");
+        TreeNode b = new("B");
+        TreeNode c = new("C");
+
+        root.AddChildren([b, c]);
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal("C", root.Children[1].Data);
+        Assert.Equal(b, root.Children[0]);
+        Assert.Equal(c, root.Children[1]);
+        Assert.Equal(root, b.Parent);
+        Assert.Equal(root, c.Parent);
+    }
+
+    [Fact]
+    public void AddChildrenFromData_ShouldAddChildren()
+    {
+        TreeNode root = new("A");
+
+        root.AddChildrenFromData(["B", "C"]);
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal("C", root.Children[1].Data);
+        Assert.Equal(root, root.Children[0].Parent);
+        Assert.Equal(root, root.Children[1].Parent);
+    }
+
+    [Fact]
+    public void Remove_ShouldRemoveFromParent()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        child.Remove();
+
+        Assert.Empty(root.Children);
+        Assert.Null(child.Parent);
+    }
+
+    [Fact]
+    public void RemoveChild_ShouldRemoveChild()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        root.RemoveChild(child);
+
+        Assert.Empty(root.Children);
+        Assert.Null(child.Parent);
     }
     #endregion
 }

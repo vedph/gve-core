@@ -258,11 +258,11 @@ public class TreeNode
 
     /// <summary>
     /// Adds a new node as a child of this node creating it from the specified
-    /// payload.
+    /// payload data.
     /// </summary>
     /// <param name="data">The payload data.</param>
     /// <returns>The newly created child node.</returns>
-    public TreeNode AddChildFromPayload(object? data)
+    public TreeNode AddChildFromData(object? data)
     {
         TreeNode child = new(data);
         AddChild(child);
@@ -283,34 +283,12 @@ public class TreeNode
 
     /// <summary>
     /// Adds new nodes as children of this node creating them from the
-    /// specified payloads.
+    /// specified payload data.
     /// </summary>
-    /// <param name="data">The payloads.</param>
+    /// <param name="data">The payload data.</param>
     public void AddChildrenFromData(IEnumerable<object?> data)
     {
-        foreach (object? d in data) AddChildFromPayload(d);
-    }
-
-    /// <summary>
-    /// Removes this node from its parent.
-    /// </summary>
-    public void Remove() => Parent?.RemoveChild(this);
-
-    /// <summary>
-    /// Removes the specified node from the children of this node.
-    /// </summary>
-    /// <param name="child">The child node to remove.</param>
-    /// <returns>True if removed, false if not found.</returns>
-    public bool RemoveChild(TreeNode child)
-    {
-        ArgumentNullException.ThrowIfNull(child);
-
-        if (Children.Remove(child))
-        {
-            child.Parent = null;
-            return true;
-        }
-        return false;
+        foreach (object? d in data) AddChildFromData(d);
     }
 
     /// <summary>
@@ -335,6 +313,21 @@ public class TreeNode
     }
 
     /// <summary>
+    /// Adds a new node before this node creating it from the specified payload
+    /// data.
+    /// </summary>
+    /// <param name="data">The data.</param>
+    /// <returns>The newly added node.</returns>
+    /// <exception cref="InvalidOperationException">Parent is null,  or
+    /// Parent does not contain this node.</exception>
+    public TreeNode AddBeforeSelfFromData(object? data)
+    {
+        TreeNode node = new(data);
+        AddBeforeSelf(node);
+        return node;
+    }
+
+    /// <summary>
     /// Adds the specified node after this node.
     /// </summary>
     /// <param name="node">The node.</param>
@@ -353,6 +346,43 @@ public class TreeNode
 
         node.Parent = Parent;
         Parent.Children.Insert(index + 1, node);
+    }
+
+    /// <summary>
+    /// Adds a new node after this node creating it from the specified payload
+    /// data.
+    /// </summary>
+    /// <param name="data">The data.</param>
+    /// <returns>The newly added node.</returns>
+    /// <exception cref="InvalidOperationException">Parent is null,  or
+    /// Parent does not contain this node.</exception>
+    public TreeNode AddAfterSelfFromData(object? data)
+    {
+        TreeNode node = new(data);
+        AddAfterSelf(node);
+        return node;
+    }
+
+    /// <summary>
+    /// Removes this node from its parent.
+    /// </summary>
+    public void Remove() => Parent?.RemoveChild(this);
+
+    /// <summary>
+    /// Removes the specified node from the children of this node.
+    /// </summary>
+    /// <param name="child">The child node to remove.</param>
+    /// <returns>True if removed, false if not found.</returns>
+    public bool RemoveChild(TreeNode child)
+    {
+        ArgumentNullException.ThrowIfNull(child);
+
+        if (Children.Remove(child))
+        {
+            child.Parent = null;
+            return true;
+        }
+        return false;
     }
     #endregion
 
