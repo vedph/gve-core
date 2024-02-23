@@ -10,6 +10,8 @@ namespace Gve.Text;
 /// </summary>
 public class TreeNode
 {
+    private List<TreeNode>? _children;
+
     /// <summary>
     /// Gets or sets the optional label for this node.
     /// </summary>
@@ -28,12 +30,16 @@ public class TreeNode
     /// <summary>
     /// Gets or sets the children.
     /// </summary>
-    public List<TreeNode> Children { get; set; }
+    public List<TreeNode> Children
+    {
+        get => _children ??= [];
+        set => _children = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     /// <summary>
     /// Gets a value indicating whether this instance has children.
     /// </summary>
-    public bool HasChildren => Children.Count > 0;
+    public bool HasChildren => _children?.Count > 0;
 
     /// <summary>
     /// Gets or sets a value indicating whether this node is expanded in some
@@ -59,7 +65,6 @@ public class TreeNode
     /// </summary>
     public TreeNode()
     {
-        Children = [];
     }
 
     /// <summary>
@@ -69,7 +74,6 @@ public class TreeNode
     public TreeNode(object? payload)
     {
         Data = payload;
-        Children = [];
     }
 
     /// <summary>
