@@ -57,7 +57,7 @@ public partial class VarOperationEntry
             sb.AppendLine();
             Root.Traverse((node) =>
             {
-                 sb.Append(new string(' ', node.GetDepth() * 2))
+                 sb.Append(new string(' ', node.GetY() * 2))
                    .Append("- ")
                    .Append(node.Payload)
                    .AppendLine();
