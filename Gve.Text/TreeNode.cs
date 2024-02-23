@@ -162,8 +162,11 @@ public class TreeNode<T>
     /// <returns>String.</returns>
     public string GetPath()
     {
-        return string.Join("/", GetAscendants().Reverse()
+        (int y, int x) = GetYX();
+        string prefix = string.Join("/", GetAscendants().Reverse()
             .Select(node => $"{node.GetYX().Item1}.{node.GetYX().Item2}"));
+
+        return prefix.Length > 0 ? $"{prefix}/{y}.{x}" : $"{y}.{x}";
     }
 
     /// <summary>
@@ -247,10 +250,12 @@ public class TreeNode<T>
     /// payload.
     /// </summary>
     /// <param name="payload">The payload.</param>
-    public void AddChildFromPayload(T? payload)
+    /// <returns>The newly created child node.</returns>
+    public TreeNode<T> AddChildFromPayload(T? payload)
     {
         TreeNode<T> child = new(payload);
         AddChild(child);
+        return child;
     }
 
     /// <summary>
