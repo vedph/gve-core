@@ -87,7 +87,7 @@ public sealed class TreeNodeTest
 
     #region Path
     [Fact]
-    public void GetY_WhenCalled_ShouldReturnCorrectDepth()
+    public void GetY__ShouldReturnCorrectDepth()
     {
         TreeNode root = new("Root");
         root.AddChildFromPayload("Child");
@@ -97,7 +97,7 @@ public sealed class TreeNodeTest
     }
 
     [Fact]
-    public void GetMaxY_WhenCalled_ShouldReturnMaxDepth()
+    public void GetMaxY__ShouldReturnMaxDepth()
     {
         TreeNode root = new("A");
         TreeNode b = root.AddChildFromPayload("B");
@@ -107,7 +107,7 @@ public sealed class TreeNodeTest
     }
 
     [Fact]
-    public void GetYX_WhenCalled_ShouldReturnCorrectCoordinates()
+    public void GetYX_ShouldReturnCorrectCoordinates()
     {
         TreeNode root = new("A");
         root.AddChildFromPayload("B");
@@ -121,84 +121,125 @@ public sealed class TreeNodeTest
     [Fact]
     public void HasChildren_WhenHasChildren_ShouldReturnTrue()
     {
-        TreeNode root = new("root");
-        root.AddChildFromPayload("Child");
+        TreeNode root = new("A");
+        root.AddChildFromPayload("B");
 
         Assert.True(root.HasChildren);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnRoot_ShouldReturnRootOnly()
+    public void GetPath_OnRoot_ShouldReturnRootOnly()
     {
-        TreeNode root = new("Root");
+        TreeNode root = new("A");
 
         string path = root.GetPath();
 
-        Assert.Equal("1.1", path);
+        Assert.Equal("", path);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnChild_Ok()
+    public void GetPath_OnFirstChild_Ok()
     {
-        TreeNode root = new("Root");
-        TreeNode child = root.AddChildFromPayload("Child");
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromPayload("B");
 
         string path = child.GetPath();
 
-        Assert.Equal("1.1/2.1", path);
+        Assert.Equal("/1", path);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnGrandchild_Ok()
+    public void GetPath_OnFirstGrandchild_Ok()
     {
-        TreeNode root = new("Root");
-        TreeNode child = root.AddChildFromPayload("Child");
-        TreeNode grandchild = child.AddChildFromPayload("Grandchild");
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromPayload("B");
+        TreeNode grandchild = child.AddChildFromPayload("C");
 
         string path = grandchild.GetPath();
 
-        Assert.Equal("1.1/2.1/3.1", path);
+        Assert.Equal("/1/1", path);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnSecondChild_Ok()
+    public void GetPath_OnSecondChild_Ok()
     {
-        TreeNode root = new("Root");
-        root.AddChildFromPayload("Child1");
-        TreeNode child2 = root.AddChildFromPayload("Child2");
+        TreeNode root = new("A");
+        root.AddChildFromPayload("B");
+        TreeNode c = root.AddChildFromPayload("C");
 
-        string path = child2.GetPath();
+        string path = c.GetPath();
 
-        Assert.Equal("1.1/2.2", path);
+        Assert.Equal("/2", path);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnThirdChild_Ok()
+    public void GetPath_OnThirdChild_Ok()
     {
-        TreeNode root = new("Root");
-        root.AddChildFromPayload("Child1");
-        root.AddChildFromPayload("Child2");
-        TreeNode child3 = root.AddChildFromPayload("Child3");
+        TreeNode root = new("A");
+        root.AddChildFromPayload("B");
+        root.AddChildFromPayload("C");
+        TreeNode d = root.AddChildFromPayload("D");
 
-        string path = child3.GetPath();
+        string path = d.GetPath();
 
-        Assert.Equal("1.1/2.3", path);
+        Assert.Equal("/3", path);
     }
 
     [Fact]
-    public void GetPath_WhenCalledOnSecondGrandchildOfSecondChild_Ok()
+    public void GetPath_OnSecondGrandchildOfSecondChild_Ok()
     {
-        TreeNode root = new("Root");
+        TreeNode root = new("A");
         // children
-        root.AddChildFromPayload("Child1");
-        TreeNode child2 = root.AddChildFromPayload("Child2");
+        root.AddChildFromPayload("B");
+        TreeNode c = root.AddChildFromPayload("C");
         // grandchildren
-        child2.AddChildFromPayload("Grandchild1");
-        TreeNode grandchild2 = child2.AddChildFromPayload("Grandchild2");
+        c.AddChildFromPayload("D");
+        TreeNode e = c.AddChildFromPayload("E");
 
-        string path = grandchild2.GetPath();
+        string path = e.GetPath();
 
-        Assert.Equal("1.1/2.2/3.2", path);
+        Assert.Equal("/2/2", path);
+    }
+
+    [Fact]
+    public void WalkPathTo_Empty_ShouldReturnCurrent()
+    {
+        TreeNode root = new("A");
+
+        TreeNode? node = root.WalkPathTo("");
+
+        Assert.Equal(root, node);
+    }
+
+    [Fact]
+    public void WalkPathTo_SecondChild_ShouldReturnIt()
+    {
+        TreeNode root = new("A");
+        root.AddChildFromPayload("B");
+        TreeNode c = root.AddChildFromPayload("C");
+
+        TreeNode? node = root.WalkPathTo("/2");
+
+        Assert.Equal(c, node);
+    }
+    #endregion
+
+    #region Clone
+    [Fact]
+    public void Clone_ShouldReturnClone()
+    {
+        TreeNode root = new("Root");
+        root.AddChildFromPayload("Child");
+
+        TreeNode clone = root.Clone();
+
+        Assert.Equal(root.Id, clone.Id);
+        Assert.Equal(root.Label, clone.Label);
+        Assert.Equal(root.Data, clone.Data);
+
+        Assert.Equal(root.Children[0].Id, clone.Children[0].Id);
+        Assert.Equal(root.Children[0].Label, clone.Children[0].Label);
+        Assert.Equal(root.Children[0].Data, clone.Children[0].Data);
     }
     #endregion
 }
