@@ -3,10 +3,10 @@
 namespace Gve.Text;
 
 /// <summary>
-/// Basic implementation of <see cref="IFlatTreeNodeItem"/>.
+/// Basic implementation of <see cref="IFlatTreeNodeItem{T}"/>.
 /// </summary>
-/// <seealso cref="IFlatTreeNodeItem" />
-public class FlatTreeNodeItem : IFlatTreeNodeItem
+/// <seealso cref="IFlatTreeNodeItem{T}" />
+public class FlatTreeNodeItem<T> : IFlatTreeNodeItem<T>
 {
     /// <summary>
     /// Gets the node identifier.
@@ -21,18 +21,18 @@ public class FlatTreeNodeItem : IFlatTreeNodeItem
     /// <summary>
     /// Gets or sets the optional payload data.
     /// </summary>
-    public object? Data { get; set; }
+    public T? Data { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="FlatTreeNodeItem"/> class.
+    /// Initializes a new instance of the <see cref="FlatTreeNodeItem{T}"/> class.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <param name="parentId">The parent identifier.</param>
     /// <param name="data">The data.</param>
     /// <exception cref="ArgumentNullException">id</exception>
-    public FlatTreeNodeItem(string id, string? parentId, object? data)
+    public FlatTreeNodeItem(string id, string? parentId, T? data)
     {
-        ArgumentNullException.ThrowIfNull(Id);
+        ArgumentNullException.ThrowIfNull(id);
         Id = id;
         ParentId = parentId;
         Data = data;

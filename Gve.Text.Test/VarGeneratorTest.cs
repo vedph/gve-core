@@ -1,4 +1,5 @@
-﻿using Gve.Text.Base;
+﻿using Gve.Text.Annotations;
+using Gve.Text.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ public sealed class VarGeneratorTest
         Assert.Equal("", entry.Operation.Value);
 
         Assert.NotNull(entry.Root);
-        TreeNode root = entry.Root;
+        TreeNode<AnnVarOperation> root = entry.Root;
         Assert.Equal(2, root.Children.Count);
         Assert.Single(root.Children[0].Children);
         Assert.Empty(root.Children[1].Children);

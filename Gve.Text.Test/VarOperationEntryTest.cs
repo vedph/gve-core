@@ -26,7 +26,7 @@ public sealed class VarOperationEntryTest
         Assert.Equal(2, entry.Root.Children.Count);
 
         // 1st child has payload and 1 child
-        TreeNode node = entry.Root.Children[0];
+        TreeNode<AnnVarOperation> node = entry.Root.Children[0];
         Assert.NotNull(node.Data);
         Assert.Single(node.Children);
         Assert.IsType<ReplaceAnnVarOperation>(node.Data);

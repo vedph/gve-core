@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace Gve.Text;
 
 /// <summary>
-/// A generic tree node.
+/// A generic tree node with payload data of a specific type.
 /// </summary>
-public class TreeNode
+public class TreeNode<T>
 {
-    private List<TreeNode>? _children;
+    private List<TreeNode<T>>? _children;
 
     /// <summary>
     /// Gets or sets an optional identifier for this node.
@@ -25,17 +26,17 @@ public class TreeNode
     /// <summary>
     /// Gets or sets the payload data.
     /// </summary>
-    public object? Data { get; set; }
+    public T? Data { get; set; }
 
     /// <summary>
     /// Gets or sets the parent.
     /// </summary>
-    public TreeNode? Parent { get; set; }
+    public TreeNode<T>? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets the children.
     /// </summary>
-    public List<TreeNode> Children
+    public List<TreeNode<T>> Children
     {
         get => _children ??= [];
         set => _children = value ?? throw new ArgumentNullException(nameof(value));
@@ -66,20 +67,13 @@ public class TreeNode
     public bool IsLastSibling() => Parent?.Children[^1] == this;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TreeNode"/> class.
+    /// Initializes a new instance of the <see cref="TreeNode{T}"/> class.
     /// </summary>
     /// <param name="data">The optional payload data.</param>
-    public TreeNode(object? data = null)
+    public TreeNode(T? data = default)
     {
         Data = data;
     }
-
-    /// <summary>
-    /// Gets the data cast to the specified type.
-    /// </summary>
-    /// <typeparam name="T">Type to cast to.</typeparam>
-    /// <returns>Data or default for its type.</returns>
-    public T? GetData<T>() => Data is T data ? data : default;
 
     #region Expansion
     /// <summary>
@@ -118,7 +112,7 @@ public class TreeNode
     public int GetY()
     {
         int level = 1;
-        TreeNode? node = this;
+        TreeNode<T>? node = this;
         while (node.Parent != null)
         {
             level++;
@@ -155,7 +149,7 @@ public class TreeNode
         if (Parent == null) return Tuple.Create(y, 1);
 
         int x = 1;
-        foreach (TreeNode sibling in Parent.Children)
+        foreach (TreeNode<T> sibling in Parent.Children)
         {
             if (sibling == this) return Tuple.Create(y, x);
             x++;
@@ -174,11 +168,11 @@ public class TreeNode
     public string GetPath()
     {
         StringBuilder sb = new();
-        TreeNode? node = this;
+        TreeNode<T>? node = this;
         while (node.Parent != null)
         {
             int x = 1;
-            foreach (TreeNode sibling in node.Parent.Children)
+            foreach (TreeNode<T> sibling in node.Parent.Children)
             {
                 if (sibling == node)
                 {
@@ -199,7 +193,7 @@ public class TreeNode
     /// An empty path just returns this node.</param>
     /// <returns>Target node, or null if not found.</returns>
     /// <exception cref="ArgumentNullException">path</exception>
-    public TreeNode? WalkPathTo(string path)
+    public TreeNode<T>? WalkPathTo(string path)
     {
         ArgumentNullException.ThrowIfNull(path);
 
@@ -207,7 +201,7 @@ public class TreeNode
         if (path[0] != '/') path = '/' + path;
 
         string[] parts = path.Split('/');
-        TreeNode? node = this;
+        TreeNode<T>? node = this;
         // we skip 1st which is empty
         foreach (string part in parts.Skip(1))
         {
@@ -230,15 +224,36 @@ public class TreeNode
     /// Payload data are not cloned.
     /// </summary>
     /// <returns>New node.</returns>
-    public TreeNode Clone()
+    public TreeNode<T> Clone()
     {
-        TreeNode clone = new(Data)
+        TreeNode<T> clone = new(Data)
         {
             Id = Id,
             Label = Label
         };
-        foreach (TreeNode child in Children) clone.AddChild(child.Clone());
+        foreach (TreeNode<T> child in Children) clone.AddChild(child.Clone());
         return clone;
+    }
+
+    /// <summary>
+    /// Deeply clones this instance and all its descendants, applying to each
+    /// node's payload data the specified transform function. This can be used
+    /// when you need to cast or transform the payload data to a different type.
+    /// </summary>
+    /// <typeparam name="P">The type of payload to transform to.</typeparam>
+    /// <param name="transformFunc">The transform function.</param>
+    /// <returns>Node.</returns>
+    public TreeNode<P> Clone<P>(Func<T?, P> transformFunc)
+    {
+        TreeNode<P> newNode = new(transformFunc(Data))
+        {
+            Label = Label
+        };
+        foreach (TreeNode<T> child in Children)
+        {
+            newNode.AddChild(child.Clone(transformFunc));
+        }
+        return newNode;
     }
     #endregion
 
@@ -248,7 +263,7 @@ public class TreeNode
     /// </summary>
     /// <param name="child">The child.</param>
     /// <exception cref="ArgumentNullException">child</exception>
-    public void AddChild(TreeNode child)
+    public void AddChild(TreeNode<T> child)
     {
         ArgumentNullException.ThrowIfNull(child);
 
@@ -261,11 +276,14 @@ public class TreeNode
     /// payload data.
     /// </summary>
     /// <param name="data">The payload data.</param>
+    /// <param name="id">The optional ID to assign to the newly created node.
+    /// </param>
     /// <returns>The newly created child node.</returns>
-    public TreeNode AddChildFromData(object? data)
+    public TreeNode<T> AddChildFromData(T? data, string? id = null)
     {
-        TreeNode child = new(data);
+        TreeNode<T> child = new(data);
         AddChild(child);
+        child.Id = id;
         return child;
     }
 
@@ -274,11 +292,11 @@ public class TreeNode
     /// </summary>
     /// <param name="children">The children.</param>
     /// <exception cref="ArgumentNullException">children</exception>
-    public void AddChildren(IEnumerable<TreeNode> children)
+    public void AddChildren(IEnumerable<TreeNode<T>> children)
     {
         ArgumentNullException.ThrowIfNull(children);
 
-        foreach (TreeNode child in children) AddChild(child);
+        foreach (TreeNode<T> child in children) AddChild(child);
     }
 
     /// <summary>
@@ -286,9 +304,9 @@ public class TreeNode
     /// specified payload data.
     /// </summary>
     /// <param name="data">The payload data.</param>
-    public void AddChildrenFromData(IEnumerable<object?> data)
+    public void AddChildrenFromData(IEnumerable<T?> data)
     {
-        foreach (object? d in data) AddChildFromData(d);
+        foreach (T? d in data) AddChildFromData(d);
     }
 
     /// <summary>
@@ -297,12 +315,11 @@ public class TreeNode
     /// <param name="node">The node.</param>
     /// <exception cref="InvalidOperationException">Parent is null,  or
     /// Parent does not contain this node.</exception>
-    public void AddBeforeSelf(TreeNode node)
+    public void AddBeforeSelf(TreeNode<T> node)
     {
         ArgumentNullException.ThrowIfNull(node);
 
-        if (Parent == null)
-            throw new InvalidOperationException("Parent is null.");
+        if (Parent == null) throw new InvalidOperationException("Parent is null.");
 
         int index = Parent.Children.IndexOf(this);
         if (index < 0)
@@ -320,9 +337,9 @@ public class TreeNode
     /// <returns>The newly added node.</returns>
     /// <exception cref="InvalidOperationException">Parent is null,  or
     /// Parent does not contain this node.</exception>
-    public TreeNode AddBeforeSelfFromData(object? data)
+    public TreeNode<T> AddBeforeSelfFromData(T? data)
     {
-        TreeNode node = new(data);
+        TreeNode<T> node = new(data);
         AddBeforeSelf(node);
         return node;
     }
@@ -333,7 +350,7 @@ public class TreeNode
     /// <param name="node">The node.</param>
     /// <exception cref="InvalidOperationException">Parent is null,  or
     /// Parent does not contain this node.</exception>
-    public void AddAfterSelf(TreeNode node)
+    public void AddAfterSelf(TreeNode<T> node)
     {
         ArgumentNullException.ThrowIfNull(node);
 
@@ -356,9 +373,9 @@ public class TreeNode
     /// <returns>The newly added node.</returns>
     /// <exception cref="InvalidOperationException">Parent is null,  or
     /// Parent does not contain this node.</exception>
-    public TreeNode AddAfterSelfFromData(object? data)
+    public TreeNode<T> AddAfterSelfFromData(T? data)
     {
-        TreeNode node = new(data);
+        TreeNode<T> node = new(data);
         AddAfterSelf(node);
         return node;
     }
@@ -373,7 +390,7 @@ public class TreeNode
     /// </summary>
     /// <param name="child">The child node to remove.</param>
     /// <returns>True if removed, false if not found.</returns>
-    public bool RemoveChild(TreeNode child)
+    public bool RemoveChild(TreeNode<T> child)
     {
         ArgumentNullException.ThrowIfNull(child);
 
@@ -392,12 +409,12 @@ public class TreeNode
     /// </summary>
     /// <param name="visitor">The visitor object to use.</param>
     /// <exception cref="ArgumentNullException">visitor</exception>
-    public void Traverse(ITreeNodeVisitor visitor)
+    public void Traverse(ITreeNodeVisitor<T> visitor)
     {
         ArgumentNullException.ThrowIfNull(visitor);
 
         visitor.Visit(this);
-        foreach (TreeNode child in Children) child.Traverse(visitor);
+        foreach (TreeNode<T> child in Children) child.Traverse(visitor);
     }
 
     /// <summary>
@@ -408,13 +425,13 @@ public class TreeNode
     /// stop the traversal.</param>
     /// <returns>True to continue traversing, false to stop.</returns>
     /// <exception cref="ArgumentNullException">visitorFunc</exception>
-    public bool Traverse(Func<TreeNode, bool> visitorFunc)
+    public bool Traverse(Func<TreeNode<T>, bool> visitorFunc)
     {
         ArgumentNullException.ThrowIfNull(visitorFunc);
 
         if (!visitorFunc(this)) return false;
 
-        foreach (TreeNode child in Children)
+        foreach (TreeNode<T> child in Children)
         {
             if (!child.Traverse(visitorFunc)) return false;
         }
@@ -426,9 +443,9 @@ public class TreeNode
     /// Gets the root node.
     /// </summary>
     /// <returns>Root node.</returns>
-    public TreeNode GetRoot()
+    public TreeNode<T> GetRoot()
     {
-        TreeNode node = this;
+        TreeNode<T> node = this;
         while (node.Parent != null) node = node.Parent;
         return node;
     }
@@ -437,9 +454,9 @@ public class TreeNode
     /// Gets all the ascendants of this node.
     /// </summary>
     /// <returns>Nodes.</returns>
-    public IEnumerable<TreeNode> GetAscendants()
+    public IEnumerable<TreeNode<T>> GetAscendants()
     {
-        TreeNode node = this;
+        TreeNode<T> node = this;
         while (node.Parent != null)
         {
             yield return node.Parent;
@@ -453,11 +470,11 @@ public class TreeNode
     /// <param name="predicate">The predicate.</param>
     /// <returns>Node or null if not found.</returns>
     /// <exception cref="ArgumentNullException">predicate</exception>
-    public TreeNode? GetFirstAscendant(Func<TreeNode, bool> predicate)
+    public TreeNode<T>? GetFirstAscendant(Func<TreeNode<T>, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        TreeNode node = this;
+        TreeNode<T> node = this;
         while (node.Parent != null)
         {
             if (predicate(node.Parent)) return node.Parent;
@@ -473,12 +490,12 @@ public class TreeNode
     /// <param name="predicate">The predicate.</param>
     /// <returns>Node or null if not found.</returns>
     /// <exception cref="ArgumentNullException">predicate</exception>
-    public TreeNode? GetFirstAscendantOrSelf(
-        Func<TreeNode, bool> predicate)
+    public TreeNode<T>? GetFirstAscendantOrSelf(
+        Func<TreeNode<T>, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        TreeNode? node = this;
+        TreeNode<T>? node = this;
         while (node != null)
         {
             if (predicate(node)) return node;
@@ -491,12 +508,12 @@ public class TreeNode
     /// Gets all the descendants of this node.
     /// </summary>
     /// <returns>Nodes.</returns>
-    public IEnumerable<TreeNode> GetDescendants()
+    public IEnumerable<TreeNode<T>> GetDescendants()
     {
-        foreach (TreeNode child in Children)
+        foreach (TreeNode<T> child in Children)
         {
             yield return child;
-            foreach (TreeNode grandchild in child.GetDescendants())
+            foreach (TreeNode<T> grandchild in child.GetDescendants())
                 yield return grandchild;
         }
     }
@@ -507,14 +524,14 @@ public class TreeNode
     /// <param name="predicate">The predicate.</param>
     /// <returns>Node or null if not found.</returns>
     /// <exception cref="ArgumentNullException">predicate</exception>
-    public TreeNode? GetFirstDescendant(Func<TreeNode, bool> predicate)
+    public TreeNode<T>? GetFirstDescendant(Func<TreeNode<T>, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
-        foreach (TreeNode child in Children)
+        foreach (TreeNode<T> child in Children)
         {
             if (predicate(child)) return child;
-            TreeNode? descendant = child.GetFirstDescendant(predicate);
+            TreeNode<T>? descendant = child.GetFirstDescendant(predicate);
             if (descendant != null) return descendant;
         }
         return null;
@@ -527,16 +544,16 @@ public class TreeNode
     /// <param name="predicate">The predicate.</param>
     /// <returns>Node or null if not found.</returns>
     /// <exception cref="ArgumentNullException">predicate</exception>
-    public TreeNode? GetFirstDescendantOrSelf(
-        Func<TreeNode, bool> predicate)
+    public TreeNode<T>? GetFirstDescendantOrSelf(
+        Func<TreeNode<T>, bool> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
 
         if (predicate(this)) return this;
 
-        foreach (TreeNode child in Children)
+        foreach (TreeNode<T> child in Children)
         {
-            TreeNode? descendant = child.GetFirstDescendantOrSelf(predicate);
+            TreeNode<T>? descendant = child.GetFirstDescendantOrSelf(predicate);
             if (descendant != null) return descendant;
         }
         return null;
@@ -549,7 +566,7 @@ public class TreeNode
     /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is a matching ascendant of
     /// this node; otherwise, <c>false</c>.</returns>
-    public bool HasAscendant(Func<TreeNode, bool> predicate) =>
+    public bool HasAscendant(Func<TreeNode<T>, bool> predicate) =>
         GetAscendants().Any(ascendant => predicate(ascendant));
 
     /// <summary>
@@ -559,18 +576,18 @@ public class TreeNode
     /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is a descendant of this
     /// node; otherwise, <c>false</c>.</returns>
-    public bool HasDescendant(Func<TreeNode, bool> predicate) =>
+    public bool HasDescendant(Func<TreeNode<T>, bool> predicate) =>
         GetDescendants().Any(descendant => predicate(descendant));
 
     /// <summary>
     /// Gets the left siblings of this node.
     /// </summary>
     /// <returns>Nodes.</returns>
-    public IEnumerable<TreeNode> GetLeftSiblings()
+    public IEnumerable<TreeNode<T>> GetLeftSiblings()
     {
         if (Parent == null) yield break;
 
-        foreach (TreeNode sibling in Parent.Children)
+        foreach (TreeNode<T> sibling in Parent.Children)
         {
             if (sibling == this) yield break;
             yield return sibling;
@@ -581,12 +598,12 @@ public class TreeNode
     /// Gets the right siblings of this node.
     /// </summary>
     /// <returns>Nodes.</returns>
-    public IEnumerable<TreeNode> GetRightSiblings()
+    public IEnumerable<TreeNode<T>> GetRightSiblings()
     {
         if (Parent == null) yield break;
 
         bool foundSelf = false;
-        foreach (TreeNode sibling in Parent.Children)
+        foreach (TreeNode<T> sibling in Parent.Children)
         {
             if (foundSelf)
             {
@@ -606,7 +623,7 @@ public class TreeNode
     /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is among the left siblings
     /// of this node; otherwise, <c>false</c>.</returns>
-    public bool HasLeftSibling(Func<TreeNode, bool> predicate) =>
+    public bool HasLeftSibling(Func<TreeNode<T>, bool> predicate) =>
         GetLeftSiblings().Any(sibling => predicate(sibling));
 
     /// <summary>
@@ -616,23 +633,39 @@ public class TreeNode
     /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is among the right siblings
     /// of this node; otherwise, <c>false</c>.</returns>
-    public bool HasRightSibling(Func<TreeNode, bool> predicate) =>
+    public bool HasRightSibling(Func<TreeNode<T>, bool> predicate) =>
         GetRightSiblings().Any(sibling => predicate(sibling));
     #endregion
 
-    #region Flattening
+    #region Flattening    
+    /// <summary>
+    /// Sets the IDs of all nodes in the tree or sub-tree starting with this
+    /// to a number starting from 1 and incrementing by 1.
+    /// </summary>
+    /// <remarks>This method can be useful before flattening the node if you
+    /// are not using IDs.</remarks>
+    public void SetAutoIds()
+    {
+        int id = 1;
+        Traverse((n) =>
+        {
+            n.Id = id++.ToString(CultureInfo.InvariantCulture);
+            return true;
+        });
+    }
+
     /// <summary>
     /// Returns a flat list of tuples representing the tree or sub-tree
     /// starting with this node.
     /// </summary>
     /// <returns>List of items.</returns>
-    public IList<IFlatTreeNodeItem> ToFlatList()
+    public List<IFlatTreeNodeItem<T>> ToFlatList()
     {
-        List<IFlatTreeNodeItem> items = [];
+        List<IFlatTreeNodeItem<T>> items = [];
 
         Traverse((n) =>
         {
-            items.Add(new FlatTreeNodeItem(
+            items.Add(new FlatTreeNodeItem<T>(
                 n.Id!,
                 n.Parent?.Id,
                 n.Data));
@@ -649,25 +682,23 @@ public class TreeNode
     /// <param name="items">The items.</param>
     /// <returns>The root node of the output tree or null.</returns>
     /// <exception cref="ArgumentNullException">items</exception>
-    public static TreeNode? FromFlatList(IList<IFlatTreeNodeItem> items)
+    public static TreeNode<T>? FromFlatList(IEnumerable<IFlatTreeNodeItem<T>> items)
     {
         ArgumentNullException.ThrowIfNull(items);
 
-        if (items.Count == 0) return null;
-
         // create a dictionary of nodes keyed by IDs
-        Dictionary<string, TreeNode> dct =
+        Dictionary<string, TreeNode<T>> dct =
             items.ToDictionary(
                 i => i.Id,
-                v => new TreeNode(v.Data));
+                v => new TreeNode<T>(v.Data));
 
         // place each node under its parent
-        TreeNode? root = null;
-        foreach (IFlatTreeNodeItem item in items)
+        TreeNode<T>? root = null;
+        foreach (IFlatTreeNodeItem<T> item in items)
         {
-            TreeNode itemNode = dct[item.Id];
+            TreeNode<T> itemNode = dct[item.Id];
             if (item.ParentId != null &&
-                dct.TryGetValue(item.ParentId, out TreeNode? value))
+                dct.TryGetValue(item.ParentId, out TreeNode<T>? value))
             {
                 value.AddChild(itemNode);
             }
@@ -719,13 +750,13 @@ public class TreeNode
 }
 
 /// <summary>
-/// Interface for a tree node visitor in <see cref="TreeNode"/>.
+/// Interface for a tree node visitor in <see cref="TreeNode{T}"/>.
 /// </summary>
-public interface ITreeNodeVisitor
+public interface ITreeNodeVisitor<T>
 {
     /// <summary>
     /// Visits the specified node.
     /// </summary>
     /// <param name="node">The node.</param>
-    void Visit(TreeNode node);
+    void Visit(TreeNode<T> node);
 }

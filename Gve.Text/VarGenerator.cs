@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Gve.Text.Annotations;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -154,8 +155,7 @@ public sealed class VarGenerator
                 {
                     if (node.Data != null)
                     {
-                        foreach (string tag in node.GetData<VarOperation>()!
-                            .TaggedOrdinals.Keys)
+                        foreach (string tag in node.Data.TaggedOrdinals.Keys)
                         {
                             tags.Add(tag);
                         }
@@ -182,12 +182,12 @@ public sealed class VarGenerator
             .ToList();
     }
 
-    private static void ReplayAscendants(TreeNode node,
+    private static void ReplayAscendants(TreeNode<AnnVarOperation> node,
         VarOperationContext context, short at, short run)
     {
         // collect ascendants up to root in a stack
-        Stack<TreeNode> stack = new();
-        TreeNode? parent = node.Parent;
+        Stack<TreeNode<AnnVarOperation>> stack = new();
+        TreeNode<AnnVarOperation>? parent = node.Parent;
         while (parent != null)
         {
             if (parent.Data != null) stack.Push(parent);
@@ -200,7 +200,7 @@ public sealed class VarGenerator
         context.SetAnnNodes(at, run);
         while (stack.Count > 0)
         {
-            TreeNode n = stack.Pop();
+            TreeNode<AnnVarOperation> n = stack.Pop();
             (n.Data as VarOperation)?.Execute(context);
         }
     }
@@ -280,7 +280,7 @@ public sealed class VarGenerator
                 // operation's tag must match
                 _logger?.LogInformation("A-Operation {op}", node.Data);
 
-                if (!node.GetData<VarOperation>()!.TaggedOrdinals.ContainsKey(
+                if (!node.Data.TaggedOrdinals.ContainsKey(
                     context.VersionTag))
                 {
                     _logger?.LogInformation("Skipping A-operation {op}",
@@ -297,7 +297,7 @@ public sealed class VarGenerator
                     newContext.OpContext.GetAnnText());
 
                 // execute the operation
-                node.GetData<VarOperation>()!.Execute(newContext.OpContext);
+                node.Data.Execute(newContext.OpContext);
                 _logger?.LogInformation("A-Result: {text}",
                     newContext.OpContext.GetAnnText());
 

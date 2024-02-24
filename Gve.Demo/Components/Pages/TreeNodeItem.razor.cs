@@ -1,4 +1,5 @@
 ﻿using Gve.Text;
+using Gve.Text.Annotations;
 using Microsoft.AspNetCore.Components;
 
 namespace Gve.Demo.Components.Pages;
@@ -6,7 +7,7 @@ namespace Gve.Demo.Components.Pages;
 public partial class TreeNodeItem
 {
     [Parameter]
-    public TreeNode? Node { get; set; }
+    public TreeNode<AnnVarOperation>? Node { get; set; }
 
     public string ItemClass
     {

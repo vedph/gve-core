@@ -1,9 +1,9 @@
 ﻿using Gve.Text;
+using Gve.Text.Annotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using TreeNode = Gve.Text.TreeNode;
 
 namespace Gve.Demo.Components.Pages;
 
@@ -23,7 +23,7 @@ public partial class VarGeneratorDemo
     [MaxLength(1000)]
     public string OpText { get; set; }
 
-    public TreeNode? Root { get; set; }
+    public TreeNode<AnnVarOperation>? Root { get; set; }
     public IList<string> VariantTags { get; set; }
     public string? Error { get; set; }
 
@@ -52,29 +52,32 @@ public partial class VarGeneratorDemo
         Steps = [];
     }
 
-    public TreeNode BuildTreeNode(TreeNode node)
+    public TreeNode<AnnVarOperation> BuildTreeNode(TreeNode<AnnVarOperation> node)
     {
-        TreeNode newNode = new()
+        TreeNode<AnnVarOperation> newNode = new()
         {
             Label = node.Data?.ToString() ?? node.GetYX().ToString(),
             Data = node.Data
         };
-        foreach (TreeNode child in node.Children)
+        foreach (TreeNode<AnnVarOperation> child in node.Children)
             newNode.AddChild(BuildTreeNode(child));
         return newNode;
     }
 
-    public TreeNode BuildTree(IList<VarOperationEntry> entries)
+    public TreeNode<AnnVarOperation> BuildTree(IList<VarOperationEntry> entries)
     {
-        TreeNode root = new() { Label = "root" };
+        TreeNode<AnnVarOperation> root = new() { Label = "root" };
 
         foreach (VarOperationEntry entry in entries)
         {
-            TreeNode child = new() { Label = entry.Operation.ToString() };
+            TreeNode<AnnVarOperation> child = new()
+            {
+                Label = entry.Operation.ToString()
+            };
 
             if (entry.Root != null)
             {
-                TreeNode tn = BuildTreeNode(entry.Root);
+                TreeNode<AnnVarOperation> tn = BuildTreeNode(entry.Root);
                 child.AddChild(tn);
             }
 
@@ -125,8 +128,7 @@ public partial class VarGeneratorDemo
 
             if (SelectedVariantTag != null && SelectedVariantTag != "*")
             {
-                SetResults(_generator!.Generate(Text,
-                    new[] { SelectedVariantTag }));
+                SetResults(_generator!.Generate(Text, [SelectedVariantTag]));
             }
             else
             {

@@ -24,7 +24,7 @@ public partial class VarOperationEntry
     /// Gets or sets the optional root operation in the annotations plane,
     /// representing the tree of annotation operations stemming from this entry.
     /// </summary>
-    public TreeNode? Root { get; }
+    public TreeNode<AnnVarOperation>? Root { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="VarOperationEntry"/> class.
@@ -33,7 +33,8 @@ public partial class VarOperationEntry
     /// <param name="root">The optional root node of a tree of annotation
     /// operations stemming from <paramref name="operation"/>.</param>
     /// <exception cref="ArgumentNullException">operation</exception>
-    public VarOperationEntry(BaseVarOperation operation, TreeNode? root)
+    public VarOperationEntry(BaseVarOperation operation,
+        TreeNode<AnnVarOperation>? root)
     {
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
         Root = root;
@@ -93,7 +94,7 @@ public partial class VarOperationEntry
             prefixRegex.Replace(lines[0], ""));
 
         // tree if any
-        TreeNode? root = null;
+        TreeNode<AnnVarOperation>? root = null;
         if (lines.Length > 1)
         {
             // tree is allowed only for replacements
@@ -103,8 +104,8 @@ public partial class VarOperationEntry
             // value is coerced to empty because it will be set by tree nodes
             operation.Value = "";
 
-            root = new TreeNode();
-            TreeNode? current = root;
+            root = new TreeNode<AnnVarOperation>();
+            TreeNode<AnnVarOperation>? current = root;
             int currentDepth = 0;
             for (int i = 1; i < lines.Length; i++)
             {
@@ -120,7 +121,7 @@ public partial class VarOperationEntry
                 if (depth > currentDepth)
                 {
                     // add a child
-                    TreeNode child = new(
+                    TreeNode<AnnVarOperation> child = new(
                         AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.AddChild(child);
                     current = child;
@@ -129,7 +130,7 @@ public partial class VarOperationEntry
                 else if (depth == currentDepth)
                 {
                     // add a sibling
-                    TreeNode sibling = new(
+                    TreeNode<AnnVarOperation> sibling = new(
                         AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.Parent?.AddChild(sibling);
                     current = sibling;
@@ -137,7 +138,7 @@ public partial class VarOperationEntry
                 else
                 {
                     // add a sibling of a parent
-                    TreeNode sibling = new(
+                    TreeNode<AnnVarOperation> sibling = new(
                         AnnVarOperation.Parse<AnnVarOperation>(line));
                     current.Parent?.Parent?.AddChild(sibling);
                     current = sibling;

@@ -1,9 +1,10 @@
 ﻿namespace Gve.Text;
 
 /// <summary>
-/// A flat tree node item to use with <see cref="TreeNode"/>.
+/// A flat tree node item to use with <see cref="TreeNode{T}"/>.
 /// </summary>
-public interface IFlatTreeNodeItem
+/// <typeparam name="T">The type of the data payload.</typeparam>
+public interface IFlatTreeNodeItem<out T>
 {
     /// <summary>
     /// Gets the identifier.
@@ -18,5 +19,5 @@ public interface IFlatTreeNodeItem
     /// <summary>
     /// Gets the data.
     /// </summary>
-    object? Data { get; }
+    T? Data { get; }
 }
