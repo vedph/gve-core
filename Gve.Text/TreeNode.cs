@@ -9,6 +9,7 @@ namespace Gve.Text;
 /// <summary>
 /// A generic tree node with payload data of a specific type.
 /// </summary>
+/// <typeparam name="T">The type of payload data.</typeparam>
 public class TreeNode<T>
 {
     private List<TreeNode<T>>? _children;
