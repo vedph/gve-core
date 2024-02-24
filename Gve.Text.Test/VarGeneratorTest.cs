@@ -1,5 +1,4 @@
-﻿using Gve.Text.Annotations;
-using Gve.Text.Base;
+﻿using Gve.Text.Base;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;

@@ -543,22 +543,24 @@ public class TreeNode
     }
 
     /// <summary>
-    /// Determines whether the specified node is an ascendant of this node.
+    /// Determines whether the specified node is an ascendant of this node
+    /// matching the specified predicate.
     /// </summary>
-    /// <param name="node">The node.</param>
-    /// <returns><c>true</c> if the specified node is an ascendant of this
-    /// node; otherwise, <c>false</c>.</returns>
-    public bool HasAscendant(TreeNode node) =>
-        GetAscendants().Any(ascendant => ascendant == node);
+    /// <param name="predicate">The predicate to test for a match.</param>
+    /// <returns><c>true</c> if the specified node is a matching ascendant of
+    /// this node; otherwise, <c>false</c>.</returns>
+    public bool HasAscendant(Func<TreeNode, bool> predicate) =>
+        GetAscendants().Any(ascendant => predicate(ascendant));
 
     /// <summary>
-    /// Determines whether the specified node is a descendant of this node.
+    /// Determines whether the specified node is a descendant of this node
+    /// matching the specified predicate.
     /// </summary>
-    /// <param name="node">The node.</param>
+    /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is a descendant of this
     /// node; otherwise, <c>false</c>.</returns>
-    public bool HasDescendant(TreeNode node) =>
-        GetDescendants().Any(descendant => descendant == node);
+    public bool HasDescendant(Func<TreeNode, bool> predicate) =>
+        GetDescendants().Any(descendant => predicate(descendant));
 
     /// <summary>
     /// Gets the left siblings of this node.
@@ -599,23 +601,23 @@ public class TreeNode
 
     /// <summary>
     /// Determines whether the specified node is among the left siblings
-    /// of this node.
+    /// of this node matching the specified predicate.
     /// </summary>
-    /// <param name="node">The node.</param>
+    /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is among the left siblings
     /// of this node; otherwise, <c>false</c>.</returns>
-    public bool HasLeftSibling(TreeNode node) =>
-        GetLeftSiblings().Any(sibling => sibling == node);
+    public bool HasLeftSibling(Func<TreeNode, bool> predicate) =>
+        GetLeftSiblings().Any(sibling => predicate(sibling));
 
     /// <summary>
     /// Determines whether the specified node is among the right siblings
-    /// of this node.
+    /// of this node matching the specified predicate.
     /// </summary>
-    /// <param name="node">The node.</param>
+    /// <param name="predicate">The predicate to test for a match.</param>
     /// <returns><c>true</c> if the specified node is among the right siblings
     /// of this node; otherwise, <c>false</c>.</returns>
-    public bool HasRightSibling(TreeNode node) =>
-        GetRightSiblings().Any(sibling => sibling == node);
+    public bool HasRightSibling(Func<TreeNode, bool> predicate) =>
+        GetRightSiblings().Any(sibling => predicate(sibling));
     #endregion
 
     #region Flattening

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -316,6 +318,72 @@ public sealed class TreeNodeTest
     }
 
     [Fact]
+    public void AddBeforeSelf_ShouldAddBeforeSelf()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        TreeNode before = new("C");
+        child.AddBeforeSelf(before);
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("C", root.Children[0].Data);
+        Assert.Equal("B", root.Children[1].Data);
+        Assert.Equal(before, root.Children[0]);
+        Assert.Equal(child, root.Children[1]);
+        Assert.Equal(root, before.Parent);
+    }
+
+    [Fact]
+    public void AddBeforeSelfFromData_ShouldAddBeforeSelf()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        TreeNode before = child.AddBeforeSelfFromData("C");
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("C", root.Children[0].Data);
+        Assert.Equal("B", root.Children[1].Data);
+        Assert.Equal(before, root.Children[0]);
+        Assert.Equal(child, root.Children[1]);
+        Assert.Equal(root, before.Parent);
+    }
+
+    [Fact]
+    public void AddAfterSelf_ShouldAddAfterSelf()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        TreeNode after = new("C");
+        child.AddAfterSelf(after);
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal("C", root.Children[1].Data);
+        Assert.Equal(child, root.Children[0]);
+        Assert.Equal(after, root.Children[1]);
+        Assert.Equal(root, after.Parent);
+    }
+
+    [Fact]
+    public void AddAfterSelfFromData_ShouldAddAfterSelf()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        TreeNode after = child.AddAfterSelfFromData("C");
+
+        Assert.Equal(2, root.Children.Count);
+        Assert.Equal("B", root.Children[0].Data);
+        Assert.Equal("C", root.Children[1].Data);
+        Assert.Equal(child, root.Children[0]);
+        Assert.Equal(after, root.Children[1]);
+        Assert.Equal(root, after.Parent);
+    }
+
+    [Fact]
     public void Remove_ShouldRemoveFromParent()
     {
         TreeNode root = new("A");
@@ -337,6 +405,313 @@ public sealed class TreeNodeTest
 
         Assert.Empty(root.Children);
         Assert.Null(child.Parent);
+    }
+    #endregion
+
+    #region Traversing
+    [Fact]
+    public void GetRoot_ShouldReturnRoot()
+    {
+        TreeNode root = new("A");
+        TreeNode child = root.AddChildFromData("B");
+
+        TreeNode? node = child.GetRoot();
+
+        Assert.Equal(root, node);
+    }
+
+    [Fact]
+    public void Traverse_ShouldTraverse()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
+        TreeNode d = b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = [];
+        root.Traverse(n =>
+        {
+            nodes.Add(n);
+            return true;
+        });
+
+        Assert.Equal(5, nodes.Count);
+        Assert.Equal(root, nodes[0]);
+        Assert.Equal(b, nodes[1]);
+        Assert.Equal(d, nodes[2]);
+        Assert.Equal(e, nodes[3]);
+        Assert.Equal(c, nodes[4]);
+    }
+
+    [Fact]
+    public void Traverse_WhenFalse_ShouldStop()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        TreeNode d = b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = [];
+        root.Traverse(n =>
+        {
+            nodes.Add(n);
+            return n != e;
+        });
+
+        Assert.Equal(4, nodes.Count);
+        Assert.Equal(root, nodes[0]);
+        Assert.Equal(b, nodes[1]);
+        Assert.Equal(d, nodes[2]);
+        Assert.Equal(e, nodes[3]);
+    }
+
+    [Fact]
+    public void GetAscendants_ShouldEnumerateAscendants()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = e.GetAscendants().ToList();
+
+        Assert.Equal(2, nodes.Count);
+        Assert.Equal(b, nodes[0]);
+        Assert.Equal(root, nodes[1]);
+    }
+
+    [Fact]
+    public void GetFirstAscendant_ShouldReturnFirstMatchingAscendant()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        TreeNode? node = e.GetFirstAscendant(n => n == b);
+
+        Assert.Equal(b, node);
+    }
+
+    [Fact]
+    public void GetFirstAscendant_NoMatch_ShouldReturnNull()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        TreeNode? node = e.GetFirstAscendant(n => n.Label == "not-existing");
+
+        Assert.Null(node);
+    }
+
+    [Fact]
+    public void GetFirstAscendantOrSelf_ShouldReturnFirstMatchingAscendantOrSelf()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        TreeNode? node = e.GetFirstAscendantOrSelf(n => n == e);
+
+        Assert.Equal(e, node);
+    }
+
+    [Fact]
+    public void GetDescendants_ShouldEnumerateDescendants()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
+        TreeNode d = b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = root.GetDescendants().ToList();
+
+        Assert.Equal(4, nodes.Count);
+        Assert.Equal(b, nodes[0]);
+        Assert.Equal(d, nodes[1]);
+        Assert.Equal(e, nodes[2]);
+        Assert.Equal(c, nodes[3]);
+    }
+
+    [Fact]
+    public void GetFirstDescendant_ShouldReturnFirstMatchingDescendant()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        TreeNode? node = root.GetFirstDescendant(n => n == e);
+
+        Assert.Equal(e, node);
+    }
+
+    [Fact]
+    public void GetFirstDescendantOrSelf_ShouldReturnFirstMatchingDescendantOrSelf()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        b.AddChildFromData("E");
+
+        TreeNode? node = root.GetFirstDescendantOrSelf(n => n == root);
+
+        Assert.Equal(root, node);
+    }
+
+    [Fact]
+    public void HasAscendant_OnMatch_ShouldReturnTrue()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        bool has = e.HasAscendant(n => n == b);
+
+        Assert.True(has);
+    }
+
+    [Fact]
+    public void HasDescendant_OnFound_ShouldReturnTrue()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        bool has = root.HasDescendant(n => n == e);
+
+        Assert.True(has);
+    }
+
+    [Fact]
+    public void GetLeftSiblings_ShouldReturnLeftSiblings()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        TreeNode d = b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = e.GetLeftSiblings().ToList();
+
+        Assert.Single(nodes);
+        Assert.Equal(d, nodes[0]);
+    }
+
+    [Fact]
+    public void GetRightSiblings_ShouldReturnRightSiblings()
+    {
+        // A
+        // +- B
+        // |  +- D
+        // |  +- E
+        // +- C
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        root.AddChildFromData("C");
+        TreeNode d = b.AddChildFromData("D");
+        TreeNode e = b.AddChildFromData("E");
+
+        List<TreeNode> nodes = d.GetRightSiblings().ToList();
+
+        Assert.Single(nodes);
+        Assert.Equal(e, nodes[0]);
+    }
+
+    [Fact]
+    public void HasLeftSibling_OnMatch_ShouldReturnTrue()
+    {
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
+
+        Assert.True(c.HasLeftSibling(n => n == b));
+    }
+
+    [Fact]
+    public void HasRightSibling_OnMatch_ShouldReturnTrue()
+    {
+        TreeNode root = new("A");
+        TreeNode b = root.AddChildFromData("B");
+        TreeNode c = root.AddChildFromData("C");
+
+        Assert.True(b.HasRightSibling(n => n == c));
     }
     #endregion
 }
