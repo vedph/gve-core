@@ -32,7 +32,7 @@ docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 
 ## History
 
-- 2024-02-23: refactored tree node.
+- 2024-02-24: refactored tree node and moved into `Fusi.Tools` version 5.0.0.
 - 2024-02-20: changed `VarOperation` ID to string and used [Nanoid](https://github.com/ai/nanoid) to generate IDs equal both on client and server side.
 - 2024-02-06: updated packages.
 - 2024-01-30: added Docker for demo.
