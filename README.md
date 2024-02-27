@@ -19,12 +19,12 @@ Other Razor packages:
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/gve-demo:0.0.1 -t vedph2020/gve-demo:latest
+docker build . -t vedph2020/gve-demo:0.0.2 -t vedph2020/gve-demo:latest
 ```
 
 (replace with the current version).
 
-To run the demo in Docker, use this command:
+To run the demo in Docker at <localhost:8080>, use this command:
 
 ```ps1
 docker run -it --rm -p 8080:80 --name gve-demo gve-demo
@@ -32,6 +32,7 @@ docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 
 ## History
 
+- 2024-02-27: new Docker image.
 - 2024-02-24: refactored tree node and moved into `Fusi.Tools` version 5.0.0.
 - 2024-02-20: changed `VarOperation` ID to string and used [Nanoid](https://github.com/ai/nanoid) to generate IDs equal both on client and server side.
 - 2024-02-06: updated packages.
