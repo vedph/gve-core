@@ -9,6 +9,107 @@ public sealed class ChainTest
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
         new(nodes.Select(n => n.Data).ToArray());
 
+    #region GetDistinctTags
+    [Fact]
+    public void GetDistinctTags_Empty()
+    {
+        Chain<char> chain = new();
+        IList<string> tags = chain.GetDistinctTags();
+        Assert.Empty(tags);
+    }
+
+    [Fact]
+    public void GetDistinctTags_Not_Empty()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        chain.AddVersion("v0", "v1");
+        chain.Append("v0", "v1", new ChainNode<char>("2", 3, "C", 'C'));
+
+        IList<string> tags = chain.GetDistinctTags();
+
+        Assert.Equal(2, tags.Count);
+        Assert.Contains("v0", tags);
+        Assert.Contains("v1", tags);
+    }
+    #endregion
+
+    #region GetMaxOrdinal
+    [Fact]
+    public void GetMaxOrdinal_Empty()
+    {
+        Chain<char> chain = new();
+        int max = chain.GetMaxOrdinal();
+        Assert.Equal(0, max);
+    }
+
+    [Fact]
+    public void GetMaxOrdinal_NotEmpty()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        chain.AddVersion("v0", "v1");
+        chain.Append("v0", "v1", new ChainNode<char>("2", 3, "C", 'C'));
+
+        int max = chain.GetMaxOrdinal();
+        Assert.Equal(3, max);
+    }
+    #endregion
+
+    #region GetFirstNode
+    [Fact]
+    public void GetFirstNode_Empty()
+    {
+        Chain<char> chain = new();
+
+        ChainNode<char>? firstNode = chain.GetFirstNode("v0");
+
+        Assert.Null(firstNode);
+    }
+
+    [Fact]
+    public void GetFirstNode_SingleNode()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+
+        ChainNode<char>? firstNode = chain.GetFirstNode("v0");
+
+        Assert.NotNull(firstNode);
+        Assert.Equal("1", firstNode.Id);
+    }
+
+    [Fact]
+    public void GetFirstNode_MultipleNodes()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        ChainNode<char>? firstNode = chain.GetFirstNode("v0");
+
+        Assert.NotNull(firstNode);
+        Assert.Equal("1", firstNode.Id);
+    }
+
+    [Fact]
+    public void GetFirstNode_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        ChainNode<char>? firstNode = chain.GetFirstNode("v1");
+
+        Assert.Null(firstNode);
+    }
+    #endregion
+
+    #region Append
     [Fact]
     public void Append_Empty()
     {
@@ -59,4 +160,5 @@ public sealed class ChainTest
         string v1 = GetVersionString(chain.GetTagNodes("v1"));
         Assert.Equal("ABC", v1);
     }
+    #endregion
 }

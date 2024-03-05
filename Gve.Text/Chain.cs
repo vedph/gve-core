@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Gve.Text;
 
@@ -39,7 +40,8 @@ public class Chain<T>
     /// chain.
     /// </summary>
     /// <returns>Max ordinal number.</returns>
-    public int GetMaxOrdinal() => _nodes.Max(n => n.Ordinal);
+    public int GetMaxOrdinal() =>
+        _nodes.Count == 0? 0 : _nodes.Max(n => n.Ordinal);
 
     /// <summary>
     /// Gets the first node for the specified version tag.
@@ -50,6 +52,8 @@ public class Chain<T>
     {
         if (_nodes.Count == 0) return null;
         if (_nodes.Count == 1) return _nodes[0];
+
+        if (!HasVersion(tag)) return null;
 
         // find the node not being the target of any link for the specified tag
         return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Target == n));
@@ -65,6 +69,8 @@ public class Chain<T>
         if (_nodes.Count == 0) return null;
         if (_nodes.Count == 1) return _nodes[0];
 
+        if (!HasVersion(tag)) return null;
+
         // find the node not being the source of any link for the specified tag
         return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Source == n));
     }
@@ -77,7 +83,8 @@ public class Chain<T>
     /// <returns>Link or null if not found or input node was null.</returns>
     public ChainLink<T>? GetLeftLink(string tag, ChainNode<T>? node)
     {
-        if (node == null) return null;
+        if (node == null || !HasVersion(tag)) return null;
+
         return _links.Find(l => l.Tag == tag && l.Target == node);
     }
 
@@ -89,7 +96,8 @@ public class Chain<T>
     /// <returns>Link or null if not found or input node was null.</returns>
     public ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
     {
-        if (link == null) return null;
+        if (link == null || !HasVersion(tag)) return null;
+
         return _links.Find(l => l.Tag == tag && l.Target == link.Source);
     }
 
@@ -101,7 +109,8 @@ public class Chain<T>
     /// <returns>Link or null if not found or input node was null.</returns>
     public ChainLink<T>? GetRightLink(string tag, ChainNode<T>? node)
     {
-        if (node == null) return null;
+        if (node == null || !HasVersion(tag)) return null;
+
         return _links.Find(l => l.Tag == tag && l.Source == node);
     }
 
@@ -113,7 +122,8 @@ public class Chain<T>
     /// <returns>Link or null if not found or input node was null.</returns>
     public ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
     {
-        if (link == null) return null;
+        if (link == null || !HasVersion(tag)) return null;
+
         return _links.Find(l => l.Tag == tag && l.Source == link.Target);
     }
 
