@@ -724,6 +724,7 @@ public class Chain<T>
     }
     #endregion
 
+    #region Swap
     /// <summary>
     /// Swaps the specified ranges of nodes.
     /// </summary>
@@ -801,6 +802,7 @@ public class Chain<T>
 
         return true;
     }
+    #endregion
 
     #region Version
     /// <summary>

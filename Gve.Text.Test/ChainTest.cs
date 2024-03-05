@@ -17,6 +17,58 @@ public sealed class ChainTest
             .ToList();
     }
 
+    #region GetNodeCount
+    [Fact]
+    public void GetNodeCount_NoTag_Total()
+    {
+        Chain<char> chain = new();
+        chain.AppendRange("", "v1", GetNodesFrom("ABC"));
+        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+
+        int n = chain.GetNodeCount();
+
+        Assert.Equal(5, n);
+    }
+
+    [Fact]
+    public void GetNodeCount_WithTag_Filtered()
+    {
+        Chain<char> chain = new();
+        chain.AppendRange("", "v1", GetNodesFrom("ABC"));
+        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+
+        Assert.Equal(3, chain.GetNodeCount("v1"));
+        Assert.Equal(2, chain.GetNodeCount("v2"));
+    }
+    #endregion
+
+    #region GetLinkCount
+    [Fact]
+    public void GetLinkCount_NoTag_Total()
+    {
+        Chain<char> chain = new();
+        chain.AppendRange("", "v1", GetNodesFrom("ABC"));
+        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+
+        int n = chain.GetLinkCount();
+
+        // there should be one less link than nodes
+        Assert.Equal(2, n);
+    }
+
+    [Fact]
+    public void GetLinkCount_WithTag_Filtered()
+    {
+        Chain<char> chain = new();
+        chain.AppendRange("", "v1", GetNodesFrom("ABC"));
+        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+
+        // there should be one less link than nodes
+        Assert.Equal(2, chain.GetLinkCount("v1"));
+        Assert.Equal(1, chain.GetLinkCount("v2"));
+    }
+    #endregion
+
     #region GetDistinctTags
     [Fact]
     public void GetDistinctTags_Empty()
