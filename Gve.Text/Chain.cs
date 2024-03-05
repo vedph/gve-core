@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Xml.Linq;
 
 namespace Gve.Text;
 
@@ -70,7 +69,7 @@ public class Chain<T>
     /// Gets the next available node identifier in this chain.
     /// </summary>
     /// <returns>ID.</returns>
-    protected int GetNextId()
+    public int GetNextId()
     {
         lock (_locker)
         {
@@ -185,24 +184,47 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Enumerates the nodes for the specified version tag, in their order.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>The nodes.</returns>
+    public IEnumerable<ChainNode<T>> EnumerateTagNodes(string tag)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        ChainNode<T>? first = GetFirstNode(tag);
+        if (first == null) yield break;
+
+        yield return first;
+        ChainLink<T>? link = GetNodeRightLink(tag, first);
+        while (link?.Target != null)
+        {
+            yield return link.Target;
+            link = GetRightLink(tag, link);
+        }
+    }
+
+    /// <summary>
     /// Builds the links which connect all the received nodes in their order.
     /// </summary>
     /// <param name="newTag">The new version tag to assign to the created links.
     /// </param>
     /// <param name="nodes">The nodes.</param>
     /// <returns>The links connecting all the nodes.</returns>
-    public IList<ChainLink<T>> BuildLinksFrom(string newTag,
+    public static IList<ChainLink<T>> BuildLinksFrom(string newTag,
         IList<ChainNode<T>> nodes)
     {
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(nodes);
 
         if (nodes.Count < 2) return [];
+
+        List<ChainLink<T>> links = [];
         for (int i = 0; i < nodes.Count - 1; i++)
         {
-            _links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
+            links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
         }
-        return _links;
+        return links;
     }
 
     /// <summary>
