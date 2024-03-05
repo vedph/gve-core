@@ -111,12 +111,34 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Builds the links which connect all the received nodes in their order.
+    /// </summary>
+    /// <param name="newTag">The new version tag to assign to the created links.
+    /// </param>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>The links connecting all the nodes.</returns>
+    public IList<ChainLink<T>> BuildLinksFrom(string newTag,
+        IList<ChainNode<T>> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        if (nodes.Count < 2) return [];
+        for (int i = 0; i < nodes.Count - 1; i++)
+        {
+            Links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
+        }
+        return Links;
+    }
+
+    /// <summary>
     /// Deletes the specified node unless it's not connected.
     /// </summary>
     /// <param name="tag">The current version tag.</param>
     /// <param name="newTag">The new version tag.</param>
     /// <param name="node">The node to delete.</param>
     /// <returns>True if deleted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, node</exception>
     public bool Delete(string tag, string newTag, ChainNode<T> node)
     {
         ArgumentNullException.ThrowIfNull(tag);
@@ -157,6 +179,8 @@ public class Chain<T>
     /// <param name="firstNode">The first node to delete.</param>
     /// <param name="lastNode">The last node to delete.</param>
     /// <returns>True if deleted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, firstNode, lastNode
+    /// </exception>
     public bool DeleteRange(string tag, string newTag, ChainNode<T> firstNode,
         ChainNode<T> lastNode)
     {
@@ -203,6 +227,8 @@ public class Chain<T>
     /// <param name="refNode">The reference node.</param>
     /// <param name="newNode">The new node.</param>
     /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
     public bool InsertBefore(string tag, string newTag, ChainNode<T> refNode,
         ChainNode<T> newNode)
     {
@@ -234,6 +260,90 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Inserts the specified range of nodes before <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <param name="newNodes">The new nodes.</param>
+    /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
+    public bool InsertRangeBefore(string tag, string newTag, ChainNode<T> refNode,
+        IList<ChainNode<T>> newNodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(refNode);
+        ArgumentNullException.ThrowIfNull(newNodes);
+
+        ChainLink<T>? link = Links.Find(l => l.Target == refNode);
+        if (link == null) return false;
+
+        // add links between new nodes
+        Links.AddRange(BuildLinksFrom(newTag, newNodes));
+        // add nodes
+        Nodes.AddRange(newNodes);
+
+        // insert [B] B:C [C] before [D]:
+        // [A] A:D [D] D:E [E]
+        // =>
+        // [A] A:B* ([B]* B:C* [C]*) C:D* [D] D:E [E] (old: A:D)
+
+        // add A:B
+        Links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
+        // add C:D
+        Links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
+
+        // if newTag is the same as tag, delete the old link
+        if (tag == newTag) Links.Remove(link);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Inserts the specified range of nodes after <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <param name="newNodes">The new nodes.</param>
+    /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
+    public bool InsertRangeAfter(string tag, string newTag, ChainNode<T> refNode,
+        IList<ChainNode<T>> newNodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(refNode);
+        ArgumentNullException.ThrowIfNull(newNodes);
+
+        ChainLink<T>? link = Links.Find(l => l.Target == refNode);
+        if (link == null) return false;
+
+        // add links between new nodes
+        Links.AddRange(BuildLinksFrom(newTag, newNodes));
+        // add nodes
+        Nodes.AddRange(newNodes);
+
+        // insert [B] B:C [C] after [A]:
+        // [A] A:D [D] D:E [E]
+        // =>
+        // [A] A:B* B:C* ([C]* C:D* [D]*) D:E [E] (old: A:D)
+
+        // add B:C
+        Links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
+        // add C:D
+        Links.Add(new ChainLink<T>(newTag, newNodes[^1], link.Target));
+
+        // if newTag is the same as tag, delete the old link
+        if (tag == newTag) Links.Remove(link);
+
+        return true;
+    }
+
+    /// <summary>
     /// Inserts <paramref name="newNode"/> after <paramref name="refNode"/>,
     /// unless the reference node is not connected.
     /// </summary>
@@ -242,6 +352,8 @@ public class Chain<T>
     /// <param name="refNode">The reference node.</param>
     /// <param name="newNode">The new node.</param>
     /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
     public bool InsertAfter(string tag, string newTag, ChainNode<T> refNode,
         ChainNode<T> newNode)
     {
@@ -273,11 +385,12 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Appends <paramref name="newNode"/> after the last node.
+    /// Appends <paramref name="newNode"/> at the end of this chain.
     /// </summary>
     /// <param name="tag">The current version tag.</param>
     /// <param name="newTag">The new version tag.</param>
     /// <param name="newNode">The new node.</param>
+    /// <exception cref="ArgumentNullException">tag, newTag, newNode</exception>
     public void Append(string tag, string newTag, ChainNode<T> newNode)
     {
         ArgumentNullException.ThrowIfNull(tag);
@@ -291,9 +404,29 @@ public class Chain<T>
 
         // append after last node
         ChainNode<T>? last = GetLastNode(tag);
-        Links.Add(new ChainLink<T>(newTag, last, newNode));
+        if (last != null) Links.Add(new ChainLink<T>(newTag, last, newNode));
 
         Nodes.Add(newNode);
+    }
+
+    /// <summary>
+    /// Appends <paramref name="nodes"/> at the end of this chain.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="nodes">The new nodes.</param>
+    public void AppendNodes(string tag, string newTag, IList<ChainNode<T>> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        // append after last node
+        ChainNode<T>? last = GetLastNode(tag);
+        if (last != null) Links.Add(new ChainLink<T>(newTag, last, nodes[0]));
+
+        Links.AddRange(BuildLinksFrom(newTag, nodes));
+        Nodes.AddRange(nodes);
     }
 
     /// <summary>
