@@ -29,37 +29,7 @@ public class Chain<T>
     /// </summary>
     protected List<ChainLink<T>> _links = [];
 
-    /// <summary>
-    /// Gets the node count.
-    /// </summary>
-    /// <param name="tag">The optional tag filter.</param>
-    /// <returns>Count.</returns>
-    public int GetNodeCount(string? tag = null)
-    {
-        if (_nodes.Count == 1) return 1;
-
-        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag) + 1;
-    }
-
-    /// <summary>
-    /// Gets the link count.
-    /// </summary>
-    /// <param name="tag">The tag filter.</param>
-    /// <returns>Count.</returns>
-    public int GetLinkCount(string? tag = null)
-    {
-        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag);
-    }
-
-    /// <summary>
-    /// Gets the a list of unique tags from all the links in this chain.
-    /// </summary>
-    /// <returns>List, sorted alphabetically.</returns>
-    public IList<string> GetDistinctTags()
-    {
-        return [.. _links.Select(l => l.Tag).Distinct().OrderBy(t => t)];
-    }
-
+    #region ID
     /// <summary>
     /// Resets the identifier to the specified seed value. This means that the
     /// next node added to this chain will have an identifier equal to the seed
@@ -98,6 +68,39 @@ public class Chain<T>
             return Interlocked.Increment(ref _maxId);
         }
     }
+    #endregion
+
+    #region Navigation
+    /// <summary>
+    /// Gets the node count.
+    /// </summary>
+    /// <param name="tag">The optional tag filter.</param>
+    /// <returns>Count.</returns>
+    public int GetNodeCount(string? tag = null)
+    {
+        if (_nodes.Count == 1) return 1;
+
+        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag) + 1;
+    }
+
+    /// <summary>
+    /// Gets the link count.
+    /// </summary>
+    /// <param name="tag">The tag filter.</param>
+    /// <returns>Count.</returns>
+    public int GetLinkCount(string? tag = null)
+    {
+        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag);
+    }
+
+    /// <summary>
+    /// Gets the a list of unique tags from all the links in this chain.
+    /// </summary>
+    /// <returns>List, sorted alphabetically.</returns>
+    public IList<string> GetDistinctTags()
+    {
+        return [.. _links.Select(l => l.Tag).Distinct().OrderBy(t => t)];
+    }
 
     /// <summary>
     /// Gets the node with the specified ID.
@@ -113,6 +116,7 @@ public class Chain<T>
     /// <param name="node">The node.</param>
     /// <param name="tag">The tag.</param>
     /// <returns><c>true</c> if in version; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">node or tag</exception>
     public bool IsNodeInVersion(ChainNode<T> node, string tag)
     {
         ArgumentNullException.ThrowIfNull(node);
@@ -127,8 +131,11 @@ public class Chain<T>
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <returns>Node or null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public ChainNode<T>? GetFirstNode(string tag)
     {
+        ArgumentNullException.ThrowIfNull(tag);
+
         if (_nodes.Count == 0) return null;
         if (_nodes.Count == 1) return _nodes[0];
 
@@ -144,8 +151,11 @@ public class Chain<T>
     /// </summary>
     /// <param name="tag">The tag.</param>
     /// <returns>Node or null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public ChainNode<T>? GetLastNode(string tag)
     {
+        ArgumentNullException.ThrowIfNull(tag);
+
         if (_nodes.Count == 0) return null;
         if (_nodes.Count == 1) return _nodes[0];
 
@@ -157,11 +167,88 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Gets the next node from <paramref name="node"/>.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="node">The node.</param>
+    /// <returns>Node or null.</returns>
+    public ChainNode<T>? GetNextNode(string tag, ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+
+        return _links.Find(l => l.Tag == tag && l.Source == node)?.Target;
+    }
+
+    /// <summary>
+    /// Gets the previous node from <paramref name="node"/>.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="node">The node.</param>
+    /// <returns>Node or null.</returns>
+    public ChainNode<T>? GetPreviousNode(string tag, ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+
+        return _links.Find(l => l.Tag == tag && l.Target == node)?.Source;
+    }
+
+    /// <summary>
+    /// Determines whether <paramref name="node"/> is at any distance before
+    /// <paramref name="refNode"/> in the version defined by
+    /// <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The versopm tag.</param>
+    /// <param name="node">The node.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <returns><c>true</c> if before; otherwise, <c>false</c>.</returns>
+    public bool IsNodeBefore(string tag, ChainNode<T> node, ChainNode<T> refNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(refNode);
+
+        ChainNode<T>? n = node;
+        while (n != null)
+        {
+            if (n == refNode) return true;
+            n = GetNextNode(tag, n);
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Determines whether <paramref name="node"/> is at any distance after
+    /// <paramref name="refNode"/> in the version defined by
+    /// <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="node">The node.</param>
+    /// <param name="refNode">The other node.</param>
+    /// <returns><c>true</c> if after; otherwise, <c>false</c>.</returns>
+    public bool IsNodeAfter(string tag, ChainNode<T> node, ChainNode<T> refNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(refNode);
+
+        ChainNode<T>? n = node;
+        while (n != null)
+        {
+            if (n == refNode) return true;
+            n = GetPreviousNode(tag, n);
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Gets the left link of the specified node.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
+    /// <exception cref="ArgumentNullException">tag or node</exception>
     public ChainLink<T>? GetNodeLeftLink(string tag, ChainNode<T>? node)
     {
         if (node == null || !HasVersion(tag)) return null;
@@ -175,8 +262,11 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
     {
+        ArgumentNullException.ThrowIfNull(tag);
+
         if (link == null || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Target == link.Source);
@@ -188,8 +278,11 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public ChainLink<T>? GetNodeRightLink(string tag, ChainNode<T>? node)
     {
+        ArgumentNullException.ThrowIfNull(tag);
+
         if (node == null || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Source == node);
@@ -201,8 +294,11 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
     {
+        ArgumentNullException.ThrowIfNull(tag);
+
         if (link == null || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Source == link.Target);
@@ -213,6 +309,7 @@ public class Chain<T>
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <returns>The nodes.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public IList<ChainNode<T>> GetTagNodes(string tag)
     {
         ArgumentNullException.ThrowIfNull(tag);
@@ -235,6 +332,7 @@ public class Chain<T>
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <returns>The nodes.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
     public IEnumerable<ChainNode<T>> EnumerateTagNodes(string tag)
     {
         ArgumentNullException.ThrowIfNull(tag);
@@ -255,30 +353,9 @@ public class Chain<T>
             }
         }
     }
+    #endregion
 
-    /// <summary>
-    /// Builds the links which connect all the received nodes in their order.
-    /// </summary>
-    /// <param name="newTag">The new version tag to assign to the created links.
-    /// </param>
-    /// <param name="nodes">The nodes.</param>
-    /// <returns>The links connecting all the nodes.</returns>
-    public static IList<ChainLink<T>> BuildLinksFrom(string newTag,
-        IList<ChainNode<T>> nodes)
-    {
-        ArgumentNullException.ThrowIfNull(newTag);
-        ArgumentNullException.ThrowIfNull(nodes);
-
-        if (nodes.Count < 2) return [];
-
-        List<ChainLink<T>> links = [];
-        for (int i = 0; i < nodes.Count - 1; i++)
-        {
-            links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
-        }
-        return links;
-    }
-
+    #region Delete
     /// <summary>
     /// Deletes the specified node unless it's not connected.
     /// </summary>
@@ -383,7 +460,9 @@ public class Chain<T>
 
         return true;
     }
+    #endregion
 
+    #region Insert
     /// <summary>
     /// Supplies the identifier to the specified node if this does not have one.
     /// </summary>
@@ -580,7 +659,9 @@ public class Chain<T>
 
         return true;
     }
+    #endregion
 
+    #region Append
     /// <summary>
     /// Appends <paramref name="newNode"/> at the end of this chain.
     /// </summary>
@@ -641,7 +722,87 @@ public class Chain<T>
         _links.AddRange(BuildLinksFrom(newTag, nodes));
         _nodes.AddRange(nodes);
     }
+    #endregion
 
+    /// <summary>
+    /// Swaps the specified ranges of nodes.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="first1Node">The first node of range 1.</param>
+    /// <param name="last1Node">The last node of range 1.</param>
+    /// <param name="first2Node">The first node of range 2.</param>
+    /// <param name="last2Node">The last node of range 2.</param>
+    /// <returns>
+    /// True if swapped.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">The two sequences to
+    /// swap overlap.</exception>
+    /// <exception cref="ArgumentNullException">tag or newTag or first1Node
+    /// or last1Node or first2Node or last2Node</exception>
+    public bool SwapRanges(string tag, string newTag,
+        ChainNode<T> first1Node, ChainNode<T> last1Node,
+        ChainNode<T> first2Node, ChainNode<T> last2Node)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(first1Node);
+        ArgumentNullException.ThrowIfNull(first2Node);
+        ArgumentNullException.ThrowIfNull(last1Node);
+        ArgumentNullException.ThrowIfNull(last2Node);
+
+        // nope the two sequences are equal
+        if (first1Node == first2Node && last1Node == last2Node) return false;
+
+        // error if the two sequences overlap
+        if (IsNodeAfter(tag, last1Node, first2Node) ||
+            IsNodeAfter(tag, last2Node, first1Node))
+        {
+            throw new InvalidOperationException("The two sequences to swap overlap.");
+        }
+
+        // if sequence 2 is before sequence 1, swap them
+        if (IsNodeAfter(tag, last1Node, first2Node))
+        {
+            (first1Node, last1Node, first2Node, last2Node) =
+                (first2Node, last2Node, first1Node, last1Node);
+        }
+
+        // get left links of head nodes
+        ChainLink<T>? first1Link = GetNodeLeftLink(tag, first1Node);
+        ChainLink<T>? first2Link = GetNodeLeftLink(tag, first2Node);
+
+        // nope if head nodes are not connected to any other node
+        if (first1Link == null && first2Link == null) return false;
+
+        // copy into new tag except the head links
+        AddVersion(tag, newTag, first1Link, first2Link);
+
+        // are 1 and 2 adjacent (left of first2Node = last of 1)?
+        if (first2Link?.Source == last1Node)
+        {
+            // add link between left-of-1-head and 2-head
+            if (first1Link != null)
+                _links.Add(new ChainLink<T>(newTag, first1Link.Source, first2Node));
+
+            // add link between 2-tail and 1-head
+            _links.Add(new ChainLink<T>(newTag, last2Node, first1Node));
+        }
+        // else non-adjacent swap
+        else
+        {
+            // add link between left-of-1-head and left-of-2-head
+            if (first1Link != null && first2Link != null)
+                _links.Add(new ChainLink<T>(newTag, first1Link.Source, first2Node));
+
+            // add link between left-of-b-head and a-head
+            _links.Add(new ChainLink<T>(newTag, first2Link?.Source, first1Node));
+        }
+
+        return true;
+    }
+
+    #region Version
     /// <summary>
     /// Adds the new version <paramref name="newTag"/> to the chain copying it
     /// from the version with the specified <paramref name="tag"/>.
@@ -652,7 +813,7 @@ public class Chain<T>
     /// copy.</param>
     /// <exception cref="ArgumentNullException">tag or newTag</exception>
     public void AddVersion(string tag, string newTag,
-        params ChainLink<T>[] excludedLinks)
+        params ChainLink<T>?[] excludedLinks)
     {
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
@@ -695,6 +856,7 @@ public class Chain<T>
     {
         return _links.Exists(l => l.Tag == tag);
     }
+    #endregion
 
     /// <summary>
     /// Clears this chain removing all the versions.
@@ -703,6 +865,30 @@ public class Chain<T>
     {
         _nodes.Clear();
         _links.Clear();
+    }
+
+    /// <summary>
+    /// Builds the links which connect all the received nodes in their order.
+    /// </summary>
+    /// <param name="newTag">The new version tag to assign to the created links.
+    /// </param>
+    /// <param name="nodes">The nodes.</param>
+    /// <returns>The links connecting all the nodes.</returns>
+    /// <exception cref="ArgumentNullException">newTag or nodes</exception>
+    public static IList<ChainLink<T>> BuildLinksFrom(string newTag,
+        IList<ChainNode<T>> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        if (nodes.Count < 2) return [];
+
+        List<ChainLink<T>> links = [];
+        for (int i = 0; i < nodes.Count - 1; i++)
+        {
+            links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
+        }
+        return links;
     }
 
     /// <summary>
