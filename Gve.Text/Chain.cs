@@ -452,11 +452,65 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Adds the new version <paramref name="newTag"/> to the chain copying it
+    /// from the version with the specified <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The source tag.</param>
+    /// <param name="newTag">The new tag.</param>
+    /// <exception cref="ArgumentNullException">tag or newTag</exception>
+    /// <exception cref="InvalidOperationException">The new tag already exists.
+    /// </exception>
+    public void AddVersion(string tag, string newTag)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+
+        // error if any link has the new tag
+        if (_links.Any(l => l.Tag == newTag))
+            throw new InvalidOperationException("The new tag already exists.");
+
+        // clone all the links of the specified tag into newTag
+        _links.AddRange(_links.Where(l => l.Tag == tag)
+            .Select(l => new ChainLink<T>(newTag, l.Source, l.Target)));
+    }
+
+    /// <summary>
+    /// Removes the version with the specified <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    public void RemoveVersion(string tag)
+    {
+        _links.RemoveAll(l => l.Tag == tag);
+    }
+
+    /// <summary>
+    /// Determines whether this chain contains the specified version.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>
+    ///   <c>true</c> if version is present; otherwise, <c>false</c>.
+    /// </returns>
+    public bool HasVersion(string tag)
+    {
+        return _links.Any(l => l.Tag == tag);
+    }
+
+    /// <summary>
+    /// Clears this chain removing all the versions.
+    /// </summary>
+    public void Clear()
+    {
+        _nodes.Clear();
+        _links.Clear();
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>string</returns>
     public override string ToString()
     {
-        return $"N{_nodes.Count}";
+        return $"N={_nodes.Count} L={_links.Count} " +
+            $"V: {string.Join(", ", GetDistinctTags())}";
     }
 }
