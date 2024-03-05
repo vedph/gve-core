@@ -308,11 +308,17 @@ public class Chain<T>
         // nope if node is not connected to any other node
         if (left == null && right == null) return false;
 
-        // [A] A:B [B] unless [B] is the first node
+        // first node: [A] A:B [B]
         if (left == null)
         {
-            // first node: [Z] Z:B [B] => [B] (old: Z:B)
             AddVersion(tag, newTag, right!);
+            return true;
+        }
+
+        // last node: B in [A] A:B [B]
+        if (right == null)
+        {
+            AddVersion(tag, newTag, left!);
             return true;
         }
 
