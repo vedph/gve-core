@@ -18,12 +18,12 @@ public class Chain<T>
     /// <summary>
     /// Gets or sets the nodes in this chain.
     /// </summary>
-    protected List<ChainNode<T>> Nodes { get; set; } = [];
+    protected List<ChainNode<T>> _nodes = [];
 
     /// <summary>
     /// Gets or sets the links connecting nodes in this chain.
     /// </summary>
-    protected List<ChainLink<T>> Links { get; set; } = [];
+    protected List<ChainLink<T>> _links = [];
 
     /// <summary>
     /// Gets the a list of unique tags from all the links in this chain.
@@ -31,7 +31,7 @@ public class Chain<T>
     /// <returns>List, sorted alphabetically.</returns>
     public IList<string> GetDistinctTags()
     {
-        return [.. Links.Select(l => l.Tag).Distinct().OrderBy(t => t)];
+        return [.. _links.Select(l => l.Tag).Distinct().OrderBy(t => t)];
     }
 
     /// <summary>
@@ -41,11 +41,11 @@ public class Chain<T>
     /// <returns>Node or null.</returns>
     public ChainNode<T>? GetFirstNode(string tag)
     {
-        if (Nodes.Count == 0) return null;
-        if (Nodes.Count == 1) return Nodes[0];
+        if (_nodes.Count == 0) return null;
+        if (_nodes.Count == 1) return _nodes[0];
 
         // find the node not being the target of any link for the specified tag
-        return Nodes.Find(n => !Links.Any(l => l.Tag == tag && l.Target == n));
+        return _nodes.Find(n => !_links.Any(l => l.Tag == tag && l.Target == n));
     }
 
     /// <summary>
@@ -55,11 +55,11 @@ public class Chain<T>
     /// <returns>Node or null.</returns>
     public ChainNode<T>? GetLastNode(string tag)
     {
-        if (Nodes.Count == 0) return null;
-        if (Nodes.Count == 1) return Nodes[0];
+        if (_nodes.Count == 0) return null;
+        if (_nodes.Count == 1) return _nodes[0];
 
         // find the node not being the source of any link for the specified tag
-        return Nodes.Find(n => !Links.Any(l => l.Tag == tag && l.Source == n));
+        return _nodes.Find(n => !_links.Any(l => l.Tag == tag && l.Source == n));
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class Chain<T>
     public ChainLink<T>? GetLeftLink(string tag, ChainNode<T>? node)
     {
         if (node == null) return null;
-        return Links.Find(l => l.Tag == tag && l.Target == node);
+        return _links.Find(l => l.Tag == tag && l.Target == node);
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class Chain<T>
     public ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
     {
         if (link == null) return null;
-        return Links.Find(l => l.Tag == tag && l.Target == link.Source);
+        return _links.Find(l => l.Tag == tag && l.Target == link.Source);
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public class Chain<T>
     public ChainLink<T>? GetRightLink(string tag, ChainNode<T>? node)
     {
         if (node == null) return null;
-        return Links.Find(l => l.Tag == tag && l.Source == node);
+        return _links.Find(l => l.Tag == tag && l.Source == node);
     }
 
     /// <summary>
@@ -107,7 +107,29 @@ public class Chain<T>
     public ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
     {
         if (link == null) return null;
-        return Links.Find(l => l.Tag == tag && l.Source == link.Target);
+        return _links.Find(l => l.Tag == tag && l.Source == link.Target);
+    }
+
+    /// <summary>
+    /// Gets the nodes for the specified version tag, in their order.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>The nodes.</returns>
+    public IList<ChainNode<T>> GetTagNodes(string tag)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        ChainNode<T>? first = GetFirstNode(tag);
+        if (first == null) return [];
+
+        List<ChainNode<T>> nodes = [first];
+        ChainLink<T>? link = GetRightLink(tag, first);
+        while (link?.Target != null)
+        {
+            nodes.Add(link.Target);
+            link = GetRightLink(tag, link);
+        }
+        return nodes;
     }
 
     /// <summary>
@@ -126,9 +148,9 @@ public class Chain<T>
         if (nodes.Count < 2) return [];
         for (int i = 0; i < nodes.Count - 1; i++)
         {
-            Links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
+            _links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
         }
-        return Links;
+        return _links;
     }
 
     /// <summary>
@@ -151,20 +173,20 @@ public class Chain<T>
         // [A] A:B* [B] (old: A:Z, Z:B)
 
         // the left link is A:Z (target=Z) and the right link is Z:B (source=Z)
-        ChainLink<T>? left = Links.Find(l => l.Target == node);
-        ChainLink<T>? right = Links.Find(l => l.Source == node);
+        ChainLink<T>? left = _links.Find(l => l.Target == node);
+        ChainLink<T>? right = _links.Find(l => l.Source == node);
 
         // nope if node is not connected to any other node
         if (left == null && right == null) return false;
 
         // [A] A:B [B]
-        Links.Add(new ChainLink<T>(newTag, left?.Source, right?.Target));
+        _links.Add(new ChainLink<T>(newTag, left?.Source, right?.Target));
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
         {
-            if (left != null) Links.Remove(left);
-            if (right != null) Links.Remove(right);
+            if (left != null) _links.Remove(left);
+            if (right != null) _links.Remove(right);
         }
 
         return true;
@@ -193,14 +215,14 @@ public class Chain<T>
         // [A] A:X [X] X:Y [Y] Y:B [B]
         // =>
         // [A] A:B* [B] (old: A:X, X:Y, Y:B)
-        ChainLink<T>? left = Links.Find(l => l.Target == firstNode);
-        ChainLink<T>? right = Links.Find(l => l.Source == lastNode);
+        ChainLink<T>? left = _links.Find(l => l.Target == firstNode);
+        ChainLink<T>? right = _links.Find(l => l.Source == lastNode);
 
         // nope if nodes are not connected to any other node
         if (left == null || right == null) return false;
 
         // [A] A:B [B]
-        Links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
+        _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
@@ -209,10 +231,10 @@ public class Chain<T>
             ChainLink<T>? l = right;
             while (l != null && l.Source != firstNode)
             {
-                Links.Remove(l);
+                _links.Remove(l);
                 l = GetLeftLink(tag, l);
             }
-            Links.Remove(left);
+            _links.Remove(left);
         }
 
         return true;
@@ -241,104 +263,20 @@ public class Chain<T>
         // [A] A:C [C] C:D [D]
         // =>
         // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = Links.Find(l => l.Target == refNode);
+        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
 
         // [A] A:B* [B]
         if (link.Source != null)
-            Links.Add(new ChainLink<T>(newTag, link.Source, newNode));
+            _links.Add(new ChainLink<T>(newTag, link.Source, newNode));
 
         // [B] B:C* [C]
-        Links.Add(new ChainLink<T>(newTag, newNode, refNode));
+        _links.Add(new ChainLink<T>(newTag, newNode, refNode));
 
         // if newTag is the same as tag, delete the old link
-        if (tag == newTag) Links.Remove(link);
-
-        return true;
-    }
-
-    /// <summary>
-    /// Inserts the specified range of nodes before <paramref name="refNode"/>.
-    /// </summary>
-    /// <param name="tag">The current version tag.</param>
-    /// <param name="newTag">The new version tag.</param>
-    /// <param name="refNode">The reference node.</param>
-    /// <param name="newNodes">The new nodes.</param>
-    /// <returns>True if inserted.</returns>
-    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
-    /// </exception>
-    public bool InsertRangeBefore(string tag, string newTag, ChainNode<T> refNode,
-        IList<ChainNode<T>> newNodes)
-    {
-        ArgumentNullException.ThrowIfNull(tag);
-        ArgumentNullException.ThrowIfNull(newTag);
-        ArgumentNullException.ThrowIfNull(refNode);
-        ArgumentNullException.ThrowIfNull(newNodes);
-
-        ChainLink<T>? link = Links.Find(l => l.Target == refNode);
-        if (link == null) return false;
-
-        // add links between new nodes
-        Links.AddRange(BuildLinksFrom(newTag, newNodes));
-        // add nodes
-        Nodes.AddRange(newNodes);
-
-        // insert [B] B:C [C] before [D]:
-        // [A] A:D [D] D:E [E]
-        // =>
-        // [A] A:B* ([B]* B:C* [C]*) C:D* [D] D:E [E] (old: A:D)
-
-        // add A:B
-        Links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
-        // add C:D
-        Links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
-
-        // if newTag is the same as tag, delete the old link
-        if (tag == newTag) Links.Remove(link);
-
-        return true;
-    }
-
-    /// <summary>
-    /// Inserts the specified range of nodes after <paramref name="refNode"/>.
-    /// </summary>
-    /// <param name="tag">The current version tag.</param>
-    /// <param name="newTag">The new version tag.</param>
-    /// <param name="refNode">The reference node.</param>
-    /// <param name="newNodes">The new nodes.</param>
-    /// <returns>True if inserted.</returns>
-    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
-    /// </exception>
-    public bool InsertRangeAfter(string tag, string newTag, ChainNode<T> refNode,
-        IList<ChainNode<T>> newNodes)
-    {
-        ArgumentNullException.ThrowIfNull(tag);
-        ArgumentNullException.ThrowIfNull(newTag);
-        ArgumentNullException.ThrowIfNull(refNode);
-        ArgumentNullException.ThrowIfNull(newNodes);
-
-        ChainLink<T>? link = Links.Find(l => l.Target == refNode);
-        if (link == null) return false;
-
-        // add links between new nodes
-        Links.AddRange(BuildLinksFrom(newTag, newNodes));
-        // add nodes
-        Nodes.AddRange(newNodes);
-
-        // insert [B] B:C [C] after [A]:
-        // [A] A:D [D] D:E [E]
-        // =>
-        // [A] A:B* B:C* ([C]* C:D* [D]*) D:E [E] (old: A:D)
-
-        // add B:C
-        Links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
-        // add C:D
-        Links.Add(new ChainLink<T>(newTag, newNodes[^1], link.Target));
-
-        // if newTag is the same as tag, delete the old link
-        if (tag == newTag) Links.Remove(link);
+        if (tag == newTag) _links.Remove(link);
 
         return true;
     }
@@ -366,20 +304,104 @@ public class Chain<T>
         // [A] A:C [C] C:D [D]
         // =>
         // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = Links.Find(l => l.Source == refNode);
+        ChainLink<T>? link = _links.Find(l => l.Source == refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
 
         // [A] A:B* [B]
-        Links.Add(new ChainLink<T>(newTag, refNode, newNode));
+        _links.Add(new ChainLink<T>(newTag, refNode, newNode));
 
         // [B] B:C* [C]
         if (link.Target != null)
-            Links.Add(new ChainLink<T>(newTag, newNode, link.Target));
+            _links.Add(new ChainLink<T>(newTag, newNode, link.Target));
 
         // if newTag is the same as tag, delete the old link
-        if (tag == newTag) Links.Remove(link);
+        if (tag == newTag) _links.Remove(link);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Inserts the specified range of nodes before <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <param name="newNodes">The new nodes.</param>
+    /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
+    public bool InsertRangeBefore(string tag, string newTag, ChainNode<T> refNode,
+        IList<ChainNode<T>> newNodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(refNode);
+        ArgumentNullException.ThrowIfNull(newNodes);
+
+        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
+        if (link == null) return false;
+
+        // add links between new nodes
+        _links.AddRange(BuildLinksFrom(newTag, newNodes));
+        // add nodes
+        _nodes.AddRange(newNodes);
+
+        // insert [B] B:C [C] before [D]:
+        // [A] A:D [D] D:E [E]
+        // =>
+        // [A] A:B* ([B]* B:C* [C]*) C:D* [D] D:E [E] (old: A:D)
+
+        // add A:B
+        _links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
+        // add C:D
+        _links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
+
+        // if newTag is the same as tag, delete the old link
+        if (tag == newTag) _links.Remove(link);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Inserts the specified range of nodes after <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <param name="newNodes">The new nodes.</param>
+    /// <returns>True if inserted.</returns>
+    /// <exception cref="ArgumentNullException">tag, newTag, refNode, newNodes
+    /// </exception>
+    public bool InsertRangeAfter(string tag, string newTag, ChainNode<T> refNode,
+        IList<ChainNode<T>> newNodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(refNode);
+        ArgumentNullException.ThrowIfNull(newNodes);
+
+        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
+        if (link == null) return false;
+
+        // add links between new nodes
+        _links.AddRange(BuildLinksFrom(newTag, newNodes));
+        // add nodes
+        _nodes.AddRange(newNodes);
+
+        // insert [B] B:C [C] after [A]:
+        // [A] A:D [D] D:E [E]
+        // =>
+        // [A] A:B* B:C* ([C]* C:D* [D]*) D:E [E] (old: A:D)
+
+        // add B:C
+        _links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
+        // add C:D
+        _links.Add(new ChainLink<T>(newTag, newNodes[^1], link.Target));
+
+        // if newTag is the same as tag, delete the old link
+        if (tag == newTag) _links.Remove(link);
 
         return true;
     }
@@ -404,9 +426,9 @@ public class Chain<T>
 
         // append after last node
         ChainNode<T>? last = GetLastNode(tag);
-        if (last != null) Links.Add(new ChainLink<T>(newTag, last, newNode));
+        if (last != null) _links.Add(new ChainLink<T>(newTag, last, newNode));
 
-        Nodes.Add(newNode);
+        _nodes.Add(newNode);
     }
 
     /// <summary>
@@ -415,7 +437,7 @@ public class Chain<T>
     /// <param name="tag">The current version tag.</param>
     /// <param name="newTag">The new version tag.</param>
     /// <param name="nodes">The new nodes.</param>
-    public void AppendNodes(string tag, string newTag, IList<ChainNode<T>> nodes)
+    public void AppendRange(string tag, string newTag, IList<ChainNode<T>> nodes)
     {
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
@@ -423,10 +445,10 @@ public class Chain<T>
 
         // append after last node
         ChainNode<T>? last = GetLastNode(tag);
-        if (last != null) Links.Add(new ChainLink<T>(newTag, last, nodes[0]));
+        if (last != null) _links.Add(new ChainLink<T>(newTag, last, nodes[0]));
 
-        Links.AddRange(BuildLinksFrom(newTag, nodes));
-        Nodes.AddRange(nodes);
+        _links.AddRange(BuildLinksFrom(newTag, nodes));
+        _nodes.AddRange(nodes);
     }
 
     /// <summary>
@@ -435,6 +457,6 @@ public class Chain<T>
     /// <returns>string</returns>
     public override string ToString()
     {
-        return $"N{Nodes.Count}";
+        return $"N{_nodes.Count}";
     }
 }
