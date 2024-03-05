@@ -35,6 +35,13 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Gets the maximum ordinal among the nodes of all the versions in this
+    /// chain.
+    /// </summary>
+    /// <returns>Max ordinal number.</returns>
+    public int GetMaxOrdinal() => _nodes.Max(n => n.Ordinal);
+
+    /// <summary>
     /// Gets the first node for the specified version tag.
     /// </summary>
     /// <param name="tag">The version tag.</param>
@@ -45,7 +52,7 @@ public class Chain<T>
         if (_nodes.Count == 1) return _nodes[0];
 
         // find the node not being the target of any link for the specified tag
-        return _nodes.Find(n => !_links.Any(l => l.Tag == tag && l.Target == n));
+        return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Target == n));
     }
 
     /// <summary>
@@ -59,7 +66,7 @@ public class Chain<T>
         if (_nodes.Count == 1) return _nodes[0];
 
         // find the node not being the source of any link for the specified tag
-        return _nodes.Find(n => !_links.Any(l => l.Tag == tag && l.Source == n));
+        return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Source == n));
     }
 
     /// <summary>
@@ -476,12 +483,13 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newTag);
 
         // error if any link has the new tag
-        if (_links.Any(l => l.Tag == newTag))
+        if (_links.Exists(l => l.Tag == newTag))
             throw new InvalidOperationException("The new tag already exists.");
 
         // clone all the links of the specified tag into newTag
         _links.AddRange(_links.Where(l => l.Tag == tag)
-            .Select(l => new ChainLink<T>(newTag, l.Source, l.Target)));
+            .Select(l => new ChainLink<T>(newTag, l.Source, l.Target))
+            .ToList());
     }
 
     /// <summary>
@@ -502,7 +510,7 @@ public class Chain<T>
     /// </returns>
     public bool HasVersion(string tag)
     {
-        return _links.Any(l => l.Tag == tag);
+        return _links.Exists(l => l.Tag == tag);
     }
 
     /// <summary>
