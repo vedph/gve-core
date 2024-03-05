@@ -81,7 +81,7 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    public ChainLink<T>? GetLeftLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetNodeLeftLink(string tag, ChainNode<T>? node)
     {
         if (node == null || !HasVersion(tag)) return null;
 
@@ -107,7 +107,7 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    public ChainLink<T>? GetRightLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetNodeRightLink(string tag, ChainNode<T>? node)
     {
         if (node == null || !HasVersion(tag)) return null;
 
@@ -140,7 +140,7 @@ public class Chain<T>
         if (first == null) return [];
 
         List<ChainNode<T>> nodes = [first];
-        ChainLink<T>? link = GetRightLink(tag, first);
+        ChainLink<T>? link = GetNodeRightLink(tag, first);
         while (link?.Target != null)
         {
             nodes.Add(link.Target);

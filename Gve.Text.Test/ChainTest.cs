@@ -158,6 +158,49 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region GetNodeLeftLink
+    [Fact]
+    public void GetNodeLeftLink_NullNode()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+
+        ChainLink<char>? link = chain.GetNodeLeftLink("v0", null);
+
+        Assert.Null(link);
+    }
+
+    [Fact]
+    public void GetNodeLeftLink_NotNullNode()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> nodeA = new("1", 1, "A", 'A');
+        ChainNode<char> nodeB = new("2", 2, "B", 'B');
+        chain.Append("", "v0", nodeA);
+        chain.Append("v0", "v0", nodeB);
+
+        ChainLink<char>? link = chain.GetNodeLeftLink("v0", nodeB);
+
+        Assert.NotNull(link);
+        Assert.Equal(nodeA, link.Source);
+        Assert.Equal(nodeB, link.Target);
+    }
+
+    [Fact]
+    public void GetNodeLeftLink_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> nodeA = new("1", 1, "A", 'A');
+        ChainNode<char> nodeB = new("2", 2, "B", 'B');
+        chain.Append("", "v0", nodeA);
+        chain.Append("v0", "v0", nodeB);
+
+        ChainLink<char>? link = chain.GetNodeLeftLink("v1", nodeB);
+
+        Assert.Null(link);
+    }
+    #endregion
+
     #region Append
     [Fact]
     public void Append_Empty()
