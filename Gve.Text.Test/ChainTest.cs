@@ -268,6 +268,110 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region GetNodeRightLink
+    [Fact]
+    public void GetNodeRightLink_NullNode_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeRightLink("v0", null);
+
+        Assert.Null(link);
+    }
+
+    [Fact]
+    public void GetNodeRightLink_LastNode_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.Null(chain.GetNodeRightLink("v0", nodes[^1]));
+    }
+
+    [Fact]
+    public void GetNodeRightLink_NotNullNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeRightLink("v0", nodes[1]);
+
+        Assert.NotNull(link);
+        Assert.Equal(nodes[1], link.Source);
+        Assert.Equal(nodes[2], link.Target);
+    }
+
+    [Fact]
+    public void GetNodeRightLink_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeRightLink("v1", nodes[1]);
+
+        Assert.Null(link);
+    }
+    #endregion
+
+    #region GetRightLink
+    [Fact]
+    public void GetRightLink_NullNode_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetRightLink("v0", null);
+
+        Assert.Null(link);
+    }
+
+    [Fact]
+    public void GetRightLink_LastNode_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetRightLink("v0",
+                       chain.GetNodeRightLink("v0", nodes[^1]));
+
+        Assert.Null(link);
+    }
+
+    [Fact]
+    public void GetRightLink_NonNullNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+        ChainLink<char>? refLink = chain.GetNodeLeftLink("v0", nodes[1]);
+
+        ChainLink<char>? link = chain.GetRightLink("v0", refLink);
+
+        Assert.NotNull(link);
+        Assert.Equal(nodes[1], link.Source);
+        Assert.Equal(nodes[2], link.Target);
+    }
+
+    [Fact]
+    public void GetRightLink_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        ChainLink<char>? refLink = chain.GetNodeLeftLink("v0", nodes[1]);
+
+        ChainLink<char>? link = chain.GetRightLink("v1", refLink);
+
+        Assert.Null(link);
+    }
+    #endregion
+
     #region Append
     [Fact]
     public void Append_Empty()
