@@ -436,6 +436,61 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region Delete
+    [Fact]
+    public void Delete_NodeNotConnected_False()
+    {
+        Chain<char> chain = new();
+
+        Assert.False(chain.Delete("", "v1", new('A')));
+    }
+
+    [Fact]
+    public void Delete_InnerNode_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.Delete("v1", "v2", nodes[1]));
+
+        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
+        Assert.Equal(2, nodes2.Count);
+        Assert.Equal('A', nodes2[0].Data);
+        Assert.Equal('C', nodes2[1].Data);
+    }
+
+    [Fact]
+    public void Delete_FirstNode_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.Delete("v1", "v2", nodes[0]));
+
+        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
+        Assert.Equal(2, nodes2.Count);
+        Assert.Equal('B', nodes2[0].Data);
+        Assert.Equal('C', nodes2[1].Data);
+    }
+
+    [Fact]
+    public void Delete_LastNode_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.Delete("v1", "v2", nodes[2]));
+
+        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
+        Assert.Equal(2, nodes2.Count);
+        Assert.Equal('A', nodes2[0].Data);
+        Assert.Equal('B', nodes2[1].Data);
+    }
+    #endregion
+
     #region Append
     [Fact]
     public void Append_Empty()

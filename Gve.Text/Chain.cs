@@ -17,7 +17,7 @@ namespace Gve.Text;
 public class Chain<T>
 {
     private readonly object _locker = new();
-    private int _maxId = 0;
+    private int _maxId;
 
     /// <summary>
     /// Gets or sets the nodes in this chain.
@@ -28,6 +28,28 @@ public class Chain<T>
     /// Gets or sets the links connecting nodes in this chain.
     /// </summary>
     protected List<ChainLink<T>> _links = [];
+
+    /// <summary>
+    /// Gets the node count.
+    /// </summary>
+    /// <param name="tag">The optional tag filter.</param>
+    /// <returns>Count.</returns>
+    public int GetNodeCount(string? tag = null)
+    {
+        if (_nodes.Count == 1) return 1;
+
+        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag) + 1;
+    }
+
+    /// <summary>
+    /// Gets the link count.
+    /// </summary>
+    /// <param name="tag">The tag filter.</param>
+    /// <returns>Count.</returns>
+    public int GetLinkCount(string? tag = null)
+    {
+        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag);
+    }
 
     /// <summary>
     /// Gets the a list of unique tags from all the links in this chain.
@@ -76,6 +98,13 @@ public class Chain<T>
             return Interlocked.Increment(ref _maxId);
         }
     }
+
+    /// <summary>
+    /// Gets the node with the specified ID.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns>Node or null if not found.</returns>
+    public ChainNode<T>? GetNode(int id) => _nodes.Find(n => n.Id == id);
 
     /// <summary>
     /// Gets the first node for the specified version tag.
@@ -192,15 +221,20 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        ChainNode<T>? first = GetFirstNode(tag);
-        if (first == null) yield break;
+        return InnerEnumerate();
 
-        yield return first;
-        ChainLink<T>? link = GetNodeRightLink(tag, first);
-        while (link?.Target != null)
+        IEnumerable<ChainNode<T>> InnerEnumerate()
         {
-            yield return link.Target;
-            link = GetRightLink(tag, link);
+            ChainNode<T>? first = GetFirstNode(tag);
+            if (first == null) yield break;
+
+            yield return first;
+            ChainLink<T>? link = GetNodeRightLink(tag, first);
+            while (link?.Target != null)
+            {
+                yield return link.Target;
+                link = GetRightLink(tag, link);
+            }
         }
     }
 
@@ -230,6 +264,9 @@ public class Chain<T>
     /// <summary>
     /// Deletes the specified node unless it's not connected.
     /// </summary>
+    /// <remarks>Deleting a node implies adding new links which short-circuit
+    /// the connection between its left and right nodes. If current and new
+    /// tags are equal, the old links will be removed.</remarks>
     /// <param name="tag">The current version tag.</param>
     /// <param name="newTag">The new version tag.</param>
     /// <param name="node">The node to delete.</param>
@@ -247,19 +284,26 @@ public class Chain<T>
         // [A] A:B* [B] (old: A:Z, Z:B)
 
         // the left link is A:Z (target=Z) and the right link is Z:B (source=Z)
-        ChainLink<T>? left = _links.Find(l => l.Target == node);
-        ChainLink<T>? right = _links.Find(l => l.Source == node);
+        ChainLink<T>? left = _links.Find(l => l.Tag == tag && l.Target == node);
+        ChainLink<T>? right = _links.Find(l => l.Tag == tag && l.Source == node);
 
         // nope if node is not connected to any other node
         if (left == null && right == null) return false;
 
-        // [A] A:B [B]
-        _links.Add(new ChainLink<T>(newTag, left?.Source, right?.Target));
+        // [A] A:B [B] unless [B] is the first node
+        if (left == null)
+        {
+            // first node: [Z] Z:B [B] => [B] (old: Z:B)
+            AddVersion(tag, newTag, right!);
+            return true;
+        }
+
+        _links.Add(new ChainLink<T>(newTag, left.Source, right?.Target));
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
         {
-            if (left != null) _links.Remove(left);
+            _links.Remove(left);
             if (right != null) _links.Remove(right);
         }
 
@@ -289,8 +333,10 @@ public class Chain<T>
         // [A] A:X [X] X:Y [Y] Y:B [B]
         // =>
         // [A] A:B* [B] (old: A:X, X:Y, Y:B)
-        ChainLink<T>? left = _links.Find(l => l.Target == firstNode);
-        ChainLink<T>? right = _links.Find(l => l.Source == lastNode);
+        ChainLink<T>? left = _links.Find(
+            l => l.Tag == tag && l.Target == firstNode);
+        ChainLink<T>? right = _links.Find(
+            l => l.Tag == tag && l.Source == lastNode);
 
         // nope if nodes are not connected to any other node
         if (left == null || right == null) return false;
@@ -356,7 +402,7 @@ public class Chain<T>
         // [A] A:C [C] C:D [D]
         // =>
         // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
+        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Target == refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
@@ -400,7 +446,7 @@ public class Chain<T>
         // [A] A:C [C] C:D [D]
         // =>
         // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = _links.Find(l => l.Source == refNode);
+        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Source == refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
@@ -484,7 +530,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(refNode);
         ArgumentNullException.ThrowIfNull(newNodes);
 
-        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
+        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Target == refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
@@ -578,22 +624,31 @@ public class Chain<T>
     /// </summary>
     /// <param name="tag">The source tag.</param>
     /// <param name="newTag">The new tag.</param>
+    /// <param name="excludedLinks">The optional links to be excluded from the
+    /// copy.</param>
     /// <exception cref="ArgumentNullException">tag or newTag</exception>
-    /// <exception cref="InvalidOperationException">The new tag already exists.
-    /// </exception>
-    public void AddVersion(string tag, string newTag)
+    public void AddVersion(string tag, string newTag,
+        params ChainLink<T>[] excludedLinks)
     {
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
 
-        // error if any link has the new tag
-        if (_links.Exists(l => l.Tag == newTag))
-            throw new InvalidOperationException("The new tag already exists.");
-
         // clone all the links of the specified tag into newTag
-        _links.AddRange(_links.Where(l => l.Tag == tag)
+        List<ChainLink<T>> newLinks = _links
+            .Where(l => l.Tag == tag && !excludedLinks.Contains(l))
             .Select(l => new ChainLink<T>(newTag, l.Source, l.Target))
-            .ToList());
+            .ToList();
+
+        // add newLinks unless there is a link with the same tag and nodes
+        foreach (ChainLink<T> link in newLinks)
+        {
+            if (!_links.Exists(l => l.Tag == newTag &&
+                                    l.Source == link.Source &&
+                                    l.Target == link.Target))
+            {
+                _links.Add(link);
+            }
+        }
     }
 
     /// <summary>
