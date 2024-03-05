@@ -107,6 +107,22 @@ public class Chain<T>
     public ChainNode<T>? GetNode(int id) => _nodes.Find(n => n.Id == id);
 
     /// <summary>
+    /// Determines whether <paramref name="node"/> is included in the version
+    /// defined by <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <param name="tag">The tag.</param>
+    /// <returns><c>true</c> if in version; otherwise, <c>false</c>.</returns>
+    public bool IsNodeInVersion(ChainNode<T> node, string tag)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(tag);
+
+        return _links.Exists(l => l.Tag == tag &&
+                             (l.Source == node || l.Target == node));
+    }
+
+    /// <summary>
     /// Gets the first node for the specified version tag.
     /// </summary>
     /// <param name="tag">The version tag.</param>
@@ -119,7 +135,8 @@ public class Chain<T>
         if (!HasVersion(tag)) return null;
 
         // find the node not being the target of any link for the specified tag
-        return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Target == n));
+        return _nodes.Find(n => IsNodeInVersion(n, tag) &&
+            !_links.Exists(l => l.Tag == tag && l.Target == n));
     }
 
     /// <summary>
@@ -135,7 +152,8 @@ public class Chain<T>
         if (!HasVersion(tag)) return null;
 
         // find the node not being the source of any link for the specified tag
-        return _nodes.Find(n => !_links.Exists(l => l.Tag == tag && l.Source == n));
+        return _nodes.Find(n => IsNodeInVersion(n, tag) &&
+            !_links.Exists(l => l.Tag == tag && l.Source == n));
     }
 
     /// <summary>
