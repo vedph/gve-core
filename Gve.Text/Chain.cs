@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace Gve.Text;
@@ -16,6 +17,9 @@ namespace Gve.Text;
 /// </summary>
 public class Chain<T>
 {
+    private readonly object _locker = new();
+    private int _maxId = 0;
+
     /// <summary>
     /// Gets or sets the nodes in this chain.
     /// </summary>
@@ -36,12 +40,43 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Resets the identifier to the specified seed value. This means that the
+    /// next node added to this chain will have an identifier equal to the seed
+    /// plus one.
+    /// </summary>
+    /// <param name="seed">The seed.</param>
+    public void ResetId(int seed)
+    {
+        lock (_locker)
+        {
+            _maxId = seed;
+        }
+    }
+
+    /// <summary>
     /// Gets the maximum ordinal among the nodes of all the versions in this
     /// chain.
     /// </summary>
     /// <returns>Max ordinal number.</returns>
-    public int GetMaxOrdinal() =>
-        _nodes.Count == 0? 0 : _nodes.Max(n => n.Ordinal);
+    public int GetMaxOrdinal()
+    {
+        lock (_locker)
+        {
+            return _nodes.Count == 0 ? 0 : _nodes.Max(n => n.Id);
+        }
+    }
+
+    /// <summary>
+    /// Gets the next available node identifier in this chain.
+    /// </summary>
+    /// <returns>ID.</returns>
+    protected int GetNextId()
+    {
+        lock (_locker)
+        {
+            return Interlocked.Increment(ref _maxId);
+        }
+    }
 
     /// <summary>
     /// Gets the first node for the specified version tag.
@@ -258,6 +293,25 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Supplies the identifier to the specified node if this does not have one.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    protected void SupplyId(ChainNode<T> node)
+    {
+        if (node.Id == 0) node.Id = GetNextId();
+    }
+
+    /// <summary>
+    /// Supply IDs to the nodes which in the specified list have no ID.
+    /// </summary>
+    /// <param name="nodes">The nodes.</param>
+    protected void SupplyIds(IList<ChainNode<T>> nodes)
+    {
+        foreach (ChainNode<T> node in nodes.Where(n => n.Id == 0))
+            node.Id = GetNextId();
+    }
+
+    /// <summary>
     /// Inserts <paramref name="newNode"/> before <paramref name="refNode"/>,
     /// unless the reference node is not connected.
     /// </summary>
@@ -284,6 +338,9 @@ public class Chain<T>
 
         // nope if node is not connected to any other node
         if (link == null) return false;
+
+        // supply ID to newNode if it does not have one
+        SupplyId(newNode);
 
         // [A] A:B* [B]
         if (link.Source != null)
@@ -326,6 +383,9 @@ public class Chain<T>
         // nope if node is not connected to any other node
         if (link == null) return false;
 
+        // supply ID to newNode if it does not have one
+        SupplyId(newNode);
+
         // [A] A:B* [B]
         _links.Add(new ChainLink<T>(newTag, refNode, newNode));
 
@@ -359,6 +419,9 @@ public class Chain<T>
 
         ChainLink<T>? link = _links.Find(l => l.Target == refNode);
         if (link == null) return false;
+
+        // supply IDs to newNodes if they do not have one
+        SupplyIds(newNodes);
 
         // add links between new nodes
         _links.AddRange(BuildLinksFrom(newTag, newNodes));
@@ -402,6 +465,9 @@ public class Chain<T>
         ChainLink<T>? link = _links.Find(l => l.Target == refNode);
         if (link == null) return false;
 
+        // supply IDs to newNodes if they do not have one
+        SupplyIds(newNodes);
+
         // add links between new nodes
         _links.AddRange(BuildLinksFrom(newTag, newNodes));
         // add nodes
@@ -436,6 +502,9 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(newNode);
 
+        // supply ID to newNode if it does not have one
+        SupplyId(newNode);
+
         // corner case: if adding to an empty version, just add the node
         if (_nodes.Count == 0)
         {
@@ -466,6 +535,9 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(nodes);
+
+        // supply IDs to newNodes if they do not have one
+        SupplyIds(nodes);
 
         if (_nodes.Count > 0)
         {
