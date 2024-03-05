@@ -109,6 +109,55 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region GetLastNode
+    [Fact]
+    public void GetLastNode_Empty()
+    {
+        Chain<char> chain = new();
+
+        ChainNode<char>? lastNode = chain.GetLastNode("v0");
+
+        Assert.Null(lastNode);
+    }
+
+    [Fact]
+    public void GetLastNode_SingleNode()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+
+        ChainNode<char>? lastNode = chain.GetLastNode("v0");
+
+        Assert.NotNull(lastNode);
+        Assert.Equal("1", lastNode.Id);
+    }
+
+    [Fact]
+    public void GetLastNode_MultipleNodes()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        ChainNode<char>? lastNode = chain.GetLastNode("v0");
+
+        Assert.NotNull(lastNode);
+        Assert.Equal("2", lastNode.Id);
+    }
+
+    [Fact]
+    public void GetLastNode_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
+
+        ChainNode<char>? lastNode = chain.GetLastNode("v1");
+
+        Assert.Null(lastNode);
+    }
+    #endregion
+
     #region Append
     [Fact]
     public void Append_Empty()
