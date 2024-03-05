@@ -508,7 +508,6 @@ public sealed class ChainTest
     public void Append_NotEmptySameVersion()
     {
         Chain<char> chain = new();
-
         chain.Append("", "v0", new ChainNode<char>('A', "A", 1));
 
         chain.Append("v0", "v0", new ChainNode<char>('B', "B", 2));

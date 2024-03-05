@@ -586,7 +586,7 @@ public class Chain<T>
         // [A] A:B [B] B:C [C] C:D* [D]
 
         // append after last node
-        ChainNode<T>? last = _nodes.Count == 1? _nodes[0] : GetLastNode(tag);
+        ChainNode<T>? last = GetLastNode(tag);
         if (last != null) _links.Add(new ChainLink<T>(newTag, last, newNode));
 
         _nodes.Add(newNode);
@@ -610,7 +610,7 @@ public class Chain<T>
         if (_nodes.Count > 0)
         {
             // append after last node
-            ChainNode<T>? last = _nodes.Count == 1 ? _nodes[0] : GetLastNode(tag);
+            ChainNode<T>? last = GetLastNode(tag);
             if (last != null) _links.Add(new ChainLink<T>(newTag, last, nodes[0]));
         }
 
