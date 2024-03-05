@@ -5,19 +5,25 @@ using System.Linq;
 namespace Gve.Text;
 
 /// <summary>
-/// A chain data structure.
+/// A chain data structure. This data structure consists of a linear sequence
+/// of nodes, each connected to the previous and the next node by a link.
+/// Additionally, each link has a version tag, which adds the dimension of time
+/// to this structure. Internally, this structure collects nodes and links,
+/// and once they are added, they cannot be removed (unless we are using a
+/// single version). Any modification is done by adding new nodes and links,
+/// which connect or disconnect or reoder the existing nodes.
 /// </summary>
 public class Chain<T>
 {
     /// <summary>
     /// Gets or sets the nodes in this chain.
     /// </summary>
-    public List<ChainNode<T>> Nodes { get; set; } = [];
+    protected List<ChainNode<T>> Nodes { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the links connecting nodes in this chain.
     /// </summary>
-    public List<ChainLink<T>> Links { get; set; } = [];
+    protected List<ChainLink<T>> Links { get; set; } = [];
 
     /// <summary>
     /// Gets the a list of unique tags from all the links in this chain.
@@ -29,12 +35,40 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Gets the first node for the specified version tag.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>Node or null.</returns>
+    public ChainNode<T>? GetFirstNode(string tag)
+    {
+        if (Nodes.Count == 0) return null;
+        if (Nodes.Count == 1) return Nodes[0];
+
+        // find the node not being the target of any link for the specified tag
+        return Nodes.Find(n => !Links.Any(l => l.Tag == tag && l.Target == n));
+    }
+
+    /// <summary>
+    /// Gets the last node for the specified version tag.
+    /// </summary>
+    /// <param name="tag">The tag.</param>
+    /// <returns>Node or null.</returns>
+    public ChainNode<T>? GetLastNode(string tag)
+    {
+        if (Nodes.Count == 0) return null;
+        if (Nodes.Count == 1) return Nodes[0];
+
+        // find the node not being the source of any link for the specified tag
+        return Nodes.Find(n => !Links.Any(l => l.Tag == tag && l.Source == n));
+    }
+
+    /// <summary>
     /// Gets the left link of the specified node.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    protected ChainLink<T>? GetLeftLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetLeftLink(string tag, ChainNode<T>? node)
     {
         if (node == null) return null;
         return Links.Find(l => l.Tag == tag && l.Target == node);
@@ -46,7 +80,7 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    protected ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
+    public ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
     {
         if (link == null) return null;
         return Links.Find(l => l.Tag == tag && l.Target == link.Source);
@@ -58,7 +92,7 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    protected ChainLink<T>? GetRightLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetRightLink(string tag, ChainNode<T>? node)
     {
         if (node == null) return null;
         return Links.Find(l => l.Tag == tag && l.Source == node);
@@ -70,7 +104,7 @@ public class Chain<T>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
-    protected ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
+    public ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
     {
         if (link == null) return null;
         return Links.Find(l => l.Tag == tag && l.Source == link.Target);
@@ -148,8 +182,6 @@ public class Chain<T>
         if (tag == newTag)
         {
             // remove all the links connecting nodes between left and right
-            // starting from rightmost link get the left node and the left link
-            // and remove it until the left node is the first node
             ChainLink<T>? l = right;
             while (l != null && l.Source != firstNode)
             {
@@ -238,6 +270,30 @@ public class Chain<T>
         if (tag == newTag) Links.Remove(link);
 
         return true;
+    }
+
+    /// <summary>
+    /// Appends <paramref name="newNode"/> after the last node.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="newNode">The new node.</param>
+    public void Append(string tag, string newTag, ChainNode<T> newNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(newNode);
+
+        // append D:
+        // [A] A:B [B] B:C [C]
+        // =>
+        // [A] A:B [B] B:C [C] C:D* [D]
+
+        // append after last node
+        ChainNode<T>? last = GetLastNode(tag);
+        Links.Add(new ChainLink<T>(newTag, last, newNode));
+
+        Nodes.Add(newNode);
     }
 
     /// <summary>
