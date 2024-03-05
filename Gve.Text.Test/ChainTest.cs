@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -369,6 +370,69 @@ public sealed class ChainTest
         ChainLink<char>? link = chain.GetRightLink("v1", refLink);
 
         Assert.Null(link);
+    }
+    #endregion
+
+    #region EnumerateTagNodes
+    [Fact]
+    public void EnumerateTagNodes_Empty()
+    {
+        Chain<char> chain = new();
+        IList<ChainNode<char>> nodes = chain.GetTagNodes("v0");
+        Assert.Empty(nodes);
+    }
+
+    [Fact]
+    public void EnumerateTagNodes_NotEmpty()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v0");
+
+        Assert.Equal(3, nodes2.Count);
+        Assert.Equal('A', nodes2[0].Data);
+        Assert.Equal('B', nodes2[1].Data);
+        Assert.Equal('C', nodes2[2].Data);
+    }
+    #endregion
+
+    #region BuildLinksFrom
+    [Fact]
+    public void BuildLinksFrom_EmptyNodes_Empty()
+    {
+        List<ChainNode<char>> nodes = [];
+
+        IList<ChainLink<char>> result = Chain<char>.BuildLinksFrom("tag", nodes);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void BuildLinksFrom_SingleNode_Empty()
+    {
+        List<ChainNode<char>> nodes = GetNodesFrom("t");
+
+        IList<ChainLink<char>> result = Chain<char>.BuildLinksFrom("tag", nodes);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void BuildLinksFrom_MultipleNodes_ReturnsLinks()
+    {
+        List<ChainNode<char>> nodes = GetNodesFrom("test");
+
+        IList<ChainLink<char>> result = Chain<char>.BuildLinksFrom("tag", nodes);
+
+        Assert.Equal(nodes.Count - 1, result.Count);
+        for (int i = 0; i < result.Count; i++)
+        {
+            Assert.Equal("tag", result[i].Tag);
+            Assert.Equal(nodes[i], result[i].Source);
+            Assert.Equal(nodes[i + 1], result[i].Target);
+        }
     }
     #endregion
 
