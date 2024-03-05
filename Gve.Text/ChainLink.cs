@@ -40,6 +40,7 @@ public class ChainLink<T>
     public ChainLink(string tag, ChainNode<T>? source, ChainNode<T>? target)
     {
         ArgumentNullException.ThrowIfNull(tag);
+        Tag = tag;
         Source = source;
         Target = target;
     }
@@ -50,6 +51,6 @@ public class ChainLink<T>
     /// <returns>string</returns>
     public override string ToString()
     {
-        return $"<{Tag}> {Source} -> {Target}";
+        return $"({Tag}) {Source} => {Target}";
     }
 }

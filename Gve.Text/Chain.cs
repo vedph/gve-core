@@ -419,13 +419,20 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(newNode);
 
+        // corner case: if adding to an empty version, just add the node
+        if (_nodes.Count == 0)
+        {
+            _nodes.Add(newNode);
+            return;
+        }
+
         // append D:
         // [A] A:B [B] B:C [C]
         // =>
         // [A] A:B [B] B:C [C] C:D* [D]
 
         // append after last node
-        ChainNode<T>? last = GetLastNode(tag);
+        ChainNode<T>? last = _nodes.Count == 1? _nodes[0] : GetLastNode(tag);
         if (last != null) _links.Add(new ChainLink<T>(newTag, last, newNode));
 
         _nodes.Add(newNode);
@@ -443,9 +450,12 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(nodes);
 
-        // append after last node
-        ChainNode<T>? last = GetLastNode(tag);
-        if (last != null) _links.Add(new ChainLink<T>(newTag, last, nodes[0]));
+        if (_nodes.Count > 0)
+        {
+            // append after last node
+            ChainNode<T>? last = _nodes.Count == 1 ? _nodes[0] : GetLastNode(tag);
+            if (last != null) _links.Add(new ChainLink<T>(newTag, last, nodes[0]));
+        }
 
         _links.AddRange(BuildLinksFrom(newTag, nodes));
         _nodes.AddRange(nodes);

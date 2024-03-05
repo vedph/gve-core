@@ -23,13 +23,10 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
 
-        // create version v0
         chain.Append("", "v0", new ChainNode<char>("1", 1, "A", 'A'));
-        // create version v1 from v0 and add a new node to it
-        chain.AddVersion("v0", "v1");
-        chain.Append("v1", "v1", new ChainNode<char>("2", 2, "B", 'B'));
+        chain.Append("v0", "v0", new ChainNode<char>("2", 2, "B", 'B'));
 
-        IList<ChainNode<char>> nodes = chain.GetTagNodes("v1");
+        IList<ChainNode<char>> nodes = chain.GetTagNodes("v0");
         Assert.Equal(2, nodes.Count);
 
         ChainNode<char>? node = nodes[0];
