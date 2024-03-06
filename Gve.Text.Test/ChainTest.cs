@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -111,6 +110,28 @@ public sealed class ChainTest
 
         int max = chain.GetMaxOrdinal();
         Assert.Equal(3, max);
+    }
+    #endregion
+
+    #region IsNodeInVersion
+    [Fact]
+    public void IsNodeInVersion_NodeNotInVersion_False()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.False(chain.IsNodeInVersion(node, "nonExistingTag"));
+    }
+
+    [Fact]
+    public void IsNodeInVersion_NodeInVersion_True()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.True(chain.IsNodeInVersion(node, "v1"));
     }
     #endregion
 
