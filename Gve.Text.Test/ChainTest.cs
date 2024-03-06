@@ -692,7 +692,7 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
 
-        chain.Append("", "v0", new ChainNode<char>('A', "A", 1));
+        chain.Append("", "v0", new ChainNode<char>('A'));
 
         ChainNode<char>? node = chain.GetTagNodes("v0").FirstOrDefault();
         Assert.NotNull(node);
@@ -703,9 +703,9 @@ public sealed class ChainTest
     public void Append_NotEmptySameVersion()
     {
         Chain<char> chain = new();
-        chain.Append("", "v0", new ChainNode<char>('A', "A", 1));
+        chain.Append("", "v0", new ChainNode<char>('A'));
 
-        chain.Append("v0", "v0", new ChainNode<char>('B', "B", 2));
+        chain.Append("v0", "v0", new ChainNode<char>('B'));
 
         IList<ChainNode<char>> nodes = chain.GetTagNodes("v0");
         Assert.Equal(2, nodes.Count);
@@ -723,16 +723,12 @@ public sealed class ChainTest
     public void Append_NotEmptyDifferentVersion()
     {
         Chain<char> chain = new();
+        chain.AppendRange("", "v0", GetNodesFrom("AB"));
 
-        chain.Append("", "v0", new ChainNode<char>('A', "A", 1));
-        chain.Append("v0", "v0", new ChainNode<char>('B', "B", 2));
-
-        chain.AddVersion("v0", "v1");
-        chain.Append("v0", "v1", new ChainNode<char>('C', "C", 3));
+        chain.Append("v0", "v1", new ChainNode<char>('C'));
 
         string v0 = GetVersionString(chain.GetTagNodes("v0"));
         Assert.Equal("AB", v0);
-
         string v1 = GetVersionString(chain.GetTagNodes("v1"));
         Assert.Equal("ABC", v1);
     }
