@@ -636,12 +636,13 @@ public sealed class ChainTest
         Chain<char> chain = new();
         chain.Append("v1", "v1", new ChainNode<char>('A'));
         List<ChainNode<char>> nodes = [];
+
         chain.AppendRange("v1", "v2", nodes);
 
         Assert.Equal(1, chain.GetNodeCount("v1"));
-        Assert.Equal(1, chain.GetNodeCount("v2"));
+        Assert.Equal(0, chain.GetNodeCount("v2"));
         Assert.Equal("A", GetVersionString(chain.GetTagNodes("v1")));
-        Assert.Equal("A", GetVersionString(chain.GetTagNodes("v2")));
+        Assert.Equal("", GetVersionString(chain.GetTagNodes("v2")));
     }
     #endregion
 }
