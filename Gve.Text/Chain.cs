@@ -442,6 +442,23 @@ public class Chain<T>
         return true;
     }
 
+    private List<ChainLink<T>> GetLinksBetween(string tag, ChainNode<T> start,
+        ChainNode<T> end)
+    {
+        List<ChainLink<T>> links = [];
+        ChainNode<T>? n = start;
+        while (n != null)
+        {
+            ChainLink<T>? link = GetNodeRightLink(tag, n);
+            if (link == null) break;
+            links.Add(link);
+            if (link.Target == end) break;
+
+            n = link.Target;
+        }
+        return links;
+    }
+
     /// <summary>
     /// Deletes the specified range of nodes unless the reference nodes are
     /// not connected.
@@ -462,16 +479,31 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(lastNode);
 
         // delete XY:
-        // [A] A:X [X] X:Y [Y] Y:B [B]
+        // [A] (A:X [X] X:Y [Y] Y:B) [B]
         // =>
         // [A] A:B* [B] (old: A:X, X:Y, Y:B)
-        ChainLink<T>? left = _links.Find(
-            l => l.Tag == tag && l.Target == firstNode);
-        ChainLink<T>? right = _links.Find(
-            l => l.Tag == tag && l.Source == lastNode);
+        ChainLink<T>? left = GetNodeLeftLink(tag, firstNode);
+        ChainLink<T>? right = GetNodeRightLink(tag, lastNode);
 
-        // nope if nodes are not connected to any other node
-        if (left == null || right == null) return false;
+        // nope if both nodes are not connected to any other node
+        if (left == null && right == null) return false;
+
+        // head: ([X] X:Y [Y] Y:A) [A]
+        if (left == null)
+        {
+            List<ChainLink<T>> links = GetLinksBetween(tag, firstNode, lastNode);
+            links.Add(right!);
+            AddVersion(tag, newTag, links.ToArray());
+            return true;
+        }
+        // tail: [A] (A:X [X] X:Y [Y])
+        if (right == null)
+        {
+            List<ChainLink<T>> links = GetLinksBetween(tag, firstNode, lastNode);
+            links.Add(left!);
+            AddVersion(tag, newTag, links.ToArray());
+            return true;
+        }
 
         // [A] A:B [B]
         _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
