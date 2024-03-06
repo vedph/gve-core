@@ -613,10 +613,7 @@ public sealed class ChainTest
 
         Assert.True(chain.Delete("v1", "v2", nodes[1]));
 
-        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
-        Assert.Equal(2, nodes2.Count);
-        Assert.Equal('A', nodes2[0].Data);
-        Assert.Equal('C', nodes2[1].Data);
+        Assert.Equal("AC", GetVersionString(chain.GetTagNodes("v2")));
     }
 
     [Fact]
@@ -628,10 +625,7 @@ public sealed class ChainTest
 
         Assert.True(chain.Delete("v1", "v2", nodes[0]));
 
-        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
-        Assert.Equal(2, nodes2.Count);
-        Assert.Equal('B', nodes2[0].Data);
-        Assert.Equal('C', nodes2[1].Data);
+        Assert.Equal("BC", GetVersionString(chain.GetTagNodes("v2")));
     }
 
     [Fact]
@@ -643,10 +637,7 @@ public sealed class ChainTest
 
         Assert.True(chain.Delete("v1", "v2", nodes[2]));
 
-        IList<ChainNode<char>> nodes2 = chain.GetTagNodes("v2");
-        Assert.Equal(2, nodes2.Count);
-        Assert.Equal('A', nodes2[0].Data);
-        Assert.Equal('B', nodes2[1].Data);
+        Assert.Equal("AB", GetVersionString(chain.GetTagNodes("v2")));
     }
     #endregion
 

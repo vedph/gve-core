@@ -398,26 +398,46 @@ public class Chain<T>
         // [A] A:B* [B] (old: A:Z, Z:B)
 
         // the left link is A:Z (target=Z) and the right link is Z:B (source=Z)
-        ChainLink<T>? left = _links.Find(l => l.Tag == tag && l.Target == node);
-        ChainLink<T>? right = _links.Find(l => l.Tag == tag && l.Source == node);
+        ChainLink<T>? left = GetNodePreviousLink(tag, node);
+        ChainLink<T>? right = GetNodeNextLink(tag, node);
 
-        // nope if node is not connected to any other node
-        if (left == null && right == null) return false;
+        if (left == null || right == null) return false;
 
-        // first node: [A] A:B [B]
-        if (left == null)
+        // first node: (-:A [A] A:B) [B] B:-
+        if (left.IsHead)
         {
-            AddVersion(tag, newTag, right!);
+            // copy the source state into a new one excluding left+right links
+            AddVersion(tag, newTag, left, right);
+
+            // add new head link
+            _links.Add(new ChainLink<T>(newTag, null, right.Target));
+
+            // if new tag is the same as tag, delete the old head link
+            if (tag == newTag) _links.Remove(left);
+
             return true;
         }
 
-        // last node: B in [A] A:B [B]
-        if (right == null)
+        // last node: -:A [A] (A:B [B] B:-)
+        if (right.IsTail)
         {
-            AddVersion(tag, newTag, left!);
+            // copy the source state into a new one excluding left+right links
+            AddVersion(tag, newTag, left, right);
+
+            // add new tail link
+            _links.Add(new ChainLink<T>(newTag, left.Source, null));
+
+            // if new tag is the same as tag, delete the old tail link
+            if (tag == newTag) _links.Remove(right);
+
             return true;
         }
 
+        // inner node: -:A [A] (A:Z [Z] Z:B) [B] B:-
+        // copy the source state into a new one excluding left+right links
+        AddVersion(tag, newTag, left, right);
+
+        // add new link A:B
         _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
 
         // if newTag is the same as tag, delete the old links
