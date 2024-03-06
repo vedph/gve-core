@@ -88,7 +88,7 @@ public class Chain<T>
     /// <returns>Count.</returns>
     public int GetNodeCount(string? tag = null)
     {
-        if (_nodes.Count == 1) return 1;
+        if (_nodes.Count == 1) return _nodes[0].SourceTag == tag? 1 : 0;
 
         return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag) + 1;
     }
@@ -104,20 +104,22 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the a list of unique tags from all the links in this chain.
+    /// Gets the a list of unique tags from this chain.
     /// </summary>
     /// <returns>List, sorted alphabetically.</returns>
     public IList<string> GetDistinctTags()
     {
-        return [.. _links.Select(l => l.Tag).Distinct().OrderBy(t => t)];
+        HashSet<string> tags = new(_nodes.Select(n => n.SourceTag));
+        foreach (ChainLink<T> link in _links) tags.Add(link.Tag);
+        return [.. tags.OrderBy(t => t)];
     }
 
     /// <summary>
-    /// Gets the node with the specified ID.
+    /// Finds the node with the specified ID.
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>Node or null if not found.</returns>
-    public ChainNode<T>? GetNode(int id) => _nodes.Find(n => n.Id == id);
+    public ChainNode<T>? FindNode(int id) => _nodes.Find(n => n.Id == id);
 
     /// <summary>
     /// Determines whether <paramref name="node"/> is included in the version
@@ -147,7 +149,8 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(tag);
 
         if (_nodes.Count == 0) return null;
-        if (_nodes.Count == 1) return _nodes[0];
+        if (_nodes.Count == 1)
+            return _nodes[0].SourceTag == tag ? _nodes[0] : null;
 
         if (!HasVersion(tag)) return null;
 
@@ -167,7 +170,8 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(tag);
 
         if (_nodes.Count == 0) return null;
-        if (_nodes.Count == 1) return _nodes[0];
+        if (_nodes.Count == 1)
+            return _nodes[0].SourceTag == tag ? _nodes[0] : null;
 
         if (!HasVersion(tag)) return null;
 
@@ -324,6 +328,9 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
+        if (_nodes.Count == 0) return [];
+        if (_nodes.Count == 1) return _nodes[0].SourceTag == tag ? _nodes : [];
+
         ChainNode<T>? first = GetFirstNode(tag);
         if (first == null) return [];
 
@@ -351,6 +358,12 @@ public class Chain<T>
 
         IEnumerable<ChainNode<T>> InnerEnumerate()
         {
+            if (_nodes.Count == 1)
+            {
+                if (_nodes[0].SourceTag == tag) yield return _nodes[0];
+                yield break;
+            }
+
             ChainNode<T>? first = GetFirstNode(tag);
             if (first == null) yield break;
 
@@ -409,13 +422,13 @@ public class Chain<T>
             return true;
         }
 
-        _links.Add(new ChainLink<T>(newTag, left.Source, right?.Target));
+        _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
         {
             _links.Remove(left);
-            if (right != null) _links.Remove(right);
+            _links.Remove(right);
         }
 
         return true;
@@ -474,22 +487,38 @@ public class Chain<T>
 
     #region Insert
     /// <summary>
-    /// Supplies the identifier to the specified node if this does not have one.
+    /// Supplies the identifier and the source tag to the specified node
+    /// where not present.
     /// </summary>
     /// <param name="node">The node.</param>
-    protected void SupplyId(ChainNode<T> node)
+    /// <param name="sourceTag">The source tag.</param>
+    /// <exception cref="ArgumentNullException">node or sourceTag</exception>
+    protected void SupplyNodeMetadata(ChainNode<T> node, string sourceTag)
     {
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(sourceTag);
+
         if (node.Id == 0) node.Id = GetNextId();
+        if (node.SourceTag.Length == 0) node.SourceTag = sourceTag;
     }
 
     /// <summary>
-    /// Supply IDs to the nodes which in the specified list have no ID.
+    /// Supply the identifiers and the source tag to the specified nodes
+    /// where not present.
     /// </summary>
     /// <param name="nodes">The nodes.</param>
-    protected void SupplyIds(IList<ChainNode<T>> nodes)
+    /// <param name="sourceTag">The source tag.</param>
+    /// <exception cref="ArgumentNullException">node or sourceTag</exception>
+    protected void SupplyNodeMetadata(IList<ChainNode<T>> nodes, string sourceTag)
     {
+        ArgumentNullException.ThrowIfNull(nodes);
+        ArgumentNullException.ThrowIfNull(sourceTag);
+
         foreach (ChainNode<T> node in nodes.Where(n => n.Id == 0))
+        {
             node.Id = GetNextId();
+            if (node.SourceTag.Length == 0) node.SourceTag = sourceTag;
+        }
     }
 
     /// <summary>
@@ -523,7 +552,7 @@ public class Chain<T>
         if (link == null) return false;
 
         // supply ID to newNode if it does not have one
-        SupplyId(newNode);
+        SupplyNodeMetadata(newNode, newTag);
 
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
@@ -572,7 +601,7 @@ public class Chain<T>
         if (link == null) return false;
 
         // supply ID to newNode if it does not have one
-        SupplyId(newNode);
+        SupplyNodeMetadata(newNode, newTag);
 
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
@@ -618,7 +647,7 @@ public class Chain<T>
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
-        SupplyIds(newNodes);
+        SupplyNodeMetadata(newNodes, newTag);
 
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
@@ -666,7 +695,7 @@ public class Chain<T>
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
-        SupplyIds(newNodes);
+        SupplyNodeMetadata(newNodes, newTag);
 
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
@@ -703,7 +732,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newNode);
 
         // supply ID to newNode if it does not have one
-        SupplyId(newNode);
+        SupplyNodeMetadata(newNode, newTag);
 
         // corner case: if adding to an empty version, just add the node
         if (_nodes.Count == 0)
@@ -745,7 +774,7 @@ public class Chain<T>
         AddVersion(tag, newTag);
 
         // supply IDs to newNodes if they do not have one
-        SupplyIds(nodes);
+        SupplyNodeMetadata(nodes, newTag);
 
         if (_nodes.Count > 0)
         {

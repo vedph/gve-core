@@ -23,6 +23,16 @@ public class ChainNode<T>
     public T? Data { get; set; }
 
     /// <summary>
+    /// Gets or sets the source tag for this node, i.e. the tag of the version
+    /// which added it to the chain. This is required to supply the version tag
+    /// when the node has no links because it is the only one in the chain.
+    /// When instead it has no links but nodes are many, this just means that
+    /// the node is disconnected because it has been deleted within the
+    /// boundaries of the same version.
+    /// </summary>
+    public string SourceTag { get; set; } = "";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainNode{T}"/> class.
     /// </summary>
     public ChainNode()
@@ -50,6 +60,6 @@ public class ChainNode<T>
     /// </returns>
     public override string ToString()
     {
-        return $"#{Id} {Label}";
+        return $"#{Id}={Label} ({SourceTag})";
     }
 }
