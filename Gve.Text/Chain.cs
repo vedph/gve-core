@@ -1003,7 +1003,10 @@ public class Chain<T>
     /// <returns>string</returns>
     public override string ToString()
     {
-        return $"N={_nodes.Count} L={_links.Count} " +
-            $"V: {string.Join(", ", GetDistinctTags())}";
+        IList<string> tags = GetDistinctTags();
+        return $"N={_nodes.Count} L={_links.Count}" +
+            (tags.Count > 0
+            ? $" V: {string.Join(", ", GetDistinctTags())}"
+            : "");
     }
 }
