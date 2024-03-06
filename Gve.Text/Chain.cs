@@ -291,7 +291,7 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        if (link == null || link.IsHead || !HasVersion(tag)) return null;
+        if (link?.IsHead != false || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Target == link.Source);
     }
@@ -307,7 +307,7 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        if (link == null || link.IsTail || !HasVersion(tag)) return null;
+        if (link?.IsTail != false || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Source == link.Target);
     }
