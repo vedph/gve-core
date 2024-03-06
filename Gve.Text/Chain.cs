@@ -501,13 +501,15 @@ public class Chain<T>
         // first nodes: (-:A [A] A:B [B] B:C) [C] C:-
         if (left.IsHead)
         {
-            // copy the source state into a new one excluding right + inner links
+            // copy the source state into a new one excluding
+            // left + right + inner links
             links = GetLinksBetween(tag, firstNode, lastNode);
-            links.Add(right!);
+            links.Add(left);
+            links.Add(right);
             AddVersion(tag, newTag, links.ToArray());
 
             // add new head link
-            _links.Add(new ChainLink<T>(newTag, null, firstNode));
+            _links.Add(new ChainLink<T>(newTag, null, right.Target));
 
             // if new tag is the same as tag, delete the old head link
             if (tag == newTag) _links.Remove(left);
