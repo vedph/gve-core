@@ -331,6 +331,14 @@ public class Chain<T>
         if (_nodes.Count == 0) return [];
         if (_nodes.Count == 1) return _nodes[0].SourceTag == tag ? _nodes : [];
 
+        if (!_links.Exists(l => l.Tag == tag))
+        {
+            // if there only one single node with source tag equal to tag, return it
+            List<ChainNode<T>> tagNodes = _nodes.Where(n => n.SourceTag == tag)
+                .ToList();
+            return tagNodes.Count == 1 ? tagNodes : (IList<ChainNode<T>>)([]);
+        }
+
         ChainNode<T>? first = GetFirstNode(tag);
         if (first == null) return [];
 
