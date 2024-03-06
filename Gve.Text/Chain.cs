@@ -467,11 +467,6 @@ public class Chain<T>
         return links;
     }
 
-    private ChainLink<T>? GetHeadLink(string tag)
-    {
-        return _links.Find(l => l.Tag == tag && l.IsHead);
-    }
-
     private ChainLink<T>? GetTailLink(string tag)
     {
         return _links.Find(l => l.Tag == tag && l.IsTail);
@@ -496,47 +491,61 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(firstNode);
         ArgumentNullException.ThrowIfNull(lastNode);
 
-        // delete XY:
-        // [A] (A:X [X] X:Y [Y] Y:B) [B]
-        // =>
-        // [A] A:B* [B] (old: A:X, X:Y, Y:B)
         ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
         ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
 
-        // nope if both nodes are not connected to any other node
-        if (left == null && right == null) return false;
+        if (left == null || right == null) return false;
 
-        // head: ([X] X:Y [Y] Y:A) [A]
-        if (left == null)
+        List<ChainLink<T>> links;
+
+        // first nodes: (-:A [A] A:B [B] B:C) [C] C:-
+        if (left.IsHead)
         {
-            List<ChainLink<T>> links = GetLinksBetween(tag, firstNode, lastNode);
+            // copy the source state into a new one excluding right + inner links
+            links = GetLinksBetween(tag, firstNode, lastNode);
             links.Add(right!);
             AddVersion(tag, newTag, links.ToArray());
-            return true;
-        }
-        // tail: [A] (A:X [X] X:Y [Y])
-        if (right == null)
-        {
-            List<ChainLink<T>> links = GetLinksBetween(tag, firstNode, lastNode);
-            links.Add(left!);
-            AddVersion(tag, newTag, links.ToArray());
+
+            // add new head link
+            _links.Add(new ChainLink<T>(newTag, null, firstNode));
+
+            // if new tag is the same as tag, delete the old head link
+            if (tag == newTag) _links.Remove(left);
+
             return true;
         }
 
-        // [A] A:B [B]
+        // last nodes: -:A [A] (A:B [B] B:C [C] C:-)
+        if (right.IsTail)
+        {
+            // copy the source state into a new one excluding left + inner links
+            links = GetLinksBetween(tag, firstNode, lastNode);
+            links.Add(left!);
+            AddVersion(tag, newTag, links.ToArray());
+
+            // add new tail link
+            _links.Add(new ChainLink<T>(newTag, lastNode, null));
+
+            // if new tag is the same as tag, delete the old tail link
+            if (tag == newTag) _links.Remove(right);
+
+            return true;
+        }
+
+        // inner nodes: -:A [A] (A:B [B] B:C) [C] C:-
+        // copy the source state into a new one excluding left+right+inner links
+        links = GetLinksBetween(tag, firstNode, lastNode);
+        links.Add(left!);
+        links.Add(right!);
+        AddVersion(tag, newTag, links.ToArray());
+
+        // add new link A:C
         _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
         {
-            // remove all the links connecting nodes between left and right
-            ChainLink<T>? l = right;
-            while (l != null && l.Source != firstNode)
-            {
-                _links.Remove(l);
-                l = GetPreviousLink(tag, l);
-            }
-            _links.Remove(left);
+            foreach (ChainLink<T> link in links) _links.Remove(link);
         }
 
         return true;
