@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -720,6 +721,57 @@ public sealed class ChainTest
         Assert.True(chain.DeleteRange("v1", "v2", nodes[0], nodes[2]));
 
         Assert.Equal("", GetVersionString(chain.GetTagNodes("v2")));
+    }
+    #endregion
+
+    #region InsertBefore
+    [Fact]
+    public void InsertBefore_NodeNotConnected_False()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> nodeA = new('A');
+        ChainNode<char> nodeB = new('B');
+        chain.Append("", "v0", nodeA);
+
+        bool result = chain.InsertBefore("", "v1", nodeB, nodeA);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void InsertBefore_FirstNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.InsertBefore("v0", "v1", nodes[0],
+            new ChainNode<char>('X')));
+        Assert.Equal("XABC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void InsertBefore_LastNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.InsertBefore("v0", "v1", nodes[2],
+            new ChainNode<char>('X')));
+        Assert.Equal("ABXC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void InsertBefore_InnerNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.InsertBefore("v0", "v1", nodes[1],
+            new ChainNode<char>('X')));
+        Assert.Equal("AXBC", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
 
