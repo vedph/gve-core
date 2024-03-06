@@ -69,6 +69,8 @@ public class ChainLink<T>
     /// <returns>string</returns>
     public override string ToString()
     {
+        if (IsHead) return $"({Tag}) <{Target}";
+        if (IsTail) return $"({Tag}) {Source}>";
         return $"({Tag}) {Source} => {Target}";
     }
 }

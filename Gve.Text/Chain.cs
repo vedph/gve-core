@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace Gve.Text;
 
@@ -13,6 +14,10 @@ namespace Gve.Text;
 /// and once they are added, they cannot be removed (unless we are using a
 /// single version). Any modification is done by adding new nodes and links,
 /// which connect or disconnect or reoder the existing nodes.
+/// When the chain is empty, there are no nodes or links. When there is at
+/// least one node, there always are links for the head and the tail of the
+/// chain. So, the structure, when not empty, always alternates links and nodes,
+/// starting and ending with links.
 /// </summary>
 public class Chain<T>
 {
@@ -88,15 +93,17 @@ public class Chain<T>
     /// <returns>Count.</returns>
     public int GetNodeCount(string? tag = null)
     {
-        if (_nodes.Count == 1) return _nodes[0].SourceTag == tag? 1 : 0;
+        if (_nodes.Count == 0) return 0;
 
-        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag) + 1;
+        return tag == null
+            ? _nodes.Count
+            : _links.Count(l => l.Tag == tag) - 1;
     }
 
     /// <summary>
     /// Gets the link count.
     /// </summary>
-    /// <param name="tag">The tag filter.</param>
+    /// <param name="tag">The optional tag filter.</param>
     /// <returns>Count.</returns>
     public int GetLinkCount(string? tag = null)
     {
@@ -148,15 +155,9 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        if (_nodes.Count == 0) return null;
-        if (_nodes.Count == 1)
-            return _nodes[0].SourceTag == tag ? _nodes[0] : null;
-
-        if (!HasVersion(tag)) return null;
-
-        // find the node not being the target of any link for the specified tag
-        return _nodes.Find(n => IsNodeInVersion(n, tag) &&
-            !_links.Exists(l => l.Tag == tag && l.Target == n));
+        return _nodes.Count == 0
+            ? null
+            : (_links.Find(l => l.Tag == tag && l.IsHead)?.Target);
     }
 
     /// <summary>
@@ -169,15 +170,9 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        if (_nodes.Count == 0) return null;
-        if (_nodes.Count == 1)
-            return _nodes[0].SourceTag == tag ? _nodes[0] : null;
-
-        if (!HasVersion(tag)) return null;
-
-        // find the node not being the source of any link for the specified tag
-        return _nodes.Find(n => IsNodeInVersion(n, tag) &&
-            !_links.Exists(l => l.Tag == tag && l.Source == n));
+        return _nodes.Count == 0
+            ? null
+            : (_links.Find(l => l.Tag == tag && l.IsTail)?.Source);
     }
 
     /// <summary>
@@ -257,13 +252,13 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the left link of the specified node.
+    /// Gets the link preceding the specified node.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
     /// <exception cref="ArgumentNullException">tag or node</exception>
-    public ChainLink<T>? GetNodeLeftLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetNodePreviousLink(string tag, ChainNode<T>? node)
     {
         if (node == null || !HasVersion(tag)) return null;
 
@@ -271,13 +266,13 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the left link of the specified link.
+    /// Gets the link preceding the specified link.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public ChainLink<T>? GetLeftLink(string tag, ChainLink<T>? link)
+    public ChainLink<T>? GetPreviousLink(string tag, ChainLink<T>? link)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
@@ -287,13 +282,13 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the right link of the specified node.
+    /// Gets the link following the specified node.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="node">The reference node or null.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public ChainLink<T>? GetNodeRightLink(string tag, ChainNode<T>? node)
+    public ChainLink<T>? GetNodeNextLink(string tag, ChainNode<T>? node)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
@@ -303,13 +298,13 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the right link of the specified link.
+    /// Gets the link following the specified link.
     /// </summary>
     /// <param name="tag">The version tag.</param>
     /// <param name="link">The reference link.</param>
     /// <returns>Link or null if not found or input node was null.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public ChainLink<T>? GetRightLink(string tag, ChainLink<T>? link)
+    public ChainLink<T>? GetNextLink(string tag, ChainLink<T>? link)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
@@ -328,26 +323,20 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
+        // none if empty
         if (_nodes.Count == 0) return [];
-        if (_nodes.Count == 1) return _nodes[0].SourceTag == tag ? _nodes : [];
 
-        if (!_links.Exists(l => l.Tag == tag))
-        {
-            // if there only one single node with source tag equal to tag, return it
-            List<ChainNode<T>> tagNodes = _nodes.Where(n => n.SourceTag == tag)
-                .ToList();
-            return tagNodes.Count == 1 ? tagNodes : (IList<ChainNode<T>>)([]);
-        }
-
+        // get the first node for tag
         ChainNode<T>? first = GetFirstNode(tag);
         if (first == null) return [];
 
+        // get the next nodes in order
         List<ChainNode<T>> nodes = [first];
-        ChainLink<T>? link = GetNodeRightLink(tag, first);
-        while (link?.Target != null)
+        ChainNode<T>? n = GetNextNode(tag, first);
+        while (n != null)
         {
-            nodes.Add(link.Target);
-            link = GetRightLink(tag, link);
+            nodes.Add(n);
+            n = GetNextNode(tag, n);
         }
         return nodes;
     }
@@ -366,21 +355,20 @@ public class Chain<T>
 
         IEnumerable<ChainNode<T>> InnerEnumerate()
         {
-            if (_nodes.Count == 1)
-            {
-                if (_nodes[0].SourceTag == tag) yield return _nodes[0];
-                yield break;
-            }
+            // none if empty
+            if (_nodes.Count == 0) yield break;
 
+            // get the first node for tag
             ChainNode<T>? first = GetFirstNode(tag);
             if (first == null) yield break;
-
             yield return first;
-            ChainLink<T>? link = GetNodeRightLink(tag, first);
-            while (link?.Target != null)
+
+            // get the next nodes in order
+            ChainNode<T>? n = GetNextNode(tag, first);
+            while (n != null)
             {
-                yield return link.Target;
-                link = GetRightLink(tag, link);
+                yield return n;
+                n = GetNextNode(tag, n);
             }
         }
     }
@@ -449,7 +437,7 @@ public class Chain<T>
         ChainNode<T>? n = start;
         while (n != null)
         {
-            ChainLink<T>? link = GetNodeRightLink(tag, n);
+            ChainLink<T>? link = GetNodeNextLink(tag, n);
             if (link == null) break;
             links.Add(link);
             if (link.Target == end) break;
@@ -457,6 +445,16 @@ public class Chain<T>
             n = link.Target;
         }
         return links;
+    }
+
+    private ChainLink<T>? GetHeadLink(string tag)
+    {
+        return _links.Find(l => l.Tag == tag && l.IsHead);
+    }
+
+    private ChainLink<T>? GetTailLink(string tag)
+    {
+        return _links.Find(l => l.Tag == tag && l.IsTail);
     }
 
     /// <summary>
@@ -482,8 +480,8 @@ public class Chain<T>
         // [A] (A:X [X] X:Y [Y] Y:B) [B]
         // =>
         // [A] A:B* [B] (old: A:X, X:Y, Y:B)
-        ChainLink<T>? left = GetNodeLeftLink(tag, firstNode);
-        ChainLink<T>? right = GetNodeRightLink(tag, lastNode);
+        ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
+        ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
 
         // nope if both nodes are not connected to any other node
         if (left == null && right == null) return false;
@@ -516,7 +514,7 @@ public class Chain<T>
             while (l != null && l.Source != firstNode)
             {
                 _links.Remove(l);
-                l = GetLeftLink(tag, l);
+                l = GetPreviousLink(tag, l);
             }
             _links.Remove(left);
         }
@@ -586,7 +584,7 @@ public class Chain<T>
         // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
 
         // get the link connecting the reference node to the previous node (A:C)
-        ChainLink<T>? link = GetNodeLeftLink(tag, refNode);
+        ChainLink<T>? link = GetNodePreviousLink(tag, refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
@@ -635,7 +633,7 @@ public class Chain<T>
         // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
 
         // get the link connecting the reference node to the next node (A:C)
-        ChainLink<T>? link = GetNodeRightLink(tag, refNode);
+        ChainLink<T>? link = GetNodeNextLink(tag, refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
@@ -683,7 +681,7 @@ public class Chain<T>
         // [A] (A:B* [B]* B:C* [C]* C:D*) [D] D:E [E] (old: A:D)
 
         // get the link connecting the reference node to the previous node
-        ChainLink<T>? link = GetNodeLeftLink(tag, refNode);
+        ChainLink<T>? link = GetNodePreviousLink(tag, refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
@@ -731,7 +729,7 @@ public class Chain<T>
         // =>
         // [A] (A:B* [B]* B:C* [C]* C:D*) [D] D:E [E] (old: A:D)
 
-        ChainLink<T>? link = GetNodeRightLink(tag, refNode);
+        ChainLink<T>? link = GetNodeNextLink(tag, refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
@@ -774,15 +772,19 @@ public class Chain<T>
         // supply ID to newNode if it does not have one
         SupplyNodeMetadata(newNode, newTag);
 
-        // corner case: if adding to an empty version, just add the node
+        // if adding to an empty version, add node and edges
         if (_nodes.Count == 0)
         {
             _nodes.Add(newNode);
+            // head
+            _links.Add(new ChainLink<T>(newTag, null, newNode));
+            // tail
+            _links.Add(new ChainLink<T>(newTag, newNode, null));
             return;
         }
 
-        // copy the source state into a new one
-        AddVersion(tag, newTag);
+        // copy the source state into a new one except for tail link
+        AddVersion(tag, newTag, GetTailLink(tag));
 
         // append D:
         // [A] A:B [B] B:C [C]
@@ -793,6 +795,17 @@ public class Chain<T>
         ChainNode<T>? last = GetLastNode(tag);
         if (last != null) _links.Add(new ChainLink<T>(newTag, last, newNode));
 
+        // if newTag is the same as tag, remove the old tail link
+        if (tag == newTag)
+        {
+            ChainLink<T>? oldTail = _links.Find(l => l.Tag == tag && l.IsTail);
+            if (oldTail != null) _links.Remove(oldTail);
+        }
+
+        // add new tail link
+        _links.Add(new ChainLink<T>(newTag, newNode, null));
+
+        // add the new node
         _nodes.Add(newNode);
     }
 
@@ -808,22 +821,46 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(nodes);
 
+        // if nothing to add, just return
         if (nodes.Count == 0) return;
-
-        // copy the source state into a new one
-        AddVersion(tag, newTag);
 
         // supply IDs to newNodes if they do not have one
         SupplyNodeMetadata(nodes, newTag);
 
+        // add links between new nodes
+        _links.AddRange(BuildLinksFrom(newTag, nodes));
+
+        // if adding to an empty version, add node and edges
+        if (_nodes.Count == 0)
+        {
+            _nodes.AddRange(nodes);
+            // head
+            _links.Add(new ChainLink<T>(newTag, null, nodes[0]));
+            // tail
+            _links.Add(new ChainLink<T>(newTag, nodes[^1], null));
+            return;
+        }
+
+        // copy the source state into a new one except for tail link
+        AddVersion(tag, newTag, GetTailLink(tag));
+
+        // append after last node
         if (_nodes.Count > 0)
         {
-            // append after last node
             ChainNode<T>? last = GetLastNode(tag);
             if (last != null) _links.Add(new ChainLink<T>(newTag, last, nodes[0]));
         }
 
-        _links.AddRange(BuildLinksFrom(newTag, nodes));
+        // add new tail link
+        _links.Add(new ChainLink<T>(newTag, nodes[^1], null));
+
+        // if newTag is the same as tag, remove the old tail link
+        if (tag == newTag)
+        {
+            ChainLink<T>? oldTail = _links.Find(l => l.Tag == tag && l.IsTail);
+            if (oldTail != null) _links.Remove(oldTail);
+        }
+
         _nodes.AddRange(nodes);
     }
     #endregion
@@ -874,8 +911,8 @@ public class Chain<T>
         }
 
         // get left links of head nodes
-        ChainLink<T>? first1Link = GetNodeLeftLink(tag, first1Node);
-        ChainLink<T>? first2Link = GetNodeLeftLink(tag, first2Node);
+        ChainLink<T>? first1Link = GetNodePreviousLink(tag, first1Node);
+        ChainLink<T>? first2Link = GetNodePreviousLink(tag, first2Node);
 
         // nope if head nodes are not connected to any other node
         if (first1Link == null && first2Link == null) return false;
@@ -955,8 +992,7 @@ public class Chain<T>
     /// Determines whether this chain contains the specified version.
     /// </summary>
     /// <param name="tag">The version tag.</param>
-    /// <returns>
-    ///   <c>true</c> if version is present; otherwise, <c>false</c>.
+    /// <returns><c>true</c> if version is present; otherwise, <c>false</c>.
     /// </returns>
     public bool HasVersion(string tag)
     {

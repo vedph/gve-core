@@ -53,7 +53,7 @@ public class CharNode
     {
         get
         {
-            return (IList<char>?)_prevValues ?? Array.Empty<char>();
+            return (IList<char>?)_prevValues ?? [];
         }
     }
 
@@ -124,7 +124,7 @@ public class CharNode
     public IList<string> GetCoordNames()
     {
         return _coords == null
-            ? Array.Empty<string>()
+            ? []
             : (IList<string>)[.. _coords.Keys.OrderBy(s => s)];
     }
 
