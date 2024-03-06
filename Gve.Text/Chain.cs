@@ -498,6 +498,8 @@ public class Chain<T>
 
         List<ChainLink<T>> links;
 
+        if (left.IsHead && right.IsTail) return true;
+
         // first nodes: (-:A [A] A:B [B] B:C) [C] C:-
         if (left.IsHead)
         {
