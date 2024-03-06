@@ -35,10 +35,10 @@ public class ChainNode<T>
     /// <param name="data">The data.</param>
     /// <param name="label">The label.</param>
     /// <param name="id">The identifier.</param>
-    public ChainNode(T? data, string label = "", int id = 0)
+    public ChainNode(T? data, string? label = null, int id = 0)
     {
         Data = data;
-        Label = label ?? "";
+        Label = label ?? data?.ToString() ?? "";
         Id = id;
     }
 
