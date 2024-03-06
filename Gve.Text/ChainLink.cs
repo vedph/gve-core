@@ -24,6 +24,16 @@ public class ChainLink<T>
     public ChainNode<T>? Target { get; set; }
 
     /// <summary>
+    /// Gets a value indicating whether this link is a head link.
+    /// </summary>
+    public bool IsHead => Source is null;
+
+    /// <summary>
+    /// Gets a value indicating whether this link is a tail link.
+    /// </summary>
+    public bool IsTail => Target is null;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainLink{T}"/> class.
     /// </summary>
     public ChainLink()
@@ -36,10 +46,18 @@ public class ChainLink<T>
     /// <param name="tag">The tag.</param>
     /// <param name="source">The source.</param>
     /// <param name="target">The target.</param>
-    /// <exception cref="System.ArgumentNullException">tag</exception>
+    /// <exception cref="ArgumentNullException">tag</exception>
+    /// <exception cref="ArgumentException">Both source and target are null.
+    /// </exception>"
     public ChainLink(string tag, ChainNode<T>? source, ChainNode<T>? target)
     {
         ArgumentNullException.ThrowIfNull(tag);
+        if (source is null && target is null)
+        {
+            throw new ArgumentException("Both source and target in a ChainLink " +
+                "cannot be null.");
+        }
+
         Tag = tag;
         Source = source;
         Target = target;
