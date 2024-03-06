@@ -594,4 +594,54 @@ public sealed class ChainTest
         Assert.Equal("ABC", v1);
     }
     #endregion
+
+    #region AppendRange
+    [Fact]
+    public void AppendRange_Empty()
+    {
+        Chain<char> chain = new();
+        chain.AppendRange("", "v1", GetNodesFrom("abc"));
+
+        Assert.Equal(3, chain.GetNodeCount("v1"));
+        Assert.Equal("abc", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void AppendRange_NonEmptyChainSameVersion()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v1", new ChainNode<char>('a'));
+        chain.AppendRange("v1", "v1", GetNodesFrom("bc"));
+
+        Assert.Equal(3, chain.GetNodeCount("v1"));
+        Assert.Equal("abc", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void AppendRange_NonEmptyChainDifferentVersion()
+    {
+        Chain<char> chain = new();
+        chain.Append("", "v1", new ChainNode<char>('a'));
+        chain.AppendRange("v1", "v2", GetNodesFrom("bc"));
+
+        Assert.Equal(1, chain.GetNodeCount("v1"));
+        Assert.Equal(3, chain.GetNodeCount("v2"));
+        Assert.Equal("a", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("abc", GetVersionString(chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void AppendRange_EmptyNodes()
+    {
+        Chain<char> chain = new();
+        chain.Append("v1", "v1", new ChainNode<char>('a'));
+        List<ChainNode<char>> nodes = [];
+        chain.AppendRange("v1", "v2", nodes);
+
+        Assert.Equal(1, chain.GetNodeCount("v1"));
+        Assert.Equal(1, chain.GetNodeCount("v2"));
+        Assert.Equal("a", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("a", GetVersionString(chain.GetTagNodes("v2")));
+    }
+    #endregion
 }

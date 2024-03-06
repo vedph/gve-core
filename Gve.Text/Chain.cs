@@ -29,6 +29,16 @@ public class Chain<T>
     /// </summary>
     protected List<ChainLink<T>> _links = [];
 
+    /// <summary>
+    /// Gets the nodes in this chain.
+    /// </summary>
+    public IReadOnlyList<ChainNode<T>> Nodes => _nodes;
+
+    /// <summary>
+    /// Gets the links in this chain.
+    /// </summary>
+    public IReadOnlyList<ChainLink<T>> Links => _links;
+
     #region ID
     /// <summary>
     /// Resets the identifier to the specified seed value. This means that the
@@ -90,7 +100,7 @@ public class Chain<T>
     /// <returns>Count.</returns>
     public int GetLinkCount(string? tag = null)
     {
-        return tag == null ? _nodes.Count : _links.Count(l => l.Tag == tag);
+        return tag == null ? _links.Count : _links.Count(l => l.Tag == tag);
     }
 
     /// <summary>
