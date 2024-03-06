@@ -23,11 +23,9 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
         chain.AppendRange("", "v1", GetNodesFrom("ABC"));
-        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+        chain.AppendRange("v1", "v2", GetNodesFrom("DE"));
 
-        int n = chain.GetNodeCount();
-
-        Assert.Equal(5, n);
+        Assert.Equal(5, chain.GetNodeCount());
     }
 
     [Fact]
@@ -35,10 +33,10 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
         chain.AppendRange("", "v1", GetNodesFrom("ABC"));
-        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+        chain.AppendRange("v1", "v2", GetNodesFrom("DE"));
 
         Assert.Equal(3, chain.GetNodeCount("v1"));
-        Assert.Equal(2, chain.GetNodeCount("v2"));
+        Assert.Equal(5, chain.GetNodeCount("v2"));
     }
     #endregion
 
@@ -50,9 +48,7 @@ public sealed class ChainTest
         chain.AppendRange("", "v1", GetNodesFrom("ABC"));
         chain.AppendRange("v1", "v2", GetNodesFrom("DE"));
 
-        Assert.Equal(4 + 2, chain.GetLinkCount());
-        Assert.Equal(2, chain.GetLinkCount("v1"));
-        Assert.Equal(2 + 2, chain.GetLinkCount("v2"));
+        Assert.Equal(10, chain.GetLinkCount());
     }
 
     [Fact]
@@ -60,11 +56,10 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
         chain.AppendRange("", "v1", GetNodesFrom("ABC"));
-        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+        chain.AppendRange("v1", "v2", GetNodesFrom("DE"));
 
-        // there should be one less link than nodes
-        Assert.Equal(2, chain.GetLinkCount("v1"));
-        Assert.Equal(1, chain.GetLinkCount("v2"));
+        Assert.Equal(4, chain.GetLinkCount("v1"));
+        Assert.Equal(6, chain.GetLinkCount("v2"));
     }
     #endregion
 
