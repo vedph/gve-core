@@ -281,6 +281,50 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region IsNodeBefore
+    [Fact]
+    public void IsNodeBefore_NodeIsNotBefore_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.False(chain.IsNodeBefore("v1", nodes[1], nodes[0]));
+    }
+
+    [Fact]
+    public void IsNodeBefore_NodeIsBefore_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.IsNodeBefore("v1", nodes[0], nodes[2]));
+    }
+    #endregion
+
+    #region IsNodeAfter
+    [Fact]
+    public void IsNodeAfter_NodeIsNotAfter_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.False(chain.IsNodeAfter("v1", nodes[0], nodes[1]));
+    }
+
+    [Fact]
+    public void IsNodeAfter_NodeIsAfter_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.IsNodeAfter("v1", nodes[2], nodes[0]));
+    }
+    #endregion
+
     #region GetNodeLeftLink
     [Fact]
     public void GetNodeLeftLink_NullNode_Null()
