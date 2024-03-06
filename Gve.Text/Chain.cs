@@ -502,16 +502,21 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newNode);
 
         // insert B before C:
-        // [A] A:C [C] C:D [D]
+        // [A] A:C ([C]) C:D [D]
         // =>
-        // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Target == refNode);
+        // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
+
+        // get the link connecting the reference node to the previous node (A:C)
+        ChainLink<T>? link = GetNodeLeftLink(tag, refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
 
         // supply ID to newNode if it does not have one
         SupplyId(newNode);
+
+        // copy the source state into a new one excluding the link to be removed
+        AddVersion(tag, newTag, link);
 
         // [A] A:B* [B]
         if (link.Source != null)
@@ -546,16 +551,21 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newNode);
 
         // insert B after A:
-        // [A] A:C [C] C:D [D]
+        // ([A]) A:C [C] C:D [D]
         // =>
-        // [A] A:B* [B] B:C* [C] C:D [D] (old: A:C)
-        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Source == refNode);
+        // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
+
+        // get the link connecting the reference node to the next node (A:C)
+        ChainLink<T>? link = GetNodeRightLink(tag, refNode);
 
         // nope if node is not connected to any other node
         if (link == null) return false;
 
         // supply ID to newNode if it does not have one
         SupplyId(newNode);
+
+        // copy the source state into a new one excluding the link to be removed
+        AddVersion(tag, newTag, link);
 
         // [A] A:B* [B]
         _links.Add(new ChainLink<T>(newTag, refNode, newNode));
@@ -588,21 +598,25 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(refNode);
         ArgumentNullException.ThrowIfNull(newNodes);
 
-        ChainLink<T>? link = _links.Find(l => l.Target == refNode);
+        // insert [B] B:C [C] before [D]:
+        // [A] A:D ([D]) D:E [E]
+        // =>
+        // [A] (A:B* [B]* B:C* [C]* C:D*) [D] D:E [E] (old: A:D)
+
+        // get the link connecting the reference node to the previous node
+        ChainLink<T>? link = GetNodeLeftLink(tag, refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
         SupplyIds(newNodes);
 
+        // copy the source state into a new one excluding the link to be removed
+        AddVersion(tag, newTag, link);
+
         // add links between new nodes
         _links.AddRange(BuildLinksFrom(newTag, newNodes));
         // add nodes
         _nodes.AddRange(newNodes);
-
-        // insert [B] B:C [C] before [D]:
-        // [A] A:D [D] D:E [E]
-        // =>
-        // [A] A:B* ([B]* B:C* [C]*) C:D* [D] D:E [E] (old: A:D)
 
         // add A:B
         _links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
@@ -633,21 +647,24 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(refNode);
         ArgumentNullException.ThrowIfNull(newNodes);
 
-        ChainLink<T>? link = _links.Find(l => l.Tag == tag && l.Target == refNode);
+        // insert [B] B:C [C] after [A]:
+        // ([A]) A:D [D] D:E [E]
+        // =>
+        // [A] (A:B* [B]* B:C* [C]* C:D*) [D] D:E [E] (old: A:D)
+
+        ChainLink<T>? link = GetNodeRightLink(tag, refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
         SupplyIds(newNodes);
 
+        // copy the source state into a new one excluding the link to be removed
+        AddVersion(tag, newTag, link);
+
         // add links between new nodes
         _links.AddRange(BuildLinksFrom(newTag, newNodes));
         // add nodes
         _nodes.AddRange(newNodes);
-
-        // insert [B] B:C [C] after [A]:
-        // [A] A:D [D] D:E [E]
-        // =>
-        // [A] A:B* B:C* ([C]* C:D* [D]*) D:E [E] (old: A:D)
 
         // add B:C
         _links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
@@ -685,6 +702,9 @@ public class Chain<T>
             return;
         }
 
+        // copy the source state into a new one
+        AddVersion(tag, newTag);
+
         // append D:
         // [A] A:B [B] B:C [C]
         // =>
@@ -708,6 +728,11 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
         ArgumentNullException.ThrowIfNull(nodes);
+
+        if (nodes.Count == 0) return;
+
+        // copy the source state into a new one
+        AddVersion(tag, newTag);
 
         // supply IDs to newNodes if they do not have one
         SupplyIds(nodes);

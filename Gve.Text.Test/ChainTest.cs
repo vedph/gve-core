@@ -53,7 +53,7 @@ public sealed class ChainTest
         int n = chain.GetLinkCount();
 
         // there should be one less link than nodes
-        Assert.Equal(2, n);
+        Assert.Equal(4, n);
     }
 
     [Fact]
