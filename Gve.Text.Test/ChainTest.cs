@@ -48,12 +48,11 @@ public sealed class ChainTest
     {
         Chain<char> chain = new();
         chain.AppendRange("", "v1", GetNodesFrom("ABC"));
-        chain.AppendRange("", "v2", GetNodesFrom("DE"));
+        chain.AppendRange("v1", "v2", GetNodesFrom("DE"));
 
-        int n = chain.GetLinkCount();
-
-        // there should be one less link than nodes
-        Assert.Equal(4, n);
+        Assert.Equal(4 + 2, chain.GetLinkCount());
+        Assert.Equal(2, chain.GetLinkCount("v1"));
+        Assert.Equal(2 + 2, chain.GetLinkCount("v2"));
     }
 
     [Fact]
@@ -215,6 +214,70 @@ public sealed class ChainTest
         ChainNode<char>? lastNode = chain.GetLastNode("v1");
 
         Assert.Null(lastNode);
+    }
+    #endregion
+
+    #region GetNextNode
+    [Fact]
+    public void GetNextNode_NonExistingTag_Null()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.Null(chain.GetNextNode("nonExistingTag", node));
+    }
+
+    [Fact]
+    public void GetNextNode_ExistingTagButNoNextNode_Null()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.Null(chain.GetNextNode("v1", node));
+    }
+
+    [Fact]
+    public void GetNextNode_ExistingTagAndHasNextNode_NextNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.Equal(nodes[1], chain.GetNextNode("v1", nodes[0]));
+    }
+    #endregion
+
+    #region GetPreviousNode
+    [Fact]
+    public void GetPreviousNode_NonExistingTag_Null()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.Null(chain.GetPreviousNode("nonExistingTag", node));
+    }
+
+    [Fact]
+    public void GetPreviousNode_ExistingTagButNoPreviousNode_Null()
+    {
+        Chain<char> chain = new();
+        ChainNode<char> node = new('A');
+        chain.Append("", "v1", node);
+
+        Assert.Null(chain.GetPreviousNode("v1", node));
+    }
+
+    [Fact]
+    public void GetPreviousNode_ExistingTagAndHasPreviousNode_PreviousNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.Equal(nodes[0], chain.GetPreviousNode("v1", nodes[1]));
     }
     #endregion
 
