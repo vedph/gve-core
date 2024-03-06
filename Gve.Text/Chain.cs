@@ -266,22 +266,6 @@ public class Chain<T>
     }
 
     /// <summary>
-    /// Gets the link preceding the specified link.
-    /// </summary>
-    /// <param name="tag">The version tag.</param>
-    /// <param name="link">The reference link or null.</param>
-    /// <returns>Link or null if not found or input node was null.</returns>
-    /// <exception cref="ArgumentNullException">tag</exception>
-    public ChainLink<T>? GetPreviousLink(string tag, ChainLink<T>? link)
-    {
-        ArgumentNullException.ThrowIfNull(tag);
-
-        if (link == null || !HasVersion(tag)) return null;
-
-        return _links.Find(l => l.Tag == tag && l.Target == link.Source);
-    }
-
-    /// <summary>
     /// Gets the link following the specified node.
     /// </summary>
     /// <param name="tag">The version tag.</param>
@@ -298,6 +282,22 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Gets the link preceding the specified link.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="link">The reference link or null.</param>
+    /// <returns>Link or null if not found or input node was null.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
+    public ChainLink<T>? GetPreviousLink(string tag, ChainLink<T>? link)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        if (link == null || link.IsHead || !HasVersion(tag)) return null;
+
+        return _links.Find(l => l.Tag == tag && l.Target == link.Source);
+    }
+
+    /// <summary>
     /// Gets the link following the specified link.
     /// </summary>
     /// <param name="tag">The version tag.</param>
@@ -308,7 +308,7 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        if (link == null || !HasVersion(tag)) return null;
+        if (link == null || link.IsTail || !HasVersion(tag)) return null;
 
         return _links.Find(l => l.Tag == tag && l.Source == link.Target);
     }

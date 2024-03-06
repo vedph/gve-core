@@ -338,13 +338,16 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void GetNodePreviousLink_FirstNode_Null()
+    public void GetNodePreviousLink_FirstNode_Edge()
     {
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABC");
         chain.AppendRange("", "v0", nodes);
 
-        Assert.Null(chain.GetNodePreviousLink("v0", nodes[0]));
+        ChainLink<char>? link = chain.GetNodePreviousLink("v0", nodes[0]);
+
+        Assert.NotNull(link);
+        Assert.True(link.IsHead);
     }
 
     [Fact]
@@ -369,6 +372,59 @@ public sealed class ChainTest
         chain.AppendRange("", "v0", nodes);
 
         ChainLink<char>? link = chain.GetNodePreviousLink("v1", nodes[1]);
+
+        Assert.Null(link);
+    }
+    #endregion
+
+    #region GetNodeNextLink
+    [Fact]
+    public void GetNodeNextLink_NullNode_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeNextLink("v0", null);
+
+        Assert.Null(link);
+    }
+
+    [Fact]
+    public void GetNodeNextLink_LastNode_Edge()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeNextLink("v0", nodes[^1]);
+
+        Assert.NotNull(link);
+        Assert.True(link.IsTail);
+    }
+
+    [Fact]
+    public void GetNodeNextLink_NotNullNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeNextLink("v0", nodes[1]);
+
+        Assert.NotNull(link);
+        Assert.Equal(nodes[1], link.Source);
+        Assert.Equal(nodes[2], link.Target);
+    }
+
+    [Fact]
+    public void GetNodeNextLink_NonExistingTag()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        ChainLink<char>? link = chain.GetNodeNextLink("v1", nodes[1]);
 
         Assert.Null(link);
     }
@@ -423,56 +479,6 @@ public sealed class ChainTest
         ChainLink<char>? refLink = chain.GetNodeNextLink("v0", nodes[1]);
 
         ChainLink<char>? link = chain.GetPreviousLink("v1", refLink);
-
-        Assert.Null(link);
-    }
-    #endregion
-
-    #region GetNodeNextLink
-    [Fact]
-    public void GetNodeNextLink_NullNode_Null()
-    {
-        Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
-        chain.AppendRange("", "v0", nodes);
-
-        ChainLink<char>? link = chain.GetNodeNextLink("v0", null);
-
-        Assert.Null(link);
-    }
-
-    [Fact]
-    public void GetNodeNextLink_LastNode_Null()
-    {
-        Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
-        chain.AppendRange("", "v0", nodes);
-
-        Assert.Null(chain.GetNodeNextLink("v0", nodes[^1]));
-    }
-
-    [Fact]
-    public void GetNodeNextLink_NotNullNode()
-    {
-        Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
-        chain.AppendRange("", "v0", nodes);
-
-        ChainLink<char>? link = chain.GetNodeNextLink("v0", nodes[1]);
-
-        Assert.NotNull(link);
-        Assert.Equal(nodes[1], link.Source);
-        Assert.Equal(nodes[2], link.Target);
-    }
-
-    [Fact]
-    public void GetNodeNextLink_NonExistingTag()
-    {
-        Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
-        chain.AppendRange("", "v0", nodes);
-
-        ChainLink<char>? link = chain.GetNodeNextLink("v1", nodes[1]);
 
         Assert.Null(link);
     }
