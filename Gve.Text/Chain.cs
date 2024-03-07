@@ -128,6 +128,29 @@ public class Chain<T>
     public ChainNode<T>? FindNode(int id) => _nodes.Find(n => n.Id == id);
 
     /// <summary>
+    /// Finds the node at the specified index in the string resulting from
+    /// enumerating all the nodes for version <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="index">The node index.</param>
+    /// <returns>Node or null if not found.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
+    /// <exception cref="ArgumentOutOfRangeException">index</exception>
+    public ChainNode<T>? FindNodeByIndex(string tag, int index)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+
+        int i = 0;
+        foreach (ChainNode<T> node in EnumerateTagNodes(tag))
+        {
+            if (i == index) return node;
+            i++;
+        }
+        return null;
+    }
+
+    /// <summary>
     /// Determines whether <paramref name="node"/> is included in the version
     /// defined by <paramref name="tag"/>.
     /// </summary>
