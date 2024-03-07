@@ -168,6 +168,38 @@ public class Chain<T>
     }
 
     /// <summary>
+    /// Determines whether <paramref name="node"/> is the first node in the
+    /// version defined by <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The tag.</param>
+    /// <param name="node">The node.</param>
+    /// <returns><c>true</c> if last node; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">tag or node</exception>
+    public bool IsFirstNode(string tag, ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+
+        return GetFirstNode(tag) == node;
+    }
+
+    /// <summary>
+    /// Determines whether <paramref name="node"/> is the last node in the
+    /// version defined by <paramref name="tag"/>.
+    /// </summary>
+    /// <param name="tag">The tag.</param>
+    /// <param name="node">The node.</param>
+    /// <returns><c>true</c> if last node; otherwise, <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">tag or node</exception>
+    public bool IsLastNode(string tag, ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
+
+        return GetLastNode(tag) == node;
+    }
+
+    /// <summary>
     /// Gets the first node for the specified version tag.
     /// </summary>
     /// <param name="tag">The version tag.</param>
@@ -633,12 +665,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(refNode);
         ArgumentNullException.ThrowIfNull(newNode);
 
-        // insert B before C:
-        // [A] A:C ([C]) C:D [D]
-        // =>
-        // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
-
-        // get the link connecting the reference node to the previous node (A:C)
+        // get the link connecting the reference node to the previous node
         ChainLink<T>? link = GetNodePreviousLink(tag, refNode);
 
         // nope if node is not connected to any other node
@@ -646,15 +673,62 @@ public class Chain<T>
 
         // supply ID to newNode if it does not have one
         SupplyNodeMetadata(newNode, newTag);
+        // add the new node
+        _nodes.Add(newNode);
 
+        // insert [X] before head:
+        // -:A [A] A:B ([B]) B:-
+        // =>
+        // (-:X [X] X:A) [A] A:B [B] B:-
+        if (link.IsHead)
+        {
+            // copy the source state into a new one excluding the head link
+            AddVersion(tag, newTag, link);
+
+            // [X] X:A* [A]
+            _links.Add(new ChainLink<T>(newTag, null, newNode));
+
+            // [A] A:B* [B]
+            _links.Add(new ChainLink<T>(newTag, newNode, refNode));
+
+            // if newTag is the same as tag, delete the old link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // insert [X] before tail:
+        // -:A [A] A:B ([B]) B:-
+        // =>
+        // -:A [A] (A:X [X] X:B) [B] B:- (old: A:B)
+        if (IsLastNode(tag, link.Target!))
+        {
+            // copy the source state into a new one excluding the tail link
+            AddVersion(tag, newTag, link);
+
+            // [A] A:X* [X]
+            _links.Add(new ChainLink<T>(newTag, link.Source, newNode));
+
+            // [X] X:B* [B]
+            _links.Add(new ChainLink<T>(newTag, newNode, refNode));
+
+            // if newTag is the same as tag, delete the old link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // inner insert:
+        // -:A [A] A:B ([B]) B:C [C] C:-
+        // =>
+        // -:A [A] (A:X [X] X:B) [B] B:C [C] C:- (old: A:B)
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
 
-        // [A] A:B* [B]
-        if (link.Source != null)
-            _links.Add(new ChainLink<T>(newTag, link.Source, newNode));
+        // [A] A:X [X]
+        _links.Add(new ChainLink<T>(newTag, link.Source, newNode));
 
-        // [B] B:C* [C]
+        // [X] X:B [B]
         _links.Add(new ChainLink<T>(newTag, newNode, refNode));
 
         // if newTag is the same as tag, delete the old link
