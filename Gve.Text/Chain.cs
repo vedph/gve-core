@@ -815,18 +815,64 @@ public class Chain<T>
 
         // supply IDs to newNodes if they do not have one
         SupplyNodeMetadata(newNodes, newTag);
+        // add nodes
+        _nodes.AddRange(newNodes);
+        // add links between new nodes
+        _links.AddRange(BuildLinksFrom(newTag, newNodes));
 
+        // insert [X] X:Y [Y] before head:
+        // -:A [A] A:B ([B]) B:-
+        // =>
+        // (-:X [X] X:Y [Y] Y:A) [A] A:B [B] B:-
+        if (link.IsHead)
+        {
+            // copy the source state into a new one excluding the head link
+            AddVersion(tag, newTag, link);
+
+            // (-:X [X] X:Y [Y] Y:A) [A]
+            _links.Add(new ChainLink<T>(newTag, null, newNodes[0]));
+
+            // [A] A:B [B] B:-
+            _links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
+
+            // if newTag is the same as tag, delete the old head link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // insert [X] X:Y [Y] before tail:
+        // -:A [A] A:B ([B]) B:-
+        // =>
+        // -:A [A] (A:X [X] X:Y [Y] Y:B) [B] B:- (old: A:B)
+        if (IsLastNode(tag, link.Target!))
+        {
+            // copy the source state into a new one excluding the tail link
+            AddVersion(tag, newTag, link);
+
+            // [A] A:X [X]
+            _links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
+
+            // [X] X:Y [Y]
+            _links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
+
+            // if newTag is the same as tag, delete the old tail link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // inner insert:
+        // -:A [A] A:B ([B]) B:C [C] C:-
+        // =>
+        // -:A [A] (A:X [X] X:Y [Y] Y:B) [B] B:C [C] C:- (old: A:B)
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
 
-        // add links between new nodes
-        _links.AddRange(BuildLinksFrom(newTag, newNodes));
-        // add nodes
-        _nodes.AddRange(newNodes);
-
-        // add A:B
+        // [A] A:X* [X]
         _links.Add(new ChainLink<T>(newTag, link.Source, newNodes[0]));
-        // add C:D
+
+        // [Y] Y:B* [B]
         _links.Add(new ChainLink<T>(newTag, newNodes[^1], refNode));
 
         // if newTag is the same as tag, delete the old link
