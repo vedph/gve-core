@@ -136,6 +136,99 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region FindNode
+    [Fact]
+    public void FindNode_EmptyChain_Null()
+    {
+        Chain<char> chain = new();
+
+        ChainNode<char>? result = chain.FindNode(1);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void FindNode_MatchingId_Node()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        ChainNode<char>? result = chain.FindNode(nodes[1].Id);
+
+        Assert.Equal(nodes[1], result);
+    }
+
+    [Fact]
+    public void FindNode_NonMatchingId_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        ChainNode<char>? result = chain.FindNode(0);
+
+        Assert.Null(result);
+    }
+    #endregion
+
+    #region FindNodeByIndex
+    [Fact]
+    public void FindNodeByIndex_NegativeIndex_Throws()
+    {
+        Chain<char> chain = new();
+
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => chain.FindNodeByIndex("tag", -1));
+    }
+
+    [Fact]
+    public void FindNodeByIndex_EmptyChain_Null()
+    {
+        Chain<char> chain = new();
+
+        ChainNode<char>? result = chain.FindNodeByIndex("tag", 0);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void FindNodeByIndex_ValidIndexNotExistingVersion_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        ChainNode<char>? result = chain.FindNodeByIndex("v2", 0);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void FindNodeByIndex_ValidIndexExistingVersion_Node()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        ChainNode<char>? result = chain.FindNodeByIndex("v1", 2);
+
+        Assert.Equal(nodes[2], result);
+    }
+
+    [Fact]
+    public void FindNodeByIndex_IndexOutOfRange_Null()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("test");
+        chain.AppendRange("tag", "newTag", nodes);
+
+        ChainNode<char>? result = chain.FindNodeByIndex("tag", 5);
+
+        Assert.Null(result);
+    }
+    #endregion
+
     #region GetFirstNode
     [Fact]
     public void GetFirstNode_Empty()
