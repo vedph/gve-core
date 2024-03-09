@@ -868,6 +868,46 @@ public sealed class ChainTest
     }
     #endregion
 
+    #region InsertAfter
+    [Fact]
+    public void InsertAfter_NodeNotConnected_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        bool result = chain.InsertAfter("", "v1",
+            new ChainNode<char>('X'),
+            new ChainNode<char>('Y'));
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void InsertAfter_FirstNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.InsertAfter("v0", "v1", nodes[0],
+            new ChainNode<char>('X')));
+        Assert.Equal("AXBC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void InsertAfter_LastNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.InsertAfter("v0", "v1", nodes[2],
+                       new ChainNode<char>('X')));
+        Assert.Equal("ABCX", GetVersionString(chain.GetTagNodes("v1")));
+    }
+    #endregion
+
     #region InsertRangeBefore
     [Fact]
     public void InsertRangeBefore_NodesNotConnected_False()

@@ -36,4 +36,13 @@ public class ChainOperationContext<T>
         LastTag = "";
         Steps = [];
     }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>String.</returns>
+    public override string ToString()
+    {
+        return $"{Chain} ({Steps.Count})";
+    }
 }
