@@ -1,0 +1,52 @@
+﻿using System;
+
+namespace Gve.Text;
+
+/// <summary>
+/// A step in a chain operation context.
+/// </summary>
+/// <typeparam name="T">The type of chain node data.</typeparam>
+public class ChainOperationContextStep<T>
+{
+    /// <summary>
+    /// Gets the operation.
+    /// </summary>
+    public ChainOperation<T> Operation { get; }
+
+    /// <summary>
+    /// Gets the input tag.
+    /// </summary>
+    public string InputTag { get; }
+
+    /// <summary>
+    /// Gets or sets the output tag.
+    /// </summary>
+    public string OutputTag { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ChainOperationContextStep{T}"/>
+    /// class.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <exception cref="ArgumentNullException">operation or tags</exception>
+    public ChainOperationContextStep(ChainOperation<T> operation, string inputTag,
+        string outputTag)
+    {
+        Operation = operation ?? throw new ArgumentNullException(nameof(operation));
+        InputTag = inputTag ?? throw new ArgumentNullException(nameof(inputTag));
+        OutputTag = outputTag ?? throw new ArgumentNullException(nameof(outputTag));
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return $"[{InputTag}:{OutputTag}] {Operation}";
+    }
+}

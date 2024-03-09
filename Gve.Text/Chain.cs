@@ -12,12 +12,20 @@ namespace Gve.Text;
 /// to this structure. Internally, this structure collects nodes and links,
 /// and once they are added, they cannot be removed (unless we are using a
 /// single version). Any modification is done by adding new nodes and links,
-/// which connect or disconnect or reoder the existing nodes.
+/// which connect or disconnect or reorder the existing nodes.
 /// When the chain is empty, there are no nodes or links. When there is at
 /// least one node, there always are links for the head and the tail of the
 /// chain. So, the structure, when not empty, always alternates links and nodes,
 /// starting and ending with links.
 /// </summary>
+/// <remarks>This structure allows to represent different states of a text
+/// in time, after operations change it. Each operation introduces a new version
+/// (unless you are overwriting the previous version), so that building the
+/// text for a version is done by just following the path defined by links
+/// among nodes. At any time, you can build the text for any version, while
+/// still using a single object to represent all of the versions.
+/// Operations usually add new links, and optionally add new nodes; anyway,
+/// both nodes and links are immutable items of an unordered set.</remarks>
 public class Chain<T>
 {
     private readonly object _locker = new();

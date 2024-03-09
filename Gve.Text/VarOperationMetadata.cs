@@ -13,6 +13,20 @@ public class VarOperationMetadata
     public const string RANK_KEY = "rank";
 
     /// <summary>
+    /// The symbols corresponding to <see cref="VarOperationType"/>'s.
+    /// </summary>
+    public static readonly string[] TYPE_SYMBOLS =
+    [
+        "=",
+        "-",
+        "+<",
+        "+>",
+        ":",
+        ">",
+        "<>"
+    ];
+
+    /// <summary>
     /// Gets or sets the certainty rank for this operation: 0=not specified,
     /// 1=most probable, 2=less probable, etc.
     /// </summary>
@@ -60,4 +74,25 @@ public class VarOperationMetadata
         Features = [];
         Sources = [];
     }
+}
+
+/// <summary>
+/// Type of <see cref="VarOperation"/>.
+/// </summary>
+public enum VarOperationType
+{
+    /// <summary>The replace operation.</summary>
+    Replace = 0,
+    /// <summary>The delete operation.</summary>
+    Delete,
+    /// <summary>The add left operation.</summary>
+    AddLeft,
+    /// <summary>The add right operation.</summary>
+    AddRight,
+    /// <summary>The annotate operation.</summary>
+    Annotate,
+    /// <summary>The move operation.</summary>
+    Move,
+    /// <summary>The swap operation.</summary>
+    Swap
 }

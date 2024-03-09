@@ -15,19 +15,6 @@ namespace Gve.Text;
 public abstract partial class VarOperation : VarOperationMetadata
 {
     /// <summary>
-    /// The symbols corresponding to <see cref="VarOperationType"/>'s.
-    /// </summary>
-    public static readonly string[] TYPE_SYMBOLS =
-    [
-        "=",
-        "+<",
-        "+>",
-        ":",
-        ">",
-        "<>"
-    ];
-
-    /// <summary>
     /// Gets or sets the operation identifier. This is used to reference
     /// a specific operation in a transformation, essentially for diagnostic
     /// purposes.
@@ -291,23 +278,4 @@ public abstract partial class VarOperation : VarOperationMetadata
     {
         return $"{At}x{Run}" + TYPE_SYMBOLS[(int)Type] + Value;
     }
-}
-
-/// <summary>
-/// Type of <see cref="VarOperation"/>.
-/// </summary>
-public enum VarOperationType
-{
-    /// <summary>The replace operation.</summary>
-    Replace = 0,
-    /// <summary>The add left operation.</summary>
-    AddLeft,
-    /// <summary>The add right operation.</summary>
-    AddRight,
-    /// <summary>The annotate operation.</summary>
-    Annotate,
-    /// <summary>The move operation.</summary>
-    Move,
-    /// <summary>The swap operation.</summary>
-    Swap
 }
