@@ -1120,4 +1120,113 @@ public sealed class ChainTest
         Assert.Equal("", GetVersionString(chain.GetTagNodes("v2")));
     }
     #endregion
+
+    #region Replace
+    [Fact]
+    public void Replace_NodeNotConnected_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        bool result = chain.Replace("", "v1",
+            new ChainNode<char>('X'),
+            new ChainNode<char>('Y'));
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void Replace_FirstNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Replace("v0", "v1", nodes[0],
+            new ChainNode<char>('X')));
+
+        Assert.Equal("XBC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Replace_LastNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Replace("v0", "v1", nodes[2],
+            new ChainNode<char>('X')));
+
+        Assert.Equal("ABX", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Replace_InnerNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Replace("v0", "v1", nodes[1],
+            new ChainNode<char>('X')));
+
+        Assert.Equal("AXC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+    #endregion
+
+    #region ReplaceRange
+    [Fact]
+    public void ReplaceRange_NodesNotConnected_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.False(chain.ReplaceRange("", "v1",
+            new ChainNode<char>('X'),
+            new ChainNode<char>('Y'),
+            GetNodesFrom("DE")));
+    }
+
+    [Fact]
+    public void ReplaceRange_FirstNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.ReplaceRange("v0", "v1", nodes[0], nodes[1],
+            GetNodesFrom("DE")));
+
+        Assert.Equal("DEC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void ReplaceRange_LastNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.ReplaceRange("v0", "v1", nodes[1], nodes[2],
+            GetNodesFrom("DE")));
+
+        Assert.Equal("ADE", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void ReplaceRange_InnerNodes()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.ReplaceRange("v0", "v1", nodes[1], nodes[2],
+            GetNodesFrom("XY")));
+
+        Assert.Equal("AXYD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+    #endregion
 }
