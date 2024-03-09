@@ -1149,6 +1149,107 @@ public class Chain<T>
     }
     #endregion
 
+    #region Move    
+    /// <summary>
+    /// Moves <paramref name="node"/> to the position before
+    /// <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The tag.</param>
+    /// <param name="newTag">The new tag.</param>
+    /// <param name="node">The chain node.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <returns>True if moved.</returns>
+    public bool Move(string tag, string newTag, ChainNode<T> node,
+        ChainNode<T> refNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(refNode);
+
+        if (node == refNode) return false;
+
+        InsertBefore(tag, newTag, refNode, node);
+        Delete(tag, newTag, node);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Moves the range defined by <paramref name="firstNode"/> and
+    /// <paramref name="lastNode"/> before <paramref name="refNode"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="firstNode">The first node.</param>
+    /// <param name="lastNode">The last node.</param>
+    /// <param name="refNode">The reference node.</param>
+    /// <returns>True if moved.</returns>
+    public bool MoveRange(string tag, string newTag, ChainNode<T> firstNode,
+        ChainNode<T> lastNode, ChainNode<T> refNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(firstNode);
+        ArgumentNullException.ThrowIfNull(lastNode);
+        ArgumentNullException.ThrowIfNull(refNode);
+
+        if (firstNode == refNode || lastNode == refNode) return false;
+
+        // if firstNode is after lastNode, swap them
+        if (IsNodeAfter(tag, firstNode, lastNode))
+        {
+            (firstNode, lastNode) = (lastNode, firstNode);
+        }
+
+        // move BC before A:
+        // -:A [A] A:B ([B]) B:C [C] C:D [D]
+        // =>
+        // -:B ([B]) B:C [C] C:A [A] A:D [D]
+
+        // get links before firstNode and after lastNode
+        ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
+        ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
+
+        // nope if firstNode or lastNode are not connected to any other node
+        if (left == null || right == null) return false;
+
+        // copy the source state into a new one except for left+right links
+        AddVersion(tag, newTag, left, right);
+
+        // if firstNode is the head, add link between head and lastNode
+        if (left.IsHead)
+        {
+            _links.Add(new ChainLink<T>(newTag, null, lastNode));
+        }
+        // else add link between left-of-firstNode and lastNode
+        else
+        {
+            _links.Add(new ChainLink<T>(newTag, left.Source, lastNode));
+        }
+
+        // if lastNode is the tail, add link between firstNode and tail
+        if (right.IsTail)
+        {
+            _links.Add(new ChainLink<T>(newTag, firstNode, null));
+        }
+        // else add link between firstNode and right-of-lastNode
+        else
+        {
+            _links.Add(new ChainLink<T>(newTag, firstNode, right.Target));
+        }
+
+        // if newTag is the same as tag, delete the old links
+        if (tag == newTag)
+        {
+            _links.Remove(left);
+            _links.Remove(right);
+        }
+
+        return true;
+    }
+    #endregion
+
     #region Swap
     /// <summary>
     /// Swaps the specified ranges of nodes.
