@@ -78,12 +78,13 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <returns>Identifier.</returns>
     public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 
-    // at, [run]
+    // TODO remove if not used, else update with tags
+    // [@]at, [run]
     [GeneratedRegex(@"^(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
     protected static partial Regex AtRunRegex();
 
-    // at, [run], op
-    [GeneratedRegex(@"^^(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
+    // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
+    [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
     private static partial Regex HeadRegex();
 
     // [rank], [group], [tags], [meta]
@@ -255,7 +256,8 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         return value.Length == 0 ? null : value;
     }
 
-    private static void ParseTaggedOrdinals(string text, VarOperation operation)
+    private static void ParseTaggedOrdinals(string text,
+        ChainOperation<T> operation)
     {
         operation.TaggedOrdinals.Clear();
 
@@ -278,14 +280,18 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <param name="operation">Target operation.</param>
     /// <returns>The body part of the text.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
-    protected static string ParseHeadAndTail(string text, VarOperation operation)
+    protected static string ParseHeadAndTail(string text,
+        ChainOperation<T> operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        // head: @ATxRUN or ATxRUN followed by OP
+        // head: (IT:OT) @ATxRUN or ATxRUN followed by OP
         Match head = HeadRegex().Match(text);
         if (!head.Success)
             throw new FormatException($"Invalid operation head: {text}");
+
+        operation.InputTag = GetOptionalArgValue(head.Groups["it"].Value);
+        operation.OutputTag = GetOptionalArgValue(head.Groups["ot"].Value);
 
         operation.At = short.Parse(head.Groups["at"].Value,
             CultureInfo.InvariantCulture);
