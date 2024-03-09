@@ -33,23 +33,21 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
             context.Chain, inputTag);
 
         // apply to single node or range
-        bool applied;
         if (endNode != null)
         {
-            applied = context.Chain.DeleteRange(
-                inputTag, outputTag, node, endNode);
+            context.Chain.DeleteRange(inputTag, outputTag, node, endNode);
         }
         else
         {
-            applied = context.Chain.Delete(inputTag, outputTag, node);
+            context.Chain.Delete(inputTag, outputTag, node);
         }
 
-        // add step if operation applied
-        if (applied)
-        {
-            context.Steps.Add(new ChainOperationContextStep<T>(
-                this, inputTag, outputTag));
-        }
+        // update the context's last tag
+        context.LastTag = outputTag;
+
+        // add this operation to the context's steps
+        context.Steps.Add(new ChainOperationContextStep<T>(
+            this, inputTag, outputTag));
     }
 
     /// <summary>

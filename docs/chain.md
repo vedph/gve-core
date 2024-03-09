@@ -14,17 +14,17 @@ Operations usually add new links, and optionally add new nodes; anyway, both nod
 
 Chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. These operations serve as an intermediate layer between client code with user-friendly models and the chain model itself.
 
-Each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`. The available operations (and their corresponding operator in their text-based representation) are:
+Each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`.
 
-- replace (`=`): e.g. `3x2="X"`
-- delete (`-`): e.g. `3x2-`
-- add left (`+<`): e.g. `3x2+<"X"`
-- add right (`+>`): e.g. `3x2+>"X"`
-- annotate (`:`): e.g. `3x2: {note=sample}`
-- move (`>`): e.g. `3x2>6`
-- swap (`<>`): e.g. `3x2<>6`
+All these operations get translated into calls to chain editing methods, which are more low-level and directly work on nodes. The chain operations take care of finding the nodes corresponding to their location arguments.
 
-All these operations get translated into chain operations, which are more low-level editing operations.
+Also, chain operations work on a chain operations context (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
+
+- the last version tag being the output of the last operation executed on this context.
+- the steps executed on the chain, each including:
+  - input version tag;
+  - output version tag;
+  - reference to the operation object.
 
 The general text-based syntax for these operations includes these components, from left to right:
 
@@ -35,3 +35,13 @@ The general text-based syntax for these operations includes these components, fr
 5. `^RANK`
 6. `[TAGS...]`: version tags, separated by space, used to filter operations in or out according to the editor's interpretation.
 7. `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
+
+The available operations (and their corresponding operator in their text-based representation) are:
+
+- replace (`=`): e.g. `3x2="X"`
+- delete (`-`): e.g. `3x2-`
+- add left (`+<`): e.g. `3x2+<"X"`
+- add right (`+>`): e.g. `3x2+>"X"`
+- annotate (`:`): e.g. `3x2: {note=sample}`
+- move (`>`): e.g. `3x2>6`
+- swap (`<>`): e.g. `3x2<>6`
