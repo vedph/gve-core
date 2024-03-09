@@ -36,7 +36,7 @@ public sealed class ReplaceBaseVarOperation : BaseVarOperation
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
-    /// <exception cref="ArgumentNullException">text or set</exception>
+    /// <exception cref="ArgumentNullException">text</exception>
     internal static ReplaceBaseVarOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);

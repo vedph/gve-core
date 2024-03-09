@@ -1,6 +1,7 @@
 ﻿using NanoidDotNet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -394,6 +395,57 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// </summary>
     /// <param name="context">The context.</param>
     public abstract void Execute(ChainOperationContext<T> context);
+
+    /// <summary>
+    /// Parses the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    /// <exception cref="FormatException">Parsing error</exception>
+    public static O Parse<O>(string text) where O : ChainOperation<T>
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        Match m = LocOpRegex().Match(text);
+        if (!m.Success)
+            throw new FormatException($"Invalid operation: {text}");
+
+        VarOperationType type = GetOperationType(m.Groups[1].Value);
+        return type switch
+        {
+            // TODO add other operation types
+            VarOperationType.Delete
+                => (ChainDeleteOperation<T>.ParseOperation(text) as O)!,
+            _ => throw new FormatException(
+                $"Invalid operation type: {GetOperationType(text)}")
+        };
+    }
+
+    /// <summary>
+    /// Tries to parsing the specified text representing an operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="operation">The parsed operation.</param>
+    /// <returns>True if success.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    public static bool TryParse<O>(string text, out O? operation)
+        where O : ChainOperation<T>
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        try
+        {
+            operation = Parse<O>(text);
+            return true;
+        }
+        catch (FormatException ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            operation = null;
+            return false;
+        }
+    }
 
     /// <summary>
     /// Converts to string.

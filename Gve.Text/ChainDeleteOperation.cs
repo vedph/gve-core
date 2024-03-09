@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Gve.Text;
 
@@ -49,5 +50,36 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
             context.Steps.Add(new ChainOperationContextStep<T>(
                 this, inputTag, outputTag));
         }
+    }
+
+    /// <summary>
+    /// Parses the operation.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Operation.</returns>
+    /// <exception cref="ArgumentNullException">text</exception>
+    internal static ChainDeleteOperation<T> ParseOperation(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        ChainDeleteOperation<T> op = new();
+        string body = ParseHeadAndTail(text, op);
+        op.Value = body.Trim('"');
+        return op;
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        AppendHead(sb);
+        sb.Append('"').Append(Value).Append('"');
+        AppendTail(sb);
+        return sb.ToString();
     }
 }
