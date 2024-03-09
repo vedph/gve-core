@@ -1127,9 +1127,8 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(oldNode);
         ArgumentNullException.ThrowIfNull(newNode);
 
-        InsertBefore(tag, newTag, oldNode, newNode);
-        Delete(tag, newTag, oldNode);
-        return true;
+        if (!InsertBefore(tag, newTag, oldNode, newNode)) return false;
+        return Delete(tag, newTag, oldNode);
     }
 
     /// <summary>
@@ -1151,9 +1150,8 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(lastNode);
         ArgumentNullException.ThrowIfNull(newNodes);
 
-        InsertRangeBefore(tag, newTag, firstNode, newNodes);
-        DeleteRange(tag, newTag, firstNode, lastNode);
-        return true;
+        if (!InsertRangeBefore(tag, newTag, firstNode, newNodes)) return false;
+        return DeleteRange(tag, newTag, firstNode, lastNode);
     }
     #endregion
 
@@ -1177,10 +1175,8 @@ public class Chain<T>
 
         if (node == refNode) return false;
 
-        InsertBefore(tag, newTag, refNode, node);
-        Delete(tag, newTag, node);
-
-        return true;
+        if (!InsertBefore(tag, newTag, refNode, node)) return false;
+        return Delete(tag, newTag, node);
     }
 
     /// <summary>
