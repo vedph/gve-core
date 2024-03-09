@@ -756,12 +756,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(refNode);
         ArgumentNullException.ThrowIfNull(newNode);
 
-        // insert B after A:
-        // ([A]) A:C [C] C:D [D]
-        // =>
-        // [A] (A:B* [B]* B:C*) [C] C:D [D] (old: A:C)
-
-        // get the link connecting the reference node to the next node (A:C)
+        // get the link connecting the reference node to the next node
         ChainLink<T>? link = GetNodeNextLink(tag, refNode);
 
         // nope if node is not connected to any other node
@@ -769,16 +764,50 @@ public class Chain<T>
 
         // supply ID to newNode if it does not have one
         SupplyNodeMetadata(newNode, newTag);
+        // add the new node
+        _nodes.Add(newNode);
 
+        // insert [X] after head:
+        // -:A ([A]) A:B [B] B:-
+        // =>
+        // -:A [A] A:X [X] X:B [B] B:- (old: A:B)
+        if (IsFirstNode(tag, link.Source!))
+        {
+            // copy the source state into a new one excluding the head link
+            AddVersion(tag, newTag, link);
+
+            // [A] A:X* [X]
+            _links.Add(new ChainLink<T>(newTag, refNode, newNode));
+
+            // [X] X:B* [B]
+            _links.Add(new ChainLink<T>(newTag, newNode, link.Target));
+
+            // if newTag is the same as tag, delete the old link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // insert [X] after tail = append
+        // -:A [A] A:B ([B]) B:-
+        if (link.IsTail)
+        {
+            Append(tag, newTag, newNode);
+            return true;
+        }
+
+        // inner insert:
+        // -:A [A] A:B ([B]) B:C [C] C:-
+        // =>
+        // -:A [A] A:B [B] (B:X [X] X:C) [C] C:- (old: B:C)
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
 
-        // [A] A:B* [B]
+        // [B] B:X* [X]
         _links.Add(new ChainLink<T>(newTag, refNode, newNode));
 
-        // [B] B:C* [C]
-        if (link.Target != null)
-            _links.Add(new ChainLink<T>(newTag, newNode, link.Target));
+        // [X] X:C* [C]
+        _links.Add(new ChainLink<T>(newTag, newNode, link.Target));
 
         // if newTag is the same as tag, delete the old link
         if (tag == newTag) _links.Remove(link);
@@ -904,23 +933,56 @@ public class Chain<T>
         // =>
         // [A] (A:B* [B]* B:C* [C]* C:D*) [D] D:E [E] (old: A:D)
 
+        // get the link connecting the reference node to the next node
         ChainLink<T>? link = GetNodeNextLink(tag, refNode);
         if (link == null) return false;
 
         // supply IDs to newNodes if they do not have one
         SupplyNodeMetadata(newNodes, newTag);
+        // add nodes
+        _nodes.AddRange(newNodes);
+        // add links between new nodes
+        _links.AddRange(BuildLinksFrom(newTag, newNodes));
 
+        // insert [X] X:Y [Y] after head:
+        // -:A ([A]) A:B [B] B:-
+        // =>
+        // -:A [A] A:X [X] X:Y [Y] Y:B [B] B:- (old: A:B)
+        if (IsFirstNode(tag, link.Source!))
+        {
+            // copy the source state into a new one excluding the head link
+            AddVersion(tag, newTag, link);
+
+            // -:A [A] A:X [X]
+            _links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
+
+            // [X] X:Y [Y]
+            _links.Add(new ChainLink<T>(newTag, newNodes[^1], link.Target));
+
+            // if newTag is the same as tag, delete the old link
+            if (tag == newTag) _links.Remove(link);
+
+            return true;
+        }
+
+        // insert [X] X:Y [Y] after tail = append
+        if (link.IsTail)
+        {
+            AppendRange(tag, newTag, newNodes);
+            return true;
+        }
+
+        // inner insert:
+        // -:A [A] A:B ([B]) B:C [C] C:-
+        // =>
+        // -:A [A] A:B [B] (B:X [X] X:Y [Y] Y:C) [C] C:- (old: B:C)
         // copy the source state into a new one excluding the link to be removed
         AddVersion(tag, newTag, link);
 
-        // add links between new nodes
-        _links.AddRange(BuildLinksFrom(newTag, newNodes));
-        // add nodes
-        _nodes.AddRange(newNodes);
-
-        // add B:C
+        // [B] B:X* [X]
         _links.Add(new ChainLink<T>(newTag, refNode, newNodes[0]));
-        // add C:D
+
+        // [Y] Y:C* [C]
         _links.Add(new ChainLink<T>(newTag, newNodes[^1], link.Target));
 
         // if newTag is the same as tag, delete the old link
@@ -1037,6 +1099,53 @@ public class Chain<T>
         }
 
         _nodes.AddRange(nodes);
+    }
+    #endregion
+
+    #region Replace    
+    /// <summary>
+    /// Replaces the specified node with a new one.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="oldNode">The old node.</param>
+    /// <param name="newNode">The new node.</param>
+    /// <returns>True if replaced.</returns>
+    public bool Replace(string tag, string newTag, ChainNode<T> oldNode,
+        ChainNode<T> newNode)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(oldNode);
+        ArgumentNullException.ThrowIfNull(newNode);
+
+        InsertBefore(tag, newTag, oldNode, newNode);
+        Delete(tag, newTag, oldNode);
+        return true;
+    }
+
+    /// <summary>
+    /// Replaces the range defined by <paramref name="firstNode"/> and
+    /// <paramref name="lastNode"/> with <paramref name="newNodes"/>.
+    /// </summary>
+    /// <param name="tag">The current version tag.</param>
+    /// <param name="newTag">The new version tag.</param>
+    /// <param name="firstNode">The first node.</param>
+    /// <param name="lastNode">The last node.</param>
+    /// <param name="newNodes">The new nodes.</param>
+    /// <returns>True if replaced.</returns>
+    public bool ReplaceRange(string tag, string newTag, ChainNode<T> firstNode,
+        ChainNode<T> lastNode, IList<ChainNode<T>> newNodes)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(newTag);
+        ArgumentNullException.ThrowIfNull(firstNode);
+        ArgumentNullException.ThrowIfNull(lastNode);
+        ArgumentNullException.ThrowIfNull(newNodes);
+
+        InsertRangeBefore(tag, newTag, firstNode, newNodes);
+        DeleteRange(tag, newTag, firstNode, lastNode);
+        return true;
     }
     #endregion
 
