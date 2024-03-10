@@ -475,7 +475,11 @@ public class Chain<T>
             _links.Add(new ChainLink<T>(newTag, null, right.Target));
 
             // if new tag is the same as tag, delete the old head link
-            if (tag == newTag) _links.Remove(left);
+            if (tag == newTag)
+            {
+                _links.Remove(left);
+                _links.Remove(right);
+            }
 
             return true;
         }
@@ -489,8 +493,12 @@ public class Chain<T>
             // add new tail link
             _links.Add(new ChainLink<T>(newTag, left.Source, null));
 
-            // if new tag is the same as tag, delete the old tail link
-            if (tag == newTag) _links.Remove(right);
+            // if new tag is the same as tag, delete the old links
+            if (tag == newTag)
+            {
+                _links.Remove(right);
+                _links.Remove(left);
+            }
 
             return true;
         }
@@ -1349,6 +1357,9 @@ public class Chain<T>
     {
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(newTag);
+
+        // nope if tag is the same as newTag
+        if (tag == newTag) return;
 
         // clone all the links of the specified tag into newTag
         List<ChainLink<T>> newLinks = _links

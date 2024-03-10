@@ -1159,6 +1159,7 @@ public sealed class ChainTest
         Assert.True(chain.Replace("v0", "v1", nodes[0],
             new ChainNode<char>('X')));
 
+        Assert.Equal("ABC", GetVersionString(chain.GetTagNodes("v0")));
         Assert.Equal("XBC", GetVersionString(chain.GetTagNodes("v1")));
     }
 
@@ -1172,6 +1173,7 @@ public sealed class ChainTest
         Assert.True(chain.Replace("v0", "v1", nodes[2],
             new ChainNode<char>('X')));
 
+        Assert.Equal("ABC", GetVersionString(chain.GetTagNodes("v0")));
         Assert.Equal("ABX", GetVersionString(chain.GetTagNodes("v1")));
     }
 
@@ -1185,6 +1187,7 @@ public sealed class ChainTest
         Assert.True(chain.Replace("v0", "v1", nodes[1],
             new ChainNode<char>('X')));
 
+        Assert.Equal("ABC", GetVersionString(chain.GetTagNodes("v0")));
         Assert.Equal("AXC", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
