@@ -733,6 +733,19 @@ public sealed class ChainTest
     }
 
     [Fact]
+    public void Delete_InnerNode_SameVersion_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.Delete("v1", "v1", nodes[1]));
+
+        Assert.Equal("AC", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Single(chain.GetDistinctTags());
+    }
+
+    [Fact]
     public void Delete_FirstNode_True()
     {
         Chain<char> chain = new();

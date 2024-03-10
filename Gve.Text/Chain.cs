@@ -1128,7 +1128,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newNode);
 
         if (!InsertBefore(tag, newTag, oldNode, newNode)) return false;
-        return Delete(tag, newTag, oldNode);
+        return Delete(newTag, newTag, oldNode);
     }
 
     /// <summary>
@@ -1151,7 +1151,7 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(newNodes);
 
         if (!InsertRangeBefore(tag, newTag, firstNode, newNodes)) return false;
-        return DeleteRange(tag, newTag, firstNode, lastNode);
+        return DeleteRange(newTag, newTag, firstNode, lastNode);
     }
     #endregion
 
