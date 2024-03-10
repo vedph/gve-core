@@ -820,6 +820,19 @@ public sealed class ChainTest
     }
 
     [Fact]
+    public void DeleteRange_FirstNodes_SameVersion_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.DeleteRange("v1", "v1", nodes[0], nodes[1]));
+
+        Assert.Equal("C", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Single(chain.GetDistinctTags());
+    }
+
+    [Fact]
     public void DeleteRange_LastNodes_True()
     {
         Chain<char> chain = new();
@@ -829,6 +842,19 @@ public sealed class ChainTest
         Assert.True(chain.DeleteRange("v1", "v2", nodes[1], nodes[2]));
 
         Assert.Equal("A", GetVersionString(chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void DeleteRange_LastNodes_SameVersion_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.DeleteRange("v1", "v1", nodes[1], nodes[2]));
+
+        Assert.Equal("A", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Single(chain.GetDistinctTags());
     }
 
     [Fact]
@@ -844,6 +870,19 @@ public sealed class ChainTest
     }
 
     [Fact]
+    public void DeleteRange_InnerNodes_SameVersion_True()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.DeleteRange("v1", "v1", nodes[1], nodes[2]));
+
+        Assert.Equal("AD", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Single(chain.GetDistinctTags());
+    }
+
+    [Fact]
     public void DeleteRange_AllNodes_True()
     {
         Chain<char> chain = new();
@@ -853,6 +892,19 @@ public sealed class ChainTest
         Assert.True(chain.DeleteRange("v1", "v2", nodes[0], nodes[2]));
 
         Assert.Equal("", GetVersionString(chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void DeleteRange_AllNodes_SameVersionTrue()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v1", nodes);
+
+        Assert.True(chain.DeleteRange("v1", "v1", nodes[0], nodes[2]));
+
+        Assert.Equal("", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Single(chain.GetDistinctTags());
     }
     #endregion
 

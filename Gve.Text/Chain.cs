@@ -568,7 +568,15 @@ public class Chain<T>
 
         List<ChainLink<T>> links;
 
-        if (left.IsHead && right.IsTail) return true;
+        // if deleting all nodes, just remove all the links from the version
+        if (left.IsHead && right.IsTail)
+        {
+            if (tag == newTag)
+            {
+                _links.RemoveAll(l => l.Tag == tag);
+            }
+            return true;
+        }
 
         // first nodes: (-:A [A] A:B [B] B:C) [C] C:-
         if (left.IsHead)
