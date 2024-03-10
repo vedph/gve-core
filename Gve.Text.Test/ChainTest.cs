@@ -1323,4 +1323,91 @@ public sealed class ChainTest
         Assert.Equal("AXYD", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
+
+    #region MoveBefore
+    [Fact]
+    public void MoveBefore_NodeNotConnected_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABC");
+        chain.AppendRange("", "v0", nodes);
+
+        bool result = chain.MoveBefore("", "v1",
+            new ChainNode<char>('X'), new ChainNode<char>('Y'));
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void MoveBefore_FirstNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[2], nodes[0]));
+
+        Assert.Equal("CABD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_FirstNode_Adjacent_Swapped()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[1], nodes[0]));
+
+        Assert.Equal("BACD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_LastNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[0], nodes[3]));
+
+        Assert.Equal("BCAD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_LastNode_Adjacent_Swapped()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[2], nodes[3]));
+
+        Assert.Equal("ABDC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_InnerNode()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[2], nodes[1]));
+
+        Assert.Equal("ACBD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_InnerNode_Adjacent_Swapped()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[1], nodes[2]));
+
+        Assert.Equal("ACBD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+    #endregion
 }
