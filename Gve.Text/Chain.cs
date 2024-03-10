@@ -583,8 +583,11 @@ public class Chain<T>
             // add new head link
             _links.Add(new ChainLink<T>(newTag, null, right.Target));
 
-            // if new tag is the same as tag, delete the old head link
-            if (tag == newTag) _links.Remove(left);
+            // if new tag is the same as tag, delete the old links
+            if (tag == newTag)
+            {
+                foreach (ChainLink<T> l in links) _links.Remove(l);
+            }
 
             return true;
         }
@@ -600,8 +603,11 @@ public class Chain<T>
             // add new tail link
             _links.Add(new ChainLink<T>(newTag, lastNode, null));
 
-            // if new tag is the same as tag, delete the old tail link
-            if (tag == newTag) _links.Remove(right);
+            // if new tag is the same as tag, delete the old links
+            if (tag == newTag)
+            {
+                foreach (ChainLink<T> l in links) _links.Remove(l);
+            }
 
             return true;
         }
@@ -616,10 +622,10 @@ public class Chain<T>
         // add new link A:C
         _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
 
-        // if newTag is the same as tag, delete the old links
+        // if new tag is the same as tag, delete the old links
         if (tag == newTag)
         {
-            foreach (ChainLink<T> link in links) _links.Remove(link);
+            foreach (ChainLink<T> l in links) _links.Remove(l);
         }
 
         return true;
@@ -1118,7 +1124,7 @@ public class Chain<T>
     }
     #endregion
 
-    #region Replace    
+    #region Replace
     /// <summary>
     /// Replaces the specified node with a new one.
     /// </summary>
