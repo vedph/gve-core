@@ -1375,13 +1375,25 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void MoveBefore_LastNode_Adjacent_Swapped()
+    public void MoveBefore_LastNode_Adjacent_Unchanged()
     {
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
         chain.AppendRange("", "v0", nodes);
 
         Assert.True(chain.MoveBefore("v0", "v1", nodes[2], nodes[3]));
+
+        Assert.Equal("ABCD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveBefore_PenultNode_Adjacent_Swapped()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[3], nodes[2]));
 
         Assert.Equal("ABDC", GetVersionString(chain.GetTagNodes("v1")));
     }
@@ -1402,12 +1414,12 @@ public sealed class ChainTest
     public void MoveBefore_InnerNode_Adjacent_Swapped()
     {
         Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
         chain.AppendRange("", "v0", nodes);
 
-        Assert.True(chain.MoveBefore("v0", "v1", nodes[1], nodes[2]));
+        Assert.True(chain.MoveBefore("v0", "v1", nodes[2], nodes[1]));
 
-        Assert.Equal("ACBD", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("ACBDE", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
 }
