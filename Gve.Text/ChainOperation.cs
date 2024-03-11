@@ -103,7 +103,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     private static partial Regex FeatureRegex();
 
     // 1=operator
-    [GeneratedRegex(@"^(?:\([^)]*\))?[0-9x×]+(=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
+    [GeneratedRegex(@"^(?:\([^)]*\))?@?[0-9x×]+(=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     protected static partial Regex LocOpRegex();
 
     /// <summary>
@@ -296,6 +296,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         operation.InputTag = GetOptionalArgValue(head.Groups["it"].Value);
         operation.OutputTag = GetOptionalArgValue(head.Groups["ot"].Value);
 
+        operation.UseIndex = head.Groups["ati"].Success;
         operation.At = short.Parse(head.Groups["at"].Value,
             CultureInfo.InvariantCulture);
         if (head.Groups["run"].Success)
@@ -305,7 +306,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         }
 
         // tail: ^RANK@GROUP [TAG...] {NOTE}
-        Match tail = TailRegex().Match(text);
+        Match tail = TailRegex().Match(text[head.Length..]);
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
 

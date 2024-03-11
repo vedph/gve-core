@@ -5,7 +5,47 @@ namespace Gve.Text.Test;
 public sealed class ChainDeleteOperationTest
 {
     [Fact]
-    public void ParseOperation_DelAt1Run1()
+    public void ParseOperation_At1Run1()
+    {
+        ChainDeleteOperation<char> op = ChainOperation<char>
+            .Parse<ChainDeleteOperation<char>>("1x1-");
+
+        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.False(op.UseIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Null(op.Value);
+
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+        Assert.Empty(op.TaggedOrdinals);
+    }
+
+    [Fact]
+    public void ParseOperation_AtIndex1Run2()
+    {
+        ChainDeleteOperation<char> op = ChainOperation<char>
+            .Parse<ChainDeleteOperation<char>>("@1x2-");
+
+        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.True(op.UseIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(2, op.Run);
+        Assert.Null(op.Value);
+
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+        Assert.Empty(op.TaggedOrdinals);
+    }
+
+    [Fact]
+    public void ParseOperation_VerAt1Run1()
     {
         ChainDeleteOperation<char> op = ChainOperation<char>
             .Parse<ChainDeleteOperation<char>>("(v0:v1)1x1-");
@@ -25,7 +65,7 @@ public sealed class ChainDeleteOperationTest
     }
 
     [Fact]
-    public void ParseOperation_DelAt1Run1Rank()
+    public void ParseOperation_VerAt1Run1Rank()
     {
         ChainDeleteOperation<char> op = ChainOperation<char>
             .Parse<ChainDeleteOperation<char>>("(v0:v1)1x1-^2");
@@ -45,7 +85,7 @@ public sealed class ChainDeleteOperationTest
     }
 
     [Fact]
-    public void ParseOperation_DelAt1Run1Group()
+    public void ParseOperation_VerAt1Run1Group()
     {
         ChainDeleteOperation<char> op = ChainOperation<char>
             .Parse<ChainDeleteOperation<char>>("(v0:v1)1x1-@g1");
@@ -65,7 +105,7 @@ public sealed class ChainDeleteOperationTest
     }
 
     [Fact]
-    public void ParseOperation_DelAt1Run1Tags()
+    public void ParseOperation_VerAt1Run1Tags()
     {
         ChainDeleteOperation<char> op = ChainOperation<char>
             .Parse<ChainDeleteOperation<char>>("(v0:v1)1x1- [alpha=1 beta=2]");
@@ -87,7 +127,7 @@ public sealed class ChainDeleteOperationTest
     }
 
     [Fact]
-    public void ParseOperation_DelAt1Run1Meta()
+    public void ParseOperation_VerAt1Run1Meta()
     {
         ChainDeleteOperation<char> op = ChainOperation<char>
             .Parse<ChainDeleteOperation<char>>("(v0:v1)1x1- {note=sample}");
