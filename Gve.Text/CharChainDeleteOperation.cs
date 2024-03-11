@@ -43,12 +43,8 @@ public sealed class CharChainDeleteOperation : CharChainOperation
             context.Chain.Delete(inputTag, outputTag, node);
         }
 
-        // update the context's last tag
-        context.LastTag = outputTag;
-
-        // add this operation to the context's steps
-        context.Steps.Add(new ChainOperationContextStep<char>(
-            this, inputTag, outputTag));
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

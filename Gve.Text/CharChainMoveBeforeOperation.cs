@@ -66,6 +66,9 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation
         {
             context.Chain.MoveBefore(inputTag, outputTag, node, toNode);
         }
+
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

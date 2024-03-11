@@ -55,6 +55,9 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
             context.Chain.InsertRangeBefore(inputTag, outputTag, node,
                 GetNodesFrom(Value));
         }
+
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

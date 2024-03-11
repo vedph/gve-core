@@ -55,6 +55,9 @@ public sealed class CharChainAddAfterOperation : CharChainOperation
             context.Chain.InsertRangeAfter(inputTag, outputTag, node,
                 GetNodesFrom(Value));
         }
+
+        // add features to context
+        AddFeaturesTo(context.Features);
     }
 
     /// <summary>

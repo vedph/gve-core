@@ -27,6 +27,11 @@ public class ChainOperationContext<T>
     public List<ChainOperationContextStep<T>> Steps { get; }
 
     /// <summary>
+    /// Gets the features.
+    /// </summary>
+    public List<Feature> Features { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContext{T}"/>
     /// class.
     /// </summary>
@@ -35,6 +40,7 @@ public class ChainOperationContext<T>
         Chain = new Chain<T>();
         LastTag = "";
         Steps = [];
+        Features = [];
     }
 
     /// <summary>

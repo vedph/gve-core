@@ -60,9 +60,8 @@ public sealed class CharChainReplaceOperation : CharChainOperation
             }
         }
 
-        context.LastTag = outputTag;
-        context.Steps.Add(new ChainOperationContextStep<char>(
-            this, inputTag, outputTag));
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

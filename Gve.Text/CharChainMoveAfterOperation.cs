@@ -66,6 +66,9 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation
         {
             context.Chain.MoveAfter(inputTag, outputTag, node, toNode);
         }
+
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

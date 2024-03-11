@@ -357,40 +357,13 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
     /// </remarks>
     /// <exception cref="ArgumentNullException">features</exception>
-    protected void AddFeatures(IList<Feature> features)
+    protected void AddFeaturesTo(IList<Feature> features)
     {
         ArgumentNullException.ThrowIfNull(features);
         Feature.UpdateFeatures(Rank != 0
             ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
             : Features,
             features);
-    }
-
-    /// <summary>
-    /// Adds <see cref="VarOperationMetadata.Features"/> to the received node.
-    /// </summary>
-    /// <param name="node">The node.</param>
-    /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
-    /// 0 is added as a unique feature; anyway, it can be overridden by another
-    /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
-    /// </remarks>
-    protected void AddFeatures(CharNode node)
-    {
-        ArgumentNullException.ThrowIfNull(node);
-        Feature.UpdateFeatures(Rank != 0
-            ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
-            : Features,
-            node.Features);
-    }
-
-    /// <summary>
-    /// Adds <see cref="VarOperationMetadata.Features"/> to the received nodes.
-    /// </summary>
-    /// <param name="nodes">The nodes.</param>
-    protected void AddFeatures(IEnumerable<CharNode> nodes)
-    {
-        ArgumentNullException.ThrowIfNull(nodes);
-        foreach (CharNode node in nodes) AddFeatures(node);
     }
 
     /// <summary>
@@ -413,6 +386,30 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </summary>
     /// <param name="context">The context.</param>
     public abstract void Execute(ChainOperationContext<char> context);
+
+    /// <summary>
+    /// Updates the context metadata after executing the operation.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    protected void UpdateContext(ChainOperationContext<char> context,
+        string inputTag, string outputTag)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(inputTag);
+        ArgumentNullException.ThrowIfNull(outputTag);
+
+        // update the context's last tag
+        context.LastTag = outputTag;
+
+        // add this operation to the context's steps
+        context.Steps.Add(new ChainOperationContextStep<char>(
+            this, inputTag, outputTag));
+
+        // add features to context
+        AddFeaturesTo(context.Features);
+    }
 
     /// <summary>
     /// Parses the specified text representing an operation.
