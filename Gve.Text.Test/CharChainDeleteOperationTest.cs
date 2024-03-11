@@ -13,7 +13,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);
@@ -33,7 +33,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
-        Assert.True(op.UseIndex);
+        Assert.True(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(2, op.Run);
         Assert.Null(op.Value);
@@ -53,7 +53,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);
@@ -73,7 +73,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);
@@ -93,7 +93,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);
@@ -113,7 +113,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);
@@ -135,7 +135,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(VarOperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
-        Assert.False(op.UseIndex);
+        Assert.False(op.AtAsIndex);
         Assert.Equal(1, op.At);
         Assert.Equal(1, op.Run);
         Assert.Null(op.Value);

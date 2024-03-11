@@ -45,7 +45,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// Gets or sets a value indicating whether <see cref="At"/> refers to
     /// an index rather than a chain node ID.
     /// </summary>
-    public bool UseIndex { get; set; }
+    public bool AtAsIndex { get; set; }
 
     /// <summary>
     /// Gets or sets the ordinal character number to start at.
@@ -79,13 +79,12 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <returns>Identifier.</returns>
     public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 
-    // TODO remove if not used, else update with tags
-    // [@]at, [run]
-    [GeneratedRegex(@"^(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?")]
-    protected static partial Regex AtRunRegex();
+    // [@]at, [run], [@]to
+    [GeneratedRegex(@"^(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?[=\-\+\[\]<>:]+(?<tox>@)?(?<to>[0-9]+)")]
+    protected static partial Regex AtRunToRegex();
 
     // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
-    [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
+    [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     private static partial Regex HeadRegex();
 
     // [rank], [group], [tags], [meta]
@@ -211,7 +210,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="sb">The target.</param>
     protected void AppendHead(StringBuilder sb)
     {
-        if (UseIndex) sb.Append('@');
+        if (AtAsIndex) sb.Append('@');
         sb.Append(At).Append('×').Append(Run).Append(TYPE_SYMBOLS[(int)Type]);
     }
 
@@ -308,7 +307,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         operation.InputTag = GetOptionalArgValue(head.Groups["it"].Value);
         operation.OutputTag = GetOptionalArgValue(head.Groups["ot"].Value);
 
-        operation.UseIndex = head.Groups["ati"].Success;
+        operation.AtAsIndex = head.Groups["atx"].Success;
         operation.At = short.Parse(head.Groups["at"].Value,
             CultureInfo.InvariantCulture);
         if (head.Groups["run"].Success)
@@ -473,6 +472,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </returns>
     public override string ToString()
     {
-        return $"{At}x{Run}" + TYPE_SYMBOLS[(int)Type] + Value;
+        return $"{(AtAsIndex ? "@" : "")}{At}x{Run}" +
+            TYPE_SYMBOLS[(int)Type] + Value;
     }
 }

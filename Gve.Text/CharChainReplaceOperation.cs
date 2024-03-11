@@ -21,7 +21,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
     /// Executes this operation on the specified context.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentNullException">context</exception>
     public override void Execute(ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
