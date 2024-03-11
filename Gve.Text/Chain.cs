@@ -1271,41 +1271,54 @@ public class Chain<T>
             (firstNode, lastNode) = (lastNode, firstNode);
         }
 
-        // move BC before A:
-        // -:A [A] A:B ([B]) B:C [C] C:D [D]
-        // =>
-        // -:B ([B]) B:C [C] C:A [A] A:D [D]
-
         // get links before firstNode and after lastNode
         ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
         ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
+        ChainLink<T>? refLeft = GetNodePreviousLink(tag, refNode);
 
-        // nope if firstNode or lastNode are not connected to any other node
-        if (left == null || right == null) return false;
+        // nope if firstNode or lastNode or ref node are not connected
+        if (left == null || right == null || refLeft == null) return false;
 
-        // copy the source state into a new one except for left+right links
-        AddVersion(tag, newTag, left, right);
+        AddVersion(tag, newTag, left, right, refLeft);
 
-        // if firstNode is the head, add link between head and lastNode
+        // move head range:
+        // (-:A [A] A:B [B]) B:C [C] C:D [D] D:E [E] E:-
+        // =>
+        // (-:C [C] C:A [A] A:B [B]) B:D [D] D:E [E] E:-
         if (left.IsHead)
         {
-            _links.Add(new ChainLink<T>(newTag, null, lastNode));
+            // add -:C
+            _links.Add(new ChainLink<T>(newTag, null, right.Target));
+            // add C:A
+            _links.Add(new ChainLink<T>(newTag, refLeft.Source, firstNode));
+            // add B:D
+            _links.Add(new ChainLink<T>(newTag, lastNode, refNode));
         }
-        // else add link between left-of-firstNode and lastNode
+        // move tail range:
+        // -:A [A] A:B [B] B:C [C] (C:D [D] D:E [E] E:-)
+        // =>
+        // -:A [A] A:D [D] D:E [E] E:B [B] B:C [C] C:-
+        else if (right.IsTail)
+        {
+            // add A:D
+            _links.Add(new ChainLink<T>(newTag, refLeft.Source, firstNode));
+            // add E:B
+            _links.Add(new ChainLink<T>(newTag, lastNode, refNode));
+            // add C:-
+            _links.Add(new ChainLink<T>(newTag, left.Source, null));
+        }
+        // move inner range:
+        // -:A [A] A:B [B] B:C [C] (C:D [D] D:E [E] E:F) [F] F:-
+        // =>
+        // -:A [A] A:D [D] D:E [E] E:B [B] B:C [C] C:F [F] F:-
         else
         {
-            _links.Add(new ChainLink<T>(newTag, left.Source, lastNode));
-        }
-
-        // if lastNode is the tail, add link between firstNode and tail
-        if (right.IsTail)
-        {
-            _links.Add(new ChainLink<T>(newTag, firstNode, null));
-        }
-        // else add link between firstNode and right-of-lastNode
-        else
-        {
-            _links.Add(new ChainLink<T>(newTag, firstNode, right.Target));
+            // add A:D
+            _links.Add(new ChainLink<T>(newTag, refLeft.Source, firstNode));
+            // add E:B
+            _links.Add(new ChainLink<T>(newTag, lastNode, refNode));
+            // add C:F
+            _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
         }
 
         // if newTag is the same as tag, delete the old links
@@ -1313,6 +1326,7 @@ public class Chain<T>
         {
             _links.Remove(left);
             _links.Remove(right);
+            _links.Remove(refLeft);
         }
 
         return true;
