@@ -13,7 +13,7 @@ namespace Gve.Text;
 /// Base class for operations on a <see cref="Chain{T}"/>.
 /// </summary>
 /// <seealso cref="VarOperationMetadata" />
-public abstract partial class ChainOperation<T> : VarOperationMetadata
+public abstract partial class CharChainOperation : VarOperationMetadata
 {
     /// <summary>
     /// Gets or sets the operation identifier. This is used to reference
@@ -67,7 +67,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// Initializes a new instance of the <see cref="VarOperation"/> class.
     /// </summary>
     /// <param name="type">The operation type.</param>
-    protected ChainOperation(VarOperationType type)
+    protected CharChainOperation(VarOperationType type)
     {
         Id = GenerateId();
         Type = type;
@@ -114,7 +114,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <returns>Input and output tags.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
     protected (string inputTag, string outputTag) GetTags(
-        ChainOperationContext<T> context)
+        ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -133,14 +133,14 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// </returns>
     /// <exception cref="ArgumentNullException">chain or tag</exception>
     /// <exception cref="InvalidOperationException">Node not found</exception>
-    protected (ChainNode<T> node, ChainNode<T>? endNode) GetBoundNodes(
-               Chain<T> chain, string tag)
+    protected (ChainNode<char> node, ChainNode<char>? endNode) GetBoundNodes(
+               Chain<char> chain, string tag)
     {
         ArgumentNullException.ThrowIfNull(chain);
         ArgumentNullException.ThrowIfNull(tag);
 
         // find At node
-        ChainNode<T>? node = FindNode(chain, At, tag) ??
+        ChainNode<char>? node = FindNode(chain, At, tag) ??
             throw new InvalidOperationException(
                 "Node not found for the specified AT: " + ToString());
 
@@ -151,7 +151,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         }
 
         // else find end node by index from Run (there must be one)
-        ChainNode<T>? endNode = null;
+        ChainNode<char>? endNode = null;
         for (int i = 0; i < Run; i++)
         {
             endNode = chain.GetNextNode(tag, node);
@@ -174,7 +174,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <param name="tag">The tag.</param>
     /// <returns>Tag.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    protected string GetNextTag(string tag)
+    protected static string GetNextTag(string tag)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
@@ -190,6 +190,18 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         while (i >= 0 && tag[i] >= '0' && tag[i] <= '9') i--;
         return tag[..(i + 1)] +
             (int.Parse(tag[(i + 1)..], CultureInfo.InvariantCulture) + 1);
+    }
+
+    /// <summary>
+    /// Gets a new set of nodes representing <paramref name="text"/>.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>Nodes.</returns>
+    protected static List<ChainNode<char>> GetNodesFrom(string text)
+    {
+        return text.Select((c, _) =>
+            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
+            .ToList();
     }
 
     /// <summary>
@@ -260,7 +272,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     }
 
     private static void ParseTaggedOrdinals(string text,
-        ChainOperation<T> operation)
+        CharChainOperation operation)
     {
         operation.TaggedOrdinals.Clear();
 
@@ -284,7 +296,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <returns>The body part of the text.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
     protected static string ParseHeadAndTail(string text,
-        ChainOperation<T> operation)
+        CharChainOperation operation)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -388,7 +400,8 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// null, this implies that <paramref name="at"/> refers to an ID, which
     /// is not dependent on version tags.</param>
     /// <returns>Node, or null if not found.</returns>
-    protected ChainNode<T>? FindNode(Chain<T> chain, int at, string? tag = null)
+    protected static ChainNode<char>? FindNode(Chain<char> chain, int at,
+        string? tag = null)
     {
         return tag != null? chain.FindNodeByIndex(tag, at) : chain.FindNode(at);
     }
@@ -397,7 +410,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// Executes this operation on the specified context.
     /// </summary>
     /// <param name="context">The context.</param>
-    public abstract void Execute(ChainOperationContext<T> context);
+    public abstract void Execute(ChainOperationContext<char> context);
 
     /// <summary>
     /// Parses the specified text representing an operation.
@@ -406,7 +419,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Parsing error</exception>
-    public static O Parse<O>(string text) where O : ChainOperation<T>
+    public static O Parse<O>(string text) where O : CharChainOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -418,8 +431,10 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         return type switch
         {
             // TODO add other operation types
+            VarOperationType.Replace
+                => (CharChainReplaceOperation.ParseOperation(text) as O)!,
             VarOperationType.Delete
-                => (ChainDeleteOperation<T>.ParseOperation(text) as O)!,
+                => (CharChainDeleteOperation.ParseOperation(text) as O)!,
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")
         };
@@ -433,7 +448,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     /// <returns>True if success.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     public static bool TryParse<O>(string text, out O? operation)
-        where O : ChainOperation<T>
+        where O : CharChainOperation
     {
         ArgumentNullException.ThrowIfNull(text);
 

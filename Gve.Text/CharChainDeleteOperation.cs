@@ -7,13 +7,13 @@ namespace Gve.Text;
 /// "Delete" operation for a chain.
 /// </summary>
 /// <typeparam name="T">The type of chain node data.</typeparam>
-public sealed class ChainDeleteOperation<T> : ChainOperation<T>
+public sealed class CharChainDeleteOperation : CharChainOperation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ChainDeleteOperation{T}"/>
+    /// Initializes a new instance of the <see cref="CharChainDeleteOperation"/>
     /// class.
     /// </summary>
-    public ChainDeleteOperation() : base(VarOperationType.Delete)
+    public CharChainDeleteOperation() : base(VarOperationType.Delete)
     {
     }
 
@@ -22,14 +22,15 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
     /// </summary>
     /// <param name="context">The context.</param>
     /// <exception cref="ArgumentNullException">context</exception>
-    public override void Execute(ChainOperationContext<T> context)
+    public override void Execute(ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
         // get bound nodes
-        (ChainNode<T> node, ChainNode<T>? endNode) = GetBoundNodes(
+        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
             context.Chain, inputTag);
 
         // apply to single node or range
@@ -46,7 +47,7 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
         context.LastTag = outputTag;
 
         // add this operation to the context's steps
-        context.Steps.Add(new ChainOperationContextStep<T>(
+        context.Steps.Add(new ChainOperationContextStep<char>(
             this, inputTag, outputTag));
     }
 
@@ -59,13 +60,11 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    internal static ChainDeleteOperation<T> ParseOperation(string text)
+    internal static CharChainDeleteOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        ChainDeleteOperation<T> op = new();
-        //string body = ParseHeadAndTail(text, op);
-        //op.Value = body.Trim('"');
+        CharChainDeleteOperation op = new();
         ParseHeadAndTail(text, op);
         return op;
     }
@@ -80,7 +79,6 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
     {
         StringBuilder sb = new();
         AppendHead(sb);
-        sb.Append('"').Append(Value).Append('"');
         AppendTail(sb);
         return sb.ToString();
     }

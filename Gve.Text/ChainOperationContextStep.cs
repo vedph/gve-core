@@ -11,7 +11,7 @@ public class ChainOperationContextStep<T>
     /// <summary>
     /// Gets the operation.
     /// </summary>
-    public ChainOperation<T> Operation { get; }
+    public VarOperationMetadata Operation { get; }
 
     /// <summary>
     /// Gets the input tag.
@@ -31,7 +31,7 @@ public class ChainOperationContextStep<T>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
     /// <exception cref="ArgumentNullException">operation or tags</exception>
-    public ChainOperationContextStep(ChainOperation<T> operation, string inputTag,
+    public ChainOperationContextStep(VarOperationMetadata operation, string inputTag,
         string outputTag)
     {
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
