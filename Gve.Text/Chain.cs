@@ -1578,7 +1578,7 @@ public class Chain<T>
             // add A:F
             _links.Add(new ChainLink<T>(newTag, left1.Source, first2Node));
             // add F:D
-            _links.Add(new ChainLink<T>(newTag, first2Node, right1.Target));
+            _links.Add(new ChainLink<T>(newTag, last2Node, right1.Target));
             // add E:B
             _links.Add(new ChainLink<T>(newTag, left2.Source, first1Node));
             // add C:G

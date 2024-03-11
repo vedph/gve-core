@@ -1690,7 +1690,21 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void SwapRanges_FirstNodes()
+    public void SwapRanges_FirstNodes_Adjacent()
+    {
+        // AB with CD
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.SwapRanges("v0", "v1",
+            nodes[0], nodes[1], nodes[2], nodes[3]));
+
+        Assert.Equal("CDAB", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void SwapRanges_FirstNodes_NonAdjacent()
     {
         // AB with DE
         Chain<char> chain = new();
@@ -1704,7 +1718,21 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void SwapRanges_LastNodes()
+    public void SwapRanges_LastNodes_Adjacent()
+    {
+        // CD with AB
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.SwapRanges("v0", "v1",
+            nodes[2], nodes[3], nodes[0], nodes[1]));
+
+        Assert.Equal("CDAB", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void SwapRanges_LastNodes_NonAdjacent()
     {
         // DE with AB
         Chain<char> chain = new();
@@ -1718,8 +1746,23 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void SwapRanges_InnerNodes()
+    public void SwapRanges_InnerNodes_Adjacent()
     {
+        // BC with DE
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.SwapRanges("v0", "v1",
+            nodes[1], nodes[2], nodes[3], nodes[4]));
+
+        Assert.Equal("ADEBCF", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void SwapRanges_InnerNodes_NonAdjacent()
+    {
+        // BC with EF
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCDEFG");
         chain.AppendRange("", "v0", nodes);
