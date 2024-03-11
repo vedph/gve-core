@@ -1527,4 +1527,58 @@ public sealed class ChainTest
         Assert.Equal("ADBCEF", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
+
+    #region MoveRangeAfter
+    [Fact]
+    public void MoveRangeAfter_NodesNotConnected_False()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.False(chain.MoveRangeAfter("", "v1",
+            new ChainNode<char>('X'),
+            new ChainNode<char>('Y'),
+            nodes[1]));
+    }
+
+    [Fact]
+    public void MoveRangeAfter_FirstNodes()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveRangeAfter("v0", "v1",
+            nodes[0], nodes[1], nodes[3]));
+
+        Assert.Equal("CABDE", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveRangeAfter_LastNodes()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveRangeAfter("v0", "v1",
+            nodes[3], nodes[4], nodes[1]));
+
+        Assert.Equal("ADEBC", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveRangeAfter_InnerNodes()
+    {
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveRangeAfter("v0", "v1",
+            nodes[3], nodes[4], nodes[1]));
+
+        Assert.Equal("ADEBCF", GetVersionString(chain.GetTagNodes("v1")));
+    }
+    #endregion
 }
