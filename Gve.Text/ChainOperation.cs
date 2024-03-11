@@ -85,7 +85,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     protected static partial Regex AtRunRegex();
 
     // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
-    [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|\+<|\+>|>|<>|:)")]
+    [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<ati>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     private static partial Regex HeadRegex();
 
     // [rank], [group], [tags], [meta]
@@ -103,7 +103,7 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
     private static partial Regex FeatureRegex();
 
     // 1=operator
-    [GeneratedRegex("^[^=+<>:]+([=+<>:]+)")]
+    [GeneratedRegex(@"^(?:\([^)]*\))?[0-9x×]+(=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     protected static partial Regex LocOpRegex();
 
     /// <summary>
@@ -241,11 +241,13 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         return op switch
         {
             "=" => VarOperationType.Replace,
-            "+<" => VarOperationType.AddBefore,
-            "+>" => VarOperationType.AddAfter,
-            ":" => VarOperationType.Annotate,
-            ">" => VarOperationType.MoveBefore,
+            "-" => VarOperationType.Delete,
+            "+[" => VarOperationType.AddBefore,
+            "+]" => VarOperationType.AddAfter,
+            ">[" => VarOperationType.MoveBefore,
+            ">]" => VarOperationType.MoveAfter,
             "<>" => VarOperationType.Swap,
+            ":" => VarOperationType.Annotate,
             _ => throw new FormatException($"Invalid operation type: {op}")
         };
     }

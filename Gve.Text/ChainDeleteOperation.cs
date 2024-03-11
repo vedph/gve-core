@@ -51,7 +51,10 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
     }
 
     /// <summary>
-    /// Parses the operation.
+    /// Parses the operation. A delete operation has format (whitespaces here
+    /// are added to separate components):
+    /// <c>(IT:OT) @ATxRUN OP ^RANK @GROUP [TAGS] {META}</c>,
+    /// where AT and OP are the only required components.
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Operation.</returns>
@@ -61,8 +64,9 @@ public sealed class ChainDeleteOperation<T> : ChainOperation<T>
         ArgumentNullException.ThrowIfNull(text);
 
         ChainDeleteOperation<T> op = new();
-        string body = ParseHeadAndTail(text, op);
-        op.Value = body.Trim('"');
+        //string body = ParseHeadAndTail(text, op);
+        //op.Value = body.Trim('"');
+        ParseHeadAndTail(text, op);
         return op;
     }
 
