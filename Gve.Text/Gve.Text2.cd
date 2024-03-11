@@ -158,5 +158,15 @@
       <FileName>CharChainMoveAfterOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Gve.Text.CharChainSwapOperation">
+    <Position X="13.25" Y="13.25" Width="1.75" />
+    <Members>
+      <Method Name="CharChainSwapOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAIQAAAAAAAARAAAAA=</HashCode>
+      <FileName>CharChainSwapOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

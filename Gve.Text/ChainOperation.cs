@@ -79,8 +79,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <returns>Identifier.</returns>
     public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 
-    // [@]at, [run], [@]to
-    [GeneratedRegex(@"^(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?[=\-\+\[\]<>:]+(?<tox>@)?(?<to>[0-9]+)")]
+    // [@]at, [run], [@]to [torun]
+    [GeneratedRegex(@"^(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?[=\-\+\[\]<>:]+(?<tox>@)?(?<to>[0-9]+)(?:[×x](?<torun>[0-9]+))?")]
     protected static partial Regex AtRunToRegex();
 
     // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
@@ -133,25 +133,28 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <exception cref="ArgumentNullException">chain or tag</exception>
     /// <exception cref="InvalidOperationException">Node not found</exception>
     protected (ChainNode<char> node, ChainNode<char>? endNode) GetBoundNodes(
-               Chain<char> chain, string tag)
+               Chain<char> chain, string tag, int at = -1, int run = -1)
     {
         ArgumentNullException.ThrowIfNull(chain);
         ArgumentNullException.ThrowIfNull(tag);
 
-        // find At node
-        ChainNode<char>? node = FindNode(chain, At, tag) ??
+        if (at == -1) at = At;
+        if (run == -1) run = Run;
+
+        // find at node
+        ChainNode<char>? node = FindNode(chain, at, tag) ??
             throw new InvalidOperationException(
                 "Node not found for the specified AT: " + ToString());
 
-        // if Run is 1, return the node only
-        if (Run == 1)
+        // if run is 1, return the node only
+        if (run == 1)
         {
             return (node, null);
         }
 
-        // else find end node by index from Run (there must be one)
+        // else find end node by index from run (there must be one)
         ChainNode<char>? endNode = null;
-        for (int i = 0; i < Run; i++)
+        for (int i = 0; i < run; i++)
         {
             endNode = chain.GetNextNode(tag, node);
         }

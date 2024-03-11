@@ -46,9 +46,6 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        // nothing to do if empty value
-        if (string.IsNullOrEmpty(Value)) return;
-
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
