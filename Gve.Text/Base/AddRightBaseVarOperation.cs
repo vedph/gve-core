@@ -12,7 +12,7 @@ public sealed class AddRightBaseVarOperation : AddBaseVarOperation
     /// Initializes a new instance of the <see cref="AddRightBaseVarOperation"/>
     /// class.
     /// </summary>
-    public AddRightBaseVarOperation() : base(VarOperationType.AddLeft)
+    public AddRightBaseVarOperation() : base(VarOperationType.AddBefore)
     {
         IsRight = true;
     }

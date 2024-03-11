@@ -20,7 +20,7 @@ public sealed class MoveAnnVarOperation : AnnVarOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveAnnVarOperation"/> class.
     /// </summary>
-    public MoveAnnVarOperation() : base(VarOperationType.Move)
+    public MoveAnnVarOperation() : base(VarOperationType.MoveBefore)
     {
     }
 

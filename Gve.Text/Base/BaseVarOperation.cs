@@ -12,10 +12,10 @@ namespace Gve.Text.Base;
 /// </summary>
 /// <seealso cref="VarOperation" />
 [JsonDerivedType(typeof(ReplaceBaseVarOperation), nameof(VarOperationType.Replace))]
-[JsonDerivedType(typeof(AddLeftBaseVarOperation), nameof(VarOperationType.AddLeft))]
-[JsonDerivedType(typeof(AddRightBaseVarOperation), nameof(VarOperationType.AddRight))]
+[JsonDerivedType(typeof(AddLeftBaseVarOperation), nameof(VarOperationType.AddBefore))]
+[JsonDerivedType(typeof(AddRightBaseVarOperation), nameof(VarOperationType.AddAfter))]
 [JsonDerivedType(typeof(AnnotateBaseVarOperation), nameof(VarOperationType.Annotate))]
-[JsonDerivedType(typeof(MoveBaseVarOperation), nameof(VarOperationType.Move))]
+[JsonDerivedType(typeof(MoveBaseVarOperation), nameof(VarOperationType.MoveBefore))]
 [JsonDerivedType(typeof(SwapBaseVarOperation), nameof(VarOperationType.Swap))]
 public abstract class BaseVarOperation : VarOperation
 {
@@ -48,13 +48,13 @@ public abstract class BaseVarOperation : VarOperation
         {
             VarOperationType.Replace
                 => (ReplaceBaseVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.AddLeft
+            VarOperationType.AddBefore
                 => (AddLeftBaseVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.AddRight
+            VarOperationType.AddAfter
                 => (AddRightBaseVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Annotate
                 => (AnnotateBaseVarOperation.ParseOperation(text) as T)!,
-            VarOperationType.Move
+            VarOperationType.MoveBefore
                 => (MoveBaseVarOperation.ParseOperation(text) as T)!,
             VarOperationType.Swap
                 => (SwapBaseVarOperation.ParseOperation(text) as T)!,

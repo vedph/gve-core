@@ -14,7 +14,7 @@ public sealed class AddLeftAnnVarOperation : AddAnnVarOperation
     /// Initializes a new instance of the <see cref="AddLeftAnnVarOperation"/>
     /// class.
     /// </summary>
-    public AddLeftAnnVarOperation() : base(VarOperationType.AddLeft)
+    public AddLeftAnnVarOperation() : base(VarOperationType.AddBefore)
     {
         IsRight = false;
     }

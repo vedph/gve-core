@@ -20,7 +20,7 @@ public sealed class MoveBaseVarOperation : BaseVarOperation
     /// Initializes a new instance of the <see cref="MoveBaseVarOperation"/>
     /// class.
     /// </summary>
-    public MoveBaseVarOperation() : base(VarOperationType.Move)
+    public MoveBaseVarOperation() : base(VarOperationType.MoveBefore)
     {
     }
 

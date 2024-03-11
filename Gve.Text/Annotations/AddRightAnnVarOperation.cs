@@ -13,7 +13,7 @@ public sealed class AddRightAnnVarOperation : AddAnnVarOperation
     /// Initializes a new instance of the <see cref="AddRightAnnVarOperation"/>
     /// class.
     /// </summary>
-    public AddRightAnnVarOperation() : base(VarOperationType.AddRight)
+    public AddRightAnnVarOperation() : base(VarOperationType.AddAfter)
     {
         IsRight = true;
     }

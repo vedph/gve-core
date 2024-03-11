@@ -241,10 +241,10 @@ public abstract partial class ChainOperation<T> : VarOperationMetadata
         return op switch
         {
             "=" => VarOperationType.Replace,
-            "+<" => VarOperationType.AddLeft,
-            "+>" => VarOperationType.AddRight,
+            "+<" => VarOperationType.AddBefore,
+            "+>" => VarOperationType.AddAfter,
             ":" => VarOperationType.Annotate,
-            ">" => VarOperationType.Move,
+            ">" => VarOperationType.MoveBefore,
             "<>" => VarOperationType.Swap,
             _ => throw new FormatException($"Invalid operation type: {op}")
         };

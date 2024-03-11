@@ -19,11 +19,12 @@ public class VarOperationMetadata
     [
         "=",
         "-",
-        "+<",
-        "+>",
-        ":",
-        ">",
-        "<>"
+        "+[",
+        "+]",
+        ">[",
+        ">]",
+        "<>",
+         ":",
     ];
 
     /// <summary>
@@ -85,14 +86,16 @@ public enum VarOperationType
     Replace = 0,
     /// <summary>The delete operation.</summary>
     Delete,
-    /// <summary>The add left operation.</summary>
-    AddLeft,
-    /// <summary>The add right operation.</summary>
-    AddRight,
-    /// <summary>The annotate operation.</summary>
-    Annotate,
-    /// <summary>The move operation.</summary>
-    Move,
+    /// <summary>The add before operation.</summary>
+    AddBefore,
+    /// <summary>The add after operation.</summary>
+    AddAfter,
+    /// <summary>The move before operation.</summary>
+    MoveBefore,
+    /// <summary>The move after operation.</summary>
+    MoveAfter,
     /// <summary>The swap operation.</summary>
-    Swap
+    Swap,
+    /// <summary>The annotate operation.</summary>
+    Annotate
 }
