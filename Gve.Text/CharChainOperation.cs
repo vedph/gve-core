@@ -403,12 +403,15 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         // update the context's last tag
         context.LastTag = outputTag;
 
-        // add this operation to the context's steps
-        context.Steps.Add(new ChainOperationContextStep<char>(
-            this, inputTag, outputTag));
-
         // add features to context
         AddFeaturesTo(context.Features);
+
+        // add this operation to the context's steps
+        context.Steps.Add(new ChainOperationContextStep<char>(
+            this, inputTag, outputTag)
+        {
+            Features = [..context.Features]
+        });
     }
 
     /// <summary>
@@ -429,11 +432,21 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         VarOperationType type = GetOperationType(m.Groups[1].Value);
         return type switch
         {
-            // TODO add other operation types
             VarOperationType.Replace
                 => (CharChainReplaceOperation.ParseOperation(text) as O)!,
+            VarOperationType.AddBefore
+                => (CharChainAddBeforeOperation.ParseOperation(text) as O)!,
+            VarOperationType.AddAfter
+                => (CharChainAddAfterOperation.ParseOperation(text) as O)!,
+            VarOperationType.MoveBefore
+                => (CharChainMoveBeforeOperation.ParseOperation(text) as O)!,
+            VarOperationType.MoveAfter
+                => (CharChainMoveAfterOperation.ParseOperation(text) as O)!,
+            VarOperationType.Swap
+                => (CharChainSwapOperation.ParseOperation(text) as O)!,
             VarOperationType.Delete
                 => (CharChainDeleteOperation.ParseOperation(text) as O)!,
+                // TODO annotate
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")
         };
