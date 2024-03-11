@@ -1445,45 +1445,62 @@ public class Chain<T>
         // nope if node1 is the same as node2
         if (node1 == node2) return false;
 
-        // if node1 is after node2, swap them - this ensures that node1 is
-        // always before node2
+        // if node1 is after node2, swap them
         if (IsNodeAfter(tag, node1, node2))
         {
             (node1, node2) = (node2, node1);
         }
 
-        // swap B with C:
-        // -:A [A] (A:B [B] B:C [C] C:D) [D] D:-
-        // =>
-        // -:A [A] A:C [C] C:B [B] B:D [D] D:- (old: A:B, B:C, C:D)
+        // get links around node1 and node2
+        ChainLink<T>? left1 = GetNodePreviousLink(tag, node1);
+        ChainLink<T>? right1 = GetNodeNextLink(tag, node1);
+        ChainLink<T>? left2 = GetNodePreviousLink(tag, node2);
+        ChainLink<T>? right2 = GetNodeNextLink(tag, node2);
 
-        // get links before node1 (A:B) and after node2 (C:D)
-        ChainLink<T>? left = GetNodePreviousLink(tag, node1);
-        ChainLink<T>? right = GetNodeNextLink(tag, node2);
-
-        // nope if node1 or node2 are not connected to any other node
-        if (left == null || right == null) return false;
+        // nope if node1 or node2 are not connected
+        if (left1 == null || right1 == null || left2 == null || right2 == null)
+            return false;
 
         // copy the source state into a new one except for left+right links
-        AddVersion(tag, newTag, left, right);
+        AddVersion(tag, newTag, left1, right1, left2, right2);
 
-        // if node1 is the head, add link between head and node2
-        if (left.IsHead)
+        // adjacent: swap B with C:
+        // -:A [A] (A:B [B] (B:C) [C] C:D) [D] D:E [E] E:-
+        // =>
+        // -:A [A] (A:C [C] C:B [B] B:D) [D] D:E [E] E:-
+        if (right1 == left2)
         {
-            _links.Add(new ChainLink<T>(newTag, null, node2));
+            // add A:C
+            _links.Add(new ChainLink<T>(newTag, left1.Source, node2));
+            // add C:B
+            _links.Add(new ChainLink<T>(newTag, node2, node1));
+            // add B:D
+            _links.Add(new ChainLink<T>(newTag, node1, right2.Target));
         }
-
-        // if node2 is the tail, add link between node1 and tail
-        if (right.IsTail)
+        else
         {
-            _links.Add(new ChainLink<T>(newTag, node1, null));
+            // non adjacent: swap B with E:
+            // -:A [A] (A:B [B] B:C) [C] C:D [D] (D:E [E] E:F) [F] F:-
+            // =>
+            // -:A [A] (A:E [E] E:C [C] C:D) [D] D:B [B] B:F [F] F:-
+
+            // add A:E
+            _links.Add(new ChainLink<T>(newTag, left1.Source, node2));
+            // add E:C
+            _links.Add(new ChainLink<T>(newTag, node2, right1.Target));
+            // add D:B
+            _links.Add(new ChainLink<T>(newTag, left2.Source, node1));
+            // add B:F
+            _links.Add(new ChainLink<T>(newTag, node1, right2.Target));
         }
 
         // if newTag is the same as tag, delete the old links
         if (tag == newTag)
         {
-            _links.Remove(left);
-            _links.Remove(right);
+            _links.Remove(left1);
+            _links.Remove(right1);
+            _links.Remove(left2);
+            _links.Remove(right2);
         }
 
         return true;
@@ -1519,13 +1536,6 @@ public class Chain<T>
         // nope the two sequences are equal
         if (first1Node == first2Node && last1Node == last2Node) return false;
 
-        // error if the two sequences overlap
-        if (IsNodeAfter(tag, last1Node, first2Node) ||
-            IsNodeAfter(tag, last2Node, first1Node))
-        {
-            throw new InvalidOperationException("The two sequences to swap overlap.");
-        }
-
         // if sequence 2 is before sequence 1, swap them
         if (IsNodeAfter(tag, last1Node, first2Node))
         {
@@ -1534,34 +1544,45 @@ public class Chain<T>
         }
 
         // get left links of head nodes
-        ChainLink<T>? first1Link = GetNodePreviousLink(tag, first1Node);
-        ChainLink<T>? first2Link = GetNodePreviousLink(tag, first2Node);
+        ChainLink<T>? left1 = GetNodePreviousLink(tag, first1Node);
+        ChainLink<T>? right1 = GetNodeNextLink(tag, last1Node);
+        ChainLink<T>? left2 = GetNodePreviousLink(tag, first2Node);
+        ChainLink<T>? right2 = GetNodeNextLink(tag, last2Node);
 
         // nope if head nodes are not connected to any other node
-        if (first1Link == null && first2Link == null) return false;
+        if (left1 == null || right1 == null || left2 == null || right2 == null)
+            return false;
 
-        // copy into new tag except the head links
-        AddVersion(tag, newTag, first1Link, first2Link);
+        // copy the source state into a new one except for left+right links
+        AddVersion(tag, newTag, left1, right1, left2, right2);
 
-        // are 1 and 2 adjacent (left of first2Node = last of 1)?
-        if (first2Link?.Source == last1Node)
+        if (right1 == left2)
         {
-            // add link between left-of-1-head and 2-head
-            if (first1Link != null)
-                _links.Add(new ChainLink<T>(newTag, first1Link.Source, first2Node));
-
-            // add link between 2-tail and 1-head
+            // adjacent: swap B:C with D:E:
+            // -:A [A] (A:B [B] (B:C) [C] C:D) [D] D:E [E] E:F [F] F:-
+            // =>
+            // -:A [A] (A:D [D] D:E [E] E:C) [C] C:B [B] B:F [F] F:-
+            // add A:D
+            _links.Add(new ChainLink<T>(newTag, left1.Source, first2Node));
+            // add E:B
             _links.Add(new ChainLink<T>(newTag, last2Node, first1Node));
+            // add C:F
+            _links.Add(new ChainLink<T>(newTag, last1Node, right2.Target));
         }
-        // else non-adjacent swap
         else
         {
-            // add link between left-of-1-head and left-of-2-head
-            if (first1Link != null && first2Link != null)
-                _links.Add(new ChainLink<T>(newTag, first1Link.Source, first2Node));
-
-            // add link between left-of-b-head and a-head
-            _links.Add(new ChainLink<T>(newTag, first2Link?.Source, first1Node));
+            // non adjacent: swap B:C with F:
+            // -:A [A] (A:B [B] B:C) [C] C:D [D] D:E [E] (E:F [F] F:-)
+            // =>
+            // -:A [A] (A:F [F] F:D) [D] D:E [E] (E:B [B] B:C [C] C:-)
+            // add A:F
+            _links.Add(new ChainLink<T>(newTag, left1.Source, first2Node));
+            // add F:D
+            _links.Add(new ChainLink<T>(newTag, first2Node, right1.Target));
+            // add E:B
+            _links.Add(new ChainLink<T>(newTag, left2.Source, first1Node));
+            // add C:G
+            _links.Add(new ChainLink<T>(newTag, last1Node, right2.Target));
         }
 
         return true;

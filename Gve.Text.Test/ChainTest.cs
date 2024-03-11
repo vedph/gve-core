@@ -1593,15 +1593,14 @@ public sealed class ChainTest
         List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
         chain.AppendRange("", "v0", nodes);
 
-        bool result = chain.Swap("", "v1",
-            new ChainNode<char>('X'), new ChainNode<char>('Y'));
-
-        Assert.False(result);
+        Assert.False(chain.Swap("", "v1",
+            new ChainNode<char>('X'), new ChainNode<char>('Y')));
     }
 
     [Fact]
-    public void Swap_FirstNodes()
+    public void Swap_FirstNode_Adjacent()
     {
+        // A with B
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
         chain.AppendRange("", "v0", nodes);
@@ -1612,8 +1611,22 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void Swap_LastNodes()
+    public void Swap_FirstNode_NonAdjacent()
     {
+        // A with C
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Swap("v0", "v1", nodes[0], nodes[2]));
+
+        Assert.Equal("CBAD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Swap_LastNode_Adjacent()
+    {
+        // C with D
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
         chain.AppendRange("", "v0", nodes);
@@ -1624,8 +1637,22 @@ public sealed class ChainTest
     }
 
     [Fact]
-    public void Swap_InnerNodes()
+    public void Swap_LastNode_NonAdjacent()
     {
+        // D with B
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Swap("v0", "v1", nodes[3], nodes[1]));
+
+        Assert.Equal("ADCB", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Swap_InnerNode_Adjacent()
+    {
+        // B with C
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
         chain.AppendRange("", "v0", nodes);
@@ -1633,6 +1660,19 @@ public sealed class ChainTest
         Assert.True(chain.Swap("v0", "v1", nodes[1], nodes[2]));
 
         Assert.Equal("ACBD", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Swap_InnerNode_NonAdjacent()
+    {
+        // B with D
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Swap("v0", "v1", nodes[1], nodes[3]));
+
+        Assert.Equal("ADCB", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
 
@@ -1652,27 +1692,29 @@ public sealed class ChainTest
     [Fact]
     public void SwapRanges_FirstNodes()
     {
+        // AB with DE
         Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
         chain.AppendRange("", "v0", nodes);
 
         Assert.True(chain.SwapRanges("v0", "v1",
             nodes[0], nodes[1], nodes[3], nodes[4]));
 
-        Assert.Equal("DECAB", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("DECABF", GetVersionString(chain.GetTagNodes("v1")));
     }
 
     [Fact]
     public void SwapRanges_LastNodes()
     {
+        // DE with AB
         Chain<char> chain = new();
-        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
         chain.AppendRange("", "v0", nodes);
 
         Assert.True(chain.SwapRanges("v0", "v1",
             nodes[3], nodes[4], nodes[0], nodes[1]));
 
-        Assert.Equal("DECAB", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("DECABF", GetVersionString(chain.GetTagNodes("v1")));
     }
 
     [Fact]
