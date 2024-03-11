@@ -1545,6 +1545,7 @@ public sealed class ChainTest
     [Fact]
     public void MoveRangeAfter_FirstNodes()
     {
+        // AB after D
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
         chain.AppendRange("", "v0", nodes);
@@ -1552,12 +1553,13 @@ public sealed class ChainTest
         Assert.True(chain.MoveRangeAfter("v0", "v1",
             nodes[0], nodes[1], nodes[3]));
 
-        Assert.Equal("CABDE", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("CDABE", GetVersionString(chain.GetTagNodes("v1")));
     }
 
     [Fact]
     public void MoveRangeAfter_LastNodes()
     {
+        // DE after B
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
         chain.AppendRange("", "v0", nodes);
@@ -1565,12 +1567,13 @@ public sealed class ChainTest
         Assert.True(chain.MoveRangeAfter("v0", "v1",
             nodes[3], nodes[4], nodes[1]));
 
-        Assert.Equal("ADEBC", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("ABDEC", GetVersionString(chain.GetTagNodes("v1")));
     }
 
     [Fact]
     public void MoveRangeAfter_InnerNodes()
     {
+        // DE after B
         Chain<char> chain = new();
         List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
         chain.AppendRange("", "v0", nodes);
@@ -1578,7 +1581,7 @@ public sealed class ChainTest
         Assert.True(chain.MoveRangeAfter("v0", "v1",
             nodes[3], nodes[4], nodes[1]));
 
-        Assert.Equal("ADEBCF", GetVersionString(chain.GetTagNodes("v1")));
+        Assert.Equal("ABDECF", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
 

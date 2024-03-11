@@ -1365,7 +1365,7 @@ public class Chain<T>
         // get links before firstNode and after lastNode
         ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
         ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
-        ChainLink<T>? refRight = GetNodePreviousLink(tag, refNode);
+        ChainLink<T>? refRight = GetNodeNextLink(tag, refNode);
 
         // nope if firstNode or lastNode or ref node are not connected
         if (left == null || right == null || refRight == null) return false;
@@ -1374,7 +1374,7 @@ public class Chain<T>
         AddVersion(tag, newTag, left, right, refRight);
 
         // move head range AB after D:
-        // (-:A [A] A:B [B] B:C) [C] C:D [D] D:E [E] E:-
+        // (-:A [A] A:B [B] B:C) [C] C:D [D]^ D:E [E] E:-
         // =>
         // (-:C) [C] (C:D [D] (D:A [A] A:B [B] B:E) [E] E:-
         if (left.IsHead)
@@ -1387,7 +1387,7 @@ public class Chain<T>
             _links.Add(new ChainLink<T>(newTag, lastNode, refRight.Target));
         }
         // move tail range DE after B:
-        // -:A [A] A:B [B] B:C [C] (C:D [D] D:E [E] E:-)
+        // -:A [A] A:B [B]^ B:C [C] (C:D [D] D:E [E] E:-)
         // =>
         // -:A [A] A:B [B] (B:D [D] D:E [E] E:C) [C] (C:-)
         else if (right.IsTail)
@@ -1400,7 +1400,7 @@ public class Chain<T>
             _links.Add(new ChainLink<T>(newTag, left.Source, null));
         }
         // move inner range DE after B:
-        // -:A [A] A:B [B] B:C [C] (C:D [D] D:E [E] E:F) [F] F:-
+        // -:A [A] A:B [B]^ B:C [C] (C:D [D] D:E [E] E:F) [F] F:-
         // =>
         // -:A [A] A:B [B] (B:D [D] D:E [E] E:C) [C] (C:F) [F] F:-
         else
@@ -1408,9 +1408,17 @@ public class Chain<T>
             // add B:D
             _links.Add(new ChainLink<T>(newTag, refNode, firstNode));
             // add E:C
-            _links.Add(new ChainLink<T>(newTag, lastNode, refRight.Target));
+            _links.Add(new ChainLink<T>(newTag, lastNode, left.Source));
             // add C:F
             _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
+        }
+
+        // if newTag is the same as tag, delete the old links
+        if (tag == newTag)
+        {
+            _links.Remove(left);
+            _links.Remove(right);
+            _links.Remove(refRight);
         }
 
         return true;
