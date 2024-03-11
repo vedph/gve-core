@@ -1663,6 +1663,20 @@ public sealed class ChainTest
     }
 
     [Fact]
+    public void Swap_InnerNode_Adjacent_SameVersion()
+    {
+        // B with C
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Swap("v0", "v0", nodes[1], nodes[2]));
+
+        Assert.Equal("ACBD", GetVersionString(chain.GetTagNodes("v0")));
+        Assert.Single(chain.GetDistinctTags());
+    }
+
+    [Fact]
     public void Swap_InnerNode_NonAdjacent()
     {
         // B with D
@@ -1673,6 +1687,20 @@ public sealed class ChainTest
         Assert.True(chain.Swap("v0", "v1", nodes[1], nodes[3]));
 
         Assert.Equal("ADCB", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Swap_InnerNode_NonAdjacent_SameVersion()
+    {
+        // B with D
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCD");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.Swap("v0", "v0", nodes[1], nodes[3]));
+
+        Assert.Equal("ADCB", GetVersionString(chain.GetTagNodes("v0")));
+        Assert.Single(chain.GetDistinctTags());
     }
     #endregion
 
@@ -1760,6 +1788,21 @@ public sealed class ChainTest
     }
 
     [Fact]
+    public void SwapRanges_InnerNodes_Adjacent_SameVersion()
+    {
+        // BC with DE
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEF");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.SwapRanges("v0", "v0",
+            nodes[1], nodes[2], nodes[3], nodes[4]));
+
+        Assert.Equal("ADEBCF", GetVersionString(chain.GetTagNodes("v0")));
+        Assert.Single(chain.GetDistinctTags());
+    }
+
+    [Fact]
     public void SwapRanges_InnerNodes_NonAdjacent()
     {
         // BC with EF
@@ -1771,6 +1814,21 @@ public sealed class ChainTest
             nodes[1], nodes[2], nodes[4], nodes[5]));
 
         Assert.Equal("AEFDBCG", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void SwapRanges_InnerNodes_NonAdjacent_SameVersion()
+    {
+        // BC with EF
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDEFG");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.SwapRanges("v0", "v0",
+            nodes[1], nodes[2], nodes[4], nodes[5]));
+
+        Assert.Equal("AEFDBCG", GetVersionString(chain.GetTagNodes("v0")));
+        Assert.Single(chain.GetDistinctTags());
     }
     #endregion
 }

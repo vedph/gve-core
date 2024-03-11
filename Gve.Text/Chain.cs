@@ -1585,6 +1585,15 @@ public class Chain<T>
             _links.Add(new ChainLink<T>(newTag, last1Node, right2.Target));
         }
 
+        // if newTag is the same as tag, delete the old links
+        if (tag == newTag)
+        {
+            _links.Remove(left1);
+            _links.Remove(right1);
+            _links.Remove(left2);
+            _links.Remove(right2);
+        }
+
         return true;
     }
     #endregion
