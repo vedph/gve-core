@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -128,6 +129,11 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </summary>
     /// <param name="chain">The target chain.</param>
     /// <param name="tag">The version tag.</param>
+    /// <param name="at">The optional value of node ID or index. If -1, the
+    /// value of <see cref="At"/> will be used.</param>
+    /// <param name="run">The optional run of characters to include from
+    /// <paramref name="at"/>. If -1, the value of <see cref="Run"/> will be
+    /// used.</param>
     /// <returns>Node and optional end node when this operation works on a range.
     /// </returns>
     /// <exception cref="ArgumentNullException">chain or tag</exception>

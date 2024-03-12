@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Gve.Text.Test;
 
@@ -147,5 +149,33 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("sample", op.Features[0].Value);
         Assert.False(op.Features[0].IsUnique);
         Assert.Empty(op.TaggedOrdinals);
+    }
+
+    private static string GetVersionString(IList<ChainNode<char>> nodes) =>
+        new(nodes.Select(n => n.Data).ToArray());
+
+    private static List<ChainNode<char>> GetNodesFrom(string text)
+    {
+        return text.Select((c, _) =>
+            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
+            .ToList();
+    }
+
+    [Fact]
+    public void Execute_DeleteSingle()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", GetNodesFrom("ABC"));
+        CharChainDeleteOperation op = new()
+        {
+            At = 1,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("BC", GetVersionString(context.Chain.GetTagNodes("v1")));
     }
 }
