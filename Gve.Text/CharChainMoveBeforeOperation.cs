@@ -31,7 +31,7 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation
 
     private ChainNode<char> GetToNode(Chain<char> chain, string tag)
     {
-        return FindNode(chain, To, tag) ??
+        return FindNode(chain, To, ToAsIndex, tag) ??
             throw new InvalidOperationException(
             "Node not found for the specified TO: " + ToString());
     }

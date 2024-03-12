@@ -148,7 +148,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         if (run == -1) run = Run;
 
         // find at node
-        ChainNode<char>? node = FindNode(chain, at, tag) ??
+        ChainNode<char>? node = FindNode(chain, at, AtAsIndex, tag) ??
             throw new InvalidOperationException(
                 "Node not found for the specified AT: " + ToString());
 
@@ -377,14 +377,18 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </summary>
     /// <param name="chain">The chain.</param>
     /// <param name="at">The value of node ID or index.</param>
-    /// <param name="tag">The tag defining the context for the index. When
-    /// null, this implies that <paramref name="at"/> refers to an ID, which
+    /// <param name="atAsIndex">if set to <c>true</c>, <paramref name="at"/>
+    /// represents an index rather than an ID.</param>
+    /// <param name="tag">The tag defining the context for the index. This
+    /// can be null when <paramref name="at"/> refers to an ID, which
     /// is not dependent on version tags.</param>
     /// <returns>Node, or null if not found.</returns>
     protected static ChainNode<char>? FindNode(Chain<char> chain, int at,
-        string? tag = null)
+        bool atAsIndex = false, string? tag = null)
     {
-        return tag != null? chain.FindNodeByIndex(tag, at) : chain.FindNode(at);
+        return atAsIndex
+            ? chain.FindNodeByIndex(tag ?? "", at)
+            : chain.FindNode(at);
     }
 
     /// <summary>
