@@ -171,12 +171,12 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.ChainOperationContext&lt;T&gt;">
-    <Position X="3.25" Y="6.75" Width="2" />
+    <Position X="3.25" Y="8" Width="2.25" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BAABAAAAAAAAAAAEAAABAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>BAABAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
       <FileName>ChainOperationContext.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -186,8 +186,8 @@
       <Property Name="Steps" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Gve.Text.ChainOperationContextStep&lt;T&gt;">
-    <Position X="6" Y="6.75" Width="2.5" />
+  <Class Name="Gve.Text.ChainOperationContextStep">
+    <Position X="6.25" Y="7.75" Width="2.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
@@ -202,8 +202,18 @@
       <Method Name="CharChainAnnotateOperation" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>CharChainAnnotateOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.ChainOperationContextFeats">
+    <Position X="3.25" Y="5.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ChainOperationContextFeats.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
