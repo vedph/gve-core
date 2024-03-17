@@ -18,12 +18,13 @@ Each chain operation derives from `ChainOperation<T>`, which in turn is derived 
 
 All these operations get translated into calls to chain editing methods, which are more low-level and directly work on nodes. The chain operations take care of finding the nodes corresponding to their location arguments.
 
-Also, chain operations work on a chain operations context (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
+Also, chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
 
 - the last version tag being the output of the last operation executed on this context.
 - the steps executed on the chain, each including:
   - input version tag;
   - output version tag;
+  - context features snapshot, taken after the step;
   - reference to the operation object.
 
 The general text-based syntax for these operations includes these components, from left to right:
@@ -42,6 +43,11 @@ The available operations (and their corresponding operator in their text-based r
 - delete (`-`): e.g. `3x2-`
 - add left (`+<`): e.g. `3x2+<"X"`
 - add right (`+>`): e.g. `3x2+>"X"`
-- annotate (`:`): e.g. `3x2: {note=sample}`
+- annotate (`:`): e.g. `3x2: {note=sample}` (node-scoped) or `0: {note=sample}` (context-scoped)
 - move (`>`): e.g. `3x2>6`
 - swap (`<>`): e.g. `3x2<>6`
+
+As for features (included in braces), `name` can have these prefixes (in this order):
+
+1. `!`: the feature should be removed.
+2. `*`: the feature targets context rather than nodes (which is the default, unless `AT` is 0).
