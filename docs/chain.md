@@ -36,7 +36,7 @@ The general text-based syntax for these operations includes these components, fr
 3. `OPERATOR` (required)
 4. `"VALUE"`
 5. `^RANK`
-6. `[TAGS...]`: filter tags, separated by space, used to filter operations in or out according to the editor's interpretation.
+6. `[TAGS...]`: tagged ordinals, separated by space, used to filter operations in or out according to the editor's interpretation.
 7. `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
 
 The available operations (and their corresponding operator in their text-based representation) are:
