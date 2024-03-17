@@ -161,7 +161,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.CharChainSwapOperation">
-    <Position X="12.75" Y="12.75" Width="1.75" />
+    <Position X="12.5" Y="12.75" Width="1.75" />
     <Members>
       <Method Name="CharChainSwapOperation" Hidden="true" />
     </Members>
@@ -194,6 +194,16 @@
     <TypeIdentifier>
       <HashCode>AAABAAAAAAAAAAAEAAABAAAAAAAAAAAAAAEAAAAAAEA=</HashCode>
       <FileName>ChainOperationContextStep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gve.Text.CharChainAnnotateOperation">
+    <Position X="15" Y="12.75" Width="2" />
+    <Members>
+      <Method Name="CharChainAnnotateOperation" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CharChainAnnotateOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
