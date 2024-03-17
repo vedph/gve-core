@@ -20,8 +20,10 @@ All these operations get translated into calls to chain editing methods, which a
 
 Also, chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
 
-- the last version tag being the output of the last operation executed on this context.
-- the steps executed on the chain, each including:
+- the **last version tag** being the output of the last operation executed on this context.
+- the **features** of the context. These get added (or updated or removed) when executing operations.
+- thoe **node features**. This is a dictionary whose key is a tuple built of node ID and version tag, and value a list of features.
+- the **steps** executed on the chain, each including:
   - input version tag;
   - output version tag;
   - context features snapshot, taken after the step;
@@ -34,7 +36,7 @@ The general text-based syntax for these operations includes these components, fr
 3. `OPERATOR` (required)
 4. `"VALUE"`
 5. `^RANK`
-6. `[TAGS...]`: version tags, separated by space, used to filter operations in or out according to the editor's interpretation.
+6. `[TAGS...]`: filter tags, separated by space, used to filter operations in or out according to the editor's interpretation.
 7. `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
 
 The available operations (and their corresponding operator in their text-based representation) are:
