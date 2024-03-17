@@ -6,7 +6,6 @@ namespace Gve.Text;
 /// <summary>
 /// "Delete" operation for a chain.
 /// </summary>
-/// <typeparam name="T">The type of chain node data.</typeparam>
 public sealed class CharChainDeleteOperation : CharChainOperation
 {
     /// <summary>

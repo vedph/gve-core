@@ -416,11 +416,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         AddFeaturesTo(context.Features);
 
         // add this operation to the context's steps
-        context.Steps.Add(new ChainOperationContextStep<char>(
-            this, inputTag, outputTag)
-        {
-            Features = [..context.Features]
-        });
+        context.Steps.Add(new ChainOperationContextStep(
+            this, inputTag, outputTag, new ChainOperationContextFeats(context)));
     }
 
     /// <summary>
