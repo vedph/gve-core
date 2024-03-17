@@ -8,7 +8,7 @@ public sealed class FeatureTest
     [Fact]
     public void Constructor_ShouldSetProperties()
     {
-        var feature = new Feature("name", "value", true);
+        Feature feature = new("name", "value", true);
 
         Assert.Equal("name", feature.Name);
         Assert.Equal("value", feature.Value);
@@ -18,7 +18,7 @@ public sealed class FeatureTest
     [Fact]
     public void Parse_ShouldReturnFeature()
     {
-        var feature = Feature.Parse("name=value");
+        Feature feature = Feature.Parse("name=value");
 
         Assert.Equal("name", feature.Name);
         Assert.Equal("value", feature.Value);
@@ -27,7 +27,7 @@ public sealed class FeatureTest
     [Fact]
     public void Parse_ShouldReturnFeature_WhenInputHasNameOnly()
     {
-        var feature = Feature.Parse("name");
+        Feature feature = Feature.Parse("name");
 
         Assert.Equal("name", feature.Name);
         Assert.Null(feature.Value);
@@ -36,7 +36,7 @@ public sealed class FeatureTest
     [Fact]
     public void Parse_ShouldReturnFeature_WhenInputHasNameAndValueWithColon()
     {
-        var feature = Feature.Parse("name:=value");
+        Feature feature = Feature.Parse("name:=value");
 
         Assert.Equal("name", feature.Name);
         Assert.Equal("value", feature.Value);
@@ -45,7 +45,7 @@ public sealed class FeatureTest
     [Fact]
     public void Parse_ShouldReturnFeature_WhenInputHasNameAndValueWithSpaces()
     {
-        var feature = Feature.Parse("name=\"value with spaces\"");
+        Feature feature = Feature.Parse("name=\"value with spaces\"");
 
         Assert.Equal("name", feature.Name);
         Assert.Equal("value with spaces", feature.Value);
@@ -74,8 +74,8 @@ public sealed class FeatureTest
     [Fact]
     public void UpdateFeatures_ShouldUpdateTargetList()
     {
-        var sources = new List<Feature> { new("name", "value", true) };
-        var targets = new List<Feature>();
+        List<Feature> sources = [new("name", "value", true)];
+        List<Feature> targets = [];
 
         Feature.UpdateFeatures(sources, targets);
 
@@ -87,7 +87,7 @@ public sealed class FeatureTest
     [Fact]
     public void ToString_ShouldReturnNameAndValue()
     {
-        var feature = new Feature("name", "value");
+        Feature feature = new("name", "value");
 
         string result = feature.ToString();
 
