@@ -426,7 +426,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         context.LastTag = outputTag;
 
         // add features to context/nodes
-        UpdateContextFeatures(outputTag, context);
+        UpdateContextFeatures(inputTag, context);
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -6,6 +7,7 @@ namespace Gve.Text.Test;
 
 public sealed class CharChainDeleteOperationTest
 {
+    #region Parsing
     [Fact]
     public void ParseOperation_At1Run1()
     {
@@ -150,6 +152,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.False(op.Features[0].IsUnique);
         Assert.Empty(op.TaggedOrdinals);
     }
+    #endregion
 
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
         new(nodes.Select(n => n.Data).ToArray());
@@ -172,10 +175,33 @@ public sealed class CharChainDeleteOperationTest
             Run = 1,
             InputTag = "v0",
             OutputTag = "v1",
+            Features =
+            [
+                new Feature("*log", "deleted A from ABC"),
+                new Feature("reason", "don't like A")
+            ]
         };
 
         op.Execute(context);
 
         Assert.Equal("BC", GetVersionString(context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("deleted A from ABC", context.Features[0].Value);
+        // node features
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 1)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("don't like A", nodeFeatures[0].Value);
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
     }
 }

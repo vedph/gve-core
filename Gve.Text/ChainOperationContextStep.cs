@@ -25,7 +25,7 @@ public class ChainOperationContextStep
     /// <summary>
     /// Gets or sets the features emitted up to this step.
     /// </summary>
-    public ChainOperationContextFeats Features { get; set; }
+    public ChainOperationContextFeats FeatureSet { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextStep"/>
@@ -42,7 +42,7 @@ public class ChainOperationContextStep
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
         InputTag = inputTag ?? throw new ArgumentNullException(nameof(inputTag));
         OutputTag = outputTag ?? throw new ArgumentNullException(nameof(outputTag));
-        Features = features ?? throw new ArgumentNullException(nameof(features));
+        FeatureSet = features ?? throw new ArgumentNullException(nameof(features));
     }
 
     /// <summary>

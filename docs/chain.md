@@ -18,7 +18,7 @@ Each chain operation derives from `ChainOperation<T>`, which in turn is derived 
 
 All these operations get translated into calls to chain editing methods, which are more low-level and directly work on nodes. The chain operations take care of finding the nodes corresponding to their location arguments.
 
-Also, chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
+Chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
 
 - the **last version tag** being the output of the last operation executed on this context.
 - the **features** of the context. These get added (or updated or removed) when executing operations.
@@ -26,8 +26,8 @@ Also, chain operations work on a chain operations **context** (`ChainOperationCo
 - the **steps** executed on the chain, each including:
   - input version tag;
   - output version tag;
-  - context features snapshot, taken after the step;
-  - reference to the operation object.
+  - context and nodes features snapshot, taken after the step;
+  - reference to the source operation object.
 
 The general text-based syntax for these operations includes these components, from left to right:
 
