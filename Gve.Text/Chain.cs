@@ -391,9 +391,11 @@ public class Chain<T>
     /// Gets the nodes for the specified version tag, in their order.
     /// </summary>
     /// <param name="tag">The version tag.</param>
+    /// <param name="source">True to collect only those nodes having their
+    /// source tag equal to <paramref name="tag"/>.</param>
     /// <returns>The nodes.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    public IList<ChainNode<T>> GetTagNodes(string tag)
+    public IList<ChainNode<T>> GetTagNodes(string tag, bool source = false)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
@@ -402,14 +404,14 @@ public class Chain<T>
 
         // get the first node for tag
         ChainNode<T>? first = GetFirstNode(tag);
-        if (first == null) return [];
+        if (first == null || (source && first.SourceTag != tag)) return [];
 
         // get the next nodes in order
         List<ChainNode<T>> nodes = [first];
         ChainNode<T>? n = GetNextNode(tag, first);
         while (n != null)
         {
-            nodes.Add(n);
+            if (n.SourceTag == tag || !source) nodes.Add(n);
             n = GetNextNode(tag, n);
         }
         return nodes;

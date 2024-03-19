@@ -364,13 +364,17 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </summary>
     /// <param name="tag">The output tag of this operation.</param>
     /// <param name="context">The context to update.</param>
+    /// <param name="nodes">The nodes to be used as targets for features. If
+    /// not specified, these will be calculated from the operation's target
+    /// range.</param>
     /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
     /// 0 is added as a unique feature; anyway, it can be overridden by another
     /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
     /// </remarks>
     /// <exception cref="ArgumentNullException">features</exception>
     private void UpdateContextFeatures(string tag,
-        ChainOperationContext<char> context)
+        ChainOperationContext<char> context,
+        IList<ChainNode<char>>? nodes = null)
     {
         ArgumentNullException.ThrowIfNull(tag);
         ArgumentNullException.ThrowIfNull(context);
@@ -381,7 +385,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
             : Features;
 
         // update the context's and/or nodes features
-        context.UpdateFeatures(sources, tag, GetTargetNodes(context.Chain, tag));
+        context.UpdateFeatures(sources, tag,
+            nodes ?? GetTargetNodes(context.Chain, tag));
     }
 
     /// <summary>
@@ -415,8 +420,12 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="context">The context.</param>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
+    /// <param name="newNodesAsTarget">Use the newly added nodes as the target
+    /// for node features, instead of the previous ones. Targeting old or new
+    /// nodes depends on the operation; for instance, a delete operation targets
+    /// old nodes, because the targeted node will not exist after it.</param>
     protected void UpdateContext(ChainOperationContext<char> context,
-        string inputTag, string outputTag)
+        string inputTag, string outputTag, bool newNodesAsTarget)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(inputTag);
@@ -426,7 +435,16 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         context.LastTag = outputTag;
 
         // add features to context/nodes
-        UpdateContextFeatures(inputTag, context);
+        if (newNodesAsTarget)
+        {
+            IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(
+                outputTag, true);
+            UpdateContextFeatures(outputTag, context, nodes);
+        }
+        else
+        {
+            UpdateContextFeatures(inputTag, context);
+        }
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(
@@ -465,7 +483,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
                 => (CharChainSwapOperation.ParseOperation(text) as O)!,
             VarOperationType.Delete
                 => (CharChainDeleteOperation.ParseOperation(text) as O)!,
-                // TODO annotate
+            VarOperationType.Annotate
+                => (CharChainAnnotateOperation.ParseOperation(text) as O)!,
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")
         };

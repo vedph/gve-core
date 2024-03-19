@@ -69,7 +69,7 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag);
+        UpdateContext(context, inputTag, outputTag, true);
     }
 
     /// <summary>

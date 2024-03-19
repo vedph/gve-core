@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -70,4 +67,47 @@ public sealed class CharChainReplaceOperationTest
         Assert.Empty(op.TaggedOrdinals);
     }
     #endregion
+
+    [Fact]
+    public void Execute_ReplaceSingle()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 1,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                new Feature("*log", "replaced A with X"),
+                new Feature("reason", "like X more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("XBC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("replaced A with X", context.Features[0].Value);
+        // node features
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 4)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("like X more", nodeFeatures[0].Value);
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+    }
 }
