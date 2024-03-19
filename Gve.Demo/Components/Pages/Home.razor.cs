@@ -1,4 +1,5 @@
 ﻿using Gve.Text;
+using Radzen;
 using System.Diagnostics;
 
 namespace Gve.Demo.Components.Pages;
@@ -6,8 +7,17 @@ namespace Gve.Demo.Components.Pages;
 public partial class Home
 {
     public string Text { get; set; } = "ARZDC";
-    public string OperationText { get; set; } = "3- {reason=\"don't like Z\"}";
+    public string OperationText { get; set; }
     public List<CharChainOperation> Operations { get; } = [];
+
+    public Home()
+    {
+        OperationText = "3- [alpha=1 beta=1] {reason=\"don't like Z\"}\n" +
+            "2=V [alpha=2]\n" +
+            "@2=B [alpha=3]\n" +
+            "2=P [beta=2]\n" +
+            "C<>D [alpha=4 beta=3]";
+    }
 
     public void ParseOperationText()
     {
@@ -28,8 +38,8 @@ public partial class Home
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
-            //NotificationService.Notify(NotificationSeverity.Error, "Error",
-            //    ex.Message);
+            NotificationService.Notify(NotificationSeverity.Error, "Error",
+                ex.Message);
         }
     }
 }
