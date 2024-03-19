@@ -156,8 +156,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         // add the first node
         nodes.Add(node);
 
-        // if run is 1, return the node only
-        if (run == 1)
+        // if run is 1 (or 0, which is used for reference nodes), return the node only
+        if (run < 2)
         {
             return nodes;
         }

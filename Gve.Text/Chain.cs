@@ -404,10 +404,11 @@ public class Chain<T>
 
         // get the first node for tag
         ChainNode<T>? first = GetFirstNode(tag);
-        if (first == null || (source && first.SourceTag != tag)) return [];
+        if (first == null) return [];
 
         // get the next nodes in order
-        List<ChainNode<T>> nodes = [first];
+        List<ChainNode<T>> nodes = first.SourceTag == tag || !source
+            ? [first] : [];
         ChainNode<T>? n = GetNextNode(tag, first);
         while (n != null)
         {
