@@ -90,13 +90,14 @@ public sealed class CharChainSwapOperation : CharChainOperation
         CharChainSwapOperation op = new();
         // AT RUN
         string body = ParseHeadAndTail(text, op);
-        Match m = AtRunToRegex().Match(body);
+        // TO RUN
+        Match m = ToRunRegex().Match(body);
         if (!m.Success)
             throw new FormatException($"Invalid move operation: {text}");
-        // TO RUN
         op.ToAsIndex = m.Groups["tox"].Success;
         op.To = int.Parse(m.Groups["to"].Value);
-        op.ToRun = int.Parse(m.Groups["torun"].Value);
+        op.ToRun = m.Groups["torun"].Length > 0
+            ? int.Parse(m.Groups["torun"].Value) : 1;
 
         return op;
     }

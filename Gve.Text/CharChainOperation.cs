@@ -79,12 +79,12 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <returns>Identifier.</returns>
     public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 
-    // [@]at, [run], [@]to [torun]
-    [GeneratedRegex(@"^(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?[=\-\+\[\]<>:]+(?<tox>@)?(?<to>[0-9]+)(?:[×x](?<torun>[0-9]+))?")]
-    protected static partial Regex AtRunToRegex();
-
     [GeneratedRegex(@"^(?<tox>@)?(?<to>[0-9]+)")]
     protected static partial Regex ToRegex();
+
+    // [@]to [torun]
+    [GeneratedRegex(@"^(?<tox>@)?(?<to>[0-9]+)(?:[×x](?<torun>[0-9]+))?")]
+    protected static partial Regex ToRunRegex();
 
     // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
     [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
