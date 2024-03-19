@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -154,21 +153,11 @@ public sealed class CharChainDeleteOperationTest
     }
     #endregion
 
-    private static string GetVersionString(IList<ChainNode<char>> nodes) =>
-        new(nodes.Select(n => n.Data).ToArray());
-
-    private static List<ChainNode<char>> GetNodesFrom(string text)
-    {
-        return text.Select((c, _) =>
-            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
-            .ToList();
-    }
-
     [Fact]
     public void Execute_DeleteSingle()
     {
         ChainOperationContext<char> context = new();
-        context.Chain.AppendRange("", "v0", GetNodesFrom("ABC"));
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
         CharChainDeleteOperation op = new()
         {
             At = 1,
@@ -184,7 +173,8 @@ public sealed class CharChainDeleteOperationTest
 
         op.Execute(context);
 
-        Assert.Equal("BC", GetVersionString(context.Chain.GetTagNodes("v1")));
+        Assert.Equal("BC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
         // context tag
         Assert.Equal("v1", context.LastTag);
         // context features
@@ -203,5 +193,53 @@ public sealed class CharChainDeleteOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+    }
+
+    [Fact]
+    public void Execute_DeleteRange()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainDeleteOperation op = new()
+        {
+            At = 2,
+            Run = 2,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Features =
+            [
+                new Feature("*log", "deleted BC from ABC"),
+                new Feature("reason", "don't like BC")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("A", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("deleted BC from ABC", context.Features[0].Value);
+        // node features
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 2)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("don't like BC", nodeFeatures[0].Value);
+
+        nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 3)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("don't like BC", nodeFeatures[0].Value);
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
