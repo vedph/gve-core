@@ -86,12 +86,18 @@ public sealed class CharChainSwapOperationTest
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("A and C are jealous", nodeFeatures[0].Value);
+
+        nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 3)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("A and C are jealous", nodeFeatures[0].Value);
+
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }

@@ -56,17 +56,9 @@ public sealed class CharChainSwapOperation : CharChainOperation
         IList<ChainNode<char>> toNodes = GetTargetNodes(context.Chain, outputTag,
             To, ToRun);
 
-        // apply to single node or range
-        if (nodes.Count > 1 || toNodes.Count > 1)
-        {
-            context.Chain.SwapRanges(inputTag, outputTag,
-                nodes[0], nodes[^1],
-                toNodes[0], toNodes[^1]);
-        }
-        else
-        {
-            context.Chain.MoveBefore(inputTag, outputTag, nodes[0], toNodes[0]);
-        }
+        context.Chain.SwapRanges(inputTag, outputTag,
+            nodes[0], nodes[^1],
+            toNodes[0], toNodes[^1]);
 
         // update context metadata
         List<ChainNode<char>> targetNodes = [];
