@@ -447,7 +447,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         }
         else
         {
-            UpdateContextFeatures(inputTag, context);
+            UpdateContextFeatures(outputTag, context);
         }
 
         // add this operation to the context's steps
