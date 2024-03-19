@@ -68,7 +68,7 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, true);
+        UpdateContext(context, inputTag, outputTag, false);
     }
 
     /// <summary>
@@ -85,12 +85,12 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation
         CharChainMoveAfterOperation op = new();
         // AT RUN
         string body = ParseHeadAndTail(text, op);
-        Match m = AtRunToRegex().Match(body);
+        Match m = ToRegex().Match(body);
         if (!m.Success)
             throw new FormatException($"Invalid move operation: {text}");
         // TO
         op.ToAsIndex = m.Groups["tox"].Success;
-        op.To = short.Parse(m.Groups["to"].Value);
+        op.To = int.Parse(m.Groups["to"].Value);
 
         return op;
     }

@@ -83,6 +83,9 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     [GeneratedRegex(@"^(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?[=\-\+\[\]<>:]+(?<tox>@)?(?<to>[0-9]+)(?:[×x](?<torun>[0-9]+))?")]
     protected static partial Regex AtRunToRegex();
 
+    [GeneratedRegex(@"^(?<tox>@)?(?<to>[0-9]+)")]
+    protected static partial Regex ToRegex();
+
     // [([it]:[ot])] [@]at, [run], op where it=input tag and ot=output tag
     [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     private static partial Regex HeadRegex();
@@ -323,11 +326,11 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         operation.OutputTag = GetOptionalArgValue(head.Groups["ot"].Value);
 
         operation.AtAsIndex = head.Groups["atx"].Success;
-        operation.At = short.Parse(head.Groups["at"].Value,
+        operation.At = int.Parse(head.Groups["at"].Value,
             CultureInfo.InvariantCulture);
         if (head.Groups["run"].Success)
         {
-            operation.Run = short.Parse(head.Groups["run"].Value,
+            operation.Run = int.Parse(head.Groups["run"].Value,
                 CultureInfo.InvariantCulture);
         }
 

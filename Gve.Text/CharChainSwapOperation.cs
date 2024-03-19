@@ -91,8 +91,8 @@ public sealed class CharChainSwapOperation : CharChainOperation
             throw new FormatException($"Invalid move operation: {text}");
         // TO RUN
         op.ToAsIndex = m.Groups["tox"].Success;
-        op.To = short.Parse(m.Groups["to"].Value);
-        op.ToRun = short.Parse(m.Groups["torun"].Value);
+        op.To = int.Parse(m.Groups["to"].Value);
+        op.ToRun = int.Parse(m.Groups["torun"].Value);
 
         return op;
     }
