@@ -43,10 +43,11 @@ The available operations (and their corresponding operator in their text-based r
 
 - replace (`=`): e.g. `3x2="X"`
 - delete (`-`): e.g. `3x2-`
-- add left (`+<`): e.g. `3x2+<"X"`
-- add right (`+>`): e.g. `3x2+>"X"`
+- add before (`+[`, `RUN` is always 0): e.g. `3+["X"`
+- add after (`+]`, `RUN` is always 0): e.g. `3+]"X"`
 - annotate (`:`): e.g. `3x2: {note=sample}` (node-scoped) or `0: {note=sample}` (context-scoped)
-- move (`>`): e.g. `3x2>6`
+- move before (`>[`, `TO-RUN` is always 0): e.g. `3x2>[6`
+- move after (`>]`, `TO-RUN` is always 0): e.g. `3x2>]6`
 - swap (`<>`): e.g. `3x2<>6`
 
 As for features (included in braces), `name` can have these prefixes (in this order):
