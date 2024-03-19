@@ -144,6 +144,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         ArgumentNullException.ThrowIfNull(tag);
 
         if (at == -1) at = At;
+        if (At == 0) return [];
         if (run == -1) run = Run;
 
         List<ChainNode<char>> nodes = [];

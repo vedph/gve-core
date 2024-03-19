@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System;
+using Xunit;
 
 namespace Gve.Text.Test;
 
@@ -40,5 +42,91 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Null(op.GroupId);
         Assert.Single(op.Features);
         Assert.Empty(op.TaggedOrdinals);
+    }
+
+    [Fact]
+    public void Execute_At0()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainAnnotateOperation op = new()
+        {
+            At = 0,
+            InputTag = "v0",
+            OutputTag = "v0",
+            Features =
+            [
+                new Feature("*log", "context annotation"),
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("ABC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+        // context tag
+        Assert.Equal("v0", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("context annotation", context.Features[0].Value);
+        // node features
+        Assert.Empty(context.NodeFeatures);
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v0", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Empty(context.Steps[0].FeatureSet.NodeFeatures);
+    }
+
+    [Fact]
+    public void Execute_At1Run2()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainAnnotateOperation op = new()
+        {
+            At = 1,
+            Run = 2,
+            InputTag = "v0",
+            OutputTag = "v0",
+            Features =
+            [
+                new Feature("*log", "context annotation"),
+                new Feature("x", "y"),
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("ABC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+        // context tag
+        Assert.Equal("v0", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("context annotation", context.Features[0].Value);
+        // node features
+        Assert.Equal(2, context.NodeFeatures.Count);
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 1)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("x", nodeFeatures[0].Name);
+        Assert.Equal("y", nodeFeatures[0].Value);
+
+        nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 2)];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("x", nodeFeatures[0].Name);
+        Assert.Equal("y", nodeFeatures[0].Value);
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v0", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
