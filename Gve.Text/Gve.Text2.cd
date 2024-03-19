@@ -46,7 +46,6 @@
   <Class Name="Gve.Text.CharChainOperation">
     <Position X="9.75" Y="4" Width="2" />
     <Members>
-      <Method Name="AtRunToRegex" Hidden="true" />
       <Method Name="FeatureRegex" Hidden="true" />
       <Method Name="GetOptionalArgValue" Hidden="true" />
       <Method Name="HeadRegex" Hidden="true" />
@@ -54,10 +53,13 @@
       <Method Name="ParseTaggedOrdinals" Hidden="true" />
       <Method Name="TaggedOrdinalRegex" Hidden="true" />
       <Method Name="TailRegex" Hidden="true" />
+      <Method Name="ToRegex" Hidden="true" />
+      <Method Name="ToRunRegex" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
+      <Method Name="UpdateContextFeatures" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AIBjAAAAQDAgAIQMAAAAAAAAQQDCABAASwAoAIIQIEI=</HashCode>
+      <HashCode>AIBjAAAAQBAgQIQMAAAIAQAAQQDCABgASQAoAIIQIEI=</HashCode>
       <FileName>CharChainOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -192,7 +194,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAAAAAEAAABAAAAAAAAAAAAAAEAAAAAAEA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAEAAAAEA=</HashCode>
       <FileName>ChainOperationContextStep.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -212,7 +214,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQAEAAAABAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>ChainOperationContextFeats.cs</FileName>
     </TypeIdentifier>
   </Class>
