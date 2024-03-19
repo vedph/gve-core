@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -49,22 +50,21 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
-        // get bound nodes
-        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
-            context.Chain, inputTag);
+        // get target nodes
+        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
 
         // get to node
         ChainNode<char> toNode = GetToNode(context.Chain, inputTag);
 
         // apply to single node or range
-        if (endNode != null)
+        if (nodes.Count > 1)
         {
-            context.Chain.MoveRangeAfter(inputTag, outputTag, node, endNode,
+            context.Chain.MoveRangeAfter(inputTag, outputTag, nodes[0], nodes[^1],
                 toNode);
         }
         else
         {
-            context.Chain.MoveAfter(inputTag, outputTag, node, toNode);
+            context.Chain.MoveAfter(inputTag, outputTag, nodes[0], toNode);
         }
 
         // update context metadata

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -48,24 +49,23 @@ public sealed class CharChainSwapOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
-        // get bound nodes
-        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
-            context.Chain, inputTag);
+        // get target nodes
+        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
 
-        // get to bound nodes
-        (ChainNode<char> toNode, ChainNode<char>? toEndNode) = GetBoundNodes(
-            context.Chain, outputTag, To, ToRun);
+        // get to target nodes
+        IList<ChainNode<char>> toNodes = GetTargetNodes(context.Chain, outputTag,
+            To, ToRun);
 
         // apply to single node or range
-        if (endNode != null || toEndNode != null)
+        if (nodes.Count > 1 || toNodes.Count > 1)
         {
             context.Chain.SwapRanges(inputTag, outputTag,
-                node, endNode ?? node,
-                toNode, toEndNode ?? toNode);
+                nodes[0], nodes[^1],
+                toNodes[0], toNodes[^1]);
         }
         else
         {
-            context.Chain.MoveBefore(inputTag, outputTag, node, toNode);
+            context.Chain.MoveBefore(inputTag, outputTag, nodes[0], toNodes[0]);
         }
 
         // update context metadata

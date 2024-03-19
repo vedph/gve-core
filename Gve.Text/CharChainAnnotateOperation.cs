@@ -27,8 +27,11 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        // get tags
+        (string inputTag, string outputTag) = GetTags(context);
+
         // add features to context
-        AddFeaturesTo(context.Features);
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>

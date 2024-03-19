@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Gve.Text;
@@ -29,33 +30,32 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
-        // get bound nodes
-        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
-            context.Chain, inputTag);
+        // get target nodes
+        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
 
         // apply to single node or range
-        if (endNode != null)
+        if (nodes.Count > 1)
         {
-            context.Chain.ReplaceRange(inputTag, outputTag, node, endNode,
+            context.Chain.ReplaceRange(inputTag, outputTag, nodes[0], nodes[^1],
                 GetNodesFrom(Value ?? ""));
         }
         else
         {
             if (string.IsNullOrEmpty(Value))
             {
-                context.Chain.Delete(inputTag, outputTag, node);
+                context.Chain.Delete(inputTag, outputTag, nodes[0]);
             }
             else
             {
                 if (Value.Length == 1)
                 {
-                    context.Chain.Replace(inputTag, outputTag, node,
+                    context.Chain.Replace(inputTag, outputTag, nodes[0],
                         GetNodesFrom(Value)[0]);
                 }
                 else
                 {
-                    context.Chain.ReplaceRange(inputTag, outputTag, node, node,
-                        GetNodesFrom(Value));
+                    context.Chain.ReplaceRange(inputTag, outputTag,
+                        nodes[0], nodes[0], GetNodesFrom(Value));
                 }
             }
         }

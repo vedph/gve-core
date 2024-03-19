@@ -123,7 +123,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     }
 
     /// <summary>
-    /// Gets the nodes representing the boundaries for this operation in relation
+    /// Gets the nodes representing targeted by this operation in relation
     /// with the specified <paramref name="chain"/> and <paramref name="tag"/>.
     /// </summary>
     /// <param name="chain">The target chain.</param>
@@ -137,8 +137,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </returns>
     /// <exception cref="ArgumentNullException">chain or tag</exception>
     /// <exception cref="InvalidOperationException">Node not found</exception>
-    protected (ChainNode<char> node, ChainNode<char>? endNode) GetBoundNodes(
-               Chain<char> chain, string tag, int at = -1, int run = -1)
+    protected IList<ChainNode<char>> GetTargetNodes(
+        Chain<char> chain, string tag, int at = -1, int run = -1)
     {
         ArgumentNullException.ThrowIfNull(chain);
         ArgumentNullException.ThrowIfNull(tag);
@@ -146,30 +146,36 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         if (at == -1) at = At;
         if (run == -1) run = Run;
 
+        List<ChainNode<char>> nodes = [];
+
         // find at node
         ChainNode<char>? node = FindNode(chain, at, AtAsIndex, tag) ??
             throw new InvalidOperationException(
                 "Node not found for the specified AT: " + ToString());
 
+        // add the first node
+        nodes.Add(node);
+
         // if run is 1, return the node only
         if (run == 1)
         {
-            return (node, null);
+            return nodes;
         }
 
         // else find end node by index from run (there must be one)
-        ChainNode<char>? endNode = null;
+        ChainNode<char>? next = null;
         for (int i = 0; i < run; i++)
         {
-            endNode = chain.GetNextNode(tag, node);
+            next = chain.GetNextNode(tag, node);
+            if (next != null) nodes.Add(next);
         }
-        if (endNode == null)
+        if (next == null)
         {
             throw new InvalidOperationException(
                 "End node not found for the specified RUN: " + ToString());
         }
 
-        return (node, endNode);
+        return nodes;
     }
 
     /// <summary>
@@ -353,22 +359,29 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     }
 
     /// <summary>
-    /// Adds <see cref="VarOperationMetadata.Features"/> to the received
-    /// <paramref name="features"/>.
+    /// Updates the <see cref="VarOperationMetadata.Features"/> of the specified
+    /// <paramref name="context"/> from this operation.
     /// </summary>
-    /// <param name="features">The features to update.</param>
+    /// <param name="tag">The output tag of this operation.</param>
+    /// <param name="context">The context to update.</param>
     /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
     /// 0 is added as a unique feature; anyway, it can be overridden by another
     /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
     /// </remarks>
     /// <exception cref="ArgumentNullException">features</exception>
-    protected void AddFeaturesTo(IList<Feature> features)
+    private void UpdateContextFeatures(string tag,
+        ChainOperationContext<char> context)
     {
-        ArgumentNullException.ThrowIfNull(features);
-        Feature.UpdateFeatures(Rank != 0
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(context);
+
+        // add rank feature if not 0
+        IList<Feature> sources = Rank != 0
             ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
-            : Features,
-            features);
+            : Features;
+
+        // update the context's and/or nodes features
+        context.UpdateFeatures(sources, tag, GetTargetNodes(context.Chain, tag));
     }
 
     /// <summary>
@@ -412,8 +425,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         // update the context's last tag
         context.LastTag = outputTag;
 
-        // add features to context
-        AddFeaturesTo(context.Features);
+        // add features to context/nodes
+        UpdateContextFeatures(outputTag, context);
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(

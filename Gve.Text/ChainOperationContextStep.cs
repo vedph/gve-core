@@ -5,7 +5,6 @@ namespace Gve.Text;
 /// <summary>
 /// A step in a <see cref="ChainOperationContext{T}"/>.
 /// </summary>
-/// <typeparam name="T">The type of chain node data.</typeparam>
 public class ChainOperationContextStep
 {
     /// <summary>

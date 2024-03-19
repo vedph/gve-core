@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Gve.Text;
@@ -35,10 +36,9 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // get bound node
-        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
-            context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
 
-        if (endNode != null)
+        if (nodes.Count > 1)
         {
             throw new InvalidOperationException(
                 "Add-before operation cannot have a RUN different from 0.");
@@ -47,12 +47,12 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
         // apply to single node or range
         if (Value.Length == 1)
         {
-            context.Chain.InsertBefore(inputTag, outputTag, node,
+            context.Chain.InsertBefore(inputTag, outputTag, nodes[0],
                 GetNodesFrom(Value)[0]);
         }
         else
         {
-            context.Chain.InsertRangeBefore(inputTag, outputTag, node,
+            context.Chain.InsertRangeBefore(inputTag, outputTag, nodes[0],
                 GetNodesFrom(Value));
         }
 

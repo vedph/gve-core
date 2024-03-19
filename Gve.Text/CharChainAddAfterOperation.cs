@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Gve.Text;
@@ -34,11 +35,10 @@ public sealed class CharChainAddAfterOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
-        // get bound node
-        (ChainNode<char> node, ChainNode<char>? endNode) = GetBoundNodes(
-            context.Chain, inputTag);
+        // get boundary nodes
+        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
 
-        if (endNode != null)
+        if (nodes.Count > 1)
         {
             throw new InvalidOperationException(
                 "Add-after operation cannot have a RUN different from 0.");
@@ -47,17 +47,17 @@ public sealed class CharChainAddAfterOperation : CharChainOperation
         // apply to single node or range
         if (Value.Length == 1)
         {
-            context.Chain.InsertAfter(inputTag, outputTag, node,
+            context.Chain.InsertAfter(inputTag, outputTag, nodes[0],
                 GetNodesFrom(Value)[0]);
         }
         else
         {
-            context.Chain.InsertRangeAfter(inputTag, outputTag, node,
+            context.Chain.InsertRangeAfter(inputTag, outputTag, nodes[0],
                 GetNodesFrom(Value));
         }
 
-        // add features to context
-        AddFeaturesTo(context.Features);
+        // update context metadata
+        UpdateContext(context, inputTag, outputTag);
     }
 
     /// <summary>
