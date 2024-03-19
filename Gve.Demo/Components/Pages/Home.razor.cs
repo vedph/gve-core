@@ -68,6 +68,7 @@ public partial class Home
             IsBusy = true;
             ChainOperationContext<char> context = new();
             context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
+            context.LastTag = "v0";
 
             foreach (CharChainOperation op in Operations)
             {
