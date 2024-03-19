@@ -7,22 +7,21 @@ namespace Gve.Demo.Components.Pages;
 
 public partial class Home
 {
-    private readonly List<CharChainOperation> _operations = [];
-
     public string Text { get; set; } = "ARZDC";
     public string OperationText { get; set; }
-    public IEnumerable<CharChainOperation> Operations { get; set; } = [];
+    public IList<CharChainOperation> Operations { get; } = [];
     public IList<string> Tags { get; set; } = [];
     public string? Error { get; set; }
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
+    public bool IsBusy { get; set; }
 
     public Home()
     {
         OperationText = "3- [alpha=1 beta=1] {reason=\"don't like Z\"}\n" +
-            "2=V [alpha=2]\n" +
-            "@2=B [alpha=3]\n" +
-            "2=P [beta=2]\n" +
-            "4<>5 [alpha=4 beta=3]";
+            "2=V [alpha=2]\n";
+            //"@2=B [alpha=3]\n" +
+            //"2=P [beta=2]\n" +
+            //"4<>5 [alpha=4 beta=3]";
     }
 
     public void ParseOperationText()
@@ -31,23 +30,23 @@ public partial class Home
 
         try
         {
-            _operations.Clear();
+            Operations.Clear();
 
             foreach (string line in OperationText.Split('\n',
                 StringSplitOptions.RemoveEmptyEntries))
             {
                 CharChainOperation op = CharChainOperation
                     .Parse<CharChainOperation>(line);
-                _operations.Add(op);
+                Operations.Add(op);
             }
 
-            Operations = [.._operations];
             StateHasChanged();
             OperationsGrid?.Reload();
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
             NotificationService.Notify(NotificationSeverity.Error, "Error",
                 ex.Message);
         }
@@ -62,12 +61,15 @@ public partial class Home
 
     public void RunOperations()
     {
+        if (Operations.Count == 0) return;
+
         try
         {
+            IsBusy = true;
             ChainOperationContext<char> context = new();
             context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
 
-            foreach (CharChainOperation op in _operations)
+            foreach (CharChainOperation op in Operations)
             {
                 op.Execute(context);
             }
@@ -77,8 +79,13 @@ public partial class Home
         catch (Exception ex)
         {
             Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
             NotificationService.Notify(NotificationSeverity.Error, "Error",
                 ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }

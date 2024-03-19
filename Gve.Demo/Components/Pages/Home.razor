@@ -46,4 +46,16 @@
 
 <RadzenCard>
     <RadzenButton Text="Run" Click="RunOperations" />
+
+    <div class="rz-m-12">
+        <RadzenProgressBar Value="100" Visible="IsBusy"
+            Mode="ProgressBarMode.Indeterminate" />
+    </div>
+    
+    <ol>
+        @foreach (var tag in Tags)
+        {
+            <li>@tag</li>
+        }
+    </ol>
 </RadzenCard>
