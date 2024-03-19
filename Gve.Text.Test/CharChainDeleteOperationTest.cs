@@ -182,7 +182,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted A from ABC", context.Features[0].Value);
         // node features
-        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 1)];
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 1)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like A", nodeFeatures[0].Value);
@@ -224,12 +224,12 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted BC from ABC", context.Features[0].Value);
         // node features
-        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 2)];
+        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 2)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like BC", nodeFeatures[0].Value);
 
-        nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 3)];
+        nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 3)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like BC", nodeFeatures[0].Value);

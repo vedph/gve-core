@@ -56,8 +56,9 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
                 GetNodesFrom(Value));
         }
 
-        // update context metadata
-        UpdateContext(context, inputTag, outputTag, true);
+        // update context metadata (target nodes are the added nodes)
+        UpdateContext(context, inputTag, outputTag,
+            context.Chain.GetTagNodes(outputTag, true));
     }
 
     /// <summary>

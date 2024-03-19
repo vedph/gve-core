@@ -368,21 +368,17 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// </summary>
     /// <param name="tag">The output tag of this operation.</param>
     /// <param name="context">The context to update.</param>
-    /// <param name="nodes">The nodes to be used as targets for features. If
+    /// <param name="targetNodes">The nodes to be used as targets for features. If
     /// not specified, these will be calculated from the operation's target
     /// range.</param>
     /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
     /// 0 is added as a unique feature; anyway, it can be overridden by another
     /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
     /// </remarks>
-    /// <exception cref="ArgumentNullException">features</exception>
     private void UpdateContextFeatures(string tag,
         ChainOperationContext<char> context,
-        IList<ChainNode<char>>? nodes = null)
+        IList<ChainNode<char>>? targetNodes = null)
     {
-        ArgumentNullException.ThrowIfNull(tag);
-        ArgumentNullException.ThrowIfNull(context);
-
         // add rank feature if not 0
         IList<Feature> sources = Rank != 0
             ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
@@ -390,7 +386,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
 
         // update the context's and/or nodes features
         context.UpdateFeatures(sources, tag,
-            nodes ?? GetTargetNodes(context.Chain, tag));
+            targetNodes ?? GetTargetNodes(context.Chain, tag));
     }
 
     /// <summary>
@@ -424,31 +420,22 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="context">The context.</param>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
-    /// <param name="newNodesAsTarget">Use the newly added nodes as the target
-    /// for node features, instead of the previous ones. Targeting old or new
-    /// nodes depends on the operation; for instance, a delete operation targets
-    /// old nodes, because the targeted node will not exist after it.</param>
+    /// <param name="targetNodes">The nodes which should be the target of
+    /// node-scoped features, if any.</param>
     protected void UpdateContext(ChainOperationContext<char> context,
-        string inputTag, string outputTag, bool newNodesAsTarget)
+        string inputTag, string outputTag,
+        IList<ChainNode<char>> targetNodes)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(inputTag);
         ArgumentNullException.ThrowIfNull(outputTag);
+        ArgumentNullException.ThrowIfNull(targetNodes);
 
         // update the context's last tag
         context.LastTag = outputTag;
 
-        // add features to context/nodes
-        if (newNodesAsTarget)
-        {
-            IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(
-                outputTag, true);
-            UpdateContextFeatures(outputTag, context, nodes);
-        }
-        else
-        {
-            UpdateContextFeatures(outputTag, context);
-        }
+        // update the context's features
+        UpdateContextFeatures(outputTag, context, targetNodes);
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(

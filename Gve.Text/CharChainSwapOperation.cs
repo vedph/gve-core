@@ -69,7 +69,11 @@ public sealed class CharChainSwapOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, true);
+        List<ChainNode<char>> targetNodes = [];
+        targetNodes.AddRange(GetTargetNodes(context.Chain, inputTag));
+        targetNodes.AddRange(GetTargetNodes(context.Chain, inputTag, To, ToRun));
+
+        UpdateContext(context, inputTag, outputTag, targetNodes);
     }
 
     /// <summary>

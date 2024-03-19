@@ -30,7 +30,8 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // add features to context
-        UpdateContext(context, inputTag, outputTag, false);
+        UpdateContext(context, inputTag, outputTag,
+            GetTargetNodes(context.Chain, inputTag));
     }
 
     /// <summary>

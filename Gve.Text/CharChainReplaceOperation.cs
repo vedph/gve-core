@@ -61,7 +61,8 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, true);
+        UpdateContext(context, inputTag, outputTag,
+            context.Chain.GetTagNodes(outputTag, true));
     }
 
     /// <summary>

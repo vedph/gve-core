@@ -43,7 +43,8 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, false);
+        UpdateContext(context, inputTag, outputTag,
+            GetTargetNodes(context.Chain, inputTag));
     }
 
     /// <summary>
