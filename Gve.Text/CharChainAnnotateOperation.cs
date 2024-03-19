@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Text;
 
 namespace Gve.Text;
@@ -41,16 +40,13 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
     /// <returns>Operation.</returns>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="FormatException">Invalid move operation: {text}</exception>
-    internal static CharChainSwapOperation ParseOperation(string text)
+    internal static CharChainAnnotateOperation ParseOperation(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        CharChainSwapOperation op = new();
+        CharChainAnnotateOperation op = new();
         // AT RUN
-        string body = ParseHeadAndTail(text, op);
-        Match m = AtRunToRegex().Match(body);
-        if (!m.Success)
-            throw new FormatException($"Invalid annotation operation: {text}");
+        ParseHeadAndTail(text, op);
 
         return op;
     }
