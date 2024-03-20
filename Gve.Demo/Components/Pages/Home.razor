@@ -20,7 +20,7 @@
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
-            @*             <RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
+            @*<RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
             TItem="CharChainOperation" @ref="OperationsGrid"
             SelectionMode="DataGridSelectionMode.Single"
             Title="operations">
@@ -32,8 +32,8 @@
             <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
             <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
             </Columns>
-            </RadzenDataGrid>
-            *@
+            </RadzenDataGrid>*@
+
             @if (Operations?.Count > 0)
             {
                 <table>
@@ -76,10 +76,74 @@
                            Mode="ProgressBarMode.Indeterminate" />
     </div>
 
-    <ol>
-        @foreach (var t in TaggedTexts)
-        {
-            <li><strong>@t.Item1</strong>: @t.Item2</li>
-        }
-    </ol>
+    <RadzenTabs RenderMode="TabRenderMode.Client">
+        <Tabs>
+            <RadzenTabsItem Text="texts">
+                <table>
+                    <thead>
+                        <tr class="rz-background-color-base-500 rz-color-white">
+                            <th>tag</th>
+                            <th>text</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in TaggedTexts)
+                        {
+                            <tr>
+                                <td>@t.Item1</td>
+                                <td>@t.Item2</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="steps">
+                <table>
+                    <thead>
+                        <tr class="rz-background-color-base-500 rz-color-white">
+                            <th>tin</th>
+                            <th>tout</th>
+                            <th>operation</th>
+                            <th>feats</th>
+                            <th>node feats</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var step in Steps)
+                        {
+                            <tr>
+                                <td>@step.InputTag</td>
+                                <td>@step.OutputTag</td>
+                                <td>@step.Operation</td>
+                                <td>
+                                    <ol>
+                                        @foreach (var f in @step.FeatureSet.Features)
+                                        {
+                                            <li>@f</li>
+                                        }
+                                    </ol>
+                                </td>
+                                <td>
+                                    <ol>
+                                        @foreach (var kvp in @step.FeatureSet.NodeFeatures)
+                                        {
+                                            <li>
+                                                <b>@kvp.Key</b>
+                                                <ul>
+                                                    @foreach (var f in kvp.Value)
+                                                    {
+                                                        <li>@f</li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    </ol>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
 </RadzenCard>

@@ -11,6 +11,7 @@ public partial class Home
     public string OperationText { get; set; }
     public IList<CharChainOperation> Operations { get; } = [];
     public IList<Tuple<string, string>> TaggedTexts { get; set; } = [];
+    public IList<ChainOperationContextStep> Steps { get; set; } = [];
     public string? Error { get; set; }
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
     public bool IsBusy { get; set; }
@@ -18,10 +19,10 @@ public partial class Home
     public Home()
     {
         OperationText = "3- [alpha=1 beta=1] {reason=\"don't like Z\"}\n" +
-            "2=V [alpha=2]\n";
-            //"@2=B [alpha=3]\n" +
-            //"2=P [beta=2]\n" +
-            //"4<>5 [alpha=4 beta=3]";
+            "2=V [alpha=2]\n" +
+            "3=B [alpha=3]\n" +
+            "2=P [beta=2]\n" +
+            "4<>5 [alpha=4 beta=3]";
     }
 
     public void ParseOperationText()
@@ -80,6 +81,12 @@ public partial class Home
             IList<string> tags = context.Chain.GetDistinctTags();
             TaggedTexts = tags.Select((t, i) => new Tuple<string, string>(
                 t, GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
+
+            Steps.Clear();
+            foreach (ChainOperationContextStep step in context.Steps)
+            {
+                Steps.Add(step);
+            }
         }
         catch (Exception ex)
         {
