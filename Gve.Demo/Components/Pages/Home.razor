@@ -20,19 +20,19 @@
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
-            @*<RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
-            TItem="CharChainOperation" @ref="OperationsGrid"
-            SelectionMode="DataGridSelectionMode.Single"
-            Title="operations">
-            <Columns>
-            <RadzenDataGridColumn TItem="string" Property="Type" Title="type" />
-            <RadzenDataGridColumn TItem="string" Property="InputTag" Title="tag-in" />
-            <RadzenDataGridColumn TItem="string" Property="OutputTag" Title="tag-out" />
-            <RadzenDataGridColumn TItem="string" Property="At" Title="at" />
-            <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
-            <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
-            </Columns>
-            </RadzenDataGrid>*@
+            <RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
+                            TItem="CharChainOperation" @ref="OperationsGrid"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            Title="operations">
+                <Columns>
+                    <RadzenDataGridColumn TItem="string" Property="Type" Title="type" />
+                    <RadzenDataGridColumn TItem="string" Property="InputTag" Title="tag-in" />
+                    <RadzenDataGridColumn TItem="string" Property="OutputTag" Title="tag-out" />
+                    <RadzenDataGridColumn TItem="string" Property="At" Title="at" />
+                    <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
+                    <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
+                </Columns>
+            </RadzenDataGrid>
 
             @if (Operations?.Count > 0)
             {
