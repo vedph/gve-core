@@ -102,7 +102,6 @@ public partial class Home
             {
                 ChainStats.Add(linkCount);
             }
-            //ChainStats.Add(Tuple.Create("links", context.Chain.Links.Count));
 
             StateHasChanged();
             StepsGrid?.Reload();
