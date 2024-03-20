@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace Gve.Text;
 
@@ -35,6 +36,31 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
         Chain = new Chain<T>();
         LastTag = "";
         Steps = [];
+    }
+
+    /// <summary>
+    /// Gets the maximum tag number among version tags in this context.
+    /// </summary>
+    /// <returns>Max number.</returns>
+    public int GetMaxTagNumber()
+    {
+        int max = 0;
+        foreach (string tag in Chain.GetDistinctTags())
+        {
+            // parse the tail of tag when ending with digits
+            int i = tag.Length - 1;
+            while (i >= 0 && char.IsDigit(tag[i]))
+            {
+                i--;
+            }
+            if (i < tag.Length - 1)
+            {
+                int n = int.Parse(tag[(i + 1)..], CultureInfo.InvariantCulture);
+                if (n > max) max = n;
+            }
+        }
+
+        return max;
     }
 
     /// <summary>

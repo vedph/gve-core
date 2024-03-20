@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace Gve.Text;
@@ -1690,6 +1691,28 @@ public class Chain<T>
             links.Add(new ChainLink<T>(newTag, nodes[i], nodes[i + 1]));
         }
         return links;
+    }
+
+    /// <summary>
+    /// Dumps this chain.
+    /// </summary>
+    /// <param name="dumper">The optional node dumper to use. If not specified,
+    /// the node will be dumped via its data.</param>
+    /// <returns>String.</returns>
+    public string Dump(Func<ChainNode<T>, string>? dumper = null)
+    {
+        StringBuilder sb = new();
+        foreach (string tag in GetDistinctTags())
+        {
+            sb.Append(tag).Append(": ");
+            foreach (ChainNode<T> node in GetTagNodes(tag))
+            {
+                if (dumper != null) sb.Append(dumper(node));
+                else sb.Append(node.Data);
+            }
+            sb.AppendLine();
+        }
+        return sb.ToString();
     }
 
     /// <summary>

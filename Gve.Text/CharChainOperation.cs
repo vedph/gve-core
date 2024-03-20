@@ -105,7 +105,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     private static partial Regex FeatureRegex();
 
     // 1=operator
-    [GeneratedRegex(@"^(?:\([^)]*\))?@?[0-9x×]+(=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
+    [GeneratedRegex(@"^(?:\([^)]*\))?\s*@?[0-9x×]+(=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     protected static partial Regex LocOpRegex();
 
     /// <summary>
@@ -121,7 +121,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         ArgumentNullException.ThrowIfNull(context);
 
         string inputTag = InputTag ?? context.LastTag;
-        string outputTag = OutputTag ?? GetNextTag(inputTag);
+        string outputTag = OutputTag ?? GetNextTag(inputTag, context);
         return (inputTag, outputTag);
     }
 
@@ -186,17 +186,21 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// Gets the output tag from the input <paramref name="tag"/>.
     /// This is the input tag with a version number incremented by 1, when
     /// it ends with digits; else, it is the input tag unless empty; when empty,
-    /// the next tag is <c>v1</c>.
+    /// the next tag is <c>v0</c>. If the calculated tag is lower than or
+    /// equal to the maximum tag number in the context, it is set to the maximum
+    /// tag number + 1. This ensures that we don't overwrite existing versions.
     /// </summary>
     /// <param name="tag">The tag.</param>
+    /// <param name="context">The context.</param>
     /// <returns>Tag.</returns>
     /// <exception cref="ArgumentNullException">tag</exception>
-    protected static string GetNextTag(string tag)
+    protected static string GetNextTag(string tag,
+        ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(tag);
 
-        // if tag is empty, return v1
-        if (tag.Length == 0) return "v1";
+        // if tag is empty, return v0
+        if (tag.Length == 0) return "v0";
 
         // if tag does not end with a digit, return it
         if (tag[^1] < '0' || tag[^1] > '9') return tag;
@@ -205,8 +209,13 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         // and increment it
         int i = tag.Length - 1;
         while (i >= 0 && tag[i] >= '0' && tag[i] <= '9') i--;
-        return tag[..(i + 1)] +
-            (int.Parse(tag[(i + 1)..], CultureInfo.InvariantCulture) + 1);
+        int next = int.Parse(tag[(i + 1)..], CultureInfo.InvariantCulture) + 1;
+
+        // if next is lower than max, set it to max + 1
+        int max = context.GetMaxTagNumber();
+        if (next <= max) next = max + 1;
+
+        return tag[..(i + 1)] + next;
     }
 
     /// <summary>
