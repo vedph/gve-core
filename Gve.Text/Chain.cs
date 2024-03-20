@@ -1696,10 +1696,10 @@ public class Chain<T>
     /// <summary>
     /// Dumps this chain.
     /// </summary>
-    /// <param name="dumper">The optional node dumper to use. If not specified,
+    /// <param name="dumpNode">The optional node dumper to use. If not specified,
     /// the node will be dumped via its data.</param>
     /// <returns>String.</returns>
-    public string Dump(Func<ChainNode<T>, string>? dumper = null)
+    public string Dump(Func<ChainNode<T>, string>? dumpNode = null)
     {
         StringBuilder sb = new();
         foreach (string tag in GetDistinctTags())
@@ -1707,7 +1707,7 @@ public class Chain<T>
             sb.Append(tag).Append(": ");
             foreach (ChainNode<T> node in GetTagNodes(tag))
             {
-                if (dumper != null) sb.Append(dumper(node));
+                if (dumpNode != null) sb.Append(dumpNode(node));
                 else sb.Append(node.Data);
             }
             sb.AppendLine();

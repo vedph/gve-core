@@ -27,7 +27,7 @@ public sealed class CharChainOperationTest
             // v2>v3
             "6=B [alpha=2] {*log=\"replace V with B\"}\n" +
             // v1>v4
-            "(v1:) 2=P [beta=2] {*log=\"replace R with P\"}" +
+            "(v1:) 2=P [beta=2] {*log=\"replace R with P\"}\n" +
             // v4>v5
             "4<>5 [beta=3]\n" +
             // v3>v6
@@ -51,7 +51,7 @@ public sealed class CharChainOperationTest
         Assert.Equal(6, context.Steps.Count);
 
         IList<string> tags = context.Chain.GetDistinctTags();
-        Assert.Equal(6, tags.Count);
+        Assert.Equal(7, tags.Count);
 
         Assert.Equal("v0", tags[0]);
         Assert.Equal("ARZDC", TestHelper.GetVersionString(
