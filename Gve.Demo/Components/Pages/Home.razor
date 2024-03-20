@@ -9,37 +9,61 @@
 <RadzenCard>
     <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="w-100" />
     <RadzenTextArea @bind-Value="@OperationText" Placeholder="text"
-        class="w-100" Rows="8" />
+                    class="w-100" Rows="8" />
     <RadzenButton Text="Parse" Click="ParseOperationText"
-        ButtonStyle="ButtonStyle.Primary" />
-    <RadzenPanel AllowCollapse="true" >
+                  ButtonStyle="ButtonStyle.Primary" />
+    <RadzenPanel AllowCollapse="true">
         <HeaderTemplate>
             <RadzenText TextStyle="TextStyle.H6"
-                Class="rz-display-flex rz-align-items-center rz-m-0">
+                        Class="rz-display-flex rz-align-items-center rz-m-0">
                 <RadzenIcon Icon="list_alt" class="rz-mr-1" /> operations
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
-            <RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
-                TItem="CharChainOperation" @ref="OperationsGrid"
-                SelectionMode="DataGridSelectionMode.Single"
-                Title="operations">
-                <Columns>
-                    <RadzenDataGridColumn TItem="string" Property="Type" Title="type" />
-                    <RadzenDataGridColumn TItem="string" Property="InputTag" Title="tag-in" />
-                    <RadzenDataGridColumn TItem="string" Property="OutputTag" Title="tag-out" />
-                    <RadzenDataGridColumn TItem="string" Property="At" Title="at" />
-                    <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
-                    <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
-                </Columns>
+            @*             <RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
+            TItem="CharChainOperation" @ref="OperationsGrid"
+            SelectionMode="DataGridSelectionMode.Single"
+            Title="operations">
+            <Columns>
+            <RadzenDataGridColumn TItem="string" Property="Type" Title="type" />
+            <RadzenDataGridColumn TItem="string" Property="InputTag" Title="tag-in" />
+            <RadzenDataGridColumn TItem="string" Property="OutputTag" Title="tag-out" />
+            <RadzenDataGridColumn TItem="string" Property="At" Title="at" />
+            <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
+            <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
+            </Columns>
             </RadzenDataGrid>
-
-            <ol>
-                @foreach (var op in Operations)
-                {
-                    <li>@op</li>
-                }
-            </ol>
+            *@
+            @if (Operations?.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr class="rz-background-color-base-500 rz-color-white">
+                            <th>type</th>
+                            <th>tin</th>
+                            <th>tout</th>
+                            <th>at</th>
+                            <th>run</th>
+                            <th>value</th>
+                            <th>op</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var op in Operations)
+                        {
+                            <tr>
+                                <td>@op.Type</td>
+                                <td>@op.InputTag</td>
+                                <td>@op.OutputTag</td>
+                                <td>@op.At</td>
+                                <td>@op.Run</td>
+                                <td>@op.Value</td>
+                                <td>@op</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </ChildContent>
     </RadzenPanel>
 </RadzenCard>
@@ -49,13 +73,13 @@
 
     <div class="rz-m-12">
         <RadzenProgressBar Value="100" Visible="IsBusy"
-            Mode="ProgressBarMode.Indeterminate" />
+                           Mode="ProgressBarMode.Indeterminate" />
     </div>
-    
+
     <ol>
-        @foreach (var tag in Tags)
+        @foreach (var t in TaggedTexts)
         {
-            <li>@tag</li>
+            <li><strong>@t.Item1</strong>: @t.Item2</li>
         }
     </ol>
 </RadzenCard>

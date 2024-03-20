@@ -10,7 +10,7 @@ public partial class Home
     public string Text { get; set; } = "ARZDC";
     public string OperationText { get; set; }
     public IList<CharChainOperation> Operations { get; } = [];
-    public IList<string> Tags { get; set; } = [];
+    public IList<Tuple<string, string>> TaggedTexts { get; set; } = [];
     public string? Error { get; set; }
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
     public bool IsBusy { get; set; }
@@ -58,6 +58,8 @@ public partial class Home
             new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
             .ToList();
     }
+    private static string GetVersionString(IList<ChainNode<char>> nodes) =>
+        new(nodes.Select(n => n.Data).ToArray());
 
     public void RunOperations()
     {
@@ -75,7 +77,9 @@ public partial class Home
                 op.Execute(context);
             }
 
-            Tags = context.Chain.GetDistinctTags();
+            IList<string> tags = context.Chain.GetDistinctTags();
+            TaggedTexts = tags.Select((t, i) => new Tuple<string, string>(
+                t, GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
         }
         catch (Exception ex)
         {
