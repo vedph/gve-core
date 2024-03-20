@@ -43,10 +43,7 @@ public sealed class CharChainOperationTest
         }
 
         // execute operations
-        foreach (CharChainOperation op in operations)
-        {
-            op.Execute(context);
-        }
+        foreach (CharChainOperation op in operations) op.Execute(context);
 
         Assert.Equal(6, context.Steps.Count);
 
