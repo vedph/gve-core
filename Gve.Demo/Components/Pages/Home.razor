@@ -20,56 +20,37 @@
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
-            <RadzenDataGrid AllowAlternatingRows="true" Data="@Operations"
+            <RadzenDataGrid AllowAlternatingRows="true" AllowSorting="true"
+                            AllowFiltering="true" Data="@Operations"
                             TItem="CharChainOperation" @ref="OperationsGrid"
                             SelectionMode="DataGridSelectionMode.Single"
+                            FilterMode="FilterMode.Advanced"
+                            LogicalFilterOperator="LogicalFilterOperator.Or"
                             Title="operations">
                 <Columns>
-                    <RadzenDataGridColumn TItem="string" Property="Type" Title="type" />
-                    <RadzenDataGridColumn TItem="string" Property="InputTag" Title="tag-in" />
-                    <RadzenDataGridColumn TItem="string" Property="OutputTag" Title="tag-out" />
-                    <RadzenDataGridColumn TItem="string" Property="At" Title="at" />
-                    <RadzenDataGridColumn TItem="string" Property="Run" Title="run" />
-                    <RadzenDataGridColumn TItem="string" Property="Value" Title="value" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Type" Title="type" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="InputTag" Title="tag-in" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="OutputTag" Title="tag-out" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="At" Title="at" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Run" Title="run" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Value" Title="value" />
                 </Columns>
             </RadzenDataGrid>
-
-            @if (Operations?.Count > 0)
-            {
-                <table>
-                    <thead>
-                        <tr class="rz-background-color-base-500 rz-color-white">
-                            <th>type</th>
-                            <th>tin</th>
-                            <th>tout</th>
-                            <th>at</th>
-                            <th>run</th>
-                            <th>value</th>
-                            <th>op</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var op in Operations)
-                        {
-                            <tr>
-                                <td>@op.Type</td>
-                                <td>@op.InputTag</td>
-                                <td>@op.OutputTag</td>
-                                <td>@op.At</td>
-                                <td>@op.Run</td>
-                                <td>@op.Value</td>
-                                <td>@op</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
         </ChildContent>
     </RadzenPanel>
 </RadzenCard>
 
 <RadzenCard>
-    <RadzenButton Text="Run" Click="RunOperations" />
+    <RadzenButton Text="Run" Click="RunOperations">
+        run
+        <RadzenBadge Text="@Operations.Count.ToString()" />
+    </RadzenButton>
 
     <div class="rz-m-12">
         <RadzenProgressBar Value="100" Visible="IsBusy"
@@ -79,70 +60,73 @@
     <RadzenTabs RenderMode="TabRenderMode.Client">
         <Tabs>
             <RadzenTabsItem Text="texts">
-                <table>
-                    <thead>
-                        <tr class="rz-background-color-base-500 rz-color-white">
-                            <th>tag</th>
-                            <th>text</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var t in TaggedTexts)
-                        {
-                            <tr>
-                                <td>@t.Item1</td>
-                                <td>@t.Item2</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <RadzenDataGrid AllowAlternatingRows="true" Data="@TaggedTexts"
+                                AllowSorting="true" AllowFiltering="true"
+                                TItem="Tuple<string,string>"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="texts">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                                              Property="Item1" Title="tag" />
+                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                                              Property="Item2" Title="text" />
+                    </Columns>
+                </RadzenDataGrid>
             </RadzenTabsItem>
             <RadzenTabsItem Text="steps">
-                <table>
-                    <thead>
-                        <tr class="rz-background-color-base-500 rz-color-white">
-                            <th>tin</th>
-                            <th>tout</th>
-                            <th>operation</th>
-                            <th>feats</th>
-                            <th>node feats</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var step in Steps)
-                        {
-                            <tr>
-                                <td>@step.InputTag</td>
-                                <td>@step.OutputTag</td>
-                                <td>@step.Operation</td>
-                                <td>
-                                    <ol>
-                                        @foreach (var f in @step.FeatureSet.Features)
+                <RadzenDataGrid AllowAlternatingRows="true" Data="@Steps"
+                                AllowSorting="true" AllowFiltering="true"
+                                @ref="StepsGrid"
+                                TItem="ChainOperationContextStep"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="steps">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="InputTag" Title="tin" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="OutputTag" Title="tout" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="Operation" Title="operation" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="FeatureSet.Features"
+                                              Title="c-features">
+                            <Template>
+                                <ul>
+                                    @foreach (var f in context.FeatureSet.Features)
+                                    {
+                                        <li>@f</li>
+                                    }
+                                </ul>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="FeatureSet.NodeFeatures"
+                                              Title="n-features">
+                            <Template>
+                                @foreach (var kvp in context.FeatureSet.NodeFeatures)
+                                {
+                                    <h4>@kvp.Key</h4>
+                                    <ul>
+                                        @foreach (var f in kvp.Value)
                                         {
                                             <li>@f</li>
                                         }
-                                    </ol>
-                                </td>
-                                <td>
-                                    <ol>
-                                        @foreach (var kvp in @step.FeatureSet.NodeFeatures)
-                                        {
-                                            <li>
-                                                <b>@kvp.Key</b>
-                                                <ul>
-                                                    @foreach (var f in kvp.Value)
-                                                    {
-                                                        <li>@f</li>
-                                                    }
-                                                </ul>
-                                            </li>
-                                        }
-                                    </ol>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    </ul>
+                                }
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="chain">
+                <RadzenChart>
+                    <RadzenPieSeries Data="@ChainStats" Title="chain"
+                                     CategoryProperty="Item1" ValueProperty="Item2">
+                        <RadzenSeriesDataLabels Visible="true" />
+                    </RadzenPieSeries>
+                </RadzenChart>
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

@@ -12,8 +12,10 @@ public partial class Home
     public IList<CharChainOperation> Operations { get; } = [];
     public IList<Tuple<string, string>> TaggedTexts { get; set; } = [];
     public IList<ChainOperationContextStep> Steps { get; set; } = [];
+    public IList<Tuple<string,int>> ChainStats { get; set;} = [];
     public string? Error { get; set; }
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
+    public RadzenDataGrid<ChainOperationContextStep>? StepsGrid { get; set; }
     public bool IsBusy { get; set; }
 
     public Home()
@@ -61,6 +63,7 @@ public partial class Home
             new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
             .ToList();
     }
+
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
         new(nodes.Select(n => n.Data).ToArray());
 
@@ -89,6 +92,20 @@ public partial class Home
             {
                 Steps.Add(step);
             }
+
+            ChainStats.Clear();
+            ChainStats.Add(Tuple.Create("nodes", context.Chain.Nodes.Count));
+            // get the counts of links grouped by their Tag
+            var linkCounts = context.Chain.Links.GroupBy(l => l.Tag)
+                .Select(g => Tuple.Create(g.Key, g.Count()));
+            foreach (var linkCount in linkCounts)
+            {
+                ChainStats.Add(linkCount);
+            }
+            //ChainStats.Add(Tuple.Create("links", context.Chain.Links.Count));
+
+            StateHasChanged();
+            StepsGrid?.Reload();
         }
         catch (Exception ex)
         {
