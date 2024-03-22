@@ -8,13 +8,14 @@ namespace Gve.Demo.Components;
 
 public partial class ChainView
 {
-    private Chain<char>? _previousChain;
-
     [Parameter]
     public Chain<char>? Chain { get; set; }
 
     [Parameter]
     public double NodeWidth { get; set; } = 100;
+
+    [Parameter]
+    public IList<string> Tags { get; set; } = [];
 
     public BlazorDiagram? Diagram { get; set; }
 
@@ -22,11 +23,7 @@ public partial class ChainView
     {
         base.OnParametersSet();
 
-        if (_previousChain != Chain)
-        {
-            _previousChain = Chain;
-            BuildDiagram();
-        }
+        BuildDiagram();
     }
 
     private static NodeModel CreateNode(string title, double x, double y)
@@ -63,11 +60,20 @@ public partial class ChainView
 
         IList<string> tags = Chain.GetDistinctTags();
 
+        // filter tags by Tags if Tags is not empty
+        if (Tags.Count > 0)
+        {
+            tags = tags.Where(t => Tags.Contains(t)).ToList();
+        }
+
         // nodes
-        double y = 0, x = NodeWidth, yOffset = tags.Count * NodeWidth;
+        double y = 0, x = NodeWidth,
+            yOffset = tags.Count * NodeWidth, xOffset = NodeWidth / 2;
         Dictionary<int, NodeModel> nodeMap = [];
 
-        Diagram.Nodes.Add(CreateNode("HEAD", x, y));
+        Diagram.Nodes.Add(CreateNode("HEAD", x, 0));
+        x += xOffset;
+        y += NodeWidth;
 
         int i = 0;
         foreach (ChainNode<char> node in Chain.Nodes)
@@ -76,17 +82,17 @@ public partial class ChainView
             nodeMap[node.Id] = n;
             Diagram.Nodes.Add(n);
 
-            x += NodeWidth + (NodeWidth / 2);
+            x += NodeWidth + xOffset;
 
             if (i % 2 == 0) y += yOffset;
             else y -= yOffset;
             i++;
         }
 
-        Diagram.Nodes.Add(CreateNode("TAIL", x, y));
+        Diagram.Nodes.Add(CreateNode("TAIL", x, 0));
 
         // links
-        Dictionary<string, string> tagColors = [];       
+        Dictionary<string, string> tagColors = [];
         string[] colors = GetDistinctColorsPalette(tags.Count);
         i = 0;
         foreach (string tag in tags) tagColors[tag] = colors[i++];
