@@ -1,0 +1,15 @@
+﻿@using Blazor.Diagrams.Core
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+
+<!-- required to resolve DiagramCanvas component -->
+@using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Core.Options
+@using Blazor.Diagrams.Options
+@using Blazor.Diagrams
+
+<div style="width:100%; height: 800px">
+    <CascadingValue Value="Diagram">
+        <DiagramCanvas></DiagramCanvas>
+    </CascadingValue>
+</div>

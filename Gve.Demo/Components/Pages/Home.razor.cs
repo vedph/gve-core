@@ -17,6 +17,7 @@ public partial class Home
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
     public RadzenDataGrid<ChainOperationContextStep>? StepsGrid { get; set; }
     public bool IsBusy { get; set; }
+    public Chain<char>? Chain { get; set; }
 
     public Home()
     {
@@ -102,6 +103,8 @@ public partial class Home
             {
                 ChainStats.Add(linkCount);
             }
+
+            Chain = context.Chain;
 
             StateHasChanged();
             StepsGrid?.Reload();
