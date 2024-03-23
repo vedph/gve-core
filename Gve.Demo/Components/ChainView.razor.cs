@@ -52,7 +52,8 @@ public partial class ChainView
 
         if (Chain is null) return;
 
-        IList<string> tags = Chain.GetDistinctTags();
+        IList<string> allTags = Chain.GetDistinctTags();
+        IList<string> tags = allTags;
 
         // filter tags by Tags if Tags is not empty
         if (Tags.Count > 0)
@@ -87,9 +88,9 @@ public partial class ChainView
 
         // links
         Dictionary<string, string> tagColors = [];
-        string[] colors = GetDistinctColorsPalette(tags.Count);
+        string[] colors = GetDistinctColorsPalette(allTags.Count);
         i = 0;
-        foreach (string tag in tags) tagColors[tag] = colors[i++];
+        foreach (string tag in allTags) tagColors[tag] = colors[i++];
 
         foreach (ChainLink<char> link in Chain.Links)
         {
