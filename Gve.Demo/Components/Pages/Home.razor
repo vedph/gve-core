@@ -134,5 +134,16 @@
     @if (Chain != null)
     {
         <ChainView Chain="@Chain"/>
+
+        <RadzenPickList @bind-Source="@ChainTags"
+                        @bind-Target="@SelectedChainTags"
+            Style="height:300px; width:100%;">
+            <SourceHeader>
+                available tags:
+            </SourceHeader>
+            <TargetHeader>
+                selected tags:
+            </TargetHeader>
+        </RadzenPickList>
     }
 </RadzenCard>
