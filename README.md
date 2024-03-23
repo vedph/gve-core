@@ -1,22 +1,8 @@
 ﻿# GVE
 
-## Demo
-
-Note: for the demo in this solution I use [MS FluentUI ASP.NET Core](https://www.nuget.org/packages/Microsoft.FluentUI.AspNetCore.Templates/); you can see [demo and docs here](https://www.fluentui-blazor.net). If you need this template in your IDE, add it with this command:
-
-```ps1
-dotnet new install Microsoft.FluentUI.AspNetCore.Templates
-```
-
-The corresponding code repository is at <https://github.com/microsoft/fluentui-blazor>.
-
-Other Razor packages:
-
-- `Microsoft.FluentUI.AspNetCore.Components.Icons`
-
 ## Docker
 
-🐋 Quick Docker image build:
+🐋 Quick Docker image build (demo app):
 
 ```bash
 docker build . -t vedph2020/gve-demo:0.0.2 -t vedph2020/gve-demo:latest
@@ -34,6 +20,7 @@ TODO: consider using [Radzen](https://blazor.radzen.com/) in demo.
 
 ## History
 
+- 2024-03-23: replaced demo.
 - 2024-02-27: new Docker image.
 - 2024-02-24: refactored tree node and moved into `Fusi.Tools` version 5.0.0.
 - 2024-02-20: changed `VarOperation` ID to string and used [Nanoid](https://github.com/ai/nanoid) to generate IDs equal both on client and server side.
