@@ -18,8 +18,8 @@ public partial class Home
     public RadzenDataGrid<ChainOperationContextStep>? StepsGrid { get; set; }
     public bool IsBusy { get; set; }
     public Chain<char>? Chain { get; set; }
-    public IEnumerable<string> ChainTags { get; set; } = [];
-    public IEnumerable<string> SelectedChainTags { get; set; } = [];
+    public IList<string> ChainTags { get; set; } = [];
+    public IList<string> SelectedChainTags { get; set; } = [];
 
     public Home()
     {

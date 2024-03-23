@@ -133,17 +133,9 @@
 
     @if (Chain != null)
     {
-        <ChainView Chain="@Chain"/>
+        <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
+                        Multiple="true" Placeholder="chain tags" />
 
-        <RadzenPickList @bind-Source="@ChainTags"
-                        @bind-Target="@SelectedChainTags"
-            Style="height:300px; width:100%;">
-            <SourceHeader>
-                available tags:
-            </SourceHeader>
-            <TargetHeader>
-                selected tags:
-            </TargetHeader>
-        </RadzenPickList>
+        <ChainView Chain="@Chain" Tags="@SelectedChainTags"/>
     }
 </RadzenCard>

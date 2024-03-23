@@ -28,13 +28,10 @@ public partial class ChainView
 
     private static NodeModel CreateNode(string title, double x, double y)
     {
-        NodeModel node = new(new Point(x, y))
+        return new(new Point(x, y))
         {
             Title = title,
         };
-        node.AddPort(PortAlignment.Left);
-        node.AddPort(PortAlignment.Right);
-        return node;
     }
 
     private static string[] GetDistinctColorsPalette(int count)
@@ -99,6 +96,8 @@ public partial class ChainView
 
         foreach (ChainLink<char> link in Chain.Links)
         {
+            if (Tags.Count > 0 && !Tags.Contains(link.Tag)) continue;
+
             NodeModel source = link.Source != null
                 ? nodeMap[link.Source.Id] : Diagram.Nodes[0];
             NodeModel target = link.Target != null
@@ -111,5 +110,7 @@ public partial class ChainView
 
             Diagram.Links.Add(l);
         }
+
+        InvokeAsync(StateHasChanged);
     }
 }
