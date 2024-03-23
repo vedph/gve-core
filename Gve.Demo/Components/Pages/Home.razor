@@ -134,7 +134,8 @@
     @if (Chain != null)
     {
         <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
-                        Multiple="true" Placeholder="chain tags" />
+                        Multiple="true" Placeholder="chain tags"
+                        Style="margin-bottom:8px"/>
 
         <ChainView Chain="@Chain" Tags="@SelectedChainTags"/>
     }

@@ -17,7 +17,7 @@ public partial class ChainView
     [Parameter]
     public IList<string> Tags { get; set; } = [];
 
-    public BlazorDiagram? Diagram { get; set; }
+    public BlazorDiagram Diagram { get; set; } = new();
 
     protected override void OnParametersSet()
     {
@@ -47,13 +47,12 @@ public partial class ChainView
 
     private void BuildDiagram()
     {
-        if (Chain is null)
-        {
-            Diagram = null;
-            return;
-        }
+        Diagram.Nodes.Clear();
+        Diagram.Links.Clear();
 
-        Diagram = new BlazorDiagram();
+        if (Chain is null) return;
+
+        //Diagram = new BlazorDiagram();
 
         IList<string> tags = Chain.GetDistinctTags();
 
@@ -111,6 +110,7 @@ public partial class ChainView
             Diagram.Links.Add(l);
         }
 
-        InvokeAsync(StateHasChanged);
+        Diagram.Refresh();
+        //InvokeAsync(StateHasChanged);
     }
 }

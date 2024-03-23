@@ -106,7 +106,8 @@ public partial class Home
                 ChainStats.Add(linkCount);
             }
 
-            ChainTags = SelectedChainTags = tags;
+            ChainTags = tags;
+            SelectedChainTags = tags.Count > 1? [tags[0], tags[^1]] : tags;
             Chain = context.Chain;
 
             StateHasChanged();
