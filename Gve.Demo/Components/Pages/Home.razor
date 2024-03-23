@@ -121,12 +121,17 @@
                 </RadzenDataGrid>
             </RadzenTabsItem>
             <RadzenTabsItem Text="chain">
-                <RadzenChart>
-                    <RadzenPieSeries Data="@ChainStats" Title="chain"
-                                     CategoryProperty="Item1" ValueProperty="Item2">
-                        <RadzenSeriesDataLabels Visible="true" />
-                    </RadzenPieSeries>
-                </RadzenChart>
+                <div style="display: grid; grid-template-columns: auto 1fr; gap: 16px">
+                    <div>
+                        <pre>@ChainDump</pre>
+                    </div>
+                    <RadzenChart>
+                        <RadzenPieSeries Data="@ChainStats" Title="chain"
+                                         CategoryProperty="Item1" ValueProperty="Item2">
+                            <RadzenSeriesDataLabels Visible="true" />
+                        </RadzenPieSeries>
+                    </RadzenChart>
+                </div>
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

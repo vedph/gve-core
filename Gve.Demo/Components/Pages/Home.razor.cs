@@ -18,6 +18,7 @@ public partial class Home
     public RadzenDataGrid<ChainOperationContextStep>? StepsGrid { get; set; }
     public bool IsBusy { get; set; }
     public Chain<char>? Chain { get; set; }
+    public string? ChainDump { get; set; }
     public IList<string> ChainTags { get; set; } = [];
     public IList<string> SelectedChainTags { get; set; } = [];
 
@@ -109,6 +110,7 @@ public partial class Home
             ChainTags = tags;
             SelectedChainTags = tags.Count > 1? [tags[0], tags[^1]] : tags;
             Chain = context.Chain;
+            ChainDump = context.Chain.Dump();
 
             StateHasChanged();
             StepsGrid?.Reload();
