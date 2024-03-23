@@ -12,7 +12,7 @@ public partial class ChainView
     public Chain<char>? Chain { get; set; }
 
     [Parameter]
-    public double NodeWidth { get; set; } = 100;
+    public double NodeDistance { get; set; } = 100;
 
     [Parameter]
     public IList<string> Tags { get; set; } = [];
@@ -52,8 +52,6 @@ public partial class ChainView
 
         if (Chain is null) return;
 
-        //Diagram = new BlazorDiagram();
-
         IList<string> tags = Chain.GetDistinctTags();
 
         // filter tags by Tags if Tags is not empty
@@ -63,13 +61,13 @@ public partial class ChainView
         }
 
         // nodes
-        double y = 0, x = NodeWidth,
-            yOffset = tags.Count * NodeWidth, xOffset = NodeWidth / 2;
+        double y = 0, x = NodeDistance,
+            yOffset = tags.Count * NodeDistance, xOffset = NodeDistance / 2;
         Dictionary<int, NodeModel> nodeMap = [];
 
-        Diagram.Nodes.Add(CreateNode("HEAD", x, 0));
+        Diagram.Nodes.Add(CreateNode("\u25C0", x, 0));
         x += xOffset;
-        y += NodeWidth;
+        y += NodeDistance;
 
         int i = 0;
         foreach (ChainNode<char> node in Chain.Nodes)
@@ -78,14 +76,14 @@ public partial class ChainView
             nodeMap[node.Id] = n;
             Diagram.Nodes.Add(n);
 
-            x += NodeWidth + xOffset;
+            x += NodeDistance + xOffset;
 
             if (i % 2 == 0) y += yOffset;
             else y -= yOffset;
             i++;
         }
 
-        Diagram.Nodes.Add(CreateNode("TAIL", x, 0));
+        Diagram.Nodes.Add(CreateNode("\u25B6", x, 0));
 
         // links
         Dictionary<string, string> tagColors = [];
@@ -111,6 +109,5 @@ public partial class ChainView
         }
 
         Diagram.Refresh();
-        //InvokeAsync(StateHasChanged);
     }
 }
