@@ -1,4 +1,5 @@
-﻿@using Blazor.Diagrams.Core
+﻿@using Blazor.Diagrams.Components.Widgets
+@using Blazor.Diagrams.Core
 @using Blazor.Diagrams.Core.Geometry
 @using Blazor.Diagrams.Core.Models
 
@@ -10,6 +11,12 @@
 
 <div style="width:100%; height: 1000px">
     <CascadingValue Value="Diagram">
-        <DiagramCanvas></DiagramCanvas>
+        <DiagramCanvas>
+            <Widgets>
+                <NavigatorWidget Width="200" Height="120"
+                                 Class="border border-black bg-white absolute"
+                                 Style="bottom: 15px; right: 15px;" />
+            </Widgets>
+        </DiagramCanvas>
     </CascadingValue>
 </div>
