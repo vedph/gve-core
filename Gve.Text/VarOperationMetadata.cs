@@ -68,7 +68,7 @@ public class VarOperationMetadata
 }
 
 /// <summary>
-/// Type of <see cref="VarOperation"/>.
+/// Type of operation.
 /// </summary>
 public enum VarOperationType
 {

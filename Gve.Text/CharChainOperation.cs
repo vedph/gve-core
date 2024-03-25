@@ -97,7 +97,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
 
     // n=name, [u=unique], [v1 or v2=value]
     // conventionally n starts with ! to remove the feature
-    [GeneratedRegex(@"\s*(?<n>[^=]+)\s*(?<u>:)?(?:=\s*(?:(?:""(?<v1>[^""]+)"")|(?<v2>[^\s]+)))?")]
+    [GeneratedRegex(@"\s*(?<n>[^:=]+)\s*(?<u>:)?(?:=\s*(?:(?:""(?<v1>[^""]+)"")|(?<v2>[^\s]+)))?")]
     private static partial Regex FeatureRegex();
 
     // 1=operator
@@ -315,7 +315,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
                 CultureInfo.InvariantCulture);
         }
 
-        // tail: ^RANK@GROUP [TAG...] {NOTE}
+        // tail: ^RANK@GROUP [META]
         Match tail = TailRegex().Match(text[head.Length..]);
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");

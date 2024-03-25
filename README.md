@@ -20,6 +20,7 @@ TODO: consider using [Radzen](https://blazor.radzen.com/) in demo.
 
 ## History
 
+- 2024-03-25: started refactoring infrastructure for chain, removing legacy operation families.
 - 2024-03-23: replaced demo.
 - 2024-02-27: new Docker image.
 - 2024-02-24: refactored tree node and moved into `Fusi.Tools` version 5.0.0.

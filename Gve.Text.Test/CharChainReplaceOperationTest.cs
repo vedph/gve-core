@@ -46,6 +46,31 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void ParseOperation_AtIndex1Run2Feats()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>("@1x2=X [*g=1 *x:=2 !*z]");
+
+        Assert.Equal(VarOperationType.Replace, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.True(op.AtAsIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(2, op.Run);
+        Assert.Equal("X", op.Value);
+
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Equal(3, op.Features.Count);
+        Assert.Equal("*g", op.Features[0].Name);
+        Assert.Equal("1", op.Features[0].Value);
+        Assert.Equal("*x", op.Features[1].Name);
+        Assert.Equal("2", op.Features[1].Value);
+        Assert.Equal("!*z", op.Features[2].Name);
+        Assert.Equal("", op.Features[2].Value);
+    }
+
+    [Fact]
     public void ParseOperation_VerAt1Run1()
     {
         CharChainReplaceOperation op = CharChainOperation

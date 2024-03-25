@@ -25,12 +25,18 @@ public partial class Home
     public Home()
     {
         OperationText =
+            // v1 = ARDC
             "3- [*log=\"delete Z\"]\n" +
-            "2=V [*log=\"replace R with V\"]\n" +
+            // v2 = AVDC (alpha)
+            "2=V [*log=\"replace R with V\" *version:=alpha]\n" +
+            // v3 = ABDC
             "6=B [*log=\"replace V with B\"]\n" +
-            "(v1:) 2=P [*log=\"replace R with P\"]\n" +
-            "4<>5\n" +
-            "(v3:) 4<>5";
+            // v4 = APDC
+            "(v1:) 2=P [*log=\"replace R with P\" *version:=beta]\n" +
+            // v5 = APCD (beta
+            "4<>5 [!*version]\n" +
+            // v6 = ABCD (gamma)
+            "(v3:) 4<>5 [*version:=gamma]";
     }
 
     public void ParseOperationText()
