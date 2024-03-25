@@ -43,10 +43,10 @@ public class ChainOperationContextFeats
 
     private static void UpdateFeature(Feature feature, List<Feature> targets)
     {
-        // if feature name starts with !, remove it from the features
-        if (feature.Name.StartsWith('!'))
+        // if feature name ends with !, remove it from the features
+        if (feature.Name.EndsWith('!'))
         {
-            string name = feature.Name[1..];
+            string name = feature.Name[..^1];
             for (int i = targets.Count - 1; i >= 0; i--)
             {
                 if (targets[i].Name == name) targets.RemoveAt(i);
@@ -87,7 +87,7 @@ public class ChainOperationContextFeats
             bool isGlobal = feature.Name.StartsWith('*');
             if (isGlobal)
             {
-                Feature f = new(feature.Name[1..], feature.Value);
+                Feature f = new(feature.Name[1..], feature.Value, feature.IsUnique);
                 UpdateFeature(f, Features);
             }
             else
@@ -101,7 +101,7 @@ public class ChainOperationContextFeats
                         nodeFeats = [];
                         NodeFeatures[key] = nodeFeats;
                     }
-                    Feature f = new(feature.Name, feature.Value);
+                    Feature f = new(feature.Name, feature.Value, feature.IsUnique);
                     UpdateFeature(f, nodeFeats);
                 }
             }

@@ -103,7 +103,7 @@ public partial record Feature
 
     /// <summary>
     /// Updates the target features with the source features. Features whose
-    /// name starts with <c>!</c> are removed from the target features; features
+    /// name ends with <c>!</c> are removed from the target features; features
     /// marked as unique imply removing all the features with the same name
     /// before adding them.
     /// </summary>
@@ -118,10 +118,10 @@ public partial record Feature
 
         foreach (Feature feature in sources)
         {
-            // if feature name starts with !, remove it from the features
-            if (feature.Name.StartsWith('!'))
+            // if feature name ends with !, remove it from the features
+            if (feature.Name.EndsWith('!'))
             {
-                string name = feature.Name[1..];
+                string name = feature.Name[..^1];
                 for (int i = targets.Count - 1; i >= 0; i--)
                 {
                     if (targets[i].Name == name) targets.RemoveAt(i);

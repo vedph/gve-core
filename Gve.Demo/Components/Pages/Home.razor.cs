@@ -34,7 +34,7 @@ public partial class Home
             // v4 = APDC
             "(v1:) 2=P [*log=\"replace R with P\" *version:=beta]\n" +
             // v5 = APCD (beta
-            "4<>5 [!*version]\n" +
+            "4<>5 [*version!]\n" +
             // v6 = ABCD (gamma)
             "(v3:) 4<>5 [*version:=gamma]";
     }
