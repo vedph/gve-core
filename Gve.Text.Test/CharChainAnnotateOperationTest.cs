@@ -10,7 +10,7 @@ public sealed class CharChainAnnotateOperationTest
     public void ParseOperation_At0()
     {
         CharChainAnnotateOperation op = CharChainOperation
-            .Parse<CharChainAnnotateOperation>("0: {note=sample}");
+            .Parse<CharChainAnnotateOperation>("0: [note=sample]");
 
         Assert.Equal(VarOperationType.Annotate, op.Type);
         Assert.Null(op.InputTag);
@@ -22,14 +22,13 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Single(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]
     public void ParseOperation_At3Run2()
     {
         CharChainAnnotateOperation op = CharChainOperation
-            .Parse<CharChainAnnotateOperation>("3x2: {note=sample}");
+            .Parse<CharChainAnnotateOperation>("3x2: [note=sample]");
 
         Assert.Equal(VarOperationType.Annotate, op.Type);
         Assert.Null(op.InputTag);
@@ -41,7 +40,6 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Single(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]

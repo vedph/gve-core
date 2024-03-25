@@ -21,17 +21,17 @@ public sealed class CharChainOperationTest
         // setup operations
         const string operationsText =
             // v0>v1
-            "3- [alpha=1 beta=2] {*log=\"delete Z\"}\n" +
+            "3- [*log=\"delete Z\"]\n" +
             // v1>v2
-            "2=V [alpha=2] {*log=\"replace R with V\"}\n" +
+            "2=V [*log=\"replace R with V\"]\n" +
             // v2>v3
-            "6=B [alpha=2] {*log=\"replace V with B\"}\n" +
+            "6=B [*log=\"replace V with B\"]\n" +
             // v1>v4
-            "(v1:) 2=P [beta=2] {*log=\"replace R with P\"}\n" +
+            "(v1:) 2=P [*log=\"replace R with P\"]\n" +
             // v4>v5
-            "4<>5 [beta=3]\n" +
+            "4<>5\n" +
             // v3>v6
-            "(v3:) 4<>5 [alpha=4]";
+            "(v3:) 4<>5";
 
         List<CharChainOperation> operations = [];
         foreach (string line in operationsText.Split('\n',

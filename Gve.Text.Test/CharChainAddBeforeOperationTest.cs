@@ -23,7 +23,6 @@ public sealed class CharChainAddBeforeOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]

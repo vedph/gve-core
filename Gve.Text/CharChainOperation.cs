@@ -90,14 +90,10 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     private static partial Regex HeadRegex();
 
-    // [rank], [group], [tags], [meta]
+    // [rank], [group], [meta]
     [GeneratedRegex(
-        @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[{\s]+))?(?:\s*\[(?<tags>[^]}]+)\])?(?:\s*\{(?<meta>[^}]+)\})?$")]
+        @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[\s]+))?(?:\s*\[(?<meta>(?:[^]]|""[^""]*"")*)\])?$")]
     private static partial Regex TailRegex();
-
-    // t=tag, [v=value]
-    [GeneratedRegex(@"\s*(?<t>[^=]+)\s*(?:=\s*(?<v>[0-9]+))?")]
-    private static partial Regex TaggedOrdinalRegex();
 
     // n=name, [u=unique], [v1 or v2=value]
     // conventionally n starts with ! to remove the feature
@@ -247,24 +243,16 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="sb">The target.</param>
     protected void AppendTail(StringBuilder sb)
     {
-        // ^RANK@GROUP [TAG,...] {NAME[=VALUE] or NAME[="VALUE"]}
+        // ^RANK@GROUP [NAME[=VALUE] or NAME[="VALUE"]]
         // (if NAME starts with !, remove it from the features)
-        if (GroupId != null || TaggedOrdinals.Count > 0 || Features.Count > 0)
+        if (GroupId != null || Features.Count > 0)
         {
             if (Rank != 0) sb.Append('^').Append(Rank);
 
             if (!string.IsNullOrEmpty(GroupId)) sb.Append('@').Append(GroupId);
 
-            if (TaggedOrdinals.Count > 0)
-            {
-                sb.Append(" [")
-                  .AppendJoin(" ", TaggedOrdinals.Select(p =>
-                    p.Value != 0 ? $"{p.Key}={p.Value}" : p.Key))
-                  .Append(']');
-            }
-
             if (Features.Count > 0)
-                sb.Append(" {").AppendJoin(" ", Features).Append('}');
+                sb.Append(" [").AppendJoin(" ", Features).Append(']');
         }
     }
 
@@ -295,22 +283,6 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         if (string.IsNullOrEmpty(value)) return null;
         value = value.Trim();
         return value.Length == 0 ? null : value;
-    }
-
-    private static void ParseTaggedOrdinals(string text,
-        CharChainOperation operation)
-    {
-        operation.TaggedOrdinals.Clear();
-
-        // text is TAG[=ORDINAL] separated by spaces
-        foreach (var groups in TaggedOrdinalRegex().Matches(text)
-            .Select(m => m.Groups))
-        {
-            string value = groups["v"].Success ? groups["v"].Value : "0";
-
-            operation.TaggedOrdinals[groups["t"].Value] =
-                int.Parse(value, CultureInfo.InvariantCulture);
-        }
     }
 
     /// <summary>
@@ -352,7 +324,6 @@ public abstract partial class CharChainOperation : VarOperationMetadata
             ? short.Parse(tail.Groups["rank"].Value, CultureInfo.InvariantCulture)
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
-        ParseTaggedOrdinals(tail.Groups["tags"].Value, operation);
 
         if (tail.Groups["meta"].Success)
         {

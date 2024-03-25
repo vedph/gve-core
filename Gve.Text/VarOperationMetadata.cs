@@ -46,15 +46,6 @@ public class VarOperationMetadata
     public IList<Feature> Features { get; set; }
 
     /// <summary>
-    /// Gets or sets the mapping between version tags and the ordinal number
-    /// which sorts this operation in the context of each version. This is used
-    /// to determine the order of operations for each text version. For instance,
-    /// an operation might be the 3rd in the context of version A, and the 5th
-    /// in the context of version B.
-    /// </summary>
-    public IDictionary<string, int> TaggedOrdinals { get; set; }
-
-    /// <summary>
     /// Gets or sets the sources for this operation. These represent any type
     /// of source for it, such as a manuscript, an author, etc.
     /// </summary>
@@ -71,7 +62,6 @@ public class VarOperationMetadata
     /// </summary>
     public VarOperationMetadata()
     {
-        TaggedOrdinals = new Dictionary<string, int>();
         Features = [];
         Sources = [];
     }

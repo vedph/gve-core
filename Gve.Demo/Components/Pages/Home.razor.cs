@@ -25,12 +25,12 @@ public partial class Home
     public Home()
     {
         OperationText =
-            "3- [alpha=1 beta=2] {*log=\"delete Z\"}\n" +
-            "2=V [alpha=2] {*log=\"replace R with V\"}\n" +
-            "6=B [alpha=2] {*log=\"replace V with B\"}\n" +
-            "(v1:) 2=P [beta=2] {*log=\"replace R with P\"}\n" +
-            "4<>5 [beta=3]\n" +
-            "(v3:) 4<>5 [alpha=4]";
+            "3- [*log=\"delete Z\"]\n" +
+            "2=V [*log=\"replace R with V\"]\n" +
+            "6=B [*log=\"replace V with B\"]\n" +
+            "(v1:) 2=P [*log=\"replace R with P\"]\n" +
+            "4<>5\n" +
+            "(v3:) 4<>5";
     }
 
     public void ParseOperationText()

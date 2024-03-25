@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -28,7 +25,6 @@ public sealed class CharChainSwapOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]
@@ -50,7 +46,6 @@ public sealed class CharChainSwapOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]

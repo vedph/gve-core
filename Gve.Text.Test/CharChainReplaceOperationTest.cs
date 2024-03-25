@@ -24,7 +24,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]
@@ -44,7 +43,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
 
     [Fact]
@@ -64,7 +62,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal(0, op.Rank);
         Assert.Null(op.GroupId);
         Assert.Empty(op.Features);
-        Assert.Empty(op.TaggedOrdinals);
     }
     #endregion
 

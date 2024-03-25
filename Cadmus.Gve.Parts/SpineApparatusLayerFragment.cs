@@ -1,9 +1,9 @@
-﻿using System;
+﻿/* TODO refactor into part
+using System;
 using System.Collections.Generic;
 using Fusi.Tools.Configuration;
 using Cadmus.Core.Layers;
 using Cadmus.Core;
-using Gve.Text.Base;
 using Gve.Text;
 
 namespace Cadmus.Gve.Parts;
@@ -34,7 +34,7 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
     /// Gets or sets the base variant-generation operation at the location
     /// specified by this fragment.
     /// </summary>
-    public BaseVarOperation? Operation { get; set; }
+    public CharChainOperation? Operation { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SpineApparatusLayerFragment">
@@ -65,13 +65,6 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
             // op value
             builder.AddValue(PartBase.FR_PREFIX + "op-value",
                 Operation.Value);
-
-            // op tags
-            if (Operation.TaggedOrdinals?.Count > 0)
-            {
-                builder.AddValues(PartBase.FR_PREFIX + "op-tag",
-                    Operation.TaggedOrdinals.Keys);
-            }
 
             // op group ID
             if (Operation.GroupId != null)
@@ -152,3 +145,4 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
             : "[SpineApparatus]";
     }
 }
+*/
