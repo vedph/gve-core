@@ -92,29 +92,50 @@ As we have seen, these operations already imply a degree of interpretation; but 
 
 The main issue for interpretation is instead _selecting and ordering our ingredients_, that is, building a **recipe** for handling them in a way leading to a final outcome, which in our case is a version of our base text.
 
-In other terms, we have six ingredients listed. Among them, five are operations. Now, should I select all of them to build a specific version, or just a subset? And what would be their order of application? We need at least one recipe, or even more than one; each of them will represent an interpretation of our snapshot leading to a specific version of our text.
+In other terms, we have six ingredients listed. Among them, five are operations. Now, should I select all of them to build a specific version, or just a subset? And what would be their order of application? We need at least one recipe, or even more than one; each of them will represent an interpretation of our snapshot leading to a specific **version** of our text.
 
 So, recipes are completely up to our interpretation: of course, they are constrained by the number and type of available ingredients; but within these limits, any combination is possible. It is up to scholar's judgement to consider all the complex factors behind a recipe, and define it, thus generating one or more versions of a text.
 
 Notice that our model will always include all the ingredients, as we want to fully represent our data at the snapshot level. We do not want any of our interpretations have destructive effects on our data: just like the snapshot presents all the ingredients mixed together, we want to collect and preserve all of them as distinct entities. This will not only ensure that our model fully represents our data; but also that we can add as many interpretations as we want on top of them, or even allow others use the same data to come out with their own interpretations.
 
-So, the challenge here is having a model which allows scholars to define a recipe for combining ingredients to get any number of distinct text versions, while still containing all the ingredients in the same box. In a sense, if you think of a text as a string (a linear sequence of) characters, it is like wanting a time-enabled string, i.e. a single data structure with the ability of representing not just a single sequence, but many different ones, all within the same box.
+So, the challenge here is having a model which allows scholars to define a recipe for combining ingredients to get any number of distinct text versions, while still containing all the ingredients in the same box. In a sense, if you think of a text as a string (a linear sequence of) characters, it is like getting a _time-enabled string_, i.e. a single data structure with the ability of representing not just a single sequence, but many different ones, all within the same box. Now, this is right what the _chain_ data structure is for.
+
+This data structure consists of a _linear sequence_ of **nodes**, each connected to the previous and the next node by a **link**. In our case, nodes are characters.
+
+So, a chain has a set of nodes, and a set of links connecting them. Notice that none of these sets is ordered; it is the link which defines the order of a node in a sequence.
+
+To allow for multiple sequences in the same set, each link has a _version tag_, which adds the dimension of time to this structure. So, essentially any change on the texts represented by the chain is made by adding new layers of links, where each layer is just defined by the link's tag.
+
+For instance, let us start from our base text, `ARZDC`: if we represent nodes inside square brackets, and links with the two characters they connect separated by a colon, the base text (let's call it `v0`) is:
+
+```txt
+-:A [A] A:R [R] R:Z [Z] Z:D [D] D:C [C] C:-
+```
+
+This means that our chain contains 5 nodes (`A`, `R`, `Z`, `D`, `C`) and 6 links:
+
+- `-:A`, i.e. the link connecting the start edge of the chain to the first node;
+- `A:R`, link between `A` and `R`;
+- `R:Z`, link between `R` and `Z`;
+- `Z:D`, link between `Z` and `D`;
+- `D:C`, link between `D` and `C`;
+- `C:-`, i.e. the link connecting the end edge of the chain to the last node.
 
 TODO
 
-In fact, except for trivial cases we can't know the relative order of these annotations; we have the ingredients for building the text, but we lost the recipe.
-
-![autograph model](./img/stages.png)
-
-This data structure consists of a linear sequence of nodes, each connected to the previous and the next node by a link.
-
-Additionally, each link has a version tag, which adds the dimension of time to this structure. Internally, this structure collects nodes and links, and once they are added, they cannot be removed (unless we are using a single version). Any modification is done by adding new nodes and links, which connect or disconnect or reorder the existing nodes.
+Internally, this structure collects nodes and links, and once they are added, they cannot be removed (unless we are using a single version). Any modification is done by adding new nodes and links, which connect or disconnect or reorder the existing nodes.
 
 When the chain is empty, there are no nodes or links. When there is at least one node, there always are links for the head and the tail of the chain. So, the structure, when not empty, always alternates links and nodes, starting and ending with links.
 
 This structure allows to represent different states of a text in time, after operations change it. Each operation introduces a new version (unless you are overwriting the previous version), so that building the text for a version is done by just following the path defined by links among nodes. At any time, you can build the text for any version, while still using a single object to represent all of the versions.
 
 Operations usually add new links, and optionally add new nodes; anyway, both nodes and links are immutable items of an unordered set.
+
+TODO
+
+In fact, except for trivial cases we can't know the relative order of these annotations; we have the ingredients for building the text, but we lost the recipe.
+
+![autograph model](./img/stages.png)
 
 ## Chain Operations
 
