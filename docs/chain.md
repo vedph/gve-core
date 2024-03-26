@@ -121,6 +121,104 @@ This means that our chain contains 5 nodes (`A`, `R`, `Z`, `D`, `C`) and 6 links
 - `D:C`, link between `D` and `C`;
 - `C:-`, i.e. the link connecting the end edge of the chain to the last node.
 
+All these links are tagged with version `v0`. Once we have filled the chain's sets, we can generate any of the text versions by just following all the links tagged for that version, starting from the first link and moving from node to node.
+
+For instance, to get the text for version `v0` we start from link `-:A`, which leads us to node `A`; then, we get to link `A:R`, which leads us to node `R`; and so forth, until the end link (`C:-`). As we move from node to node, we collect characters; in the end, the collected characters represent our sequence, `ARZDC`.
+
+If now we want to represent another version of the text, as resulting from the deletion of `Z`, all what we have to do is adding a new set of links for the next version (let's call it `v1`):
+
+- `-:A`, i.e. the link connecting the start edge of the chain to the first node;
+- `A:R`, link between `A` and `R`;
+- `R:D`, link between `R` and `D`. This bypasses `Z`, with the effect of "deleting" it from the text;
+- `D:C`, link between `D` and `C`;
+- `C:-`, i.e. the link connecting the end edge of the chain to the last node.
+
+The nodes set is unchanged; `Z` itself is still there. Yet, we have bypassed `Z` in the sequence by short-circuiting the link between `R` and `D`. The result is that when building our version text, we no more traverse the `Z` node, so that we get `ARDC`.
+
+Other operation types, like additions or replacements, also imply the addition of nodes; but for the rest they work the same, by adding new links in the set. For instance, if we are going to replace `R` with `V`, we will:
+
+- add a new node, `V`.
+- add a new set of links for a new version (tagged `v2`):
+  - `-:A`
+  - `A:V`
+  - `V:D`
+  - `D:C`
+  - `C:-`
+
+Again, we just added items to our chain's sets, but the result is that we have defined another sequence for it, corresponding to yet another text version: `AVDC`.
+
+A demo UI for this data structure can let you play with operations on it, showing among other data also a diagram representing nodes and links in the chain. So, let us consider the full set of operations in our sample snapshot, and build the corresponding diagrams. Our base text is `ARZDC`, representing our version 0 (`v0`); operations are:
+
+- the deletion of `Z`;
+- the replacement `R=V`;
+- the replacement `V=B`;
+- the replacement `R=P`;
+- the movement of `C` before `D`.
+
+The diagram below shows the representation of version `v0` via nodes and links once all the operations have been executed, in the order specified above:
+
+![version 0 in chain](./img/chain-v0.png)
+
+For clarity purposes, the diagram also shows start and end edges as nodes (with left and right triangles); yet, in the set there are no such nodes, but only nodes for letters `A`, `R`, `Z`, `D`, `C`, `V`, `B`, `P`. Note that some of the nodes are left out from the sequence; they still belong to the nodes set, but they happen not to be used for building the text of `v0`. This is because they were effectively added later, by replacements. So, following links you get `v0` text `ARZDC`.
+
+Let us now consider the last version produced after all the operations have been executed; this is version 6 (`v6`). To avoid overcrowding the diagram, here we have filtered out links not belonging to `v0` or `v6`:
+
+![version 6 in chain](./img/chain-v6.png)
+
+>Note that when showing more than one versions some links can be overlapped in the diagram, according to how you move the shapes around. The UI diagram is interactive, so you are free to drag shapes wherever you want, maybe revealing or hiding some of them. In this case I have moved nodes to make easier to read the different versions; yet, some links are overlapped: this is the case of `-:A` for both `v0` and `v6`: `v6` overlaps it completely, but it's still there (just compare the previous diagram showing just `v0`).
+
+Now you should start to see the chain's ability to represent multiple versions at the same time. Here we have two sub-sets of links: those tagged with `v0` (red), and those tagged with `v6` (magenta).
+
+If we follow `v1` links, we traverse these nodes:
+
+1. `A`
+2. `R`
+3. `Z`
+4. `D`
+5. `C`
+
+If instead we follow `v6` links, we traverse these nodes:
+
+1. `A`
+2. `B`
+3. `C`
+4. `D`
+
+While the nodes set stays the same, our _links define the recipe: they tell which nodes to pick from the set, and in which order_.
+
+Thus, we have gained the ability of representing multiple strings with this sort of time-enabled strings: in a sense, the chain is a multi-versioned string.
+
+If we remove filters from the diagram, and look at all the versions from `v0` to `v6` at once, here is the result:
+
+![versions in chain](./img/chain-v-all.png)
+
+The links now define 7 different versions of our text:
+
+0. v0: `ARZDC`
+1. v1: `ARDC`
+2. v2: `AVDC`
+3. v3: `ABDC`
+4. v4: `APDC`
+5. v5: `APCD`
+6. v6: `ABCD`
+
+So, a single chain structure represents 7 variants of the same text; these are 7 recipes, all using the same ingredients, which are always preserved in the box, whatever recipe we decide to follow.
+
+Whenever we apply an operation to our chain, we get a new version out; so we have the fully detailed text generation process, step by step, as defined by our interpretation. Of course, _not all of the versions output by this detailed process are eligible for representing what we really want to define as a text "version"_; maybe in our interpretation we have isolated 3 versions, corresponding to `v2` (`AVDC`), `v5` (`APCD`), and `v6` (`ABCD`), while discarding the other as just generative steps between them. The chain has a mechanism for this selection, but we must first introduce another feature of them before delving into its details.
+
+To sum up, we have thus met the [first two requirements](#model-requirements) of our model:
+
+1. represent the _snapshot_ itself in a _computable_ model.
+2. preserve as distinct, structured data our _ingredients_ (text and annotations), _recipes_ (annotation selection and ordering) and _outcomes_ (text versions).
+
+Yet, we still have to address the last one:
+
+3. represent the snapshot annotations both on their _textual_ and _visual_ form.
+
+This implies delving into more details about our chain's operations.
+
+### Metadata and Visuals
+
 TODO
 
 Internally, this structure collects nodes and links, and once they are added, they cannot be removed (unless we are using a single version). Any modification is done by adding new nodes and links, which connect or disconnect or reorder the existing nodes.
@@ -130,6 +228,15 @@ When the chain is empty, there are no nodes or links. When there is at least one
 This structure allows to represent different states of a text in time, after operations change it. Each operation introduces a new version (unless you are overwriting the previous version), so that building the text for a version is done by just following the path defined by links among nodes. At any time, you can build the text for any version, while still using a single object to represent all of the versions.
 
 Operations usually add new links, and optionally add new nodes; anyway, both nodes and links are immutable items of an unordered set.
+
+The operations as defined by their conventional text-based syntax (see below) is as follows (don't mind about the syntactic details here, just focus on the):
+
+1. `3- [*log=\"delete Z\" reason="don't like Z"]`
+2. `2=V [*log=\"replace R with V\" *version:=alpha]`
+3. `6=B [*log=\"replace V with B\"]`
+4. `(v1:) 2=P [*log=\"replace R with P\" *version:=beta]`
+5. `4<>5 [*version!]`
+6. `(v3:) 4<>5 [*version:=gamma]`
 
 TODO
 
