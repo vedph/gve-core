@@ -234,13 +234,13 @@ So, chain operations are abstractions on top of the chain structure, used to rep
 
 Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. The general text-based syntax for these operations includes these components, from left to right:
 
-(1) `(IN-OTAG:OUT-OTAG)`: these are the input and/or output version tags. They represent the input and the output versions in the chain before and after applying the operation. You can specify none, just one, or both. Usually there is no need to specify version tags, as the system can generate tags, and automatically increase their number (`v0`, `v1`, `v2`...) after each operation is applied. You might want to specify a version when you want to use a special name for it (which anyway is discouraged, as it would introduce variants in the expected naming scheme for tags), or when you want to start from a version which does not correspond to the latest generated version.
+(1) `(ITAG:OTAG)`: these are the optional input and/or output **version tags**. They represent the input and the output versions in the chain before and after applying the operation. You can specify none, just one, or both. Usually there is no need to specify version tags, as the system can generate tags, and automatically increase their number (`v0`, `v1`, `v2`...) after each operation is applied. You might want to specify a version when you want to use a special name for it (which anyway is discouraged, as it would introduce variants in the expected naming scheme for tags), or when you want to start from a version which does not correspond to the latest generated version.
 
-(2) `ATxRUN` or `@ATxRUN` (where `AT` is required): _node ID_ or index (when prefixed by `@`) optionally followed by the run of nodes. If not specified (and when it makes sense according to the operation's type), `RUN` defaults to 1.
+(2) `ATxRUN` or `@ATxRUN` (where `AT` is required): the **range** of characters to select as the input of the operation. `AT` is either a _node ID_ or index (when prefixed by `@`), and is optionally followed by the run of nodes. If not specified (and when it makes sense according to the operation's type), `RUN` defaults to 1.
 
 >**Node ID**s are numbers starting from 1, automatically assigned to each node from first to last, in the order they get added to the chain. So, if you start with nodes `ARZDC`, you can predict that `A`'s ID will be 1, `R`'s will be 2, etc. Once a node gets an ID, it never changes; so, node IDs are immutable, just like nodes themselves. **Node indexes** instead refer to the 0-based index of a node in the context of a specific version; so, in `v0`=`ARZDC` character `D` has index=3 (and ID=4); but in `v1`=`ARDC` (deletion of `Z`) the same character has index=2 (while still retaining its ID=4). You are free to choose which system to use, but in most cases you will stick to IDs. Indexes can be useful for nodes which get added in complex nestings of operations, when ID prediction could be less handy.
 
-(3) `OPERATOR` (required): the operator defines the operation's type.
+(3) `OPERATOR` (required): the **operator** defines the operation's type.
 
 - replace (`=`)
 - delete (`-`)
@@ -251,13 +251,16 @@ Even though GVE will provide a UI to edit such operations, it also provides a te
 - swap (`<>`)
 - annotate (`:`)
 
-(4) `"VALUE"`
+(4) `"VALUE"`: a **text value** for those operations requiring it. For instance, a replacement operation must provide a text to insert for the replaced range defined by `AT` and `RUN`.
 
-(5) `^RANK`
+(5) `^RANK`: a metadatum representing the **probability rank** for the interpretation connected to this operation. A value=0 means unspecified, values above 0 are e.g. 1=highly probable, 2=probable, 3=less probable, etc., using as many levels as you require.
 
-(6) `[TAGS...]`: tagged ordinals, separated by space, used to filter operations in or out according to the editor's interpretation.
+(6) `[NAME="VALUE"...]`: name=value pairs representing metadata **features**. Further syntax details:
 
-(7) `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
+- the operator separating the name from the value can be `=`, or `:=` for **unique** features. A unique feature is one which must be unique within its context. Usually, you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time). When instead you want a feature to be treated as unique, this means that when adding it all the features having the same name in the same context will be removed.
+- **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
+- a feature name ending with `!` means that all the features with that name must be **removed**.
+- a value containing **spaces** must be included in double quotes.
 
 TODO
 
