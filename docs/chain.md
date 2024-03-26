@@ -217,15 +217,49 @@ This implies delving into more details about our chain's operations.
 
 ### Metadata and Visuals
 
+As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set.
+
+We have also remarked that operations being the first act of interpretation of our snapshot, we do not limit ourselves to the basic ones only (insertion and deletion), but rather we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
+
+So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. There are 8 types of operations (listed with their corresponding operator in their text-based representation):
+
+- replace (`=`)
+- delete (`-`)
+- add before (`+[`)
+- add after (`+]`)
+- move before (`>[`)
+- move after (`>]`)
+- swap (`<>`)
+- annotate (`:`)
+
+Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. The general text-based syntax for these operations includes these components, from left to right:
+
+(1) `(IN-OTAG:OUT-OTAG)`: these are the input and/or output version tags. They represent the input and the output versions in the chain before and after applying the operation. You can specify none, just one, or both. Usually there is no need to specify version tags, as the system can generate tags, and automatically increase their number (`v0`, `v1`, `v2`...) after each operation is applied. You might want to specify a version when you want to use a special name for it (which anyway is discouraged, as it would introduce variants in the expected naming scheme for tags), or when you want to start from a version which does not correspond to the latest generated version.
+
+(2) `ATxRUN` or `@ATxRUN` (where `AT` is required): _node ID_ or index (when prefixed by `@`) optionally followed by the run of nodes. If not specified (and when it makes sense according to the operation's type), `RUN` defaults to 1.
+
+>**Node ID**s are numbers starting from 1, automatically assigned to each node from first to last, in the order they get added to the chain. So, if you start with nodes `ARZDC`, you can predict that `A`'s ID will be 1, `R`'s will be 2, etc. Once a node gets an ID, it never changes; so, node IDs are immutable, just like nodes themselves. **Node indexes** instead refer to the 0-based index of a node in the context of a specific version; so, in `v0`=`ARZDC` character `D` has index=3 (and ID=4); but in `v1`=`ARDC` (deletion of `Z`) the same character has index=2 (while still retaining its ID=4). You are free to choose which system to use, but in most cases you will stick to IDs. Indexes can be useful for nodes which get added in complex nestings of operations, when ID prediction could be less handy.
+
+(3) `OPERATOR` (required): the operator defines the operation's type.
+
+- replace (`=`)
+- delete (`-`)
+- add before (`+[`)
+- add after (`+]`)
+- move before (`>[`)
+- move after (`>]`)
+- swap (`<>`)
+- annotate (`:`)
+
+(4) `"VALUE"`
+
+(5) `^RANK`
+
+(6) `[TAGS...]`: tagged ordinals, separated by space, used to filter operations in or out according to the editor's interpretation.
+
+(7) `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
+
 TODO
-
-Internally, this structure collects nodes and links, and once they are added, they cannot be removed (unless we are using a single version). Any modification is done by adding new nodes and links, which connect or disconnect or reorder the existing nodes.
-
-When the chain is empty, there are no nodes or links. When there is at least one node, there always are links for the head and the tail of the chain. So, the structure, when not empty, always alternates links and nodes, starting and ending with links.
-
-This structure allows to represent different states of a text in time, after operations change it. Each operation introduces a new version (unless you are overwriting the previous version), so that building the text for a version is done by just following the path defined by links among nodes. At any time, you can build the text for any version, while still using a single object to represent all of the versions.
-
-Operations usually add new links, and optionally add new nodes; anyway, both nodes and links are immutable items of an unordered set.
 
 The operations as defined by their conventional text-based syntax (see below) is as follows (don't mind about the syntactic details here, just focus on the):
 
@@ -238,17 +272,11 @@ The operations as defined by their conventional text-based syntax (see below) is
 
 TODO
 
-In fact, except for trivial cases we can't know the relative order of these annotations; we have the ingredients for building the text, but we lost the recipe.
-
 ![autograph model](./img/stages.png)
 
 ## Chain Operations
 
-Chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. These operations serve as an intermediate layer between client code with user-friendly models and the chain model itself.
-
-Each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`.
-
-All these operations get translated into calls to chain editing methods, which are more low-level and directly work on nodes. The chain operations take care of finding the nodes corresponding to their location arguments.
+🛠️ Technical note: each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`. All operations get translated into calls to lower-level chain editing methods. The chain operations take care of finding the nodes corresponding to their location arguments.
 
 Chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
 
@@ -261,26 +289,7 @@ Chain operations work on a chain operations **context** (`ChainOperationContext<
   - context and nodes features snapshot, taken after the step;
   - reference to the source operation object.
 
-The general text-based syntax for these operations includes these components, from left to right:
 
-1. `(IN-OTAG:OUT-OTAG)`: these are the input and/or output tags. These tags are different from the interpretative tags used as filters for applying operations; they belong to the chain's model, and represent the input and the output states in the chain before and after applying an operation. You can specify none, just one, or both.
-2. `ATxRUN` or `@ATxRUN` (required): node ID or index (when prefixed by `@`) optionally followed by the run of nodes. If not specified, the run defaults to 1.
-3. `OPERATOR` (required)
-4. `"VALUE"`
-5. `^RANK`
-6. `[TAGS...]`: tagged ordinals, separated by space, used to filter operations in or out according to the editor's interpretation.
-7. `{NAME="VALUE"...}`: name=value pairs representing features. The operator can be `=` or `:=` for unique features. A name containing spaces must be included in double quotes.
-
-The available operations (and their corresponding operator in their text-based representation) are:
-
-- replace (`=`): e.g. `3x2="X"`
-- delete (`-`): e.g. `3x2-`
-- add before (`+[`, `RUN` is always 0): e.g. `3+["X"`
-- add after (`+]`, `RUN` is always 0): e.g. `3+]"X"`
-- annotate (`:`): e.g. `3x2: {note=sample}` (node-scoped) or `0: {note=sample}` (context-scoped)
-- move before (`>[`, `TO-RUN` is always 0): e.g. `3x2>[6`
-- move after (`>]`, `TO-RUN` is always 0): e.g. `3x2>]6`
-- swap (`<>`): e.g. `3x2<>6`
 
 As for features (included in braces), `name` can have these prefixes (in this order):
 
