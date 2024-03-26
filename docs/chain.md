@@ -4,11 +4,11 @@
 
 Let us first use our case study (GVE) to define some terms we use in the technical documentation with a specific algorithmic meaning.
 
-In the case of GVE, the essential source of epigrams is represented by autograph sheets from handbooks. Whatever its physical support(s), here we call an autograph **sheet** for short.
+In the case of GVE, the essential source of epigrams is represented by autograph sheets from handbooks. Whatever its physical support(s), here we call an autograph 🔖 **sheet** for short.
 
-The main challenge in modeling sheets is that they do not just represent a linear text; rather, they represent a sort of **snapshot** of the creative process which in the author's mind would have led to the intended text.
+The main challenge in modeling sheets is that they do not just represent a linear text; rather, they represent a sort of 🔖 **snapshot** of the creative process which in the author's mind would have led to the intended text.
 
-This is because graphically the snapshot does not just represents a text, but includes many corrections, rethinkings, or refactorings of it, in the form of various types of **annotations** (deletions, insertions, transpositions, side notes, etc.).
+This is because graphically the snapshot does not just represents a text, but includes many corrections, rethinkings, or refactorings of it, in the form of various types of 🔖 **annotations** (deletions, insertions, transpositions, side notes, etc.).
 
 The snapshot is thus a sort of picture taken from the author's mind in relation to the text being composed at a given point in time. This does not necessarily imply that this is the end stage of the creative process underlying the text. The process may well have gone further on; but this is not reflected by the snapshot, which just represents a picture which froze an instant of this process at a given time.
 
@@ -26,9 +26,9 @@ Of course, this requires a proper model.
 
 Ideally, the main requirements of this model are:
 
-1. we want to represent the _snapshot_ itself in a _computable_ model.
-2. we want to preserve as distinct, structured data our _ingredients_ (text and annotations), _recipes_ (annotation selection and ordering) and _outcomes_ (text versions).
-3. we want to represent the snapshot annotations both on their _textual_ and _visual_ form. This is because the graphical representation of each annotation is a semantic information, which should be encoded next to the textual variant it represents. By preserving both these layers of data we provide a richer model, which can be inspected by scholars used our digital edition as a tool, or just leveraged by more casual users as another way of looking at the text and its creation process.
+1. we want to **represent the snapshot** itself in a _computable_ model.
+2. we want to **preserve** as distinct, structured data our _ingredients_ (text and annotations), _recipes_ (annotation selection and ordering) and _outcomes_ (text versions).
+3. we want to represent the snapshot annotations both on their **textual and visual form**. This is because the graphical representation of each annotation is a semantic information, which should be encoded next to the textual variant it represents. By preserving both these layers of data we provide a richer model, which can be inspected by scholars used our digital edition as a tool, or just leveraged by more casual users as another way of looking at the text and its creation process.
 
 A good model should meet all these requirements using the simplest possible structure, which implies _raising the abstraction level_ so that even the finest details can find a generalized and consistent representation.
 
@@ -36,9 +36,7 @@ This also allows our model to lay the foundation of a paradigmatic approach, lea
 
 ## Core Chain Model
 
-Our model core is represented by a general purpose data structure we call **chain**.
-
-The task of this data structure is _representing multiple linear combinations of a set of entities_. We represent these entities as **nodes** of a **graph**, connecting them into linear sequences.
+Our model core is represented by a general purpose data structure we call 🔖 **chain**. The task of this data structure is _representing multiple linear combinations of a set of entities_. We represent these entities as **nodes** of a **graph**, connecting them into linear sequences.
 
 In our specific case, our entities are characters, and their linear combinations build a sequence representing a text. So, a chain has the power of representing multiple texts (i.e. multiple versions of what we regard as the "same" text in the course of its composition) at the same time; and this is right what a snapshot on a sheet does.
 
@@ -48,7 +46,7 @@ Let us see how this works by using a simplified diagram. Consider this sheet, wh
 
 A text being a linear sequence of characters, we don't care creating a true text in a specific language here; we just deal with such sequences, so that our examples are shorter and more to the point.
 
-![snapshot diagram](./img/snapshot.png)
+![snapshot diagram](./img/snapshot1.png)
 
 As you can see, our snapshot provides annotations which can be interpreted as operations changing the **base text**, which is just what happens to be the starting point of our digital representation. So, "base text" here has no genetic or philological implication; it is just a practical device in our model. As our model represents multiple versions of what we consider the same text, this means that it represents a set of changes on it, from the first to the last version in the author's mind. Again, "first" and "last" here don't imply that these are the two edges of the line representing the whole creation process; rather, they are the two edges of the segment in this line which is covered by our snapshot.
 
