@@ -1,5 +1,16 @@
 # Modeling an Autograph
 
+- [Modeling an Autograph](#modeling-an-autograph)
+  - [Basic Terminology](#basic-terminology)
+  - [Model Requirements](#model-requirements)
+  - [Core Chain Model](#core-chain-model)
+    - [Operations](#operations)
+    - [Chain](#chain)
+    - [Metadata](#metadata)
+    - [Syntax](#syntax)
+    - [Example](#example)
+    - [Visuals](#visuals)
+
 ## Basic Terminology
 
 Let us first use our case study (GVE) to define some terms we use in the technical documentation with a specific algorithmic meaning.
@@ -335,23 +346,10 @@ So in the end, these operations end up representing 7 variants of our text:
 - `v5`: `APCD`
 - `v6`: `ABCD`
 
+>🛠️ Technical note: each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`. All operations get translated into calls to lower-level chain editing methods. The chain operations take care of finding the nodes corresponding to their location arguments. All the operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data, like last version tag, context features (for global features), node features, and all the details about each step in processing the text.
+
 ### Visuals
 
 TODO
 
 ![autograph model](./img/stages.png)
-
-## Chain Operations
-
-🛠️ Technical note: each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`. All operations get translated into calls to lower-level chain editing methods. The chain operations take care of finding the nodes corresponding to their location arguments.
-
-Chain operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data:
-
-- the **last version tag** being the output of the last operation executed on this context.
-- the **features** of the context. These get added (or updated or removed) when executing operations.
-- thoe **node features**. This is a dictionary whose key is a tuple built of node ID and version tag, and value a list of features.
-- the **steps** executed on the chain, each including:
-  - input version tag;
-  - output version tag;
-  - context and nodes features snapshot, taken after the step;
-  - reference to the source operation object.

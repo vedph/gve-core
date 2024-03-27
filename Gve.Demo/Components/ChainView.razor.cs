@@ -6,19 +6,39 @@ using Microsoft.AspNetCore.Components;
 
 namespace Gve.Demo.Components;
 
+/// <summary>
+/// Chain view component. This component visualizes a chain of nodes and links
+/// using a <see cref="BlazorDiagram"/>.
+/// </summary>
+/// <seealso cref="ComponentBase" />
 public partial class ChainView
 {
+    /// <summary>
+    /// Gets or sets the chain.
+    /// </summary>
     [Parameter]
     public Chain<char>? Chain { get; set; }
 
+    /// <summary>
+    /// Gets or sets the node distance.
+    /// </summary>
     [Parameter]
     public double NodeDistance { get; set; } = 100;
 
+    /// <summary>
+    /// Gets or sets the tags.
+    /// </summary>
     [Parameter]
     public IList<string> Tags { get; set; } = [];
 
+    /// <summary>
+    /// Gets or sets the diagram.
+    /// </summary>
     public BlazorDiagram Diagram { get; set; } = new();
 
+    /// <summary>
+    /// Called when parameters are set.
+    /// </summary>
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
