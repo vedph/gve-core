@@ -72,6 +72,82 @@ public sealed class FeatureTest
     }
 
     [Fact]
+    public void UpdateFeature_NotExisting_Added()
+    {
+        Feature feature = new("A", "1");
+        List<Feature> features = [];
+
+        string? doomed = Feature.UpdateFeature(feature, features);
+
+        Assert.Null(doomed);
+        Assert.Single(features);
+        Assert.Equal("A", features[0].Name);
+        Assert.Equal("1", features[0].Value);
+    }
+
+    [Fact]
+    public void UpdateFeature_NotExistingDoomed_Added()
+    {
+        Feature feature = new("A^", "1");
+        List<Feature> features = [];
+
+        string? doomed = Feature.UpdateFeature(feature, features);
+
+        Assert.Equal("A", doomed);
+        Assert.Single(features);
+        Assert.Equal("A", features[0].Name);
+        Assert.Equal("1", features[0].Value);
+    }
+
+    [Fact]
+    public void UpdateFeature_RemoveNotExisting_Unchanged()
+    {
+        List<Feature> features = [];
+
+        string? doomed = Feature.UpdateFeature(new("A!", null), features);
+
+        Assert.Null(doomed);
+        Assert.Empty(features);
+    }
+
+    [Fact]
+    public void UpdateFeature_RemoveExisting_Removed()
+    {
+        List<Feature> features = [new("A", "1"), new("A", "2")];
+
+        string? doomed = Feature.UpdateFeature(new("A!", null), features);
+
+        Assert.Null(doomed);
+        Assert.Empty(features);
+    }
+
+    [Fact]
+    public void UpdateFeature_ExistingNotUnique_Added()
+    {
+        List<Feature> features = [new("A", "1")];
+
+        string? doomed = Feature.UpdateFeature(new("A", "2"), features);
+
+        Assert.Null(doomed);
+        Assert.Equal(2, features.Count);
+        Assert.Contains(features, x => x.Name == "A" && x.Value == "1");
+        Assert.Contains(features, x => x.Name == "A" && x.Value == "2");
+    }
+
+    [Fact]
+    public void UpdateFeature_ExistingUnique_Replaced()
+    {
+        List<Feature> features = [new("A", "1"), new("A", "2")];
+
+        string? doomed = Feature.UpdateFeature(new("A", "3", true), features);
+
+        Assert.Null(doomed);
+        Assert.Single(features);
+        Assert.Equal("A", features[0].Name);
+        Assert.Equal("3", features[0].Value);
+    }
+
+    [Fact]
     public void UpdateFeatures_ShouldUpdateTargetList()
     {
         List<Feature> sources = [new("name", "value", true)];

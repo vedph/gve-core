@@ -60,4 +60,21 @@ public sealed class ChainOperationContextFeatsTest
         Assert.Single(feats.Features);
         Assert.Contains(feats.Features, x => x.Name == "u" && x.Value == "U");
     }
+
+    [Fact]
+    public void UpdateFeatures_Global_Doomed()
+    {
+        ChainOperationContextFeats feats = new();
+        List<Feature> srcFeats =
+        [
+            new Feature("*a", "A"),
+            new Feature("*u^", "U", true),
+        ];
+        feats.UpdateFeatures<char>(srcFeats);
+
+        feats.UpdateFeatures<char>([]);
+
+        Assert.Single(feats.Features);
+        Assert.Contains(feats.Features, x => x.Name == "a" && x.Value == "A");
+    }
 }

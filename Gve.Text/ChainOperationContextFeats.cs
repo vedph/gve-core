@@ -20,6 +20,14 @@ public class ChainOperationContextFeats
     public Dictionary<Tuple<string, int>, List<Feature>> NodeFeatures { get; } = [];
 
     /// <summary>
+    /// Gets the names of the doomed features, i.e. the features which should
+    /// be removed from the features list in the next operation, i.e.
+    /// the next time the features get updated via
+    /// <see cref="UpdateFeatures{T}(IList{Feature}, string?, IList{ChainNode{T}}?)"/>
+    /// </summary>
+    public HashSet<string> DoomedFeatNames { get; } = [];
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextFeats"/>
     /// class.
     /// </summary>
@@ -41,29 +49,25 @@ public class ChainOperationContextFeats
             feats.NodeFeatures);
     }
 
-    private static void UpdateFeature(Feature feature, List<Feature> targets)
+    private void RemoveDoomedFeatures()
     {
-        // if feature name ends with !, remove it from the features
-        if (feature.Name.EndsWith('!'))
+        foreach (string name in DoomedFeatNames)
         {
-            string name = feature.Name[..^1];
-            for (int i = targets.Count - 1; i >= 0; i--)
+            for (int i = Features.Count - 1; i >= 0; i--)
             {
-                if (targets[i].Name == name) targets.RemoveAt(i);
+                if (Features[i].Name == name) Features.RemoveAt(i);
             }
-        }
-        else
-        {
-            // else if unique, first remove all the features with the same name
-            if (feature.IsUnique)
+
+            foreach (List<Feature> nodeFeats in NodeFeatures.Values)
             {
-                for (int i = targets.Count - 1; i >= 0; i--)
+                for (int i = nodeFeats.Count - 1; i >= 0; i--)
                 {
-                    if (targets[i].Name == feature.Name) targets.RemoveAt(i);
+                    if (nodeFeats[i].Name == name) nodeFeats.RemoveAt(i);
                 }
             }
-            targets.Add(feature);
         }
+
+        DoomedFeatNames.Clear();
     }
 
     /// <summary>
@@ -81,6 +85,10 @@ public class ChainOperationContextFeats
     {
         ArgumentNullException.ThrowIfNull(sources);
 
+        RemoveDoomedFeatures();
+
+        string? doomed;
+
         foreach (Feature feature in sources)
         {
             // if feature name starts with *, it's global; else it's node
@@ -88,7 +96,8 @@ public class ChainOperationContextFeats
             if (isGlobal)
             {
                 Feature f = new(feature.Name[1..], feature.Value, feature.IsUnique);
-                UpdateFeature(f, Features);
+                doomed = Feature.UpdateFeature(f, Features);
+                if (doomed != null) DoomedFeatNames.Add(doomed);
             }
             else
             {
@@ -102,7 +111,8 @@ public class ChainOperationContextFeats
                         NodeFeatures[key] = nodeFeats;
                     }
                     Feature f = new(feature.Name, feature.Value, feature.IsUnique);
-                    UpdateFeature(f, nodeFeats);
+                    doomed = Feature.UpdateFeature(f, nodeFeats);
+                    if (doomed != null) DoomedFeatNames.Add(doomed);
                 }
             }
         }

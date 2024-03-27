@@ -102,6 +102,59 @@ public partial record Feature
     }
 
     /// <summary>
+    /// Updates <paramref name="targets"/> features with <paramref name="source"/>
+    /// feature. This assumes that global features have been preprocessed thus
+    /// losing their <c>*</c> prefix. Callers will use this helper method against
+    /// different targets according to whether the feature is global or not.
+    /// </summary>
+    /// <param name="source">The source feature.</param>
+    /// <param name="targets">The target features.</param>
+    /// <returns>The parsed name of <paramref name="source"/> when it is
+    /// doomed, i.e. a short-lived feature which should be removed on the next
+    /// update; otherwise, null.</returns>
+    /// <exception cref="ArgumentNullException">source or targets</exception>
+    public static string? UpdateFeature(Feature source, IList<Feature> targets)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(targets);
+
+        string name = source.Name;
+        bool doomed = false;
+
+        // if feature name ends with ^, it is a doomed (short-lived) feature
+        if (source.Name.EndsWith('^'))
+        {
+            name = source.Name[..^1];
+            doomed = true;
+        }
+
+        // if feature name ends with !, remove it from the features
+        if (name.EndsWith('!'))
+        {
+            name = name[..^1];
+            for (int i = targets.Count - 1; i >= 0; i--)
+            {
+                if (targets[i].Name == name) targets.RemoveAt(i);
+            }
+        }
+        else
+        {
+            // else if unique, first remove all the features with the same name
+            if (source.IsUnique)
+            {
+                for (int i = targets.Count - 1; i >= 0; i--)
+                {
+                    if (targets[i].Name == name) targets.RemoveAt(i);
+                }
+            }
+            targets.Add(source.Name != name
+                ? new Feature(name, source.Value, source.IsUnique) : source);
+        }
+
+        return doomed ? name : null;
+    }
+
+    /// <summary>
     /// Updates the target features with the source features. Features whose
     /// name ends with <c>!</c> are removed from the target features; features
     /// marked as unique imply removing all the features with the same name
@@ -109,36 +162,24 @@ public partial record Feature
     /// </summary>
     /// <param name="sources">The source features.</param>
     /// <param name="targets">The target features.</param>
+    /// <returns>The list of doomed feature names from <paramref name="sources"/>,
+    /// if any.</returns>
     /// <exception cref="ArgumentNullException">sources or targets</exception>
-    public static void UpdateFeatures(IList<Feature> sources,
+    public static HashSet<string> UpdateFeatures(IList<Feature> sources,
         IList<Feature> targets)
     {
         ArgumentNullException.ThrowIfNull(sources);
         ArgumentNullException.ThrowIfNull(targets);
 
+        HashSet<string> doomed = [];
+
         foreach (Feature feature in sources)
         {
-            // if feature name ends with !, remove it from the features
-            if (feature.Name.EndsWith('!'))
-            {
-                string name = feature.Name[..^1];
-                for (int i = targets.Count - 1; i >= 0; i--)
-                {
-                    if (targets[i].Name == name) targets.RemoveAt(i);
-                }
-                continue;
-            }
-
-            // else if unique, first remove all the features with the same name
-            if (feature.IsUnique)
-            {
-                for (int i = targets.Count - 1; i >= 0; i--)
-                {
-                    if (targets[i].Name == feature.Name) targets.RemoveAt(i);
-                }
-            }
-            targets.Add(feature);
+            string? n = UpdateFeature(feature, targets);
+            if (n != null) doomed.Add(n);
         }
+
+        return doomed;
     }
 
     /// <summary>
