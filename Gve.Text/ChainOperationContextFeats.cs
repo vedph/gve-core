@@ -11,21 +11,14 @@ public class ChainOperationContextFeats
     /// <summary>
     /// Gets the features.
     /// </summary>
-    public List<Feature> Features { get; } = [];
+    public List<OperationFeature> Features { get; } = [];
 
     /// <summary>
     /// Gets the node features dictionary, where the key is a tuple of the
     /// version tag and the node ID, and the value is a list of features.
     /// </summary>
-    public Dictionary<Tuple<string, int>, List<Feature>> NodeFeatures { get; } = [];
-
-    /// <summary>
-    /// Gets the names of the doomed features, i.e. the features which should
-    /// be removed from the features list in the next operation, i.e.
-    /// the next time the features get updated via
-    /// <see cref="UpdateFeatures{T}(IList{Feature}, string?, IList{ChainNode{T}}?)"/>
-    /// </summary>
-    public HashSet<string> DoomedFeatNames { get; } = [];
+    public Dictionary<Tuple<string, int>, List<OperationFeature>>
+        NodeFeatures { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextFeats"/>
@@ -44,30 +37,25 @@ public class ChainOperationContextFeats
     {
         ArgumentNullException.ThrowIfNull(feats);
 
-        Features = new List<Feature>(feats.Features);
-        NodeFeatures = new Dictionary<Tuple<string, int>, List<Feature>>(
+        Features = new List<OperationFeature>(feats.Features);
+        NodeFeatures = new Dictionary<Tuple<string, int>, List<OperationFeature>>(
             feats.NodeFeatures);
     }
 
-    private void RemoveDoomedFeatures()
+    private void RemoveShortLivedFeatures()
     {
-        foreach (string name in DoomedFeatNames)
+        for (int i = Features.Count - 1; i >= 0; i--)
         {
-            for (int i = Features.Count - 1; i >= 0; i--)
-            {
-                if (Features[i].Name == name) Features.RemoveAt(i);
-            }
-
-            foreach (List<Feature> nodeFeats in NodeFeatures.Values)
-            {
-                for (int i = nodeFeats.Count - 1; i >= 0; i--)
-                {
-                    if (nodeFeats[i].Name == name) nodeFeats.RemoveAt(i);
-                }
-            }
+            if (Features[i].IsShortLived) Features.RemoveAt(i);
         }
 
-        DoomedFeatNames.Clear();
+        foreach (List<OperationFeature> nodeFeats in NodeFeatures.Values)
+        {
+            for (int i = nodeFeats.Count - 1; i >= 0; i--)
+            {
+                if (nodeFeats[i].IsShortLived) nodeFeats.RemoveAt(i);
+            }
+        }
     }
 
     /// <summary>
@@ -80,41 +68,41 @@ public class ChainOperationContextFeats
     /// <param name="nodes">The nodes targeted in the update when any source
     /// features targets nodes instead of context.</param>
     /// <exception cref="ArgumentNullException">sources</exception>
-    public void UpdateFeatures<T>(IList<Feature> sources, string? tag = null,
+    public void UpdateFeatures<T>(IList<OperationFeature> sources,
+        string? tag = null,
         IList<ChainNode<T>>? nodes = null)
     {
         ArgumentNullException.ThrowIfNull(sources);
 
-        RemoveDoomedFeatures();
+        RemoveShortLivedFeatures();
+        HashSet<string> names = [];
 
-        string? doomed;
-
-        foreach (Feature feature in sources)
+        foreach (OperationFeature feature in sources)
         {
-            // if feature name starts with *, it's global; else it's node
-            bool isGlobal = feature.Name.StartsWith('*');
-            if (isGlobal)
+            // if global, update context features
+            if (feature.IsGlobal)
             {
-                Feature f = new(feature.Name[1..], feature.Value, feature.IsUnique);
-                doomed = Feature.UpdateFeature(f, Features);
-                if (doomed != null) DoomedFeatNames.Add(doomed);
+                OperationFeature.UpdateFeature(feature, Features,
+                    !names.Contains(feature.Name));
             }
-            else
+            // else update features of each target node
+            else if (nodes != null)
             {
-                // update features of each node in nodes
                 foreach (ChainNode<T> node in nodes!)
                 {
                     Tuple<string, int> key = Tuple.Create(tag!, node.Id);
-                    if (!NodeFeatures.TryGetValue(key, out List<Feature>? nodeFeats))
+                    if (!NodeFeatures.TryGetValue(key,
+                        out List<OperationFeature>? nodeFeats))
                     {
                         nodeFeats = [];
                         NodeFeatures[key] = nodeFeats;
                     }
-                    Feature f = new(feature.Name, feature.Value, feature.IsUnique);
-                    doomed = Feature.UpdateFeature(f, nodeFeats);
-                    if (doomed != null) DoomedFeatNames.Add(doomed);
+                    OperationFeature.UpdateFeature(feature, nodeFeats,
+                        !names.Contains(feature.Name));
                 }
             }
+
+            names.Add(feature.Name);
         }
     }
 }

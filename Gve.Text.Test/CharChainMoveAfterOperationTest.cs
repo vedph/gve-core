@@ -59,8 +59,8 @@ public sealed class CharChainMoveAfterOperationTest
             OutputTag = "v1",
             Features =
             [
-                new Feature("*log", "moved A after C"),
-                new Feature("reason", "A likes C")
+                OperationFeature.Parse("*log:=\"moved A after C\""),
+                new OperationFeature("reason", "A likes C")
             ]
         };
 
@@ -75,7 +75,8 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("moved A after C", context.Features[0].Value);
         // node features
-        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 1)];
+        List<OperationFeature> nodeFeatures =
+            context.NodeFeatures[Tuple.Create("v1", 1)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("A likes C", nodeFeatures[0].Value);

@@ -54,7 +54,7 @@ public sealed class CharChainAnnotateOperationTest
             OutputTag = "v0",
             Features =
             [
-                new Feature("*log", "context annotation"),
+                OperationFeature.Parse("*log:=\"context annotation\""),
             ]
         };
 
@@ -92,8 +92,8 @@ public sealed class CharChainAnnotateOperationTest
             OutputTag = "v0",
             Features =
             [
-                new Feature("*log", "context annotation"),
-                new Feature("x", "y"),
+                OperationFeature.Parse("*log:=\"context annotation\""),
+                new OperationFeature("x", "y"),
             ]
         };
 
@@ -109,7 +109,8 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("context annotation", context.Features[0].Value);
         // node features
         Assert.Equal(2, context.NodeFeatures.Count);
-        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 1)];
+        List<OperationFeature> nodeFeatures =
+            context.NodeFeatures[Tuple.Create("v0", 1)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("x", nodeFeatures[0].Name);
         Assert.Equal("y", nodeFeatures[0].Value);

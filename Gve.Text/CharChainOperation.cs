@@ -91,14 +91,13 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     [GeneratedRegex(@"^(?:\((?<it>[^:)]+)?:(?<ot>[^)]+)?\)\s*)?(?<atx>@)?(?<at>[0-9]+)(?:[×x](?<run>[0-9]+))?(?<op>=|-|\+\[|\+\]|>\[|>\]|<>|:)")]
     private static partial Regex HeadRegex();
 
-    // [rank], [group], [meta]
+    // [rank], [group], [feats]
     [GeneratedRegex(
-        @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[\s]+))?(?:\s*\[(?<meta>(?:[^]]|""[^""]*"")*)\])?$")]
+        @"(?:\s*\^(?<rank>[0-9]+))?(?:\s*@(?<group>[^[\s]+))?(?:\s*\[(?<feats>(?:[^]]|""[^""]*"")*)\])?$")]
     private static partial Regex TailRegex();
 
-    // n=name, [u=unique], [v1 or v2=value]
-    // conventionally n starts with ! to remove the feature
-    [GeneratedRegex(@"\s*(?<n>[^:=]+)\s*(?<u>:)?(?:=\s*(?:(?:""(?<v1>[^""]+)"")|(?<v2>[^\s]+)))?")]
+    // operation feature
+    [GeneratedRegex(@"\s*(?:[^:=]+)(?:(?:=|:=|==)(?:(?:""(?:[^""]+)"")|(?:[^\s]+)))?")]
     private static partial Regex FeatureRegex();
 
     // 1=operator
@@ -316,7 +315,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
                 CultureInfo.InvariantCulture);
         }
 
-        // tail: ^RANK@GROUP [META]
+        // tail: ^RANK@GROUP [FEATS]
         Match tail = TailRegex().Match(text[head.Length..]);
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
@@ -326,16 +325,13 @@ public abstract partial class CharChainOperation : VarOperationMetadata
             : (short)0;
         operation.GroupId = GetOptionalArgValue(tail.Groups["group"].Value);
 
-        if (tail.Groups["meta"].Success)
+        if (tail.Groups["feats"].Success)
         {
-            foreach (var groups in FeatureRegex()
-                .Matches(tail.Groups["meta"].Value).Select(m => m.Groups))
+            foreach (string feats in FeatureRegex()
+                .Matches(tail.Groups["feats"].Value)
+                .Select(m => m.Value))
             {
-                operation.Features.Add(new Feature(groups["n"].Value,
-                    groups["v1"].Success
-                        ? groups["v1"].Value.Trim()
-                        : groups["v2"].Value.Trim(),
-                    groups["u"].Success));
+                operation.Features.Add(OperationFeature.Parse(feats.Trim()));
             }
         }
 
@@ -360,18 +356,23 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         ChainOperationContext<char> context,
         IList<ChainNode<char>>? targetNodes = null)
     {
-        List<Feature> sources = [..Features];
+        List<OperationFeature> sources = [..Features];
 
         // project rank as a unique feature
         if (Rank != 0)
-            sources.Add(new Feature(RANK_KEY, $"{Rank}", true));
+        {
+            sources.Add(new OperationFeature(RANK_KEY, $"{Rank}",
+                FeatureSetPolicy.Single));
+        }
 
         // project sources as features; if any sources existed, remove them
         // before adding the new ones
         int i = 0;
         foreach (VarSource vs in Sources)
         {
-            sources.Add(new Feature(SOURCE_KEY, vs.ToString(), i == 0));
+            sources.Add(new OperationFeature(SOURCE_KEY, vs.ToString(),
+                FeatureSetPolicy.SingleFirst,
+                i == 0));
             i++;
         }
 

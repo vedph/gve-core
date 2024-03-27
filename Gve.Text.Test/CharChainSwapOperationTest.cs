@@ -61,8 +61,8 @@ public sealed class CharChainSwapOperationTest
             OutputTag = "v1",
             Features =
             [
-                new Feature("*log", "swapped A with C"),
-                new Feature("reason", "A and C are jealous")
+                OperationFeature.Parse("*log:=\"swapped A with C\""),
+                new OperationFeature("reason", "A and C are jealous")
             ]
         };
 
@@ -77,7 +77,8 @@ public sealed class CharChainSwapOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("swapped A with C", context.Features[0].Value);
         // node features
-        List<Feature> nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 1)];
+        List<OperationFeature> nodeFeatures =
+            context.NodeFeatures[Tuple.Create("v1", 1)];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("A and C are jealous", nodeFeatures[0].Value);
