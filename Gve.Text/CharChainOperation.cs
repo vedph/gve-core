@@ -406,6 +406,10 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="context">The context.</param>
     public abstract void Execute(ChainOperationContext<char> context);
 
+    private static string GetVersionString(ChainOperationContext<char> context,
+        string tag) =>
+        string.Concat(context.Chain.GetTagNodes(tag).Select(n => n.Data));
+
     /// <summary>
     /// Updates the context metadata after executing the operation.
     /// </summary>
@@ -431,7 +435,10 @@ public abstract partial class CharChainOperation : VarOperationMetadata
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(
-            this, inputTag, outputTag, new ChainOperationContextFeats(context)));
+            this, inputTag, outputTag, new ChainOperationContextFeats(context))
+        {
+            Result = GetVersionString(context, outputTag)
+        });
     }
 
     /// <summary>

@@ -7,11 +7,14 @@
 
 <h1>Chain</h1>
 <RadzenCard>
+    <!-- input -->
     <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="w-100" />
     <RadzenTextArea @bind-Value="@OperationText" Placeholder="text"
                     class="w-100" Rows="8" />
     <RadzenButton Text="Parse" Click="ParseOperationText"
                   ButtonStyle="ButtonStyle.Primary" />
+
+    <!-- parsed operations -->
     <RadzenPanel AllowCollapse="true">
         <HeaderTemplate>
             <RadzenText TextStyle="TextStyle.H6"
@@ -47,6 +50,7 @@
 </RadzenCard>
 
 <RadzenCard>
+    <!-- run -->
     <RadzenButton Text="Run" Click="RunOperations">
         run
         <RadzenBadge Text="@Operations.Count.ToString()" />
@@ -57,6 +61,7 @@
                            Mode="ProgressBarMode.Indeterminate" />
     </div>
 
+    <!-- results -->
     <RadzenTabs RenderMode="TabRenderMode.Client">
         <Tabs>
             <RadzenTabsItem Text="texts">
@@ -89,6 +94,8 @@
                                               Property="OutputTag" Title="tout" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="Operation" Title="operation" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="Result" Title="text" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="FeatureSet.Features"
                                               Title="c-features">

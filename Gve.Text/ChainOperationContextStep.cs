@@ -23,6 +23,11 @@ public class ChainOperationContextStep
     public string OutputTag { get; set; }
 
     /// <summary>
+    /// Gets or sets a string synthetically representing the result.
+    /// </summary>
+    public string? Result { get; set; }
+
+    /// <summary>
     /// Gets or sets the features emitted up to this step.
     /// </summary>
     public ChainOperationContextFeats FeatureSet { get; set; }
