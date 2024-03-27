@@ -206,18 +206,21 @@ Whenever we apply an operation to our chain, we get a new version out; so we hav
 
 To sum up, we have thus met the [first two requirements](#model-requirements) of our model:
 
-1. represent the _snapshot_ itself in a _computable_ model.
-2. preserve as distinct, structured data our _ingredients_ (text and annotations), _recipes_ (annotation selection and ordering) and _outcomes_ (text versions).
+(1) represent the _snapshot_ itself in a _computable_ model.
+
+(2) preserve as distinct, structured data our _ingredients_ (text and annotations), _recipes_ (annotation selection and ordering) and _outcomes_ (text versions).
 
 Yet, we still have to address the last one:
 
-3. represent the snapshot annotations both on their _textual_ and _visual_ form.
+(3) represent the snapshot annotations both on their _textual_ and _visual_ form.
 
-This implies delving into more details about our chain's operations.
+This implies delving into more details about our chain's operations, which will also show more about the data they carry and inject in their output.
 
 ### Metadata
 
-As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set. So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. As already noticed, the operations being the first act of interpretation of our snapshot we do not limit ourselves to the basic ones only (insertion and deletion); rather, we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
+As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set. So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text.
+
+As already noticed, the operations being the first act of interpretation of our snapshot we do not limit ourselves to the basic ones only (insertion and deletion); rather, we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
 
 So, there are 8 **types** of operations (listed with their corresponding operator in their text-based representation):
 
@@ -228,7 +231,7 @@ So, there are 8 **types** of operations (listed with their corresponding operato
 - move before (`>[`)
 - move after (`>]`)
 - swap (`<>`)
-- annotate (`:`)
+- annotate (`:`): this is a do-nothing operation which affects only metadata by updating features.
 
 Given that each operation affects the chain producing a different version of the text, we might also need to attach specific **metadata** to either that version as a whole, or to the nodes affected by it.
 
@@ -283,6 +286,8 @@ The general text-based syntax for these operations includes these components, fr
 - **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
 - a feature name ending with `!` means that all the features with that name must be **removed**.
 - a value containing **spaces** must be included in double quotes.
+
+Note that features get accumulated as each operation is executed on the chain. So at any stage in the evolution of the text you get all the features accumulated up to it, unless you explicitly remove any of them in an operation.
 
 ### Example
 
