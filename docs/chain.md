@@ -215,13 +215,11 @@ Yet, we still have to address the last one:
 
 This implies delving into more details about our chain's operations.
 
-### Metadata and Visuals
+### Metadata and Syntax
 
-As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set.
+As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set. So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. As already noticed, the operations being the first act of interpretation of our snapshot we do not limit ourselves to the basic ones only (insertion and deletion); rather, we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
 
-We have also remarked that operations being the first act of interpretation of our snapshot, we do not limit ourselves to the basic ones only (insertion and deletion), but rather we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
-
-So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. There are 8 types of operations (listed with their corresponding operator in their text-based representation):
+So, there are 8 **types** of operations (listed with their corresponding operator in their text-based representation):
 
 - replace (`=`)
 - delete (`-`)
@@ -231,6 +229,15 @@ So, chain operations are abstractions on top of the chain structure, used to rep
 - move after (`>]`)
 - swap (`<>`)
 - annotate (`:`)
+
+Given that each operation affects the chain producing a different version of the text, we might also need to attach specific **metadata** to either that version as a whole, or to the nodes affected by it.
+
+So, operations can also carry metadata to be attached to their output; these might refer to any kind of data useful to be carried on the affected nodes, and/or on the chain context as a whole. For instance, a single operation might be attributed to another person (e.g. a suggestion from Schiller about some change in an epigram), or it might be written using a different ink, or receive some additional editorial note about its interpretation, etc.
+
+Given this variability, we allow for an open-set of such data by modeling them as generic name/value pairs, named **features**. So, for instance the ink color of an annotation represented by an operation might be represented as a name of `color`, and a value of `red`.
+
+Additionally, a feature can be _unique_ in its context, or freely repeatable. Usually you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time in an annotation). When instead you want a feature to be treated as unique, this means that when adding it, all the features having the same name in the same context will be removed.
+
 
 Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. The general text-based syntax for these operations includes these components, from left to right:
 
@@ -261,6 +268,8 @@ Even though GVE will provide a UI to edit such operations, it also provides a te
 - **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
 - a feature name ending with `!` means that all the features with that name must be **removed**.
 - a value containing **spaces** must be included in double quotes.
+
+### Visuals
 
 TODO
 

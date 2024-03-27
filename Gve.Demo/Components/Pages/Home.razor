@@ -107,7 +107,7 @@
                             <Template>
                                 @foreach (var kvp in context.FeatureSet.NodeFeatures)
                                 {
-                                    <h4>@kvp.Key</h4>
+                                    <strong>@kvp.Key</strong>
                                     <ul>
                                         @foreach (var f in kvp.Value)
                                         {

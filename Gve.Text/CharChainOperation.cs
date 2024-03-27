@@ -16,9 +16,10 @@ namespace Gve.Text;
 public abstract partial class CharChainOperation : VarOperationMetadata
 {
     /// <summary>
-    /// Gets or sets the operation identifier. This is used to reference
-    /// a specific operation in a transformation, essentially for diagnostic
-    /// purposes.
+    /// Gets or sets the operation identifier. This can be used to reference
+    /// a specific operation in a transformation, and is automatically
+    /// generated using <see cref="Nanoid.Generate(string, int)"/> unless
+    /// you want to assign it some human-friendly name.
     /// </summary>
     public string Id { get; set; }
 
@@ -64,7 +65,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     public string? Value { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VarOperation"/> class.
+    /// Initializes a new instance of the <see cref="CharChainOperation"/> class.
     /// </summary>
     /// <param name="type">The operation type.</param>
     protected CharChainOperation(VarOperationType type)
