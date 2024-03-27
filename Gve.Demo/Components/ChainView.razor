@@ -9,7 +9,12 @@
 @using Blazor.Diagrams.Options
 @using Blazor.Diagrams
 
-<div style="width:100%; height: 1000px">
+<div style="margin-bottom: 8px;">
+    <RadzenButton Click="@(() => Diagram.ZoomToFit())">
+        <RadzenIcon Icon="aspect_ratio"/> zoom to fit
+    </RadzenButton>
+</div>
+<div style="width:100%; height: 1000px; border: 1px solid silver;">
     <CascadingValue Value="Diagram">
         <DiagramCanvas></DiagramCanvas>
     </CascadingValue>
