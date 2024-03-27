@@ -391,5 +391,3 @@ Additionally, each version has its set of features, as derived by accumulating t
 ### Visuals
 
 TODO
-
-![autograph model](./img/stages.png)
