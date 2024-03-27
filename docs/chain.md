@@ -215,7 +215,7 @@ Yet, we still have to address the last one:
 
 This implies delving into more details about our chain's operations.
 
-### Metadata and Syntax
+### Metadata
 
 As we have seen, the chain structure is a container of any number of versions of a text, and operations target it by adding new links and optionally new nodes to its set. So, chain operations are abstractions on top of the chain structure, used to represent higher level editing operations on the chain's text. As already noticed, the operations being the first act of interpretation of our snapshot we do not limit ourselves to the basic ones only (insertion and deletion); rather, we prefer a full set of higher order operations, which best fit the nuances of our descriptive model.
 
@@ -234,12 +234,25 @@ Given that each operation affects the chain producing a different version of the
 
 So, operations can also carry metadata to be attached to their output; these might refer to any kind of data useful to be carried on the affected nodes, and/or on the chain context as a whole. For instance, a single operation might be attributed to another person (e.g. a suggestion from Schiller about some change in an epigram), or it might be written using a different ink, or receive some additional editorial note about its interpretation, etc.
 
-Given this variability, we allow for an open-set of such data by modeling them as generic name/value pairs, named **features**. So, for instance the ink color of an annotation represented by an operation might be represented as a name of `color`, and a value of `red`.
+All the operations thus share a common set of metadata, represented by:
 
-Additionally, a feature can be _unique_ in its context, or freely repeatable. Usually you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time in an annotation). When instead you want a feature to be treated as unique, this means that when adding it, all the features having the same name in the same context will be removed.
+- generic **features**. This is an open-ended set of any type of features, modeled as generic name/value pairs. So, for instance the ink color of an annotation represented by an operation might be represented as a name of `color`, and a value of `red`.
 
+>Additionally, a feature can be _unique_ in its context, or freely repeatable. Usually you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time in an annotation). When instead you want a feature to be treated as unique, this means that when adding it, all the features having the same name in the same context will be removed.
 
-Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. The general text-based syntax for these operations includes these components, from left to right:
+- **source** metadata: these metadata are specialized to represent the source for the variant implied by a specific operation. The model of a source item is similar to that of a generic apparatus, and contains:
+  - _ID_: an identifier for the source. For instance, it might be the identifier used for Schiller, or for some other witness.
+  - _type_: the type of source (a person, a witness, etc.).
+  - _rank_: the probability rank attributed to the identification of this source.
+  - _note_: an optional free text note.
+
+- **diplomatic** metadata: these metadata are specialized to represent the _visual_ aspects of an operation on the snaspshot sheet (see [below](#visuals)).
+
+### Syntax
+
+Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. This text format is used to represent their basic metadata, including features, but excluding specialized metadata (source and diplomatic). It is mostly used to speed up editing, or for diagnostic purposes.
+
+The general text-based syntax for these operations includes these components, from left to right:
 
 (1) `(ITAG:OTAG)`: these are the optional input and/or output **version tags**. They represent the input and the output versions in the chain before and after applying the operation. You can specify none, just one, or both. Usually there is no need to specify version tags, as the system can generate tags, and automatically increase their number (`v0`, `v1`, `v2`...) after each operation is applied. You might want to specify a version when you want to use a special name for it (which anyway is discouraged, as it would introduce variants in the expected naming scheme for tags), or when you want to start from a version which does not correspond to the latest generated version.
 
@@ -262,25 +275,58 @@ Even though GVE will provide a UI to edit such operations, it also provides a te
 
 (5) `^RANK`: a metadatum representing the **probability rank** for the interpretation connected to this operation. A value=0 means unspecified, values above 0 are e.g. 1=highly probable, 2=probable, 3=less probable, etc., using as many levels as you require.
 
-(6) `[NAME="VALUE"...]`: name=value pairs representing metadata **features**. Further syntax details:
+>When not zero, the rank also generates a feature with the same name and a value equal to the rank's value. This allows this metadatum to bubble up into the operation's output, and thus be part of the data attached to each generated version.
 
-- the operator separating the name from the value can be `=`, or `:=` for **unique** features. A unique feature is one which must be unique within its context. Usually, you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time). When instead you want a feature to be treated as unique, this means that when adding it all the features having the same name in the same context will be removed.
+(6) `[NAME="VALUE"...]`: name=value pairs representing metadata **features**, separated by space. Further syntax details:
+
+- the operator separating the name from the value can be `=`, or `:=` for **unique** features. A unique feature is one which must be unique within its context.
 - **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
 - a feature name ending with `!` means that all the features with that name must be **removed**.
 - a value containing **spaces** must be included in double quotes.
 
+### Example
+
+Let us see an example. If you recall our sample `ARZDC` snapshot, we could provide the following operations to interpret it (the line prefixed by 👉 represents the version generated by each operation, and the base text):
+
+👉 `v0`: `ARZDC`
+
+(1) `3- [*log=\"delete Z\" reason="don't like Z"]`: this is a delete operation targeting node with ID 3, i.e. the third character of our base text (`Z`). Notice that for this demo we have added a couple of mock features: a `log` unique feature which has a diagnostic purpose, representing the operation being executed in a human-friendly form; and a `reason` feature, which might represent the reason for that operation. The input of this operation is the base text (`v0`), and the output is a new version, which will automatically be tagged as `v1` (=the numeric suffix is just increased).
+
+👉 `v1`: `ARDC`
+
+(2) `2=V [*log=\"replace R with V\" *version:=alpha]`: this is a replace operation targeting node with ID 2, i.e. the second character of the base text (`V`), being replaced by `V`. Besides the `log` feature, here we add a `version` unique feature, which means that we want to pick the outcome of the operation as a text version proper, named `alpha`. This feature can thus be used to define which of the versions generated by each operation should be promoted to what we envisage as a version of the text, rather than just a reconstructed stage in the process of its evolution. Also note that here we are going to use the version output by the previous operation as the input of this one, which is the default; that's why we do not require to explicitly define neither the input nor the output version tags for it.
+
+👉 `v2`: `AVDC`
+
+(3) `6=B [*log=\"replace V with B\"]`: this is a replace operation targeting node with ID=6, which is the ID of the newly added node `V` in the previous operation (as remarked above, node identifiers are predictable, as they get assigned automatically by incrementing a shared ordinal number).
+
+👉 `v3`: `ABDC`
+
+(4) `(v1:) 2=P [*log=\"replace R with P\" *version:=beta]`: this is yet another replace operation, but this time it does not use the last generated output as its input. Rather, it is based on version `v1` (`ARDC`); so, it's the second branch of replacements stemming from the same base text character `R`.
+
+👉 `v4`: `APDC`
+
+>Note that when you start from a previous version, the chain is smart enough to generate a unique version number, without colliding with existing ones. The output version number is equal to the input version number + 1, or to the next available number when this already exists.
+
+(5) `4<>5 [*version!]`: this is a swap operation, swapping the position of two characters with ID 4 (`D`) and 5 (`C`). As you can see, swap here best captures the meaning of this operation, and is a higher order operation. A swap is just a special case of movement, which in turn could be represented with a deletion and an insertion; yet, should we go that down, we would lose the immediate meaning represented by a more synthetic and human-friendlier "swap".
+
+👉 `v5`: `APCD`
+
+(6) `(v3:) 4<>5 [*version:=gamma]`: this is the same swap operation which now affects another branch in the evolution of the text; the operation has as its input `v3` (`ABDC`), so in the end the output will be `ABCD`.
+
+👉 `v6`: `ABCD`
+
+So in the end, these operations end up representing 7 variants of our text:
+
+- `v0`: `ARZDC`
+- `v1`: `ARDC`
+- `v2`: `AVDC`
+- `v3`: `ABDC`
+- `v4`: `APDC`
+- `v5`: `APCD`
+- `v6`: `ABCD`
+
 ### Visuals
-
-TODO
-
-The operations as defined by their conventional text-based syntax (see below) is as follows (don't mind about the syntactic details here, just focus on the):
-
-1. `3- [*log=\"delete Z\" reason="don't like Z"]`
-2. `2=V [*log=\"replace R with V\" *version:=alpha]`
-3. `6=B [*log=\"replace V with B\"]`
-4. `(v1:) 2=P [*log=\"replace R with P\" *version:=beta]`
-5. `4<>5 [*version!]`
-6. `(v3:) 4<>5 [*version:=gamma]`
 
 TODO
 
@@ -300,10 +346,3 @@ Chain operations work on a chain operations **context** (`ChainOperationContext<
   - output version tag;
   - context and nodes features snapshot, taken after the step;
   - reference to the source operation object.
-
-
-
-As for features (included in braces), `name` can have these prefixes (in this order):
-
-1. `!`: the feature should be removed.
-2. `*`: the feature targets context rather than nodes (which is the default, unless `AT` is 0).

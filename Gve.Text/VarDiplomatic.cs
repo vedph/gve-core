@@ -4,7 +4,7 @@ using System.Text;
 namespace Gve.Text;
 
 /// <summary>
-/// Diplomatic data for a text variant. This defines the graphical representation
+/// Diplomatic data for a text variant. This defines the visual representation
 /// of the variant, as well as the features attached to it.
 /// </summary>
 public class VarDiplomatic
