@@ -241,7 +241,7 @@ All the operations thus share a common set of metadata, represented by:
 
 - generic **features**. This is an open-ended set of any type of features, modeled as generic name/value pairs. So, for instance the ink color of an annotation represented by an operation might be represented as a name of `color`, and a value of `red`.
 
->Additionally, a feature can be _unique_ in its context, or freely repeatable. Usually you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time in an annotation). When instead you want a feature to be treated as unique, this means that when adding it, all the features having the same name in the same context will be removed.
+>Additionally, the feature carried by an operation has a specific set policy. This drives the behavior of the operation when updating features in their sets (=the context set, when they are global; or the nodes set, when they target the affected nodes). Usually you can add as many features as you want, even when they have the same name; this allows you representing items of a set (e.g. color=red and color=black for two colors used at the same time in an annotation). Anyway, you can treat a feature as single, so that when adding it, all the features having the same name in the same context will be removed; or treat a subset of features as single the first time it gets added, and as multiple later. See below about [syntax](#syntax) for more details.
 
 - **source** metadata: these metadata are specialized to represent the source for the variant implied by a specific operation. The model of a source item is similar to that of a generic apparatus, and contains:
   - _ID_: an identifier for the source. For instance, it might be the identifier used for Schiller, or for some other witness.
@@ -278,17 +278,20 @@ The general text-based syntax for these operations includes these components, fr
 
 (5) `^RANK`: a metadatum representing the **probability rank** for the interpretation connected to this operation. A value=0 means unspecified, values above 0 are e.g. 1=highly probable, 2=probable, 3=less probable, etc., using as many levels as you require.
 
->When not zero, the rank also generates a feature with the same name and a value equal to the rank's value. This allows this metadatum to bubble up into the operation's output, and thus be part of the data attached to each generated version.
+>When not zero, the rank also generates a feature with the same name and a value equal to the rank's value. This allows this metadatum to bubble up into the operation's output, and thus be part of the data attached to each generated version. The rank is thus a _projected feature_, using a single policy. Also source features get projected in a similar way, when present, using a first-single policy.
 
-(6) `[NAME="VALUE"...]`: name=value pairs representing metadata **features**, separated by space. Further syntax details:
+(6) `[NAME="VALUE"...]`: name=value pairs representing metadata **features**, separated by space. When the feature is flag-like (boolean), you can just use `NAME` without operators and value. Further syntax details:
 
-- the operator separating the name from the value can be `=`, or `:=` for **unique** features. A unique feature is one which must be unique within its context.
+- the operator separating the name from the value varies according to the set policy of the feature:
+  - `=` represents a **multiple** feature, which can occur 0-N times in its set.
+  - `:=` represents a **single** feature, which can occur 0-1 times in its set.
+  - `==` represents a feature which is treated as single the first time it is added to the set, and then as multiple. This can be used to replace a set of features with another one. For instance, when adding source-related features, the next operation first removes all the features named "source" from the targeted set, and then adds all the new ones.
 - **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
-- a feature name ending with `!` means that all the features with that name must be **removed**.
+- a feature name prefixed by `!` means that all the features with that name must be **removed**. In this case you just specify the feature name after this prefix.
 - a feature name ending with `^` means that that feature will be short-lived, i.e. once added, it will be removed the next time features get updated (i.e. at the next operation). This is useful for instance when adding the `*version^` feature, which should tag a single output as representative of a named text version.
 - a value containing **spaces** must be included in double quotes.
 
-Note that features get accumulated as each operation is executed on the chain. So at any stage in the evolution of the text you get all the features accumulated up to it, unless you explicitly remove any of them in an operation.
+Note that features get accumulated as each operation is executed on the chain. So at any stage in the evolution of the text you get all the features accumulated up to it, unless you remove any of them in an operation, according to the set policy used.
 
 ### Example
 
