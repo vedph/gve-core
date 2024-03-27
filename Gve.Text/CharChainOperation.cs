@@ -360,10 +360,20 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         ChainOperationContext<char> context,
         IList<ChainNode<char>>? targetNodes = null)
     {
-        // add rank feature if not 0
-        IList<Feature> sources = Rank != 0
-            ? [new Feature(RANK_KEY, $"{Rank}", true), .. Features]
-            : Features;
+        List<Feature> sources = [..Features];
+
+        // project rank as a unique feature
+        if (Rank != 0)
+            sources.Add(new Feature(RANK_KEY, $"{Rank}", true));
+
+        // project sources as features; if any sources existed, remove them
+        // before adding the new ones
+        int i = 0;
+        foreach (VarSource vs in Sources)
+        {
+            sources.Add(new Feature(SOURCE_KEY, vs.ToString(), i == 0));
+            i++;
+        }
 
         // update the context's and/or nodes features
         context.UpdateFeatures(sources, tag,

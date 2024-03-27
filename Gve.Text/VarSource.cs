@@ -1,4 +1,6 @@
-﻿namespace Gve.Text;
+﻿using System.Text;
+
+namespace Gve.Text;
 
 /// <summary>
 /// The source for a variant.
@@ -13,7 +15,7 @@ public class VarSource
     /// <summary>
     /// Gets or sets the source type (e.g. manuscript, author...).
     /// </summary>
-    public string Type { get; set; } = "";
+    public string? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the probability rank for the source attribution.
@@ -33,6 +35,15 @@ public class VarSource
     /// </returns>
     public override string ToString()
     {
-        return $"[{Type}] {Id} ({Rank})";
+        StringBuilder sb = new(Id);
+
+        if (!string.IsNullOrEmpty(Type))
+            sb.Append(" [").Append(Type).Append(']');
+
+        if (Rank > 0) sb.Append(" (").Append(Rank).Append(')');
+
+        if (!string.IsNullOrEmpty(Note)) sb.Append(' ').Append(Note);
+
+        return sb.ToString();
     }
 }

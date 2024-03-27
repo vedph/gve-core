@@ -8,9 +8,16 @@ namespace Gve.Text;
 public class VarOperationMetadata
 {
     /// <summary>
-    /// The key for the rank feature.
+    /// The key for the rank feature. This is automatically projected from
+    /// <see cref="Rank"/>.
     /// </summary>
     public const string RANK_KEY = "rank";
+
+    /// <summary>
+    /// The key for the source feature(s). These are automatically projected
+    /// from <see cref="Sources"/>.
+    /// </summary>
+    public const string SOURCE_KEY = "source";
 
     /// <summary>
     /// The symbols corresponding to <see cref="VarOperationType"/>'s.
