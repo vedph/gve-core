@@ -96,7 +96,9 @@
                                 <ul>
                                     @foreach (var f in context.FeatureSet.Features)
                                     {
-                                        <li>@f</li>
+                                        <li>
+                                            <span class="@(f.Name == "version" ? "feature-important" : "")">@f</span>
+                                        </li>
                                     }
                                 </ul>
                             </Template>
@@ -140,8 +142,8 @@
     {
         <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
                         Multiple="true" Placeholder="chain tags"
-                        Style="margin-bottom:8px"/>
+                        Style="margin-bottom:8px" />
 
-        <ChainView Chain="@Chain" Tags="@SelectedChainTags"/>
+        <ChainView Chain="@Chain" Tags="@SelectedChainTags" />
     }
 </RadzenCard>
