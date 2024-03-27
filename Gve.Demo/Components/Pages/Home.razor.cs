@@ -28,15 +28,15 @@ public partial class Home
             // v1 = ARDC
             "3- [*log=\"delete Z\" reason=\"don't like Z\"]\n" +
             // v2 = AVDC (alpha)
-            "2=V [*log=\"replace R with V\" *version:=alpha]\n" +
+            "2=V [*log=\"replace R with V\" *version^:=alpha]\n" +
             // v3 = ABDC
             "6=B [*log=\"replace V with B\"]\n" +
             // v4 = APDC
-            "(v1:) 2=P [*log=\"replace R with P\" *version:=beta]\n" +
+            "(v1:) 2=P [*log=\"replace R with P\" *version^:=beta]\n" +
             // v5 = APCD (beta)
-            "4<>5 [*version!]\n" +
+            "4<>5\n" +
             // v6 = ABCD (gamma)
-            "(v3:) 4<>5 [*version:=gamma]";
+            "(v3:) 4<>5 [*version^:=gamma]";
     }
 
     public void ParseOperationText()
