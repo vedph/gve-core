@@ -109,13 +109,12 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("context annotation", context.Features[0].Value);
         // node features
         Assert.Equal(2, context.NodeFeatures.Count);
-        List<OperationFeature> nodeFeatures =
-            context.NodeFeatures[Tuple.Create("v0", 1)];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v0_1"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("x", nodeFeatures[0].Name);
         Assert.Equal("y", nodeFeatures[0].Value);
 
-        nodeFeatures = context.NodeFeatures[Tuple.Create("v0", 2)];
+        nodeFeatures = context.NodeFeatures["v0_2"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("x", nodeFeatures[0].Name);
         Assert.Equal("y", nodeFeatures[0].Value);

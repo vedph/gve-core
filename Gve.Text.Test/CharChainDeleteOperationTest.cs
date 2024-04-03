@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -154,8 +153,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted A from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures =
-            context.NodeFeatures[Tuple.Create("v1", 1)];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like A", nodeFeatures[0].Value);
@@ -197,13 +195,12 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted BC from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures =
-            context.NodeFeatures[Tuple.Create("v1", 2)];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_2"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like BC", nodeFeatures[0].Value);
 
-        nodeFeatures = context.NodeFeatures[Tuple.Create("v1", 3)];
+        nodeFeatures = context.NodeFeatures["v1_3"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like BC", nodeFeatures[0].Value);

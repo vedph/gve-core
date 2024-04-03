@@ -124,8 +124,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("replaced A with X", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures =
-            context.NodeFeatures[Tuple.Create("v1", 4)];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("like X more", nodeFeatures[0].Value);
@@ -168,8 +167,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("replaced AB with X", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures =
-            context.NodeFeatures[Tuple.Create("v1", 4)];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("like X more", nodeFeatures[0].Value);

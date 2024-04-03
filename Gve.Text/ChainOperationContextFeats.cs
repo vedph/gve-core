@@ -17,8 +17,7 @@ public class ChainOperationContextFeats
     /// Gets the node features dictionary, where the key is a tuple of the
     /// version tag and the node ID, and the value is a list of features.
     /// </summary>
-    public Dictionary<Tuple<string, int>, List<OperationFeature>>
-        NodeFeatures { get; } = [];
+    public Dictionary<string, List<OperationFeature>> NodeFeatures { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextFeats"/>
@@ -38,7 +37,7 @@ public class ChainOperationContextFeats
         ArgumentNullException.ThrowIfNull(feats);
 
         Features = new List<OperationFeature>(feats.Features);
-        NodeFeatures = new Dictionary<Tuple<string, int>, List<OperationFeature>>(
+        NodeFeatures = new Dictionary<string, List<OperationFeature>>(
             feats.NodeFeatures);
     }
 
@@ -90,7 +89,7 @@ public class ChainOperationContextFeats
             {
                 foreach (ChainNode<T> node in nodes!)
                 {
-                    Tuple<string, int> key = Tuple.Create(tag!, node.Id);
+                    string key = $"{tag!}_{node.Id}";
                     if (!NodeFeatures.TryGetValue(key,
                         out List<OperationFeature>? nodeFeats))
                     {
