@@ -180,7 +180,7 @@ public partial record OperationFeature
 
     /// <summary>
     /// Converts to a parsable string with format <c>!*NAME^=VALUE</c> where
-    /// <c>!</c>=negated, <c>*</c>=global, and operator can is <c>=</c> for
+    /// <c>!</c>=negated, <c>*</c>=global, and operator is <c>=</c> for
     /// multiple, <c>:=</c> for single, and <c>==</c> for single-first.
     /// Value is enclosed in double quotes if it contains white spaces.
     /// Suffix <c>^</c> is used for short-lived features.
@@ -212,26 +212,4 @@ public partial record OperationFeature
 
         return sb.ToString();
     }
-}
-
-/// <summary>
-/// Policy for adding a <see cref="Feature"/> to a set.
-/// </summary>
-public enum FeatureSetPolicy
-{
-    /// <summary>
-    /// When added, the feature is just added to the set (<c>=</c>).
-    /// </summary>
-    Multiple = 0,
-
-    /// <summary>
-    /// When added and feature(s) already exists, they are replaced (<c>:=</c>).
-    /// </summary>
-    Single,
-
-    /// <summary>
-    /// When added and feature(s) already exists, the first one replaces all
-    /// the existing ones, while the following ones just get added  (<c>==</c>).
-    /// </summary>
-    SingleFirst,
 }
