@@ -52,10 +52,11 @@ In turn, tweens are contained in **timelines**, which can be further configured 
 
 So in the end, we might envisage this simple model for our snapshot:
 
-- `timelines`: a set of 1 or more timelines, keyed under version tags. Each version can thus have its own animation, as it's selecting and reordering a subset of operations on the chain. Each timeline has these properties:
-  - `target` element ID (which will be used as the tween selector). This can be the ID of any of the elements in the SVG code of any operation with a visual representation in the whole snapshot.
-  - `type`
-  - `variables`
-  - `position`
+- `timelines`: a dictionary of 1 or more timelines, keyed under version tags. Each version can thus have its own animation, as it's selecting and reordering a subset of operations on the chain. Each timeline contains a set of tweens.
+  - `tweens`:
+    - `target` element ID (which will be used as the tween selector). This can be the ID of any of the elements in the SVG code of any operation with a visual representation in the whole snapshot.
+    - `type`
+    - `variables`
+    - `position`
 
 Type, variables and position are just strings, and their interpretation is up to the GSAP engine. This model is thus generic enough, as it deals with single animations (tweens), orchestrated in a timeline for each text version, optionally configured with text-based parameters.
