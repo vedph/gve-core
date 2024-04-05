@@ -50,7 +50,7 @@ public class VarOperationMetadata
     /// <summary>
     /// Gets or sets the features to be attached to the result of this operation.
     /// </summary>
-    public IList<OperationFeature> Features { get; set; }
+    public IList<VarFeature> Features { get; set; }
 
     /// <summary>
     /// Gets or sets the sources for this operation. These represent any type

@@ -9,10 +9,10 @@ public sealed class ChainOperationContextFeatsTest
     public void UpdateFeatures_Global_Add()
     {
         ChainOperationContextFeats feats = new();
-        List<OperationFeature> srcFeats =
+        List<VarFeature> srcFeats =
         [
-            OperationFeature.Parse("*a=A"),
-            OperationFeature.Parse("*u:=U"),
+            VarFeature.Parse("*a=A"),
+            VarFeature.Parse("*u:=U"),
         ];
 
         feats.UpdateFeatures<char>(srcFeats);
@@ -26,14 +26,14 @@ public sealed class ChainOperationContextFeatsTest
     public void UpdateFeatures_Global_Update()
     {
         ChainOperationContextFeats feats = new();
-        List<OperationFeature> srcFeats =
+        List<VarFeature> srcFeats =
         [
-            OperationFeature.Parse("*a=A"),
-            OperationFeature.Parse("*u:=U"),
+            VarFeature.Parse("*a=A"),
+            VarFeature.Parse("*u:=U"),
         ];
         feats.UpdateFeatures<char>(srcFeats);
         srcFeats.Clear();
-        srcFeats.Add(OperationFeature.Parse("*u:=U2"));
+        srcFeats.Add(VarFeature.Parse("*u:=U2"));
 
         feats.UpdateFeatures<char>(srcFeats);
 
@@ -46,14 +46,14 @@ public sealed class ChainOperationContextFeatsTest
     public void UpdateFeatures_Global_Remove()
     {
         ChainOperationContextFeats feats = new();
-        List<OperationFeature> srcFeats =
+        List<VarFeature> srcFeats =
         [
-            OperationFeature.Parse("*a=A"),
-            OperationFeature.Parse("*u:=U"),
+            VarFeature.Parse("*a=A"),
+            VarFeature.Parse("*u:=U"),
         ];
         feats.UpdateFeatures<char>(srcFeats);
         srcFeats.Clear();
-        srcFeats.Add(OperationFeature.Parse("!*a"));
+        srcFeats.Add(VarFeature.Parse("!*a"));
 
         feats.UpdateFeatures<char>(srcFeats);
 
@@ -65,10 +65,10 @@ public sealed class ChainOperationContextFeatsTest
     public void UpdateFeatures_Global_Doomed()
     {
         ChainOperationContextFeats feats = new();
-        List<OperationFeature> srcFeats =
+        List<VarFeature> srcFeats =
         [
-            OperationFeature.Parse("*a=A"),
-            OperationFeature.Parse("*u^:=U"),
+            VarFeature.Parse("*a=A"),
+            VarFeature.Parse("*u^:=U"),
         ];
         feats.UpdateFeatures<char>(srcFeats);
 

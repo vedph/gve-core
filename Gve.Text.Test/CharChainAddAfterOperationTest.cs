@@ -48,8 +48,8 @@ public sealed class CharChainAddAfterOperationTest
             Value = "X",
             Features =
             [
-                OperationFeature.Parse("*log:=\"added X after A\""),
-                OperationFeature.Parse("reason=\"A likes X\"")
+                VarFeature.Parse("*log:=\"added X after A\""),
+                VarFeature.Parse("reason=\"A likes X\"")
             ]
         };
 
@@ -64,7 +64,7 @@ public sealed class CharChainAddAfterOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("added X after A", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("A likes X", nodeFeatures[0].Value);

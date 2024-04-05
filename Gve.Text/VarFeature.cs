@@ -7,28 +7,12 @@ using System.Text.RegularExpressions;
 namespace Gve.Text;
 
 /// <summary>
-/// A feature attached to an operation. This adds metadata to the feature
-/// to drive its application to the operation context.
+/// A feature attached to a text variant generation operation. This adds
+/// metadata to the feature to drive its application to the operation context.
 /// </summary>
 /// <seealso cref="Feature" />
-public partial record OperationFeature
+public partial record VarFeature : Feature
 {
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
-    public string Name { get; init; }
-
-    /// <summary>
-    /// Gets the value. Usually there is a value, but in some cases a feature
-    /// is used just as a flag, in which case the value is null.
-    /// </summary>
-    public string? Value { get; init; }
-
-    /// <summary>
-    /// The feature set policy.
-    /// </summary>
-    public FeatureSetPolicy SetPolicy { get; init; }
-
     /// <summary>
     /// Gets or sets a value indicating whether this feature is negated.
     /// A negated feature means that any existing feature with the same name
@@ -53,7 +37,7 @@ public partial record OperationFeature
     private static partial Regex OpNameValueRegex();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OperationFeature"/> class.
+    /// Initializes a new instance of the <see cref="VarFeature"/> class.
     /// </summary>
     /// <param name="name">The name.</param>
     /// <param name="value">The value.</param>
@@ -62,7 +46,7 @@ public partial record OperationFeature
     /// <param name="isGlobal">if set to <c>true</c> [global].</param>
     /// <param name="isShortLived">if set to <c>true</c> [short lived].</param>
     /// <exception cref="ArgumentNullException">name</exception>
-    public OperationFeature(string name,
+    public VarFeature(string name,
         string? value,
         FeatureSetPolicy setPolicy = FeatureSetPolicy.Multiple,
         bool isNegated = false,
@@ -87,14 +71,14 @@ public partial record OperationFeature
     /// <returns>Feature.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Invalid feature</exception>
-    public static OperationFeature Parse(string text)
+    public static VarFeature Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         Match m = OpNameValueRegex().Match(text);
         if (!m.Success) throw new FormatException($"Invalid feature: {text}");
 
-        return new OperationFeature(
+        return new VarFeature(
             m.Groups["n"].Value,
             m.Groups["v"].Success ? m.Groups["v"].Value.Trim('"') : null,
             m.Groups["p"].Value switch
@@ -115,7 +99,7 @@ public partial record OperationFeature
     /// <param name="feature">The feature.</param>
     /// <returns>True if success.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    public static bool TryParse(string text, out OperationFeature? feature)
+    public static bool TryParse(string text, out VarFeature? feature)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -147,8 +131,8 @@ public partial record OperationFeature
     /// doomed, i.e. a short-lived feature which should be removed on the next
     /// update; otherwise, null.</returns>
     /// <exception cref="ArgumentNullException">source or targets</exception>
-    public static void UpdateFeature(OperationFeature source,
-        IList<OperationFeature> targets, bool first)
+    public static void UpdateFeature(VarFeature source,
+        IList<VarFeature> targets, bool first)
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(targets);

@@ -137,8 +137,8 @@ public sealed class CharChainDeleteOperationTest
             OutputTag = "v1",
             Features =
             [
-                OperationFeature.Parse("*log:=\"deleted A from ABC\""),
-                new OperationFeature("reason", "don't like A")
+                VarFeature.Parse("*log:=\"deleted A from ABC\""),
+                new VarFeature("reason", "don't like A")
             ]
         };
 
@@ -153,7 +153,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted A from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
+        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_1"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like A", nodeFeatures[0].Value);
@@ -179,8 +179,8 @@ public sealed class CharChainDeleteOperationTest
             OutputTag = "v1",
             Features =
             [
-                OperationFeature.Parse("*log:=\"deleted BC from ABC\""),
-                new OperationFeature("reason", "don't like BC")
+                VarFeature.Parse("*log:=\"deleted BC from ABC\""),
+                new VarFeature("reason", "don't like BC")
             ]
         };
 
@@ -195,7 +195,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted BC from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_2"];
+        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_2"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("don't like BC", nodeFeatures[0].Value);

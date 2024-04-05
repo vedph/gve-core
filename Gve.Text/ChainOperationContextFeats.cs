@@ -11,13 +11,13 @@ public class ChainOperationContextFeats
     /// <summary>
     /// Gets the features.
     /// </summary>
-    public List<OperationFeature> Features { get; } = [];
+    public List<VarFeature> Features { get; } = [];
 
     /// <summary>
     /// Gets the node features dictionary, where the key is a tuple of the
     /// version tag and the node ID, and the value is a list of features.
     /// </summary>
-    public Dictionary<string, List<OperationFeature>> NodeFeatures { get; } = [];
+    public Dictionary<string, List<VarFeature>> NodeFeatures { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextFeats"/>
@@ -36,8 +36,8 @@ public class ChainOperationContextFeats
     {
         ArgumentNullException.ThrowIfNull(feats);
 
-        Features = new List<OperationFeature>(feats.Features);
-        NodeFeatures = new Dictionary<string, List<OperationFeature>>(
+        Features = new List<VarFeature>(feats.Features);
+        NodeFeatures = new Dictionary<string, List<VarFeature>>(
             feats.NodeFeatures);
     }
 
@@ -48,7 +48,7 @@ public class ChainOperationContextFeats
             if (Features[i].IsShortLived) Features.RemoveAt(i);
         }
 
-        foreach (List<OperationFeature> nodeFeats in NodeFeatures.Values)
+        foreach (List<VarFeature> nodeFeats in NodeFeatures.Values)
         {
             for (int i = nodeFeats.Count - 1; i >= 0; i--)
             {
@@ -67,7 +67,7 @@ public class ChainOperationContextFeats
     /// <param name="nodes">The nodes targeted in the update when any source
     /// features targets nodes instead of context.</param>
     /// <exception cref="ArgumentNullException">sources</exception>
-    public void UpdateFeatures<T>(IList<OperationFeature> sources,
+    public void UpdateFeatures<T>(IList<VarFeature> sources,
         string? tag = null,
         IList<ChainNode<T>>? nodes = null)
     {
@@ -76,12 +76,12 @@ public class ChainOperationContextFeats
         RemoveShortLivedFeatures();
         HashSet<string> names = [];
 
-        foreach (OperationFeature feature in sources)
+        foreach (VarFeature feature in sources)
         {
             // if global, update context features
             if (feature.IsGlobal)
             {
-                OperationFeature.UpdateFeature(feature, Features,
+                VarFeature.UpdateFeature(feature, Features,
                     !names.Contains(feature.Name));
             }
             // else update features of each target node
@@ -91,12 +91,12 @@ public class ChainOperationContextFeats
                 {
                     string key = $"{tag!}_{node.Id}";
                     if (!NodeFeatures.TryGetValue(key,
-                        out List<OperationFeature>? nodeFeats))
+                        out List<VarFeature>? nodeFeats))
                     {
                         nodeFeats = [];
                         NodeFeatures[key] = nodeFeats;
                     }
-                    OperationFeature.UpdateFeature(feature, nodeFeats,
+                    VarFeature.UpdateFeature(feature, nodeFeats,
                         !names.Contains(feature.Name));
                 }
             }
