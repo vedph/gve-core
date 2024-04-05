@@ -35,28 +35,36 @@ In depicting our interpretations of a snapshot, tracing back text versions to th
 
 With reference to our architecture, animations must be designed no longer at the level of each single operation, but rather within the scope of the whole snapshot. For instance, think about a `B`  inserted between `A` and `C`: we might want to animate this insertion by moving `B` between these two letters, which in turn would require to be moved in opposite directions, so to make space for the new one. So, this goes beyond the scope of a single operation, and is rather contained in the snapshot as a whole.
 
+### GSAP Model
+
 Animations are complex; yet, given that we don't need (nor desire) overtly complex features in our general-purpose model, we can leverage some existing software libraries to define a generic model for them.
 
 Among the freeware libraries targeting web, one of the most popular and well-suited for these requirements is represented by [GSAP](https://gsap.com). The basic concepts and entities used there can be easily imported in our model.
 
 GSAP is based on _tweens_. A **tween** is just a _property setter_, capable of animating any property, like for instance the position of an element, its size, rotation, color, etc. Its name clearly comes from the fact that animation essentially interpolates _between_ two different states of an object.
 
-Tweens properties can be grouped in:
+In GSAP, a tween object is created with a function specifying either its start point (`from`, assuming the current state as the end point), or its end point (`to`, assuming the current state as the start point), or both (`fromTo`).
 
-- `type` (`to`, `from`, `fromTo`): TODO
-- `selector`: in our case, this is just the target SVG element ID. We can freely assign IDs to any SVG element of our visuals, so animations can target any of them, including groups.
-- `variables`: these are generic name=value pairs, where value is either a scalar value, like a number or a string, or a complex object with its own properties. As we are dealing with a JavaScript library, objects can be encoded with plain text using JSON.
-- `position` in time, either relative or absolute.
+Each of these functions gets these [arguments](https://gsap.com/docs/v3/GSAP/Tween):
 
-In turn, tweens are contained in **timelines**, which can be further configured with variables, as for tweens. Timelines orchestrate the animations represented by tweens, coordinating their timing and order.
+1. a `selector` to define the target element(s).
+2. a `vars` object, with all the properties/values pairs you want to animate (e.g. `rotation: 360`). This can also include some special properties, whose names are reserved to specify animation behaviors, like `duration`, `delay`, `ease`, etc.
 
-So in the end, we might envisage this simple model for our snapshot:
+In turn, tweens are contained in **timelines**, which can be further configured with `vars`, as for tweens. Timelines orchestrate the animations represented by tweens, coordinating their timing and order.
+
+To add a tween to a timeline, the timeline object has corresponding methods (`to`, `from`, `fromTo`). This adds a third optional parameter, [position](https://gsap.com/docs/v3/GSAP/Timeline#positioning-animations-in-a-timeline), a string with its own syntax, used to precisely control where things are placed.
+
+### Animation Model
+
+The animation model here can be designed in compliance with a basic usage of GSAP:
 
 - `timelines`: a dictionary of 1 or more timelines, keyed under version tags. Each version can thus have its own animation, as it's selecting and reordering a subset of operations on the chain. Each timeline contains a set of tweens.
   - `tweens`:
-    - `target` element ID (which will be used as the tween selector). This can be the ID of any of the elements in the SVG code of any operation with a visual representation in the whole snapshot.
-    - `type`
-    - `variables`
-    - `position`
+    - `label`: a human-friendly label for the tween.
+    - `note`: a free text note about the tween.
+    - `selector`, usually the target element ID. This can be the ID of any of the elements in the SVG code of any operation with a visual representation in the whole snapshot.
+    - `type`: whether it animates from current state to another one (`to`), vice-versa (`from`), or specifying both initial and final states (`fromTo`).
+    - `vars`: a free object with variables to be animated, whose values can be scalar or other objects. As GSAP is JavaScript-based, the object can be encoded as a JSON string.
+    - `position`: this is just a string.
 
-Type, variables and position are just strings, and their interpretation is up to the GSAP engine. This model is thus generic enough, as it deals with single animations (tweens), orchestrated in a timeline for each text version, optionally configured with text-based parameters.
+>In tweens, both label and note have no usage, except facilitating the users work in editing the timeline.
