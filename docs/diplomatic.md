@@ -26,3 +26,36 @@ As annotations are modeled as operations, this means that we can add the graphic
 - `element features`: this is a dictionary of features sets, keyed under SVG element IDs. The dictionary allows to attach features to a specific element of the operation visuals, rather than to their whole set. To this end, you assign an arbitrarily chosen ID to every SVG element you want to attach features to, and then add as many features as needed to it under the key of its ID. For instance, we might want to add a specific set of features to only the orange bar among the two visuals building the group representing the replacement of `V` with `B`.
 
 So, this model not only links visuals to each operation, but also attaches optional metadata on the diplomatic side, both to the operation as a whole, or to any parts of its visuals. Yet, the model is very simple, because it rests on just text: SVG code for the visuals, and name=value pairs for features.
+
+## Animation
+
+Additionally, this bidimensional, geometric model can be further extended by adding the dimension of time in the form of animations.
+
+In depicting our interpretations of a snapshot, tracing back text versions to the actions performed by its author, animations can play a significant semantic role in the context of this model. Of course, they belong to the same realm of interpretation we have already distinguished in that model, but a digital publication can greatly benefit from them.
+
+With reference to our architecture, animations must be designed no longer at the level of each single operation, but rather within the scope of the whole snapshot. For instance, think about a `B`  inserted between `A` and `C`: we might want to animate this insertion by moving `B` between these two letters, which in turn would require to be moved in opposite directions, so to make space for the new one. So, this goes beyond the scope of a single operation, and is rather contained in the snapshot as a whole.
+
+Animations are complex; yet, given that we don't need (nor desire) overtly complex features in our general-purpose model, we can leverage some existing software libraries to define a generic model for them.
+
+Among the freeware libraries targeting web, one of the most popular and well-suited for these requirements is represented by [GSAP](https://gsap.com). The basic concepts and entities used there can be easily imported in our model.
+
+GSAP is based on _tweens_. A **tween** is just a _property setter_, capable of animating any property, like for instance the position of an element, its size, rotation, color, etc. Its name clearly comes from the fact that animation essentially interpolates _between_ two different states of an object.
+
+Tweens properties can be grouped in:
+
+- `type` (`to`, `from`, `fromTo`): TODO
+- `selector`: in our case, this is just the target SVG element ID. We can freely assign IDs to any SVG element of our visuals, so animations can target any of them, including groups.
+- `variables`: these are generic name=value pairs, where value is either a scalar value, like a number or a string, or a complex object with its own properties. As we are dealing with a JavaScript library, objects can be encoded with plain text using JSON.
+- `position` in time, either relative or absolute.
+
+In turn, tweens are contained in **timelines**, which can be further configured with variables, as for tweens. Timelines orchestrate the animations represented by tweens, coordinating their timing and order.
+
+So in the end, we might envisage this simple model for our snapshot:
+
+- `timelines`: a set of 1 or more timelines, keyed under version tags. Each version can thus have its own animation, as it's selecting and reordering a subset of operations on the chain. Each timeline has these properties:
+  - `target` element ID (which will be used as the tween selector). This can be the ID of any of the elements in the SVG code of any operation with a visual representation in the whole snapshot.
+  - `type`
+  - `variables`
+  - `position`
+
+Type, variables and position are just strings, and their interpretation is up to the GSAP engine. This model is thus generic enough, as it deals with single animations (tweens), orchestrated in a timeline for each text version, optionally configured with text-based parameters.
