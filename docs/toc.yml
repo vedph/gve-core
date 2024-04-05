@@ -1,2 +1,6 @@
 - name: Modeling Autographs
-  href: chain.md
+  href: autograph.md
+- name: Textual Model
+  href: textual.md
+- name: Diplomatic Model
+  href: diplomatic.md

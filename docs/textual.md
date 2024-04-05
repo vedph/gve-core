@@ -1,37 +1,4 @@
-# Modeling an Autograph
-
-- [Modeling an Autograph](#modeling-an-autograph)
-  - [Basic Terminology](#basic-terminology)
-  - [Model Requirements](#model-requirements)
-  - [Core Chain Model](#core-chain-model)
-    - [Operations](#operations)
-    - [Chain](#chain)
-    - [Metadata](#metadata)
-    - [Syntax](#syntax)
-    - [Example](#example)
-    - [Visuals](#visuals)
-
-## Basic Terminology
-
-Let us first use our case study (GVE) to define some terms we use in the technical documentation with a specific algorithmic meaning.
-
-In the case of GVE, the essential source of epigrams is represented by autograph sheets from handbooks. Whatever its physical support(s), here we call an autograph 🔖 **sheet** for short.
-
-The main challenge in modeling sheets is that they do not just represent a linear text; rather, they represent a sort of 🔖 **snapshot** of the creative process which in the author's mind would have led to the intended text.
-
-This is because graphically the snapshot does not just represents a text, but includes many corrections, rethinkings, or refactorings of it, in the form of various types of 🔖 **annotations** (deletions, insertions, transpositions, side notes, etc.).
-
-The snapshot is thus a sort of picture taken from the author's mind in relation to the text being composed at a given point in time. This does not necessarily imply that this is the end stage of the creative process underlying the text. The process may well have gone further on; but this is not reflected by the snapshot, which just represents a picture which froze an instant of this process at a given time.
-
-The snapshot is thus far from being the carrier of an undisputed linear text; it's an even chaotic bunch of text and annotations on a sheet. It is up to the reader to make sense of these annotations, and try to deduce one or more versions of the text from his interpretation.
-
-The annotations represent changes on the text; but there often is no way to know their relative order, or even their selection when they represent several competing versions of the text. _It is like having all the ingredients_ (our text with annotations), _when we have lost the recipe_ (how to select and order the annotations to generate the intended version(s)).
-
-When for whatever reason an authoritative version of the final outcome of all these operations on the text is lacking, in a traditional (paper) edition usually we are forced to forge one, representing the best effort in interpreting our sheet. Of course, that would just be a best effort; and it might even be the case that we are not sure in deciding among competing interpretations. In the end, we come up with our best recipe.
-
-In a digital edition instead, we have the power to handle all the rich and complex data preserved by our snapshot, without resorting to compromises. We can represent all the ingredients (text and annotations), all the recipes (annotation selection and ordering), and all their outcomes (resulting versions), while still keeping each as a separate layer, so that everyone can evaluate our text reconstruction, and even provide his own alternatives.
-
-Of course, this requires a proper model.
+# Textual Model
 
 ## Model Requirements
 
@@ -285,7 +252,7 @@ The general text-based syntax for these operations includes these components, fr
 - swap (`<>`)
 - annotate (`:`)
 
-(4) `"VALUE"`: a **text value** for those operations requiring it. For instance, a replacement operation must provide a text to insert for the replaced range defined by `AT` and `RUN`.
+(4) `"VALUE"`: a **text value** for those operations requiring it. For instance, a replacement operation must provide a text to insert for the replaced range defined by `AT` and `RUN`. Alternatively, move operations (move before, move after, swap) have a second pair of coordinates, `TO` and `TORUN`, which work like `AT` and `RUN`. For instance, `1>]3` is a move-after (`>]`) operation, which moves character 1 after character 3.
 
 (5) `^RANK`: a metadatum representing the **probability rank** for the interpretation connected to this operation. A value=0 means unspecified, values above 0 are e.g. 1=highly probable, 2=probable, 3=less probable, etc., using as many levels as you require.
 
@@ -296,7 +263,7 @@ The general text-based syntax for these operations includes these components, fr
 - the operator separating the name from the value varies according to the set policy of the feature:
   - `=` represents a **multiple** feature, which can occur 0-N times in its set.
   - `:=` represents a **single** feature, which can occur 0-1 times in its set.
-  - `==` represents a feature which is treated as single the first time it is added to the set, and then as multiple. This can be used to replace a set of features with another one. For instance, when adding source-related features, the next operation first removes all the features named "source" from the targeted set, and then adds all the new ones.
+  - `==` represents a **first-single** feature, which is treated as single the first time it is added to the set, and then as multiple. This can be used to replace a set of features with another one. For instance, when adding source-related features, the next operation first removes all the features named "source" from the targeted set, and then adds all the new ones.
 - **global feature** names must start with an asterisk (e.g. `*version`). A global feature is a feature attached to the chain data context as a whole, rather than to specific nodes in it. Specific nodes are determined by the operation type: for instance, a deletion targets the node being deleted, while an insertion targets the nodes being inserted.
 - a feature name prefixed by `!` means that all the features with that name must be **removed**. In this case you just specify the feature name after this prefix.
 - a feature name ending with `^` means that that feature will be short-lived, i.e. once added, it will be removed the next time features get updated (i.e. at the next operation). This is useful for instance when adding the `*version^` feature, which should tag a single output as representative of a named text version.
@@ -310,14 +277,14 @@ Let us see an example. If you recall our sample `ARZDC` snapshot, we could provi
 
 - 👉 `v0`: `ARZDC`
 
-(1) `3- [*log=\"delete Z\" reason="don't like Z"]`: this is a delete operation targeting node with ID 3, i.e. the third character of our base text (`Z`). Notice that for this demo we have added a couple of mock features: a `log` unique feature which has a diagnostic purpose, representing the operation being executed in a human-friendly form; and a `reason` feature, which might represent the reason for that operation. The input of this operation is the base text (`v0`), and the output is a new version, which will automatically be tagged as `v1` (=the numeric suffix is just increased).
+(1) `3- [*log=\"delete Z\" reason="don't like Z"]`: this is a delete operation targeting node with ID 3, i.e. the third character of our base text (`Z`). Notice that for this demo we have added a couple of mock features: a `log` single feature which has a diagnostic purpose, representing the operation being executed in a human-friendly form; and a `reason` feature, which might represent the reason for that operation. The input of this operation is the base text (`v0`), and the output is a new version, which will automatically be tagged as `v1` (=the numeric suffix is just increased).
 
 - 👉 `v1`: `ARDC`
 - 📚 features:
   - context: log=delete Z
   - node #3: reason=don't like Z
 
-(2) `2=V [*log=\"replace R with V\" *version^:=alpha]`: this is a replace operation targeting node with ID 2, i.e. the second character of the base text (`V`), being replaced by `V`. Besides the `log` feature, here we add a `version` unique feature, which means that we want to pick the outcome of the operation as a text version proper, named `alpha`. This feature can thus be used to define which of the versions generated by each operation should be promoted to what we envisage as a version of the text, rather than just a reconstructed stage in the process of its evolution. Also note that here we are going to use the version output by the previous operation as the input of this one, which is the default; that's why we do not require to explicitly define neither the input nor the output version tags for it.
+(2) `2=V [*log=\"replace R with V\" *version^:=alpha]`: this is a replace operation targeting node with ID 2, i.e. the second character of the base text (`V`), being replaced by `V`. Besides the `log` feature, here we add a `version` single feature, which means that we want to pick the outcome of the operation as a text version proper, named `alpha`. This feature can thus be used to define which of the versions generated by each operation should be promoted to what we envisage as a version of the text, rather than just a reconstructed stage in the process of its evolution. Also note that here we are going to use the version output by the previous operation as the input of this one, which is the default; that's why we do not require to explicitly define neither the input nor the output version tags for it.
 
 - 👉 `v2`: `AVDC`
 - 📚 features:
@@ -387,7 +354,3 @@ So in the end, these operations represent 7 variants of our text:
 Additionally, each version has its set of features, as derived by accumulating them from the various operations which generated it.
 
 >🛠️ Technical note: each chain operation derives from `ChainOperation<T>`, which in turn is derived from `VarOperationMetadata`. All operations get translated into calls to lower-level chain editing methods. The chain operations take care of finding the nodes corresponding to their location arguments. All the operations work on a chain operations **context** (`ChainOperationContext<T>`), which includes the chain itself and a set of related data, like last version tag, context features (for global features), node features, and all the details about each step in processing the text.
-
-### Visuals
-
-TODO
