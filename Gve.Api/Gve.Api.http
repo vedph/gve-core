@@ -4,11 +4,10 @@ GET {{Gve.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
-POST {{Gve.Api_HostAddress}}/text/operations/
+POST {{Gve.Api_HostAddress}}/text/operations/parse
 Accept: application/json
 Content-Type: application/json
 
 {
-  "text": "ARZDC",
-  "operationsText": "- 2=\"\" [x=2 y=2]\n  - 1=\"V\" [x]\n    - 1=\"B\" [x]\n  - 1=\"P\" [y]\n- 3=\"\" [x=1 y=1] {reason=\"don't like Z\"}\n- 5>4 [x=3 y=3]\n"
+  "text": "3- [*log=\"delete Z\" reason=\"don't like Z\"]\n2=V [*log=\"replace R with V\" *version^:=alpha]\n6=B [*log=\"replace V with B\"]\n(v1:) 2=P [*log=\"replace R with P\" *version^:=beta]\n4<>5\n(v3:) 4<>5 [*version^:=gamma]"
 }

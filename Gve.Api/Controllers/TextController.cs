@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gve.Api.Controllers;
 
+[ApiController]
 public class TextController : Controller
 {
     /// <summary>
