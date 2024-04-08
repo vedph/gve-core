@@ -103,6 +103,15 @@ public class CharChainOperationModel
     /// Initializes a new instance of the <see cref="CharChainOperationModel"/>
     /// class.
     /// </summary>
+    public CharChainOperationModel()
+    {
+        Id = "";
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CharChainOperationModel"/>
+    /// class.
+    /// </summary>
     /// <param name="operation">The operation.</param>
     /// <exception cref="ArgumentNullException"></exception>
     public CharChainOperationModel(CharChainOperation operation)

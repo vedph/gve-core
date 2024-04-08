@@ -3,11 +3,199 @@
 GET {{Gve.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+### Parse Operations
 POST {{Gve.Api_HostAddress}}/text/operations/parse
 Accept: application/json
 Content-Type: application/json
 
 {
   "text": "3- [*log=\"delete Z\" reason=\"don't like Z\"]\n2=V [*log=\"replace R with V\" *version^:=alpha]\n6=B [*log=\"replace V with B\"]\n(v1:) 2=P [*log=\"replace R with P\" *version^:=beta]\n4<>5\n(v3:) 4<>5 [*version^:=gamma]"
+}
+
+### Run Operations
+POST {{Gve.Api_HostAddress}}/text/operations/run
+Accept: application/json
+Content-Type: application/json
+
+{
+  "text": "ARZDC",
+  "operations": [
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": false,
+          "name": "log",
+          "value": "delete Z",
+          "setPolicy": 0
+        },
+        {
+          "isNegated": false,
+          "isGlobal": false,
+          "isShortLived": false,
+          "name": "reason",
+          "value": "don't like Z",
+          "setPolicy": 0
+        }
+      ],
+      "sources": [],
+      "diplomatic": null,
+      "id": "109ed877ec",
+      "type": 1,
+      "inputTag": null,
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 3,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 0,
+      "toRun": 0,
+      "value": null
+    },
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": false,
+          "name": "log",
+          "value": "replace R with V",
+          "setPolicy": 0
+        },
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": true,
+          "name": "version",
+          "value": "alpha",
+          "setPolicy": 1
+        }
+      ],
+      "sources": [],
+      "diplomatic": null,
+      "id": "67cbb33648",
+      "type": 0,
+      "inputTag": null,
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 2,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 0,
+      "toRun": 0,
+      "value": "V"
+    },
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": false,
+          "name": "log",
+          "value": "replace V with B",
+          "setPolicy": 0
+        }
+      ],
+      "sources": [],
+      "diplomatic": null,
+      "id": "c67d20027d",
+      "type": 0,
+      "inputTag": null,
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 6,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 0,
+      "toRun": 0,
+      "value": "B"
+    },
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": false,
+          "name": "log",
+          "value": "replace R with P",
+          "setPolicy": 0
+        },
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": true,
+          "name": "version",
+          "value": "beta",
+          "setPolicy": 1
+        }
+      ],
+      "sources": [],
+      "diplomatic": null,
+      "id": "c4e716dd40",
+      "type": 0,
+      "inputTag": "v1",
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 2,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 0,
+      "toRun": 0,
+      "value": "P"
+    },
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [],
+      "sources": [],
+      "diplomatic": null,
+      "id": "781f61d71b",
+      "type": 6,
+      "inputTag": null,
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 4,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 5,
+      "toRun": 1,
+      "value": null
+    },
+    {
+      "rank": 0,
+      "groupId": null,
+      "features": [
+        {
+          "isNegated": false,
+          "isGlobal": true,
+          "isShortLived": true,
+          "name": "version",
+          "value": "gamma",
+          "setPolicy": 1
+        }
+      ],
+      "sources": [],
+      "diplomatic": null,
+      "id": "9fc1a345a7",
+      "type": 6,
+      "inputTag": "v3",
+      "outputTag": null,
+      "atAsIndex": false,
+      "at": 4,
+      "run": 1,
+      "toAsIndex": false,
+      "to": 5,
+      "toRun": 1,
+      "value": null
+    }
+  ]
 }

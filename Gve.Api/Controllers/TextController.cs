@@ -1,4 +1,5 @@
 ﻿using Gve.Api.Models;
+using Gve.Api.Services;
 using Gve.Text;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,57 @@ public class TextController : Controller
         {
             return new ResultWrapperModel<IList<CharChainOperationModel>>(
                 null, e.Message);
+        }
+    }
+
+    private static List<ChainNode<char>> GetNodesFrom(string text)
+    {
+        return text.Select((c, _) =>
+            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
+            .ToList();
+    }
+
+    private static string GetVersionString(IList<ChainNode<char>> nodes) =>
+        new(nodes.Select(n => n.Data).ToArray());
+
+    /// <summary>
+    /// Runs operations on the specified text.
+    /// </summary>
+    /// <param name="model">The model with text and operations.</param>
+    /// <returns>Object with either <c>result</c> or <c>error</c>
+    /// (an error message).</returns>
+    [HttpPost("text/operations/run")]
+    [Produces("application/json")]
+    public ResultWrapperModel<CharChainResultModel>
+        RunOperations([FromBody] TextOperationBindingModel model)
+    {
+        try
+        {
+            List<CharChainOperation> operations = model.Operations.Select(
+                CharChainOperationMapper.Map).ToList();
+
+            ChainOperationContext<char> context = new();
+            context.Chain.AppendRange("", "v0", GetNodesFrom(model.Text));
+            context.LastTag = "v0";
+
+            foreach (CharChainOperation op in operations) op.Execute(context);
+
+            CharChainResultModel result = new()
+            {
+                Steps = context.Steps,
+                ChainDump = context.Chain.Dump(),
+                ChainTags = context.Chain.GetDistinctTags(),
+            };
+
+            result.TaggedTexts = result.ChainTags.Select((t, i) =>
+                new Tuple<string, string>(t,
+                GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
+
+            return new ResultWrapperModel<CharChainResultModel>(result);
+        }
+        catch (Exception e)
+        {
+            return new ResultWrapperModel<CharChainResultModel>(null, e.Message);
         }
     }
 }
