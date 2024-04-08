@@ -6,26 +6,34 @@ namespace Gve.Api.Controllers;
 
 public class TextController : Controller
 {
-    //[HttpPost("text/operations")]
-    //[Produces("application/json")]
-    //public VarOperationsResponse RunOperationsText([FromBody]
-    //    VarOperationsBindingModel model)
-    //{
-    //    try
-    //    {
-    //        RamLogger logger = new();
-    //        VarGenerator generator = new(logger) { IsTrackingEnabled = true };
-    //        generator.SetEntries(model.OperationsText);
-    //        VarOperationsResponse response = new(generator.Generate(model.Text))
-    //        {
-    //            //Steps = generator.GetSteps(null),
-    //            LogEntries = logger.GetEntries(),
-    //        };
-    //        return response;
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        return new VarOperationsResponse(e.Message);
-    //    }
-    //}
+    /// <summary>
+    /// Parses the operations in the specified text.
+    /// </summary>
+    /// <param name="model">The parsable text model.</param>
+    /// <returns>Object with either <c>result</c> (a list of operations) or
+    /// <c>error</c> (an error message).</returns>
+    [HttpPost("text/operations/parse")]
+    [Produces("application/json")]
+    public ResultWrapperModel<IList<CharChainOperationModel>>
+        ParseOperations([FromBody] ParsableTextBindingModel model)
+    {
+        try
+        {
+            List<CharChainOperationModel> operations = [];
+            foreach (string line in model.Text.Split('\n',
+                StringSplitOptions.RemoveEmptyEntries))
+            {
+                CharChainOperation op = CharChainOperation
+                    .Parse<CharChainOperation>(line);
+                operations.Add(new CharChainOperationModel(op));
+            }
+            return new ResultWrapperModel<IList<CharChainOperationModel>>(
+                operations);
+        }
+        catch (Exception e)
+        {
+            return new ResultWrapperModel<IList<CharChainOperationModel>>(
+                null, e.Message);
+        }
+    }
 }

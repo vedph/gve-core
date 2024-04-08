@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Gve.Text.Test;
 
-public sealed class OperationFeatureTest
+public sealed class VarFeatureTest
 {
     [Fact]
     public void Constructor_ShouldSetProperties()

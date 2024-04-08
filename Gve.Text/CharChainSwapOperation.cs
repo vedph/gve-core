@@ -9,7 +9,8 @@ namespace Gve.Text;
 /// Swap operation for a chain of characters.
 /// </summary>
 /// <seealso cref="CharChainOperation" />
-public sealed class CharChainSwapOperation : CharChainOperation
+public sealed class CharChainSwapOperation : CharChainOperation,
+    IHasToArgument
 {
     /// <summary>
     /// Gets or sets a value indicating whether <see cref="To"/> refers to

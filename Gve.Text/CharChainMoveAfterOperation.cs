@@ -9,7 +9,8 @@ namespace Gve.Text;
 /// Move-after operation for a chain of characters.
 /// </summary>
 /// <seealso cref="CharChainOperation" />
-public sealed class CharChainMoveAfterOperation : CharChainOperation
+public sealed class CharChainMoveAfterOperation : CharChainOperation,
+    IHasToArgument
 {
     /// <summary>
     /// Gets or sets a value indicating whether <see cref="To"/> refers to
