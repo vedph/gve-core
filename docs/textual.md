@@ -241,16 +241,20 @@ The general text-based syntax for these operations includes these components, fr
 
 >**Node ID**s are numbers starting from 1, automatically assigned to each node from first to last, in the order they get added to the chain. So, if you start with nodes `ARZDC`, you can predict that `A`'s ID will be 1, `R`'s will be 2, etc. Once a node gets an ID, it never changes; so, node IDs are immutable, just like nodes themselves. **Node indexes** instead refer to the 0-based index of a node in the context of a specific version; so, in `v0`=`ARZDC` character `D` has index=3 (and ID=4); but in `v1`=`ARDC` (deletion of `Z`) the same character has index=2 (while still retaining its ID=4). You are free to choose which system to use, but in most cases you will stick to IDs. Indexes can be useful for nodes which get added in complex nestings of operations, when ID prediction could be less handy.
 
-(3) `OPERATOR` (required): the **operator** defines the operation's type.
+(3) `OPERATOR` (required): the **operator** defines the operation's type. According to the operator, the other relevant parameters are listed in this table:
 
-- replace (`=`)
-- delete (`-`)
-- add before (`+[`)
-- add after (`+]`)
-- move before (`>[`)
-- move after (`>]`)
-- swap (`<>`)
-- annotate (`:`)
+type        | operator | at | run | to | to-run | value
+------------|----------|----|-----|----|--------|------
+replace     | `=`      | Y  | Y   | -  | -      | Y
+delete      | `-`      | Y  | Y   | -  | -      | -
+add before  | `+[`     | Y  | Y   | -  | -      | Y
+add after   | `+]`     | Y  | Y   | -  | -      | Y
+move before | `>[`     | Y  | Y   | Y  | -      | -
+move after  | `>[`     | Y  | Y   | Y  | -      | -
+swap        | `<>`     | Y  | Y   | Y  | Y      | -
+annotate    | `:`      | Y  | Y   | -  | -      | -
+
+>Run by default is always 1 except in add where it is 0.
 
 (4) `"VALUE"`: a **text value** for those operations requiring it. For instance, a replacement operation must provide a text to insert for the replaced range defined by `AT` and `RUN`. Alternatively, move operations (move before, move after, swap) have a second pair of coordinates, `TO` and `TORUN`, which work like `AT` and `RUN`. For instance, `1>]3` is a move-after (`>]`) operation, which moves character 1 after character 3.
 
