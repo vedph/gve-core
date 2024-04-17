@@ -5,7 +5,7 @@
 🐋 Quick Docker image build (demo app):
 
 ```bash
-docker build . -t vedph2020/gve-demo:0.0.2 -t vedph2020/gve-demo:latest
+docker build . -t vedph2020/gve-demo:1.0.0 -t vedph2020/gve-demo:latest
 ```
 
 (replace with the current version).

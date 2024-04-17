@@ -3,7 +3,7 @@ version: '3.7'
 services:
   # GVE demo
   gve-demo:
-    image: vedph2020/gve-demo:0.0.1
+    image: vedph2020/gve-demo:1.0.0
     container_name: gve-demo
     ports:
       - 5094:8080
