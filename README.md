@@ -16,7 +16,11 @@ To run the demo in Docker at <localhost:8080>, use this command:
 docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 ```
 
-TODO: consider using [Radzen](https://blazor.radzen.com/) in demo.
+To build API image:
+
+```bash
+docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest
+```
 
 ## History
 
