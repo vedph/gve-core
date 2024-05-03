@@ -294,4 +294,50 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("abC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v2")));
     }
+
+    [Fact]
+    public void Execute_RealWorld()
+    {
+        // v0
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0",
+            //                       123456789-123456789-123456789-12345678
+            TestHelper.GetNodesFrom("g'rade Mitte gest"));
+
+        // v1
+        CharChainReplaceOperation op1 = new()
+        {
+            At = 6,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "' in die",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced e with ' in die\""),
+            ]
+        };
+        op1.Execute(context);
+        Assert.Equal("g'rad' in die Mitte gest",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v1")));
+
+        // v2
+        CharChainReplaceOperation op2 = new()
+        {
+            At = 0,
+            AtAsIndex = true,
+            Run = 24,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "grad gegen über gestellt",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced g'rad' in die Mitte gest " +
+                "with grad gegen über gestellt\""),
+            ]
+        };
+        op2.Execute(context);
+        Assert.Equal("grad gegen über gestellt",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v2")));
+    }
 }

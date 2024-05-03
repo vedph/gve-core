@@ -539,6 +539,8 @@ public class Chain<T>
     private List<ChainLink<T>> GetLinksBetween(string tag, ChainNode<T> start,
         ChainNode<T> end)
     {
+        if (start == end) return [];
+
         List<ChainLink<T>> links = [];
         ChainNode<T>? n = start;
         while (n != null)
