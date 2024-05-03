@@ -9,8 +9,8 @@
 <RadzenCard>
     <!-- input -->
     <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="w-100" />
-    <RadzenTextArea @bind-Value="@OperationText" Placeholder="text"
-                    class="w-100" Rows="8" />
+    <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
+                    class="w-100 font-monospace" Rows="8" />
     <RadzenButton Text="Parse" Click="ParseOperationText"
                   ButtonStyle="ButtonStyle.Primary" />
 
