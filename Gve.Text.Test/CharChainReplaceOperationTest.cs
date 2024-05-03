@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -138,7 +137,7 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
-    public void Execute_ReplaceRange()
+    public void Execute_ReplaceRange_Shorter()
     {
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
@@ -179,5 +178,55 @@ public sealed class CharChainReplaceOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+    }
+
+    [Fact]
+    public void Execute_ReplaceRange_Longer()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 2,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "XY",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced B with XY\""),
+                new VarFeature("reason", "like XY more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AXYC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("replaced B with XY", context.Features[0].Value);
+
+        // node features
+        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("like XY more", nodeFeatures[0].Value);
+
+        nodeFeatures = context.NodeFeatures["v1_5"];
+        Assert.NotEmpty(nodeFeatures);
+        Assert.Equal("reason", nodeFeatures[0].Name);
+        Assert.Equal("like XY more", nodeFeatures[0].Value);
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
