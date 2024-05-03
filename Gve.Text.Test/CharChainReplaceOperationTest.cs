@@ -302,12 +302,12 @@ public sealed class CharChainReplaceOperationTest
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0",
             //                       123456789-123456789-123456789-12345678
-            TestHelper.GetNodesFrom("g'rade Mitte gest"));
+            TestHelper.GetNodesFrom("Seyd Vernünftige mir g'rade Mitte gest"));
 
         // v1
         CharChainReplaceOperation op1 = new()
         {
-            At = 6,
+            At = 27,
             Run = 1,
             InputTag = "v0",
             OutputTag = "v1",
@@ -318,13 +318,14 @@ public sealed class CharChainReplaceOperationTest
             ]
         };
         op1.Execute(context);
-        Assert.Equal("g'rad' in die Mitte gest",
+        //            0123456789-123456789-123456789-123456789-1234
+        Assert.Equal("Seyd Vernünftige mir g'rad' in die Mitte gest",
             TestHelper.GetVersionString(context.Chain.GetTagNodes("v1")));
 
         // v2
         CharChainReplaceOperation op2 = new()
         {
-            At = 0,
+            At = 21,
             AtAsIndex = true,
             Run = 24,
             InputTag = "v1",
@@ -337,7 +338,7 @@ public sealed class CharChainReplaceOperationTest
             ]
         };
         op2.Execute(context);
-        Assert.Equal("grad gegen über gestellt",
+        Assert.Equal("Seyd Vernünftige mir grad gegen über gestellt",
             TestHelper.GetVersionString(context.Chain.GetTagNodes("v2")));
     }
 }
