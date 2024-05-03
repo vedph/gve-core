@@ -231,7 +231,33 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
-    public void Execute_Index_Linear()
+    public void Execute_Index_Linear_Equal()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 1,
+            AtAsIndex = true,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced B with X\""),
+                new VarFeature("reason", "like X more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AXC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Execute_Index_Linear_Shorter()
     {
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
@@ -242,22 +268,48 @@ public sealed class CharChainReplaceOperationTest
             Run = 2,
             InputTag = "v0",
             OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced BC with X\""),
+                new VarFeature("reason", "like X more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AX", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Execute_Index_Linear_Longer()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 1,
+            AtAsIndex = true,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
             Value = "XY",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced BC with XY\""),
+                VarFeature.Parse("*log:=\"replaced B with XY\""),
                 new VarFeature("reason", "like XY more")
             ]
         };
 
         op.Execute(context);
 
-        Assert.Equal("AXY", TestHelper.GetVersionString(
+        Assert.Equal("AXYC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v1")));
     }
 
     [Fact]
-    public void Execute_Index_NonLinear()
+    public void Execute_Index_NonLinear_Equal()
     {
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
@@ -284,14 +336,92 @@ public sealed class CharChainReplaceOperationTest
             Run = 2,
             InputTag = "v1",
             OutputTag = "v2",
-            Value = "ab",
+            Value = "ax",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced AX with ab\""),
+                VarFeature.Parse("*log:=\"replaced AX with ax\""),
             ]
         };
         op2.Execute(context);
-        Assert.Equal("abC", TestHelper.GetVersionString(
+        Assert.Equal("axC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void Execute_Index_NonLinear_Shorter()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op1 = new()
+        {
+            At = 2,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced B with X\""),
+            ]
+        };
+        op1.Execute(context);
+        Assert.Equal("AXC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        CharChainReplaceOperation op2 = new()
+        {
+            At = 0,
+            AtAsIndex = true,
+            Run = 2,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "x",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced AX with x\""),
+            ]
+        };
+        op2.Execute(context);
+        Assert.Equal("xC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void Execute_Index_NonLinear_Longer()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op1 = new()
+        {
+            At = 2,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced B with X\""),
+            ]
+        };
+        op1.Execute(context);
+        Assert.Equal("AXC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        CharChainReplaceOperation op2 = new()
+        {
+            At = 1,
+            AtAsIndex = true,
+            Run = 2,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "xy",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced X with xy\""),
+            ]
+        };
+        op2.Execute(context);
+        Assert.Equal("Axy", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v2")));
     }
 
