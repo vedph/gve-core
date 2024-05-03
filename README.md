@@ -29,6 +29,14 @@ Seyd Vernünftige mir g'rade Mitte gest
 
 27x1="' in die" [*log:="replaced e with ' in die"]
 @21x24="grad gegen über gestellt" [*log:="replaced g'rad' in die Mitte gest with grad gegen über gestellt" loc=below *version^:=beta]
+
+or better, keeping into account also the requirements of diplomatic annotations:
+
+27x1="'" [*log:="replace e with '"]
+28+[" in die" [*log:="insert in die before Mitte'" loc=above]
+23- [*log:="delete ' in g'rad'"]
+@25x8- [*log:="delete in die"]
+29x10="gegen über gestellt" [*log:="replace Mitte gest with gegen über gestellt" loc=below]
 ```
 
 ## History
