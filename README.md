@@ -41,6 +41,10 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-05-03: more controls in demo.
+
+### 1.0.1
+
 - 2024-05-03:
   - fixes to operations.
   - added chars view to demo.
