@@ -22,6 +22,15 @@ To build API image:
 docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest
 ```
 
+Real world example for demo:
+
+```txt
+Seyd Vernünftige mir g'rade Mitte gest
+
+27x1="' in die" [*log:="replaced e with ' in die"]
+@21x24="grad gegen über gestellt" [*log:="replaced g'rad' in die Mitte gest with grad gegen über gestellt" loc=below *version^:=beta]
+```
+
 ## History
 
 - 2024-05-03:
