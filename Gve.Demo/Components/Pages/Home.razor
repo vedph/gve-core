@@ -10,7 +10,7 @@
     <!-- input -->
     <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="w-100" />
     <div style="margin:8px 0">
-        <StringView Value="@Text" />
+        <StringView Chars="@TextChars" />
     </div>
 
     <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
@@ -18,6 +18,10 @@
     <RadzenButton Text="Parse" Click="ParseOperationText"
                   ButtonStyle="ButtonStyle.Primary" />
 
+     @if (ChainTags.Count > 0)
+     {
+         <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags"/>
+     }
 
     <!-- parsed operations -->
     <RadzenPanel AllowCollapse="true">

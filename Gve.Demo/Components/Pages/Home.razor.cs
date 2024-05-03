@@ -1,4 +1,5 @@
 ﻿using Gve.Text;
+using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using System.Diagnostics;
@@ -7,7 +8,19 @@ namespace Gve.Demo.Components.Pages;
 
 public partial class Home
 {
-    public string Text { get; set; } = "ARZDC";
+    private string _text = "ARZDC";
+    private string? _selectedChainTag;
+
+    public string Text
+    {
+        get => _text;
+        set
+        {
+            _text = value;
+            OnTextChanged(value);
+        }
+    }
+
     public string OperationText { get; set; }
     public IList<CharChainOperation> Operations { get; } = [];
     public IList<Tuple<string, string>> TaggedTexts { get; set; } = [];
@@ -20,7 +33,17 @@ public partial class Home
     public Chain<char>? Chain { get; set; }
     public string? ChainDump { get; set; }
     public IList<string> ChainTags { get; set; } = [];
+    public string? SelectedChainTag
+    {
+        get => _selectedChainTag;
+        set
+        {
+            _selectedChainTag = value;
+            OnSelectedChainTagChanged(value);
+        }
+    }
     public IList<string> SelectedChainTags { get; set; } = [];
+    public IList<CharModel> TextChars { get; set; } = [];
 
     public Home()
     {
@@ -37,6 +60,38 @@ public partial class Home
             "4<>5\n" +
             // v6 = ABCD (gamma)
             "(v3:) 4<>5 [*version^:=gamma]";
+        OnTextChanged(_text);
+    }
+
+    private void OnTextChanged(string value)
+    {
+        List<CharModel> chars = [];
+
+        for (int i = 0; i < value.Length; i++)
+        {
+            chars.Add(new CharModel
+            {
+                Id = i + 1,
+                Index = i,
+                Label = value[i] == ' ' ? "_" : value[i].ToString(),
+                Value = value[i],
+            });
+        }
+        TextChars = chars;
+    }
+
+    private void OnSelectedChainTagChanged(string? value)
+    {
+        if (Chain == null || string.IsNullOrEmpty(value)) return;
+
+        TextChars = Chain.GetTagNodes(value).Select((n, i) =>
+            new CharModel
+            {
+                Id = n.Id,
+                Index = i,
+                Label = n.Data == ' ' ? "_" : n.Data.ToString(),
+                Value = n.Data,
+            }).ToList();
     }
 
     public void ParseOperationText()
@@ -93,8 +148,8 @@ public partial class Home
                 op.Execute(context);
             }
 
-            IList<string> tags = context.Chain.GetDistinctTags();
-            TaggedTexts = tags.Select((t, i) => new Tuple<string, string>(
+            ChainTags = context.Chain.GetDistinctTags();
+            TaggedTexts = ChainTags.Select((t, i) => new Tuple<string, string>(
                 t, GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
 
             Steps.Clear();
@@ -113,10 +168,14 @@ public partial class Home
                 ChainStats.Add(linkCount);
             }
 
-            ChainTags = tags;
-            SelectedChainTags = tags.Count > 1? [tags[0], tags[^1]] : tags;
+            SelectedChainTags = ChainTags.Count > 1
+                ? [ChainTags[0], ChainTags[^1]]
+                : ChainTags;
             Chain = context.Chain;
             ChainDump = context.Chain.Dump();
+
+            ChainTags.Insert(0, "");
+            SelectedChainTag = ChainTags[0];
 
             StateHasChanged();
             StepsGrid?.Reload();
