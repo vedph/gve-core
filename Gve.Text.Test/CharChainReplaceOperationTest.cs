@@ -229,4 +229,69 @@ public sealed class CharChainReplaceOperationTest
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
+
+    [Fact]
+    public void Execute_Index_Linear()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 1,
+            AtAsIndex = true,
+            Run = 2,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "XY",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced BC with XY\""),
+                new VarFeature("reason", "like XY more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AXY", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Execute_Index_NonLinear()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op1 = new()
+        {
+            At = 2,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced B with X\""),
+            ]
+        };
+        op1.Execute(context);
+        Assert.Equal("AXC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        CharChainReplaceOperation op2 = new()
+        {
+            At = 0,
+            AtAsIndex = true,
+            Run = 2,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "ab",
+            Features =
+            [
+                VarFeature.Parse("*log:=\"replaced AX with ab\""),
+            ]
+        };
+        op2.Execute(context);
+        Assert.Equal("abC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
 }

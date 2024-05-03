@@ -143,7 +143,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         ArgumentNullException.ThrowIfNull(tag);
 
         if (at == -1) at = At;
-        if (At == 0) return [];
+        if (At == 0 && !AtAsIndex) return [];
         if (run == -1) run = Run;
 
         List<ChainNode<char>> nodes = [];
@@ -163,11 +163,12 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         }
 
         // else find end node by index from run (there must be one)
-        ChainNode<char>? next = null;
-        for (int i = 0; i < run; i++)
+        ChainNode<char>? next = node;
+        for (int i = 1; i < run; i++)
         {
-            next = chain.GetNextNode(tag, node);
-            if (next != null) nodes.Add(next);
+            next = chain.GetNextNode(tag, next);
+            if (next == null) break;
+            nodes.Add(next);
         }
         if (next == null)
         {
