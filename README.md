@@ -5,7 +5,7 @@
 🐋 Quick Docker image build (demo app):
 
 ```bash
-docker build . -t vedph2020/gve-demo:1.0.0 -t vedph2020/gve-demo:latest
+docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest
 ```
 
 (replace with the current version).
@@ -24,6 +24,9 @@ docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api
 
 ## History
 
+- 2024-05-03:
+  - fixes to operations.
+  - added chars view to demo.
 - 2024-04-15: updated packages.
 - 2024-03-25: started refactoring infrastructure for chain, removing legacy operation families.
 - 2024-03-23: replaced demo.
