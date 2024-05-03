@@ -1,0 +1,10 @@
+﻿<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    @foreach (var c in Chars)
+    {
+        <div style="flex: 0 0 auto;border: 1px solid silver;border-radius:6px;padding:8px">
+            <div style="font-size:1.5rem">@c.Label</div>
+            <div style="color:silver;text-align:center">@c.Index</div>
+            <div style="color:royalblue;text-align:center">@c.Id</div>
+        </div>
+    }
+</div>
