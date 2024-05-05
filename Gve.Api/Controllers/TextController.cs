@@ -78,9 +78,14 @@ public class TextController : Controller
                 ChainTags = context.Chain.GetDistinctTags(),
             };
 
-            result.TaggedTexts = result.ChainTags.Select((t, i) =>
-                new Tuple<string, string>(t,
-                GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
+            foreach (string tag in result.ChainTags)
+            {
+                IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(tag);
+                result.TaggedNodes[tag] = nodes.ToArray();
+
+                result.TaggedTexts.Add(new Tuple<string, string>(tag,
+                    GetVersionString(nodes)));
+            }
 
             return new ResultWrapperModel<CharChainResultModel>(result);
         }

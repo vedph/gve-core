@@ -26,4 +26,18 @@ public class CharChainResultModel
     /// Gets or sets the list of output text versions, each keyed under its tag.
     /// </summary>
     public IList<Tuple<string, string>> TaggedTexts { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the set of nodes in their order, for each version tag.
+    /// </summary>
+    public IDictionary<string, ChainNode<char>[]> TaggedNodes { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CharChainResultModel"/>
+    /// class.
+    /// </summary>
+    public CharChainResultModel()
+    {
+        TaggedNodes = new Dictionary<string, ChainNode<char>[]>();
+    }
 }

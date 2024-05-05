@@ -41,6 +41,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-05-05: added nodes to API results.
 - 2024-05-03: more controls in demo.
 
 ### 1.0.1
