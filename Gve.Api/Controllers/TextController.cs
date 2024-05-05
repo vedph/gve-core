@@ -5,8 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gve.Api.Controllers;
 
+/// <summary>
+/// Text controller.
+/// </summary>
+/// <seealso cref="Controller" />
 [ApiController]
-public class TextController : Controller
+public sealed class TextController : Controller
 {
     /// <summary>
     /// Parses the operations in the specified text.
@@ -46,8 +50,8 @@ public class TextController : Controller
             .ToList();
     }
 
-    private static string GetVersionString(IList<ChainNode<char>> nodes) =>
-        new(nodes.Select(n => n.Data).ToArray());
+    private static string GetNodeFeatureKey(string tag, ChainNode<char> node) =>
+        $"{tag}:{node.Id}";
 
     /// <summary>
     /// Runs operations on the specified text.
@@ -81,10 +85,25 @@ public class TextController : Controller
             foreach (string tag in result.ChainTags)
             {
                 IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(tag);
-                result.TaggedNodes[tag] = nodes.ToArray();
+                result.TaggedNodes[tag] = [];
 
-                result.TaggedTexts.Add(new Tuple<string, string>(tag,
-                    GetVersionString(nodes)));
+                foreach (ChainNode<char> node in nodes)
+                {
+                    CharChainNodeModel m = new()
+                    {
+                        Id = node.Id,
+                        Label = node.Label,
+                        Data = node.Data,
+                        SourceTag = node.SourceTag,
+                    };
+                    string key = GetNodeFeatureKey(tag, node);
+                    if (context.NodeFeatures.TryGetValue(key,
+                        out List<VarFeature>? value))
+                    {
+                        m.Features = value.ToArray();
+                    }
+                    result.TaggedNodes[tag].Add(m);
+                }
             }
 
             return new ResultWrapperModel<CharChainResultModel>(result);

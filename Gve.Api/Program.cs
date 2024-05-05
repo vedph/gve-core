@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Gve.Api.Services;
 using Serilog;
 
@@ -48,6 +49,11 @@ public static class Program
     private static void ConfigureServices(IServiceCollection services,
         IConfiguration config)
     {
+        // JSON options: ignore null values (this shortens the output)
+        services.AddControllers().AddJsonOptions(options =>
+            options.JsonSerializerOptions.DefaultIgnoreCondition =
+            JsonIgnoreCondition.WhenWritingNull);
+
         // API controllers
         services.AddControllers();
 
