@@ -16,7 +16,7 @@ This also allows our model to lay the foundation of a paradigmatic approach, lea
 
 Our model core is represented by a general purpose data structure we call 🔖 **chain**. The task of this data structure is _representing multiple linear combinations of a set of entities_. We represent these entities as **nodes** of a **graph**, connecting them into linear sequences.
 
-In our specific case, our entities are characters, and their linear combinations build a sequence representing a text. So, a chain has the power of representing multiple texts (i.e. multiple versions of what we regard as the "same" text in the course of its composition) at the same time; and this is right what a snapshot on a sheet does.
+In our specific case, our entities are characters, and their linear combinations build a sequence representing a text. So, a chain has the power of representing multiple texts (i.e. multiple versions of what we regard as the "same" text in the course of its composition) at the same time; and this is right what a snapshot on a carrier does.
 
 In technical terms, we could describe this structure as a _tagged multigraph linked list_:
 
@@ -26,7 +26,7 @@ In technical terms, we could describe this structure as a _tagged multigraph lin
 
 ### Operations
 
-Let us see how this works by using a simplified diagram. Consider this sheet, which I created by first writing characters `ARZDC`, and then making some annotations on it, representing variations of the text.
+Let us see how this works by using a simplified diagram. Consider this carrier, which I created by first writing characters `ARZDC`, and then making some annotations on it, representing variations of the text.
 
 A text being a linear sequence of characters, we don't care creating a true text in a specific language here; we just deal with such sequences, so that our examples are shorter and more to the point.
 
@@ -233,7 +233,7 @@ All the operations thus share a common set of metadata, represented by:
   - _rank_: the probability rank attributed to the identification of this source.
   - _note_: an optional free text note.
 
-- **diplomatic** metadata: these metadata are specialized to represent the _visual_ aspects of an operation on the snaspshot sheet (see [below](#visuals)).
+- **diplomatic** metadata: these metadata are specialized to represent the _visual_ aspects of an operation on the snaspshot's carrier (see the [diplomatic portion of the model](diplomatic.md)).
 
 ### Syntax
 
