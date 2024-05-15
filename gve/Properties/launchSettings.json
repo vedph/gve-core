@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "gve": {
+      "commandName": "Project",
+      "commandLineArgs": "diff c:\\users\\dfusi\\desktop\\a.txt c:\\users\\dfusi\\desktop\\b.txt"
+    }
+  }
+}
