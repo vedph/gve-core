@@ -87,11 +87,13 @@ public sealed class TextController : Controller
                 IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(tag);
                 result.TaggedNodes[tag] = [];
 
+                int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
                     CharChainNodeModel m = new()
                     {
                         Id = node.Id,
+                        Index = i++,
                         Label = node.Label,
                         Data = node.Data,
                         SourceTag = node.SourceTag,

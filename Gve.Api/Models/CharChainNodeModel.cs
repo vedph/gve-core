@@ -13,6 +13,11 @@ public class CharChainNodeModel
     public int Id { get; set; }
 
     /// <summary>
+    /// Gets or sets the node's index in the base text.
+    /// </summary>
+    public int Index { get; set; }
+
+    /// <summary>
     /// The node label.
     /// </summary>
     public string Label { get; set; } = "";
