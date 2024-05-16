@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Gve.Text;
@@ -30,8 +31,8 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // add features to context
-        UpdateContext(context, inputTag, outputTag,
-            GetTargetNodes(context.Chain, inputTag));
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
+        UpdateContext(context, inputTag, outputTag, nodes, nodes);
     }
 
     /// <summary>

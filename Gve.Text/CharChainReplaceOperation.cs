@@ -31,7 +31,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // get target nodes
-        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         // apply to single node or range
         if (nodes.Count > 1)
@@ -61,7 +61,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag,
+        UpdateContext(context, inputTag, outputTag, nodes,
             context.Chain.GetTagNodes(outputTag, true));
     }
 

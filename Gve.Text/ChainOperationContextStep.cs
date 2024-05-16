@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Gve.Text;
 
@@ -33,6 +34,11 @@ public class ChainOperationContextStep
     public ChainOperationContextFeats FeatureSet { get; set; }
 
     /// <summary>
+    /// Gets or sets the reference node IDs.
+    /// </summary>
+    public IList<int> RefNodeIds { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainOperationContextStep"/>
     /// class.
     /// </summary>
@@ -40,14 +46,17 @@ public class ChainOperationContextStep
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
     /// <param name="features">The features.</param>
+    /// <param name="refNodeIds">The reference node IDs.</param>
     /// <exception cref="ArgumentNullException">operation or tags</exception>
     public ChainOperationContextStep(VarOperationMetadata operation,
-        string inputTag, string outputTag, ChainOperationContextFeats features)
+        string inputTag, string outputTag, ChainOperationContextFeats features,
+        IList<int> refNodeIds)
     {
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
         InputTag = inputTag ?? throw new ArgumentNullException(nameof(inputTag));
         OutputTag = outputTag ?? throw new ArgumentNullException(nameof(outputTag));
         FeatureSet = features ?? throw new ArgumentNullException(nameof(features));
+        RefNodeIds = refNodeIds ?? throw new ArgumentNullException(nameof(refNodeIds));
     }
 
     /// <summary>

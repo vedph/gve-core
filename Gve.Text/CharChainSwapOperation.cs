@@ -51,10 +51,10 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         (string inputTag, string outputTag) = GetTags(context);
 
         // get target nodes
-        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         // get to target nodes
-        IList<ChainNode<char>> toNodes = GetTargetNodes(context.Chain, outputTag,
+        IList<ChainNode<char>> toNodes = GetReferenceNodes(context.Chain, outputTag,
             To, ToRun);
 
         context.Chain.SwapRanges(inputTag, outputTag,
@@ -63,10 +63,10 @@ public sealed class CharChainSwapOperation : CharChainOperation,
 
         // update context metadata
         List<ChainNode<char>> targetNodes = [];
-        targetNodes.AddRange(GetTargetNodes(context.Chain, inputTag));
-        targetNodes.AddRange(GetTargetNodes(context.Chain, inputTag, To, ToRun));
+        targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag));
+        targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag, To, ToRun));
 
-        UpdateContext(context, inputTag, outputTag, targetNodes);
+        UpdateContext(context, inputTag, outputTag, nodes, targetNodes);
     }
 
     /// <summary>

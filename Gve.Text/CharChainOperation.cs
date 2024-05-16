@@ -122,8 +122,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     }
 
     /// <summary>
-    /// Gets the nodes representing targeted by this operation in relation
-    /// with the specified <paramref name="chain"/> and <paramref name="tag"/>.
+    /// Gets the nodes referenced by this operation in relation with the
+    /// specified <paramref name="chain"/> and <paramref name="tag"/>.
     /// </summary>
     /// <param name="chain">The target chain.</param>
     /// <param name="tag">The version tag.</param>
@@ -132,11 +132,10 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="run">The optional run of characters to include from
     /// <paramref name="at"/>. If -1, the value of <see cref="Run"/> will be
     /// used.</param>
-    /// <returns>Node and optional end node when this operation works on a range.
-    /// </returns>
+    /// <returns>Target node(s).</returns>
     /// <exception cref="ArgumentNullException">chain or tag</exception>
     /// <exception cref="InvalidOperationException">Node not found</exception>
-    protected IList<ChainNode<char>> GetTargetNodes(
+    protected IList<ChainNode<char>> GetReferenceNodes(
         Chain<char> chain, string tag, int at = -1, int run = -1)
     {
         ArgumentNullException.ThrowIfNull(chain);
@@ -379,7 +378,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
 
         // update the context's and/or nodes features
         context.UpdateFeatures(sources, tag,
-            targetNodes ?? GetTargetNodes(context.Chain, tag));
+            targetNodes ?? GetReferenceNodes(context.Chain, tag));
     }
 
     /// <summary>
@@ -417,15 +416,18 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="context">The context.</param>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
+    /// <param name="refNodes">The nodes referenced by the operation.</param>
     /// <param name="targetNodes">The nodes which should be the target of
     /// node-scoped features, if any.</param>
     protected void UpdateContext(ChainOperationContext<char> context,
         string inputTag, string outputTag,
+        IList<ChainNode<char>> refNodes,
         IList<ChainNode<char>> targetNodes)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(inputTag);
         ArgumentNullException.ThrowIfNull(outputTag);
+        ArgumentNullException.ThrowIfNull(refNodes);
         ArgumentNullException.ThrowIfNull(targetNodes);
 
         // update the context's last tag
@@ -436,7 +438,8 @@ public abstract partial class CharChainOperation : VarOperationMetadata
 
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(
-            this, inputTag, outputTag, new ChainOperationContextFeats(context))
+            this, inputTag, outputTag, new ChainOperationContextFeats(context),
+            refNodes.Select(n => n.Id).ToList())
         {
             Result = GetVersionString(context, outputTag)
         });

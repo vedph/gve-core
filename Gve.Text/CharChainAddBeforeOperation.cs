@@ -36,7 +36,7 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // get bound node
-        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         if (nodes.Count > 1)
         {
@@ -57,7 +57,7 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
         }
 
         // update context metadata (target nodes are the added nodes)
-        UpdateContext(context, inputTag, outputTag,
+        UpdateContext(context, inputTag, outputTag, nodes,
             context.Chain.GetTagNodes(outputTag, true));
     }
 

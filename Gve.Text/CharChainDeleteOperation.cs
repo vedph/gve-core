@@ -30,7 +30,7 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         (string inputTag, string outputTag) = GetTags(context);
 
         // get target nodes
-        IList<ChainNode<char>> nodes = GetTargetNodes(context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         // apply to single node or range
         if (nodes.Count > 1)
@@ -43,8 +43,8 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag,
-            GetTargetNodes(context.Chain, inputTag));
+        UpdateContext(context, inputTag, outputTag, nodes,
+            GetReferenceNodes(context.Chain, inputTag));
     }
 
     /// <summary>
