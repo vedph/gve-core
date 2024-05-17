@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NanoidDotNet;
+using System.Collections.Generic;
 
 namespace Gve.Text;
 
@@ -35,6 +36,14 @@ public class VarOperationMetadata
     ];
 
     /// <summary>
+    /// Gets or sets the operation identifier. This can be used to reference
+    /// a specific operation in a transformation, and is automatically
+    /// generated using <see cref="Nanoid.Generate(string, int)"/> unless
+    /// you want to assign it some human-friendly name.
+    /// </summary>
+    public string Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the certainty rank for this operation: 0=not specified,
     /// 1=most probable, 2=less probable, etc.
     /// </summary>
@@ -69,9 +78,17 @@ public class VarOperationMetadata
     /// </summary>
     public VarOperationMetadata()
     {
+        Id = GenerateId();
+
         Features = [];
         Sources = [];
     }
+
+    /// <summary>
+    /// Generates a new identifier for an operation.
+    /// </summary>
+    /// <returns>Identifier.</returns>
+    public static string GenerateId() => Nanoid.Generate("1234567890abcdef", 10);
 }
 
 /// <summary>
