@@ -208,14 +208,14 @@ As already noticed, the operations being the first act of interpretation of our 
 
 So, there are 8 **types** of operations (listed with their corresponding operator in their text-based representation):
 
-- replace (`=`)
-- delete (`-`)
-- add before (`+[`)
-- add after (`+]`)
-- move before (`>[`)
-- move after (`>]`)
-- swap (`<>`)
-- annotate (`:`): this is a do-nothing operation which affects only metadata by updating features.
+- replace (`=`): e.g. `1x2=X`.
+- delete (`-`): e.g. `1x2-`.
+- add before (`+[`): e.g. `1x1+[X`.
+- add after (`+]`): e.g. `1x1+]X`.
+- move before (`>[`): e.g. `1x2>[5`.
+- move after (`>]`): e.g. `1x2>]5`.
+- swap (`<>`): e.g. `1x2<>3x3`.
+- annotate (`:`): this is a do-nothing operation which affects only metadata by updating features; e.g. `3x2: [note=sample]`.
 
 Given that each operation affects the chain producing a different version of the text, we might also need to attach specific **metadata** to either that version as a whole, or to the nodes affected by it.
 
@@ -256,7 +256,7 @@ delete      | `-`      | Y  | Y   | -  | -      | -
 add before  | `+[`     | Y  | Y   | -  | -      | Y
 add after   | `+]`     | Y  | Y   | -  | -      | Y
 move before | `>[`     | Y  | Y   | Y  | -      | -
-move after  | `>[`     | Y  | Y   | Y  | -      | -
+move after  | `>]`     | Y  | Y   | Y  | -      | -
 swap        | `<>`     | Y  | Y   | Y  | Y      | -
 annotate    | `:`      | Y  | Y   | -  | -      | -
 
