@@ -22,7 +22,7 @@ public class CharChainOperationModel
     /// <summary>
     /// The features to be attached to the result of this operation.
     /// </summary>
-    public IList<VarFeature>? Features { get; set; }
+    public IList<OperationFeature>? Features { get; set; }
 
     /// <summary>
     /// The sources for this operation. These represent any type

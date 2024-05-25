@@ -100,7 +100,7 @@ public sealed class TextController : Controller
                     };
                     string key = GetNodeFeatureKey(tag, node);
                     if (context.NodeFeatures.TryGetValue(key,
-                        out List<VarFeature>? value))
+                        out List<OperationFeature>? value))
                     {
                         m.Features = value.ToArray();
                     }

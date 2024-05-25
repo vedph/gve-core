@@ -88,11 +88,11 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BAATIAAEAAAAAAAAAAABAAAAQAAQABAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAATIAAEAAAIAAAAAAABAAAAQAAQABAAAAAAAAAAAAA=</HashCode>
       <FileName>OperationMetadata.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Diplomatic" />
+      <Property Name="Diplomatics" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Sources" />

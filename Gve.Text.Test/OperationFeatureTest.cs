@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Gve.Text.Test;
 
-public sealed class VarFeatureTest
+public sealed class OperationFeatureTest
 {
     [Fact]
     public void Constructor_ShouldSetProperties()
     {
-        VarFeature feature = new("name", "value",
+        OperationFeature feature = new("name", "value",
             FeatureSetPolicy.Single);
 
         Assert.Equal("name", feature.Name);
@@ -19,7 +19,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_Name()
     {
-        VarFeature feature = VarFeature.Parse("name");
+        OperationFeature feature = OperationFeature.Parse("name");
 
         Assert.False(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -31,7 +31,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_GlobalName()
     {
-        VarFeature feature = VarFeature.Parse("*name");
+        OperationFeature feature = OperationFeature.Parse("*name");
 
         Assert.False(feature.IsNegated);
         Assert.True(feature.IsGlobal);
@@ -43,7 +43,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NegatedName()
     {
-        VarFeature feature = VarFeature.Parse("!name");
+        OperationFeature feature = OperationFeature.Parse("!name");
 
         Assert.True(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -55,7 +55,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NegatedGlobalName()
     {
-        VarFeature feature = VarFeature.Parse("!*name");
+        OperationFeature feature = OperationFeature.Parse("!*name");
 
         Assert.True(feature.IsNegated);
         Assert.True(feature.IsGlobal);
@@ -67,7 +67,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NameEqValue()
     {
-        VarFeature feature = VarFeature.Parse("name=value");
+        OperationFeature feature = OperationFeature.Parse("name=value");
 
         Assert.False(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -79,7 +79,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NameEqValueWithColon()
     {
-        VarFeature feature = VarFeature.Parse("name:=value");
+        OperationFeature feature = OperationFeature.Parse("name:=value");
 
         Assert.False(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -91,7 +91,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NameEqValueWithEqual()
     {
-        VarFeature feature = VarFeature.Parse("name==value");
+        OperationFeature feature = OperationFeature.Parse("name==value");
 
         Assert.False(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -103,7 +103,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void Parse_NameEqValueWithSpaces()
     {
-        VarFeature feature = VarFeature.Parse("name=\"value with spaces\"");
+        OperationFeature feature = OperationFeature.Parse("name=\"value with spaces\"");
 
         Assert.False(feature.IsNegated);
         Assert.False(feature.IsGlobal);
@@ -115,8 +115,8 @@ public sealed class VarFeatureTest
     [Fact]
     public void TryParse_ShouldReturnTrueAndSetOutParameter_WhenInputIsValid()
     {
-        bool result = VarFeature.TryParse("name=value",
-            out VarFeature? feature);
+        bool result = OperationFeature.TryParse("name=value",
+            out OperationFeature? feature);
 
         Assert.True(result);
         Assert.NotNull(feature);
@@ -127,7 +127,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void TryParse_ShouldReturnFalse_WhenInputIsInvalid()
     {
-        bool result = VarFeature.TryParse("", out VarFeature? feature);
+        bool result = OperationFeature.TryParse("", out OperationFeature? feature);
 
         Assert.False(result);
         Assert.Null(feature);
@@ -136,10 +136,10 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_NotExisting_Added()
     {
-        VarFeature OperationFeature = new("A", "1");
-        List<VarFeature> features = [];
+        OperationFeature OperationFeature = new("A", "1");
+        List<OperationFeature> features = [];
 
-        VarFeature.UpdateFeature(OperationFeature, features, false);
+        OperationFeature.UpdateFeature(OperationFeature, features, false);
 
         Assert.Single(features);
         Assert.Equal("A", features[0].Name);
@@ -149,10 +149,10 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_NotExistingShortLived_Added()
     {
-        VarFeature feature = VarFeature.Parse("A^=1");
-        List<VarFeature> features = [];
+        OperationFeature feature = OperationFeature.Parse("A^=1");
+        List<OperationFeature> features = [];
 
-        VarFeature.UpdateFeature(feature, features, false);
+        OperationFeature.UpdateFeature(feature, features, false);
 
         Assert.Single(features);
         Assert.True(features[0].IsShortLived);
@@ -163,9 +163,9 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_RemoveNotExisting_Unchanged()
     {
-        List<VarFeature> features = [];
+        List<OperationFeature> features = [];
 
-        VarFeature.UpdateFeature(VarFeature.Parse("!A"), features,
+        OperationFeature.UpdateFeature(OperationFeature.Parse("!A"), features,
             false);
 
         Assert.Empty(features);
@@ -174,10 +174,10 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_RemoveExisting_Removed()
     {
-        List<VarFeature> features = [new("A", "1"), new("A", "2")];
+        List<OperationFeature> features = [new("A", "1"), new("A", "2")];
 
-        VarFeature.UpdateFeature(
-            VarFeature.Parse("!A"), features, false);
+        OperationFeature.UpdateFeature(
+            OperationFeature.Parse("!A"), features, false);
 
         Assert.Empty(features);
     }
@@ -185,9 +185,9 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_ExistingNotUnique_Added()
     {
-        List<VarFeature> features = [new("A", "1")];
+        List<OperationFeature> features = [new("A", "1")];
 
-        VarFeature.UpdateFeature(new("A", "2"), features, false);
+        OperationFeature.UpdateFeature(new("A", "2"), features, false);
 
         Assert.Equal(2, features.Count);
         Assert.Contains(features, x => x.Name == "A" && x.Value == "1");
@@ -197,9 +197,9 @@ public sealed class VarFeatureTest
     [Fact]
     public void UpdateFeature_ExistingUnique_Replaced()
     {
-        List<VarFeature> features = [new("A", "1"), new("A", "2")];
+        List<OperationFeature> features = [new("A", "1"), new("A", "2")];
 
-        VarFeature.UpdateFeature(new("A", "3", FeatureSetPolicy.Single),
+        OperationFeature.UpdateFeature(new("A", "3", FeatureSetPolicy.Single),
             features, false);
 
         Assert.Single(features);
@@ -210,7 +210,7 @@ public sealed class VarFeatureTest
     [Fact]
     public void ToString_ShouldReturnNameAndValue()
     {
-        VarFeature OperationFeature = new("name", "value");
+        OperationFeature OperationFeature = new("name", "value");
 
         string result = OperationFeature.ToString();
 

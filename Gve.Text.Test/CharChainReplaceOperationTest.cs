@@ -107,8 +107,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced A with X\""),
-                new VarFeature("reason", "like X more")
+                OperationFeature.Parse("*log:=\"replaced A with X\""),
+                new OperationFeature("reason", "like X more")
             ]
         };
 
@@ -123,7 +123,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("replaced A with X", context.Features[0].Value);
         // node features
-        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("like X more", nodeFeatures[0].Value);
@@ -150,8 +150,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced AB with X\""),
-                new VarFeature("reason", "like X more")
+                OperationFeature.Parse("*log:=\"replaced AB with X\""),
+                new OperationFeature("reason", "like X more")
             ]
         };
 
@@ -166,7 +166,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("replaced AB with X", context.Features[0].Value);
         // node features
-        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("like X more", nodeFeatures[0].Value);
@@ -194,8 +194,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "XY",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with XY\""),
-                new VarFeature("reason", "like XY more")
+                OperationFeature.Parse("*log:=\"replaced B with XY\""),
+                new OperationFeature("reason", "like XY more")
             ]
         };
 
@@ -211,7 +211,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced B with XY", context.Features[0].Value);
 
         // node features
-        List<VarFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
         Assert.Equal("reason", nodeFeatures[0].Name);
         Assert.Equal("like XY more", nodeFeatures[0].Value);
@@ -245,8 +245,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with X\""),
-                new VarFeature("reason", "like X more")
+                OperationFeature.Parse("*log:=\"replaced B with X\""),
+                new OperationFeature("reason", "like X more")
             ]
         };
 
@@ -271,8 +271,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced BC with X\""),
-                new VarFeature("reason", "like X more")
+                OperationFeature.Parse("*log:=\"replaced BC with X\""),
+                new OperationFeature("reason", "like X more")
             ]
         };
 
@@ -297,8 +297,8 @@ public sealed class CharChainReplaceOperationTest
             Value = "XY",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with XY\""),
-                new VarFeature("reason", "like XY more")
+                OperationFeature.Parse("*log:=\"replaced B with XY\""),
+                new OperationFeature("reason", "like XY more")
             ]
         };
 
@@ -322,7 +322,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with X\""),
+                OperationFeature.Parse("*log:=\"replaced B with X\""),
             ]
         };
         op1.Execute(context);
@@ -339,7 +339,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "ax",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced AX with ax\""),
+                OperationFeature.Parse("*log:=\"replaced AX with ax\""),
             ]
         };
         op2.Execute(context);
@@ -361,7 +361,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with X\""),
+                OperationFeature.Parse("*log:=\"replaced B with X\""),
             ]
         };
         op1.Execute(context);
@@ -378,7 +378,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "x",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced AX with x\""),
+                OperationFeature.Parse("*log:=\"replaced AX with x\""),
             ]
         };
         op2.Execute(context);
@@ -400,7 +400,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "X",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced B with X\""),
+                OperationFeature.Parse("*log:=\"replaced B with X\""),
             ]
         };
         op1.Execute(context);
@@ -417,7 +417,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "xy",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced X with xy\""),
+                OperationFeature.Parse("*log:=\"replaced X with xy\""),
             ]
         };
         op2.Execute(context);
@@ -444,7 +444,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "' in die",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced e with ' in die\""),
+                OperationFeature.Parse("*log:=\"replaced e with ' in die\""),
             ]
         };
         op1.Execute(context);
@@ -463,7 +463,7 @@ public sealed class CharChainReplaceOperationTest
             Value = "grad gegen über gestellt",
             Features =
             [
-                VarFeature.Parse("*log:=\"replaced g'rad' in die Mitte gest " +
+                OperationFeature.Parse("*log:=\"replaced g'rad' in die Mitte gest " +
                 "with grad gegen über gestellt\""),
             ]
         };

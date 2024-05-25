@@ -11,7 +11,7 @@ namespace Gve.Text;
 /// metadata to the feature to drive its application to the operation context.
 /// </summary>
 /// <seealso cref="Feature" />
-public partial record VarFeature : Feature
+public partial record OperationFeature : Feature
 {
     /// <summary>
     /// Gets or sets a value indicating whether this feature is negated.
@@ -27,7 +27,7 @@ public partial record VarFeature : Feature
     public bool IsGlobal { get; init; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is short lived.
+    /// Gets or sets a value indicating whether this instance is short-lived.
     /// When true, the feature is removed on the next update.
     /// </summary>
     public bool IsShortLived { get; init; }
@@ -37,16 +37,16 @@ public partial record VarFeature : Feature
     private static partial Regex OpNameValueRegex();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VarFeature"/> class.
+    /// Initializes a new instance of the <see cref="OperationFeature"/> class.
     /// </summary>
     /// <param name="name">The name.</param>
     /// <param name="value">The value.</param>
     /// <param name="setPolicy">The set policy.</param>
     /// <param name="isNegated">if set to <c>true</c> is negated.</param>
-    /// <param name="isGlobal">if set to <c>true</c> [global].</param>
-    /// <param name="isShortLived">if set to <c>true</c> [short lived].</param>
+    /// <param name="isGlobal">if set to <c>true</c> is global.</param>
+    /// <param name="isShortLived">if set to <c>true</c> is short-lived.</param>
     /// <exception cref="ArgumentNullException">name</exception>
-    public VarFeature(string name,
+    public OperationFeature(string name,
         string? value,
         FeatureSetPolicy setPolicy = FeatureSetPolicy.Multiple,
         bool isNegated = false,
@@ -71,14 +71,14 @@ public partial record VarFeature : Feature
     /// <returns>Feature.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Invalid feature</exception>
-    public static VarFeature Parse(string text)
+    public static OperationFeature Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 
         Match m = OpNameValueRegex().Match(text);
         if (!m.Success) throw new FormatException($"Invalid feature: {text}");
 
-        return new VarFeature(
+        return new OperationFeature(
             m.Groups["n"].Value,
             m.Groups["v"].Success ? m.Groups["v"].Value.Trim('"') : null,
             m.Groups["p"].Value switch
@@ -99,7 +99,7 @@ public partial record VarFeature : Feature
     /// <param name="feature">The feature.</param>
     /// <returns>True if success.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
-    public static bool TryParse(string text, out VarFeature? feature)
+    public static bool TryParse(string text, out OperationFeature? feature)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -131,8 +131,8 @@ public partial record VarFeature : Feature
     /// doomed, i.e. a short-lived feature which should be removed on the next
     /// update; otherwise, null.</returns>
     /// <exception cref="ArgumentNullException">source or targets</exception>
-    public static void UpdateFeature(VarFeature source,
-        IList<VarFeature> targets, bool first)
+    public static void UpdateFeature(OperationFeature source,
+        IList<OperationFeature> targets, bool first)
     {
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(targets);

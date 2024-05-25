@@ -316,7 +316,7 @@ public abstract partial class CharChainOperation : OperationMetadata
                 .Matches(tail.Groups["feats"].Value)
                 .Select(m => m.Value))
             {
-                operation.Features.Add(VarFeature.Parse(feats.Trim()));
+                operation.Features.Add(OperationFeature.Parse(feats.Trim()));
             }
         }
 
@@ -341,12 +341,12 @@ public abstract partial class CharChainOperation : OperationMetadata
         ChainOperationContext<char> context,
         IList<ChainNode<char>>? targetNodes = null)
     {
-        List<VarFeature> sources = [..Features];
+        List<OperationFeature> sources = [..Features];
 
         // project rank as a unique feature
         if (Rank != 0)
         {
-            sources.Add(new VarFeature(RANK_KEY, $"{Rank}",
+            sources.Add(new OperationFeature(RANK_KEY, $"{Rank}",
                 FeatureSetPolicy.Single));
         }
 
@@ -355,7 +355,7 @@ public abstract partial class CharChainOperation : OperationMetadata
         int i = 0;
         foreach (OperationSource vs in Sources)
         {
-            sources.Add(new VarFeature(SOURCE_KEY, vs.ToString(),
+            sources.Add(new OperationFeature(SOURCE_KEY, vs.ToString(),
                 FeatureSetPolicy.SingleFirst,
                 i == 0));
             i++;
