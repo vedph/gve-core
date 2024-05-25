@@ -14,7 +14,7 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
     /// Initializes a new instance of the <see cref="CharChainAnnotateOperation"/>
     /// class.
     /// </summary>
-    public CharChainAnnotateOperation() : base(VarOperationType.Annotate)
+    public CharChainAnnotateOperation() : base(OperationType.Annotate)
     {
     }
 

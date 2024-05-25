@@ -24,7 +24,7 @@ public sealed class SpineApparatusLayerFragmentTest
                 At = 2,
                 Run = 1,
                 Value = "X",
-                Diplomatic = new()
+                Diplomatics = new()
                 {
                     G = "<g><rect width=\"10\" height=\"5\"></rect></g>",
                 },
@@ -80,7 +80,7 @@ public sealed class SpineApparatusLayerFragmentTest
 
         // fr.op-type
         DataPin? pin = pins.Find(p => p.Name == PartBase.FR_PREFIX + "op-type"
-            && p.Value == Enum.GetName(VarOperationType.Replace));
+            && p.Value == Enum.GetName(OperationType.Replace));
         Assert.NotNull(pin);
 
         // fr.op-value

@@ -14,7 +14,7 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
     /// Initializes a new instance of the <see cref="CharChainAddBeforeOperation"/>
     /// class.
     /// </summary>
-    public CharChainAddBeforeOperation() : base(VarOperationType.AddBefore)
+    public CharChainAddBeforeOperation() : base(OperationType.AddBefore)
     {
         Run = 0;
     }

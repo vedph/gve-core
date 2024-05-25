@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Gve.Text;
 
 /// <summary>
-/// Generic metadata about a text variant operation.
+/// Generic metadata about a text operation.
 /// </summary>
-public class VarOperationMetadata
+public class OperationMetadata
 {
     /// <summary>
     /// The key for the rank feature. This is automatically projected from
@@ -21,7 +21,7 @@ public class VarOperationMetadata
     public const string SOURCE_KEY = "source";
 
     /// <summary>
-    /// The symbols corresponding to <see cref="VarOperationType"/>'s.
+    /// The symbols corresponding to <see cref="OperationType"/>'s.
     /// </summary>
     public static readonly string[] TYPE_SYMBOLS =
     [
@@ -65,18 +65,18 @@ public class VarOperationMetadata
     /// Gets or sets the sources for this operation. These represent any type
     /// of source for it, such as a manuscript, an author, etc.
     /// </summary>
-    public IList<VarSource> Sources { get; set; }
+    public IList<OperationSource> Sources { get; set; }
 
     /// <summary>
     /// Gets or sets the diplomatic description of this operation, representing
     /// its graphical representation in the original document.
     /// </summary>
-    public VarDiplomatic? Diplomatic { get; set; }
+    public OperationDiplomatics? Diplomatics { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VarOperationMetadata"/> class.
+    /// Initializes a new instance of the <see cref="OperationMetadata"/> class.
     /// </summary>
-    public VarOperationMetadata()
+    public OperationMetadata()
     {
         Id = GenerateId();
 
@@ -94,7 +94,7 @@ public class VarOperationMetadata
 /// <summary>
 /// Type of operation.
 /// </summary>
-public enum VarOperationType
+public enum OperationType
 {
     /// <summary>The replace operation.</summary>
     Replace = 0,

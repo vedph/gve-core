@@ -27,7 +27,7 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation,
     /// Initializes a new instance of the <see cref="CharChainMoveBeforeOperation"/>
     /// class.
     /// </summary>
-    public CharChainMoveBeforeOperation() : base(VarOperationType.MoveBefore)
+    public CharChainMoveBeforeOperation() : base(OperationType.MoveBefore)
     {
     }
 

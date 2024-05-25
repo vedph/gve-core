@@ -12,7 +12,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("1x1-");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -31,7 +31,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("@1x2-");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.True(op.AtAsIndex);
@@ -50,7 +50,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("(v0:v1)1x1-");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -69,7 +69,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("(v0:v1)1x1-^2");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -88,7 +88,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("(v0:v1)1x1-@g1");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -107,7 +107,7 @@ public sealed class CharChainDeleteOperationTest
         CharChainDeleteOperation op = CharChainOperation
             .Parse<CharChainDeleteOperation>("(v0:v1)1x1- [note=sample]");
 
-        Assert.Equal(VarOperationType.Delete, op.Type);
+        Assert.Equal(OperationType.Delete, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
         Assert.False(op.AtAsIndex);

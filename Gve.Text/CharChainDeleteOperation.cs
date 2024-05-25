@@ -13,7 +13,7 @@ public sealed class CharChainDeleteOperation : CharChainOperation
     /// Initializes a new instance of the <see cref="CharChainDeleteOperation"/>
     /// class.
     /// </summary>
-    public CharChainDeleteOperation() : base(VarOperationType.Delete)
+    public CharChainDeleteOperation() : base(OperationType.Delete)
     {
     }
 

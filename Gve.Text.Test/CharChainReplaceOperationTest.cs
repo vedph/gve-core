@@ -12,7 +12,7 @@ public sealed class CharChainReplaceOperationTest
         CharChainReplaceOperation op = CharChainOperation
             .Parse<CharChainReplaceOperation>("1x1=X");
 
-        Assert.Equal(VarOperationType.Replace, op.Type);
+        Assert.Equal(OperationType.Replace, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -31,7 +31,7 @@ public sealed class CharChainReplaceOperationTest
         CharChainReplaceOperation op = CharChainOperation
             .Parse<CharChainReplaceOperation>("@1x2=X");
 
-        Assert.Equal(VarOperationType.Replace, op.Type);
+        Assert.Equal(OperationType.Replace, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.True(op.AtAsIndex);
@@ -50,7 +50,7 @@ public sealed class CharChainReplaceOperationTest
         CharChainReplaceOperation op = CharChainOperation
             .Parse<CharChainReplaceOperation>("@1x2=X [*g=1 *x:=2 !*z]");
 
-        Assert.Equal(VarOperationType.Replace, op.Type);
+        Assert.Equal(OperationType.Replace, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.True(op.AtAsIndex);
@@ -79,7 +79,7 @@ public sealed class CharChainReplaceOperationTest
         CharChainReplaceOperation op = CharChainOperation
             .Parse<CharChainReplaceOperation>("(v0:v1)1x1=X");
 
-        Assert.Equal(VarOperationType.Replace, op.Type);
+        Assert.Equal(OperationType.Replace, op.Type);
         Assert.Equal("v0", op.InputTag);
         Assert.Equal("v1", op.OutputTag);
         Assert.False(op.AtAsIndex);

@@ -5,7 +5,7 @@ namespace Gve.Text;
 /// <summary>
 /// The source for a variant.
 /// </summary>
-public class VarSource
+public class OperationSource
 {
     /// <summary>
     /// Gets or sets the source identifier.

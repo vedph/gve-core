@@ -7,7 +7,7 @@ namespace Gve.Text;
 /// Diplomatic data for a text variant. This defines the visual representation
 /// of the variant, as well as the features attached to it.
 /// </summary>
-public class VarDiplomatic
+public class OperationDiplomatics
 {
     /// <summary>
     /// Gets or sets the SVG <c>g</c> element graphically representing the

@@ -32,7 +32,7 @@ public sealed class CharChainSwapOperation : CharChainOperation,
     /// Initializes a new instance of the <see cref="CharChainSwapOperation"/>
     /// class.
     /// </summary>
-    public CharChainSwapOperation() : base(VarOperationType.Swap)
+    public CharChainSwapOperation() : base(OperationType.Swap)
     {
         ToRun = 1;
     }

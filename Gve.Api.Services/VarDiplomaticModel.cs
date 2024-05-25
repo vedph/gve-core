@@ -41,7 +41,7 @@ public class VarDiplomaticModel
     /// Initializes a new instance of the <see cref="VarDiplomaticModel"/> class.
     /// </summary>
     /// <param name="d">The source diplomatic info.</param>
-    public VarDiplomaticModel(VarDiplomatic d)
+    public VarDiplomaticModel(OperationDiplomatics d)
     {
         ArgumentNullException.ThrowIfNull(d);
 

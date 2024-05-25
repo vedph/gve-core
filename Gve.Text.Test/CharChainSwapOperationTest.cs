@@ -12,7 +12,7 @@ public sealed class CharChainSwapOperationTest
         CharChainSwapOperation op = CharChainOperation
             .Parse<CharChainSwapOperation>("1<>3");
 
-        Assert.Equal(VarOperationType.Swap, op.Type);
+        Assert.Equal(OperationType.Swap, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -33,7 +33,7 @@ public sealed class CharChainSwapOperationTest
         CharChainSwapOperation op = CharChainOperation
             .Parse<CharChainSwapOperation>("1x2<>3x3");
 
-        Assert.Equal(VarOperationType.Swap, op.Type);
+        Assert.Equal(OperationType.Swap, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);

@@ -8,7 +8,7 @@ To build the book (https://flaviocopes.com/how-to-create-ebooks-markdown):
 - SUMMARY.md with toc
 - README.md with preface
 
-3. build by opening a terminal at this folder and running these commands:
+3. build by opening a terminal in this folder and running these commands:
 
 $env:Path += ";C:\Program Files\Calibre2"
 npx honkit pdf  ./ ./book.pdf

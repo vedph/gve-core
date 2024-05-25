@@ -93,7 +93,7 @@ public sealed class SpineApparatusLayerFragment : ITextLayerFragment
             // op sources: type and ID for each source
             if (Operation.Sources?.Count > 0)
             {
-                foreach (VarSource source in Operation.Sources)
+                foreach (OperationSource source in Operation.Sources)
                 {
                     builder.AddValue(PartBase.FR_PREFIX +
                         $"op-source-{source.Type.ToLowerInvariant()}",

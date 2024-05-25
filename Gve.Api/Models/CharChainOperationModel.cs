@@ -28,13 +28,13 @@ public class CharChainOperationModel
     /// The sources for this operation. These represent any type
     /// of source for it, such as a manuscript, an author, etc.
     /// </summary>
-    public IList<VarSource>? Sources { get; set; }
+    public IList<OperationSource>? Sources { get; set; }
 
     /// <summary>
     /// The diplomatic description of this operation, representing
     /// its graphical representation in the original document.
     /// </summary>
-    public VarDiplomatic? Diplomatic { get; set; }
+    public OperationDiplomatics? Diplomatic { get; set; }
 
     /// <summary>
     /// The operation identifier. This can be used to reference
@@ -45,7 +45,7 @@ public class CharChainOperationModel
     /// <summary>
     /// The operation type.
     /// </summary>
-    public VarOperationType Type { get; set; }
+    public OperationType Type { get; set; }
 
     /// <summary>
     /// The input version tag for this operation. If null, the default tag
@@ -122,7 +122,7 @@ public class CharChainOperationModel
         GroupId = operation.GroupId;
         Features = operation.Features;
         Sources = operation.Sources;
-        Diplomatic = operation.Diplomatic;
+        Diplomatic = operation.Diplomatics;
         Id = operation.Id;
         Type = operation.Type;
         InputTag = operation.InputTag;

@@ -12,7 +12,7 @@ public sealed class CharChainMoveBeforeOperationTest
         CharChainMoveBeforeOperation op = CharChainOperation
             .Parse<CharChainMoveBeforeOperation>("1>[3");
 
-        Assert.Equal(VarOperationType.MoveBefore, op.Type);
+        Assert.Equal(OperationType.MoveBefore, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -32,7 +32,7 @@ public sealed class CharChainMoveBeforeOperationTest
         CharChainMoveBeforeOperation op = CharChainOperation
             .Parse<CharChainMoveBeforeOperation>("1x2>[3");
 
-        Assert.Equal(VarOperationType.MoveBefore, op.Type);
+        Assert.Equal(OperationType.MoveBefore, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);

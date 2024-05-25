@@ -12,7 +12,7 @@ public sealed class CharChainAddBeforeOperationTest
         CharChainAddBeforeOperation op = CharChainOperation
             .Parse<CharChainAddBeforeOperation>("1+[X");
 
-        Assert.Equal(VarOperationType.AddBefore, op.Type);
+        Assert.Equal(OperationType.AddBefore, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);

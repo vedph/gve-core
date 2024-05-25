@@ -14,7 +14,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
     /// Initializes a new instance of the <see cref="CharChainReplaceOperation"/>
     /// class.
     /// </summary>
-    public CharChainReplaceOperation() : base(VarOperationType.Replace)
+    public CharChainReplaceOperation() : base(OperationType.Replace)
     {
     }
 

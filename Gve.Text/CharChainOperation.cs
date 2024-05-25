@@ -12,13 +12,13 @@ namespace Gve.Text;
 /// <summary>
 /// Base class for operations on a <see cref="Chain{T}"/>.
 /// </summary>
-/// <seealso cref="VarOperationMetadata" />
-public abstract partial class CharChainOperation : VarOperationMetadata
+/// <seealso cref="OperationMetadata" />
+public abstract partial class CharChainOperation : OperationMetadata
 {
     /// <summary>
     /// Gets or sets the operation type.
     /// </summary>
-    public VarOperationType Type { get; protected set; }
+    public OperationType Type { get; protected set; }
 
     /// <summary>
     /// Gets or sets the input version tag for this operation. If null,
@@ -60,7 +60,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// Initializes a new instance of the <see cref="CharChainOperation"/> class.
     /// </summary>
     /// <param name="type">The operation type.</param>
-    protected CharChainOperation(VarOperationType type)
+    protected CharChainOperation(OperationType type)
     {
         Type = type;
     }
@@ -247,18 +247,18 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="op">Operator symbol.</param>
     /// <returns>Type.</returns>
     /// <exception cref="FormatException">Invalid operation type.</exception>
-    protected static VarOperationType GetOperationType(string op)
+    protected static OperationType GetOperationType(string op)
     {
         return op switch
         {
-            "=" => VarOperationType.Replace,
-            "-" => VarOperationType.Delete,
-            "+[" => VarOperationType.AddBefore,
-            "+]" => VarOperationType.AddAfter,
-            ">[" => VarOperationType.MoveBefore,
-            ">]" => VarOperationType.MoveAfter,
-            "<>" => VarOperationType.Swap,
-            ":" => VarOperationType.Annotate,
+            "=" => OperationType.Replace,
+            "-" => OperationType.Delete,
+            "+[" => OperationType.AddBefore,
+            "+]" => OperationType.AddAfter,
+            ">[" => OperationType.MoveBefore,
+            ">]" => OperationType.MoveAfter,
+            "<>" => OperationType.Swap,
+            ":" => OperationType.Annotate,
             _ => throw new FormatException($"Invalid operation type: {op}")
         };
     }
@@ -325,7 +325,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     }
 
     /// <summary>
-    /// Updates the <see cref="VarOperationMetadata.Features"/> of the specified
+    /// Updates the <see cref="OperationMetadata.Features"/> of the specified
     /// <paramref name="context"/> from this operation.
     /// </summary>
     /// <param name="tag">The output tag of this operation.</param>
@@ -333,9 +333,9 @@ public abstract partial class CharChainOperation : VarOperationMetadata
     /// <param name="targetNodes">The nodes to be used as targets for features. If
     /// not specified, these will be calculated from the operation's target
     /// range.</param>
-    /// <remarks>The <see cref="VarOperationMetadata.Rank"/> property when not
+    /// <remarks>The <see cref="OperationMetadata.Rank"/> property when not
     /// 0 is added as a unique feature; anyway, it can be overridden by another
-    /// rank feature directly set in <see cref="VarOperationMetadata.Features"/>.
+    /// rank feature directly set in <see cref="OperationMetadata.Features"/>.
     /// </remarks>
     private void UpdateContextFeatures(string tag,
         ChainOperationContext<char> context,
@@ -353,7 +353,7 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         // project sources as features; if any sources existed, remove them
         // before adding the new ones
         int i = 0;
-        foreach (VarSource vs in Sources)
+        foreach (OperationSource vs in Sources)
         {
             sources.Add(new VarFeature(SOURCE_KEY, vs.ToString(),
                 FeatureSetPolicy.SingleFirst,
@@ -445,24 +445,24 @@ public abstract partial class CharChainOperation : VarOperationMetadata
         if (!m.Success)
             throw new FormatException($"Invalid operation: {text}");
 
-        VarOperationType type = GetOperationType(m.Groups[1].Value);
+        OperationType type = GetOperationType(m.Groups[1].Value);
         return type switch
         {
-            VarOperationType.Replace
+            OperationType.Replace
                 => (CharChainReplaceOperation.ParseOperation(text) as O)!,
-            VarOperationType.AddBefore
+            OperationType.AddBefore
                 => (CharChainAddBeforeOperation.ParseOperation(text) as O)!,
-            VarOperationType.AddAfter
+            OperationType.AddAfter
                 => (CharChainAddAfterOperation.ParseOperation(text) as O)!,
-            VarOperationType.MoveBefore
+            OperationType.MoveBefore
                 => (CharChainMoveBeforeOperation.ParseOperation(text) as O)!,
-            VarOperationType.MoveAfter
+            OperationType.MoveAfter
                 => (CharChainMoveAfterOperation.ParseOperation(text) as O)!,
-            VarOperationType.Swap
+            OperationType.Swap
                 => (CharChainSwapOperation.ParseOperation(text) as O)!,
-            VarOperationType.Delete
+            OperationType.Delete
                 => (CharChainDeleteOperation.ParseOperation(text) as O)!,
-            VarOperationType.Annotate
+            OperationType.Annotate
                 => (CharChainAnnotateOperation.ParseOperation(text) as O)!,
             _ => throw new FormatException(
                 $"Invalid operation type: {GetOperationType(text)}")

@@ -41,6 +41,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-05-25:
+  - minor renamings.
+  - updated packages.
 - 2024-05-16: added `refNodeIds` to `ChainOperationContextStep`. This provides the reference nodes of each executed operation, which are useful to locate their visuals with reference to the base text.
 - 2024-05-05: added nodes to API results.
 - 2024-05-03: more controls in demo.

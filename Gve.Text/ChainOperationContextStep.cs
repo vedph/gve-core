@@ -11,7 +11,7 @@ public class ChainOperationContextStep
     /// <summary>
     /// Gets the operation.
     /// </summary>
-    public VarOperationMetadata Operation { get; }
+    public OperationMetadata Operation { get; }
 
     /// <summary>
     /// Gets the input tag.
@@ -48,7 +48,7 @@ public class ChainOperationContextStep
     /// <param name="features">The features.</param>
     /// <param name="refNodeIds">The reference node IDs.</param>
     /// <exception cref="ArgumentNullException">operation or tags</exception>
-    public ChainOperationContextStep(VarOperationMetadata operation,
+    public ChainOperationContextStep(OperationMetadata operation,
         string inputTag, string outputTag, ChainOperationContextFeats features,
         IList<int> refNodeIds)
     {

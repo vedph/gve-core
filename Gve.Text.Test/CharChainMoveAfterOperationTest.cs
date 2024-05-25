@@ -11,7 +11,7 @@ public sealed class CharChainMoveAfterOperationTest
         CharChainMoveAfterOperation op = CharChainOperation
             .Parse<CharChainMoveAfterOperation>("1>]3");
 
-        Assert.Equal(VarOperationType.MoveAfter, op.Type);
+        Assert.Equal(OperationType.MoveAfter, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
@@ -31,7 +31,7 @@ public sealed class CharChainMoveAfterOperationTest
         CharChainMoveAfterOperation op = CharChainOperation
             .Parse<CharChainMoveAfterOperation>("1x2>]3");
 
-        Assert.Equal(VarOperationType.MoveAfter, op.Type);
+        Assert.Equal(OperationType.MoveAfter, op.Type);
         Assert.Null(op.InputTag);
         Assert.Null(op.OutputTag);
         Assert.False(op.AtAsIndex);
