@@ -41,6 +41,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-05-31: updated packages.
 - 2024-05-25:
   - minor renamings.
   - updated packages.
