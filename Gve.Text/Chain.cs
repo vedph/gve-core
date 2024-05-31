@@ -1148,6 +1148,25 @@ public class Chain<T>
 
         _nodes.AddRange(nodes);
     }
+
+    /// <summary>
+    /// Reset this chain setting the specified nodes as its base.
+    /// </summary>
+    /// <remarks>When setting the base text nodes, use this method rather than
+    /// <see cref="AppendRange(string, string, IList{ChainNode{T}})"/>, because
+    /// this updates the inner ID seed.</remarks>
+    /// <param name="nodes">The nodes.</param>
+    public void Reset(IList<ChainNode<T>> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(nodes);
+        Clear();
+
+        AppendRange("", "v0", nodes);
+        lock (_locker)
+        {
+            _maxId = nodes.Max(n => n.Id);
+        }
+    }
     #endregion
 
     #region Replace

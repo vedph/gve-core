@@ -10,6 +10,7 @@ namespace Gve.Api.Controllers;
 /// </summary>
 /// <seealso cref="Controller" />
 [ApiController]
+[Route("text")]
 public sealed class TextController : Controller
 {
     /// <summary>
@@ -18,7 +19,7 @@ public sealed class TextController : Controller
     /// <param name="model">The parsable text model.</param>
     /// <returns>Object with either <c>result</c> (a list of operations) or
     /// <c>error</c> (an error message).</returns>
-    [HttpPost("text/operations/parse")]
+    [HttpPost("operations/parse")]
     [Produces("application/json")]
     public ResultWrapperModel<IList<CharChainOperationModel>>
         ParseOperations([FromBody] ParsableTextBindingModel model)
@@ -43,10 +44,17 @@ public sealed class TextController : Controller
         }
     }
 
-    private static List<ChainNode<char>> GetNodesFrom(string text)
+    //private static List<ChainNode<char>> GetNodesFrom(string text)
+    //{
+    //    return text.Select((c, _) =>
+    //        new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
+    //        .ToList();
+    //}
+
+    private static List<ChainNode<char>> GetNodesFrom(CharChainNodeModel[] models)
     {
-        return text.Select((c, _) =>
-            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
+        return models.Select(m => new ChainNode<char>(
+                m.Data, m.Label, m.Id))
             .ToList();
     }
 
@@ -59,7 +67,7 @@ public sealed class TextController : Controller
     /// <param name="model">The model with text and operations.</param>
     /// <returns>Object with either <c>result</c> or <c>error</c>
     /// (an error message).</returns>
-    [HttpPost("text/operations/run")]
+    [HttpPost("operations/run")]
     [Produces("application/json")]
     public ResultWrapperModel<CharChainResultModel>
         RunOperations([FromBody] TextOperationBindingModel model)
@@ -70,7 +78,7 @@ public sealed class TextController : Controller
                 CharChainOperationMapper.Map).ToList();
 
             ChainOperationContext<char> context = new();
-            context.Chain.AppendRange("", "v0", GetNodesFrom(model.Text));
+            context.Chain.Reset(GetNodesFrom(model.Text));
             context.LastTag = "v0";
 
             foreach (CharChainOperation op in operations) op.Execute(context);

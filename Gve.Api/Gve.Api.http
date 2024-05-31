@@ -1,10 +1,10 @@
-@Gve.Api_HostAddress = http://localhost:5239
+@GveApi_HostAddress = http://localhost:5239
 
-GET {{Gve.Api_HostAddress}}/weatherforecast/
+GET {{GveApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ### Parse Operations
-POST {{Gve.Api_HostAddress}}/text/operations/parse
+POST {{GveApi_HostAddress}}/text/operations/parse
 Accept: application/json
 Content-Type: application/json
 
@@ -13,16 +13,46 @@ Content-Type: application/json
 }
 
 ### Run Operations
-POST {{Gve.Api_HostAddress}}/text/operations/run
+POST {{GveApi_HostAddress}}/text/operations/run
 Accept: application/json
 Content-Type: application/json
 
 {
-  "text": "ARZDC",
+  "text": [
+    {
+      "id": 1,
+      "label": "A",
+      "index": 0,
+      "data": "A"
+    },
+    {
+      "id": 2,
+      "label": "R",
+      "index": 1,
+      "data": "R"
+    },
+    {
+      "id": 3,
+      "label": "Z",
+      "index": 2,
+      "data": "Z"
+    },
+    {
+      "id": 4,
+      "label": "D",
+      "index": 3,
+      "data": "D"
+    },
+    {
+      "id": 5,
+      "label": "C",
+      "index": 4,
+      "data": "C"
+    }
+  ],
   "operations": [
     {
       "rank": 0,
-      "groupId": null,
       "features": [
         {
           "isNegated": false,
@@ -42,22 +72,20 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "diplomatic": null,
-      "id": "109ed877ec",
+      "id": "c705f7c65a",
       "type": 1,
-      "inputTag": null,
-      "outputTag": null,
       "atAsIndex": false,
       "at": 3,
       "run": 1,
       "toAsIndex": false,
       "to": 0,
       "toRun": 0,
-      "value": null
+      "diplomatics": {
+        "g": "<g id=\"del-z\"><line x1=\"32\" y1=\"85\" x2=\"44\" y2=\"50\" stroke=\"red\" stroke-width=\"3\"/></g>"
+      }
     },
     {
       "rank": 0,
-      "groupId": null,
       "features": [
         {
           "isNegated": false,
@@ -77,22 +105,21 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "diplomatic": null,
-      "id": "67cbb33648",
+      "id": "66aed192fc",
       "type": 0,
-      "inputTag": null,
-      "outputTag": null,
       "atAsIndex": false,
       "at": 2,
       "run": 1,
       "toAsIndex": false,
       "to": 0,
       "toRun": 0,
-      "value": "V"
+      "value": "V",
+      "diplomatics": {
+        "g": "<g id=\"rep-RV\"><line x1=\"22\" y1=\"85\" x2=\"28\" y2=\"48\" stroke=\"gray\" stroke-width=\"3\"/><text x=\"24\" y=\"44\" fill=\"gray\">V</text></g>"
+      }
     },
     {
       "rank": 0,
-      "groupId": null,
       "features": [
         {
           "isNegated": false,
@@ -101,25 +128,32 @@ Content-Type: application/json
           "name": "log",
           "value": "replace V with B",
           "setPolicy": 0
+        },
+        {
+          "isNegated": false,
+          "isGlobal": false,
+          "isShortLived": false,
+          "name": "reason",
+          "value": "like B",
+          "setPolicy": 0
         }
       ],
       "sources": [],
-      "diplomatic": null,
-      "id": "c67d20027d",
+      "id": "e5610844bd",
       "type": 0,
-      "inputTag": null,
-      "outputTag": null,
       "atAsIndex": false,
       "at": 6,
       "run": 1,
       "toAsIndex": false,
       "to": 0,
       "toRun": 0,
-      "value": "B"
+      "value": "B",
+      "diplomatics": {
+        "g": "<g id=\"rep-VB\"><line x1=\"22\" y1=\"32\" x2=\"36\" y2=\"40\" stroke=\"orange\" stroke-width=\"3\"/><text x=\"37\" y=\"40\" fill=\"orange\">B</text></g>"
+      }
     },
     {
       "rank": 0,
-      "groupId": null,
       "features": [
         {
           "isNegated": false,
@@ -139,40 +173,22 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "diplomatic": null,
-      "id": "c4e716dd40",
+      "id": "503c1e3a94",
       "type": 0,
       "inputTag": "v1",
-      "outputTag": null,
       "atAsIndex": false,
       "at": 2,
       "run": 1,
       "toAsIndex": false,
       "to": 0,
       "toRun": 0,
-      "value": "P"
+      "value": "P",
+      "diplomatics": {
+        "g": "<g id=\"rep-RP\"><line x1=\"28\" y1=\"48\" x2=\"16\" y2=\"26\" stroke=\"blue\" stroke-width=\"3\"/><text x=\"12\" y=\"24\" fill=\"blue\">P</text></g>"
+      }
     },
     {
       "rank": 0,
-      "groupId": null,
-      "features": [],
-      "sources": [],
-      "diplomatic": null,
-      "id": "781f61d71b",
-      "type": 6,
-      "inputTag": null,
-      "outputTag": null,
-      "atAsIndex": false,
-      "at": 4,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 5,
-      "toRun": 1,
-      "value": null
-    },
-    {
-      "rank": 0,
-      "groupId": null,
       "features": [
         {
           "isNegated": false,
@@ -184,18 +200,18 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "diplomatic": null,
-      "id": "9fc1a345a7",
+      "id": "ea8ffab3d4",
       "type": 6,
       "inputTag": "v3",
-      "outputTag": null,
       "atAsIndex": false,
       "at": 4,
       "run": 1,
       "toAsIndex": false,
       "to": 5,
       "toRun": 1,
-      "value": null
+      "diplomatics": {
+        "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 70,80 A 12,4 0 0 1 65,83 12,4 0 0 1 53,78\" /><text x=\"42\" y=\"90\" fill=\"green\">C</text><line x1=\"60\" y1=\"85\" x2=\"80\" y2=\"60\" stroke=\"green\" stroke-width=\"3\"/></g>"
+      }
     }
   ]
 }

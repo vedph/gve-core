@@ -41,7 +41,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
-- 2024-05-31: updated packages.
+- 2024-05-31:
+  - updated packages.
+  - refactored binding model for run operation to accept an array of character objects rather than a string.
 - 2024-05-25:
   - minor renamings.
   - updated packages.
