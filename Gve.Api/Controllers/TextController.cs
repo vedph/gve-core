@@ -59,7 +59,7 @@ public sealed class TextController : Controller
     }
 
     private static string GetNodeFeatureKey(string tag, ChainNode<char> node) =>
-        $"{tag}:{node.Id}";
+        $"{tag}_{node.Id}";
 
     /// <summary>
     /// Runs operations on the specified text.
