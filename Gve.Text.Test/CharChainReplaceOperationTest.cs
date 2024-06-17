@@ -137,6 +137,52 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void Execute_ReplaceSingleWithFeats()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 1,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"replaced A with X\""),
+                OperationFeature.Parse("x:=\"25\""),
+                OperationFeature.Parse("y:=\"50\""),
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("XBC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("replaced A with X", context.Features[0].Value);
+        // node features
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
+        Assert.Equal(2, nodeFeatures.Count);
+        Assert.Equal("x", nodeFeatures[0].Name);
+        Assert.Equal("25", nodeFeatures[0].Value);
+        Assert.Equal("y", nodeFeatures[1].Name);
+        Assert.Equal("50", nodeFeatures[1].Value);
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+    }
+
+    [Fact]
     public void Execute_ReplaceRange_Shorter()
     {
         ChainOperationContext<char> context = new();
