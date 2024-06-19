@@ -51,9 +51,6 @@ public sealed class TextController : ControllerBase
             .ToList();
     }
 
-    private static string GetNodeFeatureKey(string tag, ChainNode<char> node) =>
-        $"{tag}_{node.Id}";
-
     /// <summary>
     /// Runs operations on the specified text.
     /// </summary>
@@ -102,6 +99,7 @@ public sealed class TextController : ControllerBase
                 result.TaggedNodes[tag] = [];
 
                 // create their models with injected features from context
+                List<string> tagsUpToCurrent = tags[..(tags.IndexOf(tag) + 1)];
                 int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
@@ -113,7 +111,7 @@ public sealed class TextController : ControllerBase
                         Data = node.Data,
                         SourceTag = node.SourceTag,
                         Features = context.GetNodeFeatures(
-                            node.Id, tags[..(i + 1)])
+                            node.Id, tagsUpToCurrent)
                     };
                     result.TaggedNodes[tag].Add(m);
                 }

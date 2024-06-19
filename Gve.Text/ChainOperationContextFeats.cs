@@ -133,8 +133,7 @@ public class ChainOperationContextFeats
                     // (single or single-first policy when no features with
                     // the same name precede in taggedNodeFeats)
                     if (feat.SetPolicy != FeatureSetPolicy.Multiple &&
-                        (i == 0 ||
-                         feat.SetPolicy == FeatureSetPolicy.Single ||
+                        (feat.SetPolicy == FeatureSetPolicy.Single ||
                          // SingleFirst
                          taggedNodeFeats.Take(i).All(f => f.Name != feat.Name)))
                     {
@@ -142,7 +141,6 @@ public class ChainOperationContextFeats
                     }
                     result.Add(feat);
                 }
-                result.AddRange(taggedNodeFeats);
             }
         }
         return result;
