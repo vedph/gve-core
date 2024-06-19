@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gve.Text;
 
@@ -103,5 +104,47 @@ public class ChainOperationContextFeats
 
             names.Add(feature.Name);
         }
+    }
+
+    /// <summary>
+    /// Gets the features for the node with the specified ID by collecting
+    /// them from the features of all the specified tags, in that order.
+    /// </summary>
+    /// <param name="id">The node identifier.</param>
+    /// <param name="tags">The version tags to collect features from.</param>
+    /// <returns>Features.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public IList<Feature> GetNodeFeatures(int id, IList<string> tags)
+    {
+        ArgumentNullException.ThrowIfNull(tags);
+
+        List<Feature> result = [];
+        foreach (string tag in tags)
+        {
+            if (NodeFeatures.TryGetValue($"{tag}_{id}",
+                out List<OperationFeature>? taggedNodeFeats))
+            {
+                // add features by following their policy
+                for (int i = 0; i < taggedNodeFeats.Count; i++)
+                {
+                    OperationFeature feat = taggedNodeFeats[i];
+
+                    // remove previous features with the same name if needed
+                    // (single or single-first policy when no features with
+                    // the same name precede in taggedNodeFeats)
+                    if (feat.SetPolicy != FeatureSetPolicy.Multiple &&
+                        (i == 0 ||
+                         feat.SetPolicy == FeatureSetPolicy.Single ||
+                         // SingleFirst
+                         taggedNodeFeats.Take(i).All(f => f.Name != feat.Name)))
+                    {
+                        result.RemoveAll(f => f.Name == feat.Name);
+                    }
+                    result.Add(feat);
+                }
+                result.AddRange(taggedNodeFeats);
+            }
+        }
+        return result;
     }
 }

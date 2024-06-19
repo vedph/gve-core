@@ -81,7 +81,7 @@ Content-Type: application/json
       "to": 0,
       "toRun": 0,
       "diplomatics": {
-        "g": "<g id=\"del-z\"><line x1=\"32\" y1=\"85\" x2=\"44\" y2=\"50\" stroke=\"red\" stroke-width=\"3\"/></g>"
+        "g": "<g id=\"del-z\"><line x1=\"64\" y1=\"170\" x2=\"88\" y2=\"100\" stroke=\"red\" stroke-width=\"6\"/></g>"
       }
     },
     {
@@ -102,6 +102,21 @@ Content-Type: application/json
           "name": "version",
           "value": "alpha",
           "setPolicy": 1
+        },
+        {
+          "name": "x",
+          "value": "48",
+          "setPolicy": 1
+        },
+        {
+          "name": "y",
+          "value": "65",
+          "setPolicy": 1
+        },
+        {
+          "name": "style",
+          "value": "font-size:36px;fill:gray",
+          "setPolicy": 1
         }
       ],
       "sources": [],
@@ -115,7 +130,7 @@ Content-Type: application/json
       "toRun": 0,
       "value": "V",
       "diplomatics": {
-        "g": "<g id=\"rep-RV\"><line x1=\"22\" y1=\"85\" x2=\"28\" y2=\"48\" stroke=\"gray\" stroke-width=\"3\"/><text x=\"24\" y=\"44\" fill=\"gray\">V</text></g>"
+        "g": "<g id=\"rep-RV\"><line x1=\"44\" y1=\"170\" x2=\"56\" y2=\"96\" stroke=\"gray\" stroke-width=\"6\"/></g>"
       }
     },
     {
@@ -136,6 +151,21 @@ Content-Type: application/json
           "name": "reason",
           "value": "like B",
           "setPolicy": 0
+        },
+        {
+          "name": "x",
+          "value": "74",
+          "setPolicy": 1
+        },
+        {
+          "name": "y",
+          "value": "70",
+          "setPolicy": 1
+        },
+        {
+          "name": "style",
+          "value": "font-size:36px;fill:orange",
+          "setPolicy": 1
         }
       ],
       "sources": [],
@@ -149,7 +179,7 @@ Content-Type: application/json
       "toRun": 0,
       "value": "B",
       "diplomatics": {
-        "g": "<g id=\"rep-VB\"><line x1=\"22\" y1=\"32\" x2=\"36\" y2=\"40\" stroke=\"orange\" stroke-width=\"3\"/><text x=\"37\" y=\"40\" fill=\"orange\">B</text></g>"
+        "g": "<g id=\"rep-VB\"><line x1=\"44\" y1=\"64\" x2=\"72\" y2=\"80\" stroke=\"orange\" stroke-width=\"6\"/></g>"
       }
     },
     {
@@ -170,6 +200,21 @@ Content-Type: application/json
           "name": "version",
           "value": "beta",
           "setPolicy": 1
+        },
+        {
+          "name": "x",
+          "value": "24",
+          "setPolicy": 1
+        },
+        {
+          "name": "y",
+          "value": "18",
+          "setPolicy": 1
+        },
+        {
+          "name": "style",
+          "value": "font-size:36px;fill:blue",
+          "setPolicy": 1
         }
       ],
       "sources": [],
@@ -184,7 +229,7 @@ Content-Type: application/json
       "toRun": 0,
       "value": "P",
       "diplomatics": {
-        "g": "<g id=\"rep-RP\"><line x1=\"28\" y1=\"48\" x2=\"16\" y2=\"26\" stroke=\"blue\" stroke-width=\"3\"/><text x=\"12\" y=\"24\" fill=\"blue\">P</text></g>"
+        "g": "<g id=\"rep-RP\"><line x1=\"56\" y1=\"96\" x2=\"32\" y2=\"52\" stroke=\"blue\" stroke-width=\"6\"/></g>"
       }
     },
     {
@@ -210,7 +255,7 @@ Content-Type: application/json
       "to": 5,
       "toRun": 1,
       "diplomatics": {
-        "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 70,80 A 12,4 0 0 1 65,83 12,4 0 0 1 53,78\" /><text x=\"42\" y=\"90\" fill=\"green\">C</text><line x1=\"60\" y1=\"85\" x2=\"80\" y2=\"60\" stroke=\"green\" stroke-width=\"3\"/></g>"
+        "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 140,160 A 24,8 0 0 2 130,166 24,8 0 0 2 106,156\" /><text x=\"84\" y=\"180\" style=\"font-size:36px\" fill=\"green\">C</text><line x1=\"120\" y1=\"170\" x2=\"160\" y2=\"120\" stroke=\"green\" stroke-width=\"6\"/></g>"
       }
     }
   ]

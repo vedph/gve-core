@@ -37,4 +37,16 @@ public class CharChainNodeModel
     /// The node features.
     /// </summary>
     public IList<Feature>? Features { get; set; }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return $"#{Id}={Label} ({string.Join(", ",
+            Features?.Select(f => f.ToString()) ?? [])})";
+    }
 }

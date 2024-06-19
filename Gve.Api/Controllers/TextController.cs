@@ -11,7 +11,7 @@ namespace Gve.Api.Controllers;
 /// <seealso cref="Controller" />
 [ApiController]
 [Route("text")]
-public sealed class TextController : Controller
+public sealed class TextController : ControllerBase
 {
     /// <summary>
     /// Parses the operations in the specified text.
@@ -44,13 +44,6 @@ public sealed class TextController : Controller
         }
     }
 
-    //private static List<ChainNode<char>> GetNodesFrom(string text)
-    //{
-    //    return text.Select((c, _) =>
-    //        new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
-    //        .ToList();
-    //}
-
     private static List<ChainNode<char>> GetNodesFrom(CharChainNodeModel[] models)
     {
         return models.Select(m => new ChainNode<char>(
@@ -74,15 +67,24 @@ public sealed class TextController : Controller
     {
         try
         {
+            // get operations
             List<CharChainOperation> operations = model.Operations.Select(
                 CharChainOperationMapper.Map).ToList();
 
+            // init chain with base text (v0)
             ChainOperationContext<char> context = new();
             context.Chain.Reset(GetNodesFrom(model.Text));
             context.LastTag = "v0";
 
-            foreach (CharChainOperation op in operations) op.Execute(context);
+            // execute all the operations in their order
+            List<string> tags = [];
+            foreach (CharChainOperation op in operations)
+            {
+                op.Execute(context);
+                tags.Add(context.LastTag);
+            }
 
+            // build result
             CharChainResultModel result = new()
             {
                 Steps = context.Steps,
@@ -90,11 +92,16 @@ public sealed class TextController : Controller
                 ChainTags = context.Chain.GetDistinctTags(),
             };
 
-            foreach (string tag in result.ChainTags)
+            // for each version in build order (distinct ensures that we
+            // have no duplicates, even if this is not expected here)
+            tags = tags.Distinct().ToList();
+            foreach (string tag in tags)
             {
+                // get its nodes
                 IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(tag);
                 result.TaggedNodes[tag] = [];
 
+                // create their models with injected features from context
                 int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
@@ -105,13 +112,9 @@ public sealed class TextController : Controller
                         Label = node.Label,
                         Data = node.Data,
                         SourceTag = node.SourceTag,
+                        Features = context.GetNodeFeatures(
+                            node.Id, tags[..(i + 1)])
                     };
-                    string key = GetNodeFeatureKey(tag, node);
-                    if (context.NodeFeatures.TryGetValue(key,
-                        out List<OperationFeature>? value))
-                    {
-                        m.Features = value.ToArray();
-                    }
                     result.TaggedNodes[tag].Add(m);
                 }
             }
