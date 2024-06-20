@@ -41,6 +41,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-06-20: fix to non copied tagged node features in context when running an operation.
 - 2024-06-17: fix to text controller node feature key.
 - 2024-06-09: updated packages.
 - 2024-05-31:

@@ -419,6 +419,7 @@ public abstract partial class CharChainOperation : OperationMetadata
         context.LastTag = outputTag;
 
         // update the context's features
+        context.CopyTaggedNodeFeatures(inputTag, outputTag);
         UpdateContextFeatures(outputTag, context, targetNodes);
 
         // add this operation to the context's steps

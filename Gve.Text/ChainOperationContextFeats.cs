@@ -59,6 +59,38 @@ public class ChainOperationContextFeats
     }
 
     /// <summary>
+    /// Copies the features from a tagged set to another.
+    /// </summary>
+    /// <param name="sourceTag">The source tag.</param>
+    /// <param name="targetTag">The target tag.</param>
+    /// <param name="includeShortLived">True to include in the copy also
+    /// the short-lived features in source.</param>
+    /// <exception cref="ArgumentNullException">sourceTag or targetTag</exception>
+    public void CopyTaggedNodeFeatures(string sourceTag, string targetTag,
+        bool includeShortLived = false)
+    {
+        ArgumentNullException.ThrowIfNull(sourceTag);
+        ArgumentNullException.ThrowIfNull(targetTag);
+
+        foreach (string key in NodeFeatures.Keys
+            .Where(k => k.StartsWith($"{sourceTag}_")).ToList())
+        {
+            string newKey = $"{targetTag}_{key[(sourceTag.Length + 1)..]}";
+            if (includeShortLived)
+            {
+                NodeFeatures[newKey] = new List<OperationFeature>(
+                    NodeFeatures[key]);
+            }
+            else
+            {
+                NodeFeatures[newKey] = NodeFeatures[key]
+                    .Where(f => !f.IsShortLived)
+                    .ToList();
+            }
+        }
+    }
+
+    /// <summary>
     /// Updates the features of this context and/or of the <paramref name="nodes"/>
     /// from the specified source features.
     /// </summary>
