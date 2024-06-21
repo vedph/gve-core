@@ -25,7 +25,7 @@ The following snippet specifies the snapshot view size (in pixels) and the optio
 
 ## Text
 
-Them, the base text follows as an array of chain nodes. When you are entering text as a string, the nodes array is automatically built by the editor. In this case I have created it manually to provide a full example.
+The base text follows as an array of chain nodes. When you are entering text as a string, the nodes array is automatically built by the editor. In this case I have created it manually to provide a full example.
 
 Each node is an object with a numeric ID, a label, an index, and data which in our case corresponds to a single character (the chain structure is templated for its data type, as we might want to reuse it to chain types different from single characters).
 
@@ -366,4 +366,4 @@ Each visual provided with an ID, i.e. all the base text characters and all the v
 In the end, the snapshot view provides users with an overview of the text creation and transformation processes, as derived from blending two layers, which are separately modeled:
 
 - an _objective_ data layer, the digital representation of the snapshot as it can be described from its carrier. This is the set of all the visuals as they appear on it. Of course, even at this level there might be a level of subjectivity (for instance in reading a single sign), but this usually is a corner case, and anyway it can be encoded using features (like a probability rank) about it.
-- a _subjective_ data layer one, the philological interpretation of the snapshot, which is described by operations. These guide us in reading the snapshot, by interpreting the operations represented by its annotations so that they are filtered and ordered to get all the text versions we deduce from it.
+- a _subjective_ data layer one, the philological interpretation of the snapshot, which is described by operations. These guide us in reading the snapshot, by interpreting the operations represented by its annotations so that they are filtered and ordered to get all the text versions we deduce from it. Additionally, we describe this recipe for getting our text versions from the ingredients on the table of the carrier in such a way that we effectively get operational instructions for the underlying chain data structure. This makes the system capable of generating all the text versions with all their metadata, up to the granularity level of a single character.
