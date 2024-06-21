@@ -9,6 +9,7 @@ The GVE conceptual documentation revolves around two main areas: _intra-document
 - [modeling an autograph](autograph.md)
   - [textual model](textual.md)
   - [diplomatic model](diplomatic.md)
+  - [snapshot sample](snapshot-sample.md)
 
 ### Inter-Document
 

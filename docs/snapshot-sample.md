@@ -95,7 +95,7 @@ The **base text options** include these properties:
 
 ## Operations
 
-[Operations](textual#operations) are objects inside an `operations` array property. They are listed in their order of application. Here I am listing one at a time.
+[Operations](textual#operations) are objects inside an `operations` array property. They are listed in their order of application. Here I am listing one at a time, preceded by its essential text-based representation (which covers only a subset of its properties, but is useful for quick data entry or diagnostic purposes).
 
 ### Delete Z
 
@@ -203,3 +203,167 @@ We do not want to represent this `V` character as a mere visual on the diplomati
 To this end, we add some node-scoped features to the operation, which will be thus injected in `V`: _x_, _y_, and _style_. A node having _x_ and _y_ is placed at these coordinates, thus outside the automatic layout. Also, the style specifies its color (gray) and its size (a bit smaller than the base text).
 
 💡 Features names _style_ and _class_ are reserved to represent the SVG element attributes `style` and `class` respectively.
+
+On the diplomatic layer instead we just have a grey stroke on `R`.
+
+### Replace V with B
+
+```txt
+6=B [*log="replace V with B" reason:="like B"]
+```
+
+This is again a replace operation, so it essentially looks like the previous one: a new node `B` and an orange stroke on `V`:
+
+```json
+{
+    "features": [
+    {
+    "isGlobal": true,
+    "name": "log",
+    "value": "replace V with B",
+    "setPolicy": 0
+  },
+  {
+    "name": "reason",
+    "value": "like B",
+    "setPolicy": 1
+  },
+  {
+    "name": "x",
+    "value": "74",
+    "setPolicy": 1
+  },
+  {
+    "name": "y",
+    "value": "70",
+    "setPolicy": 1
+  },
+  {
+    "name": "style",
+    "value": "font-size:36px;fill:orange",
+    "setPolicy": 1
+  }
+  ],
+  "sources": [],
+  "id": "e5610844bd",
+  "type": 0,
+  "at": 6,
+  "run": 1,
+  "value": "B",
+  "diplomatics": {
+  "g": "<g id=\"rep-VB\"><line x1=\"44\" y1=\"64\" x2=\"72\" y2=\"80\" stroke=\"orange\" stroke-width=\"6\"/></g>"
+  }
+},
+```
+
+### Replace R with P
+
+```txt
+(v1:) 2=P [*log="replace R with P" *version^:=beta]
+```
+
+This is yet another replacement, so similar to what we have above. This time the color is blue and we also mark the result as a version ("beta").
+
+Also notice that the input state for this operation is not the last generated step, as usual, but rather "v1". This is because we have a branching from the original base text R: the first branch replaces it with V and then B; the second branch replaces it with P. So, we could not start from the previous step, which is the last operation on the first branch; these branch are mutually exclusive, as they represent alternatives.
+
+```json
+{
+  "features": [
+  {
+    "isGlobal": true,
+    "name": "log",
+    "value": "replace R with P",
+    "setPolicy": 0
+  },
+  {
+    "isGlobal": true,
+    "isShortLived": true,
+    "name": "version",
+    "value": "beta",
+    "setPolicy": 1
+  },
+  {
+    "name": "x",
+    "value": "24",
+    "setPolicy": 1
+  },
+  {
+    "name": "y",
+    "value": "18",
+    "setPolicy": 1
+  },
+  {
+    "name": "style",
+    "value": "font-size:36px;fill:blue",
+    "setPolicy": 1
+  }
+  ],
+  "sources": [],
+  "id": "503c1e3a94",
+  "type": 0,
+  "inputTag": "v1",
+  "at": 2,
+  "run": 1,
+  "value": "P",
+  "diplomatics": {
+  "g": "<g id=\"rep-RP\"><line x1=\"56\" y1=\"96\" x2=\"32\" y2=\"52\" stroke=\"blue\" stroke-width=\"6\"/></g>"
+  }
+},
+```
+
+### Swap D and C
+
+```txt
+(v3:) 4<>5 [*version^:=gamma]
+```
+
+Finally, we swap `D` and `C` in the branch generated with step "v3". This generates version "gamma". This time the visuals represent a green arc and the C letter in its new position.
+
+Note that this letter is not a node of the base text, because the snapshot view stays fixed to the base text nodes, "ARZDC", while still adding new nodes as required. This reflects the material source, where essentially nothing which is drawn on the support can be undone; you may well overwrite it in any way, but once written, it is there. The operations are rather represented as annotations referring to it.
+
+So, the snapshot view already has the C node in its original position. The newly written C is just a sort of mirrored image of it, a pure visual artifact which together with the arc represents its movement.
+
+```json
+{
+  "features": [
+    {
+      "isGlobal": true,
+      "name": "version",
+      "value": "gamma",
+      "setPolicy": 1
+    }
+  ],
+  "sources": [],
+  "id": "ea8ffab3d4",
+  "type": 6,
+  "inputTag": "v3",
+  "at": 4,
+  "run": 1,
+  "to": 5,
+  "toRun": 1,
+  "diplomatics": {
+    "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 140,160 A 24,8 0 0 2 130,166 24,8 0 0 2 106,156\" /><text x=\"84\" y=\"180\" style=\"font-size:36px\" fill=\"green\">C</text><line x1=\"120\" y1=\"170\" x2=\"160\" y2=\"120\" stroke=\"green\" stroke-width=\"6\"/></g>"
+  }
+}
+```
+
+### Recap
+
+In the end, our operations are:
+
+1. `3- [*log="delete Z" reason:="don't like Z"]`: visuals = red stroke on `Z`.
+2. `2=V [*log="replace R with V" *version^:=alpha]`: visuals = grey stroke on `R`. The newly introduced text node is grey, smaller, and located just above the top of the stroke.
+3. `6=B [*log="replace V with B" reason:="like B"]`: visuals = yellow stroke on `V`. The newly introduced text node is yellow, smaller, and located to the right of the stroke.
+4. `(v1:) 2=P [*log="replace R with P" *version^:=beta]`: visuals = blue segment connected to the grey stroke on `R`. The newly introduced text node is blue, smaller, and located at the top of the segment.
+5. `(v3:) 4<>5 [*version^:=gamma]`: visuals = green stroke on `C` and a smaller green copy of it below `Z` and `D`.
+
+The visuals usually reflect the snapshot's visual appearance in an approximate way; they might be drawn on top of an image of the carrier, or even be directly derived from it by vectorization. 
+
+The degree of approximation can greatly vary according to the purpose of the digital representation, from a highly similar vector-based representation to a purely symbolic representation of the underlying operations. On the other end, we might even omit visuals altogether and just limit ourselves to the text layer.
+
+Each visual provided with an ID, i.e. all the base text characters and all the visuals from operations metadata whose element has an `id` attribute, are also interactive objects on the page, so you could have your presentation software interact with the user via mouse events like hovering or clicking on them.
+
+In the end, the snapshot view provides users with an overview of the text creation and transformation processes, as derived from blending two layers, which are separately modeled:
+
+- an _objective_ data layer, the digital representation of the snapshot as it can be described from its carrier. This is the set of all the visuals as they appear on it. Of course, even at this level there might be a level of subjectivity (for instance in reading a single sign), but this usually is a corner case, and anyway it can be encoded using features (like a probability rank) about it.
+- a _subjective_ data layer one, the philological interpretation of the snapshot, which is described by operations. These guide us in reading the snapshot, by interpreting the operations represented by its annotations so that they are filtered and ordered to get all the text versions we deduce from it.
