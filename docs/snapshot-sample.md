@@ -95,7 +95,7 @@ The **base text options** include these properties:
 
 ## Operations
 
-[Operations](textual#operations) are objects inside an `operations` array property. They are listed in their order of application. Here I am listing one at a time, preceded by its essential text-based representation (which covers only a subset of its properties, but is useful for quick data entry or diagnostic purposes).
+[Operations](./textual.md#operations) are objects inside an `operations` array property. They are listed in their order of application. Here I am listing one at a time, preceded by its essential text-based representation (which covers only a subset of its properties, but is useful for quick data entry or diagnostic purposes).
 
 ### Delete Z
 
