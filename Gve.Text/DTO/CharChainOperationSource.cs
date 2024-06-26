@@ -1,11 +1,12 @@
-﻿using Gve.Text;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Gve.Api.Models;
+namespace Gve.Text.DTO;
 
 /// <summary>
-/// Metadata about a character-based chain operation.
+/// Source data for building a character-based chain operation.
 /// </summary>
-public class CharChainOperationModel
+public class CharChainOperationSource
 {
     /// <summary>
     /// The certainty rank for this operation: 0=not specified,
@@ -100,21 +101,21 @@ public class CharChainOperationModel
     public string? Value { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CharChainOperationModel"/>
+    /// Initializes a new instance of the <see cref="CharChainOperationSource"/>
     /// class.
     /// </summary>
-    public CharChainOperationModel()
+    public CharChainOperationSource()
     {
         Id = "";
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CharChainOperationModel"/>
+    /// Initializes a new instance of the <see cref="CharChainOperationSource"/>
     /// class.
     /// </summary>
     /// <param name="operation">The operation.</param>
     /// <exception cref="ArgumentNullException"></exception>
-    public CharChainOperationModel(CharChainOperation operation)
+    public CharChainOperationSource(CharChainOperation operation)
     {
         ArgumentNullException.ThrowIfNull(operation);
 
@@ -141,5 +142,49 @@ public class CharChainOperationModel
                 ToRun = swapOp.ToRun;
             }
         }
+    }
+
+    /// <summary>
+    /// Converts this source into the corresponding operation.
+    /// </summary>
+    /// <returns>Operation.</returns>
+    public CharChainOperation ToOperation()
+    {
+        CharChainOperation op = Type switch
+        {
+            OperationType.Delete => new CharChainDeleteOperation(),
+            OperationType.AddBefore => new CharChainAddBeforeOperation(),
+            OperationType.AddAfter => new CharChainAddAfterOperation(),
+            OperationType.MoveBefore => new CharChainMoveBeforeOperation(),
+            OperationType.MoveAfter => new CharChainMoveAfterOperation(),
+            OperationType.Swap => new CharChainSwapOperation(),
+            OperationType.Annotate => new CharChainAnnotateOperation(),
+            _ => new CharChainReplaceOperation(),
+        };
+
+        op.Rank = Rank;
+        op.GroupId = GroupId;
+        if (Features?.Count > 0) op.Features = Features;
+        if (Sources?.Count > 0) op.Sources = Sources;
+        op.Diplomatics = Diplomatic;
+        op.Id = Id;
+        op.InputTag = InputTag;
+        op.OutputTag = OutputTag;
+        op.AtAsIndex = AtAsIndex;
+        op.At = At;
+        op.Run = Run;
+        op.Value = Value;
+
+        if (op is IHasToArgument toOp)
+        {
+            toOp.ToAsIndex = ToAsIndex;
+            toOp.To = To;
+            if (op is CharChainSwapOperation swapOp)
+            {
+                swapOp.ToRun = ToRun;
+            }
+        }
+
+        return op;
     }
 }

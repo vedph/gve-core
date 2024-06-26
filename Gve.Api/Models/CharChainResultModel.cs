@@ -1,4 +1,5 @@
 ﻿using Gve.Text;
+using Gve.Text.DTO;
 
 namespace Gve.Api.Models;
 
@@ -25,7 +26,7 @@ public class CharChainResultModel
     /// <summary>
     /// Gets or sets the set of nodes in their order, for each version tag.
     /// </summary>
-    public IDictionary<string, IList<CharChainNodeModel>> TaggedNodes { get; set; }
+    public IDictionary<string, IList<CharChainNode>> TaggedNodes { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CharChainResultModel"/>
@@ -33,6 +34,6 @@ public class CharChainResultModel
     /// </summary>
     public CharChainResultModel()
     {
-        TaggedNodes = new Dictionary<string, IList<CharChainNodeModel>>();
+        TaggedNodes = new Dictionary<string, IList<CharChainNode>>();
     }
 }

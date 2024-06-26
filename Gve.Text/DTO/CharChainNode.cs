@@ -1,11 +1,12 @@
-﻿using Gve.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace Gve.Api.Models;
+namespace Gve.Text.DTO;
 
 /// <summary>
-/// Model for a character chain node.
+/// Base text character chain node.
 /// </summary>
-public class CharChainNodeModel
+public class CharChainNode
 {
     /// <summary>
     /// The autonumber assigned to this node in the context of its chain.

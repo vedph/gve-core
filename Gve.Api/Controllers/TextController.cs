@@ -1,6 +1,6 @@
 ﻿using Gve.Api.Models;
-using Gve.Api.Services;
 using Gve.Text;
+using Gve.Text.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gve.Api.Controllers;
@@ -21,30 +21,30 @@ public sealed class TextController : ControllerBase
     /// <c>error</c> (an error message).</returns>
     [HttpPost("operations/parse")]
     [Produces("application/json")]
-    public ResultWrapperModel<IList<CharChainOperationModel>>
+    public ResultWrapperModel<IList<CharChainOperationSource>>
         ParseOperations([FromBody] ParsableTextBindingModel model)
     {
         try
         {
-            List<CharChainOperationModel> operations = [];
+            List<CharChainOperationSource> operations = [];
             foreach (string line in model.Text.Split('\n',
                 StringSplitOptions.RemoveEmptyEntries))
             {
                 CharChainOperation op = CharChainOperation
                     .Parse<CharChainOperation>(line);
-                operations.Add(new CharChainOperationModel(op));
+                operations.Add(new CharChainOperationSource(op));
             }
-            return new ResultWrapperModel<IList<CharChainOperationModel>>(
+            return new ResultWrapperModel<IList<CharChainOperationSource>>(
                 operations);
         }
         catch (Exception e)
         {
-            return new ResultWrapperModel<IList<CharChainOperationModel>>(
+            return new ResultWrapperModel<IList<CharChainOperationSource>>(
                 null, e.Message);
         }
     }
 
-    private static List<ChainNode<char>> GetNodesFrom(CharChainNodeModel[] models)
+    private static List<ChainNode<char>> GetNodesFrom(CharChainNode[] models)
     {
         return models.Select(m => new ChainNode<char>(
                 m.Data, m.Label, m.Id))
@@ -66,7 +66,7 @@ public sealed class TextController : ControllerBase
         {
             // get operations
             List<CharChainOperation> operations = model.Operations.Select(
-                CharChainOperationMapper.Map).ToList();
+                s => s.ToOperation()).ToList();
 
             // init chain with base text (v0)
             ChainOperationContext<char> context = new();
@@ -103,7 +103,7 @@ public sealed class TextController : ControllerBase
                 int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
-                    CharChainNodeModel m = new()
+                    CharChainNode m = new()
                     {
                         Id = node.Id,
                         Index = i++,

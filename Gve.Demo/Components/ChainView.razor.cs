@@ -48,7 +48,7 @@ public partial class ChainView
 
     private static NodeModel CreateNode(string title, double x, double y)
     {
-        return new(new Point(x, y))
+        return new(new Blazor.Diagrams.Core.Geometry.Point(x, y))
         {
             Title = title,
         };

@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gve.Text.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gve.Api.Models;
 
 public class TextOperationBindingModel
 {
     [Required]
-    public CharChainNodeModel[] Text { get; set; } = [];
+    public CharChainNode[] Text { get; set; } = [];
 
     [Required]
-    public IList<CharChainOperationModel> Operations { get; set; } = [];
+    public IList<CharChainOperationSource> Operations { get; set; } = [];
 }
