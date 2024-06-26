@@ -38,3 +38,4 @@ packages/
 .vs/
 _site/
 api/
+CadmusGveApi/cadmus-log*.txt
