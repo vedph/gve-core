@@ -32,11 +32,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gve.Demo", "Gve.Demo\Gve.De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gve", "gve\gve.csproj", "{89189130-F88F-474A-92CF-4D57304B4EAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Seed.Gve.Parts", "Cadmus.Seed.Gve.Parts\Cadmus.Seed.Gve.Parts.csproj", "{7CD273F7-D8F0-4BB7-A212-6B3B219D12B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Seed.Gve.Parts", "Cadmus.Seed.Gve.Parts\Cadmus.Seed.Gve.Parts.csproj", "{7CD273F7-D8F0-4BB7-A212-6B3B219D12B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Seed.Gve.Parts.Test", "Cadmus.Seed.Gve.Parts.Test\Cadmus.Seed.Gve.Parts.Test.csproj", "{E96618A7-2B69-472F-BD8D-D971ECA35CC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Seed.Gve.Parts.Test", "Cadmus.Seed.Gve.Parts.Test\Cadmus.Seed.Gve.Parts.Test.csproj", "{E96618A7-2B69-472F-BD8D-D971ECA35CC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Gve.Services", "Cadmus.Gve.Services\Cadmus.Gve.Services.csproj", "{1953D274-0525-431C-8734-5B5C9B5D7212}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Gve.Services", "Cadmus.Gve.Services\Cadmus.Gve.Services.csproj", "{1953D274-0525-431C-8734-5B5C9B5D7212}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadmusGveApi", "CadmusGveApi\CadmusGveApi.csproj", "{7F80EF4E-5EF7-401C-ACCD-275C8742C356}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,10 @@ Global
 		{1953D274-0525-431C-8734-5B5C9B5D7212}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1953D274-0525-431C-8734-5B5C9B5D7212}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1953D274-0525-431C-8734-5B5C9B5D7212}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F80EF4E-5EF7-401C-ACCD-275C8742C356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F80EF4E-5EF7-401C-ACCD-275C8742C356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F80EF4E-5EF7-401C-ACCD-275C8742C356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F80EF4E-5EF7-401C-ACCD-275C8742C356}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
