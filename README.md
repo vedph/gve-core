@@ -43,7 +43,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 - 2024-06-26:
   - updated packages.
-  - added Cadmus parts. 
+  - added Cadmus parts.
 - 2024-06-20: fix to non copied tagged node features in context when running an operation.
 - 2024-06-17: fix to text controller node feature key.
 - 2024-06-09: updated packages.
