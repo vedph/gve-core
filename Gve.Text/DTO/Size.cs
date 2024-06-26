@@ -16,6 +16,24 @@ public class Size
     public double Height { get; set; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Size"/> class.
+    /// </summary>
+    public Size()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Size"/> class.
+    /// </summary>
+    /// <param name="width">The width.</param>
+    /// <param name="height">The height.</param>
+    public Size(double width, double height)
+    {
+        Width = width;
+        Height = height;
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>

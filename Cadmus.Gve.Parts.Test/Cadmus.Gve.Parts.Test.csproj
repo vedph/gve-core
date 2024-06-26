@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj" />
+		<ProjectReference Include="..\Cadmus.Seed.Gve.Parts\Cadmus.Seed.Gve.Parts.csproj" />
 		<ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 

@@ -27,7 +27,7 @@ public sealed class GveSnapshotPart : PartBase, IHasText
     /// can optionally be passed to this method for those parts requiring
     /// to access further data.</param>
     /// <returns>The pins: <c>node-count</c>=count of base text nodes,
-    /// <c>ops-count</c>=count of operations.</returns>
+    /// <c>op-count</c>=count of operations.</returns>
     public override IEnumerable<DataPin> GetDataPins(IItem? item = null)
     {
         DataPinBuilder builder = new();
@@ -35,7 +35,7 @@ public sealed class GveSnapshotPart : PartBase, IHasText
         // node-count
         builder.Set("node", Value?.Text?.Count ?? 0, false);
         // ops-count
-        builder.Set("ops", Value?.Operations?.Count ?? 0, false);
+        builder.Set("op", Value?.Operations?.Count ?? 0, false);
 
         return builder.Build(this);
     }
@@ -52,7 +52,7 @@ public sealed class GveSnapshotPart : PartBase, IHasText
                 "node-count",
                 "The total count of base text nodes."),
              new DataPinDefinition(DataPinValueType.Integer,
-                "ops-count",
+                "op-count",
                 "The total count of operations.")
         ]);
     }

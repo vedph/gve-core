@@ -27,6 +27,11 @@ public class Snapshot
     public string? Defs { get; set; }
 
     /// <summary>
+    /// Gets or sets the optional snapshot background image.
+    /// </summary>
+    public SnapshotImage? Image { get; set; }
+
+    /// <summary>
     /// Gets or sets the text nodes.
     /// </summary>
     public List<CharChainNode> Text { get; set; } = [];

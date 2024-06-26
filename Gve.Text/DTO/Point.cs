@@ -16,6 +16,24 @@ public class Point
     public double Y { get; set; }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Point"/> class.
+    /// </summary>
+    public Point()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Point"/> class.
+    /// </summary>
+    /// <param name="x">The x.</param>
+    /// <param name="y">The y.</param>
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>
