@@ -58,7 +58,7 @@ public sealed class GveSnapshotPartSeeder : PartSeederBase
                    Url = "https://via.placeholder.com/800x600",
                    Opacity = 0.8
                },
-               Text = GetNodes(f.Lorem.Sentence()),
+               Text = GetNodes(f.Lorem.Sentence(5)),
                TextStyle = "font-size: 24px",
                TextOptions = new()
                {
