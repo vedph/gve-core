@@ -3,11 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gve.Api.Models;
 
-public class TextOperationBindingModel
+public class OperationsBindingModel
 {
-    [Required]
-    public CharChainNode[] Text { get; set; } = [];
-
     [Required]
     public IList<CharChainOperationSource> Operations { get; set; } = [];
 }

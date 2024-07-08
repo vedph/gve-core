@@ -30,8 +30,11 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
+        // clone version
+        context.Chain.AddVersion(inputTag, outputTag);
+
         // add features to context
-        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
+        IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, outputTag);
         UpdateContext(context, inputTag, outputTag, nodes, nodes);
     }
 

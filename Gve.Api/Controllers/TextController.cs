@@ -59,7 +59,7 @@ public sealed class TextController : ControllerBase
     [HttpPost("operations/tags")]
     [Produces("application/json")]
     public ResultWrapperModel<OperationTagsModel[]> GetOperationTags
-        ([FromBody] TextOperationBindingModel model)
+        ([FromBody] OperationsBindingModel model)
     {
         try
         {
@@ -67,7 +67,15 @@ public sealed class TextController : ControllerBase
                 s => s.ToOperation()).ToList();
 
             ChainOperationContext<char> context = new();
-            context.Chain.Reset(GetNodesFrom(model.Text));
+            context.Chain.Reset(
+            [
+                new ChainNode<char>()
+                {
+                    Id = 1,
+                    Data = 'A',
+                    Label = "A",
+                }
+            ]);
             context.LastTag = "v0";
 
             List<OperationTagsModel> tags = [];
@@ -102,7 +110,7 @@ public sealed class TextController : ControllerBase
     [HttpPost("operations/run")]
     [Produces("application/json")]
     public ResultWrapperModel<CharChainResultModel>
-        RunOperations([FromBody] TextOperationBindingModel model)
+        RunOperations([FromBody] TextOperationsBindingModel model)
     {
         try
         {
