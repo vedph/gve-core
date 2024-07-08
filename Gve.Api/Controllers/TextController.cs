@@ -52,6 +52,48 @@ public sealed class TextController : ControllerBase
     }
 
     /// <summary>
+    /// Gets the input and output tags of all the given operations.
+    /// </summary>
+    /// <param name="model">The model.</param>
+    /// <returns>Array of objects having input and output tags.</returns>
+    [HttpPost("operations/tags")]
+    [Produces("application/json")]
+    public ResultWrapperModel<OperationTagsModel[]> GetOperationTags
+        ([FromBody] TextOperationBindingModel model)
+    {
+        try
+        {
+            List<CharChainOperation> operations = model.Operations.Select(
+                s => s.ToOperation()).ToList();
+
+            ChainOperationContext<char> context = new();
+            context.Chain.Reset(GetNodesFrom(model.Text));
+            context.LastTag = "v0";
+
+            List<OperationTagsModel> tags = [];
+            foreach (CharChainOperation op in operations)
+            {
+                (string inputTag, string outputTag) = op.GetTags(context);
+                tags.Add(new OperationTagsModel(inputTag, outputTag));
+
+                // add a mock node with output tag as this is required
+                // by next tag calculation
+                context.Chain.Append(inputTag, outputTag, new ChainNode<char>
+                {
+                    Id = context.Chain.GetNextId(),
+                });
+                context.LastTag = outputTag;
+            }
+
+            return new ResultWrapperModel<OperationTagsModel[]>(tags.ToArray());
+        }
+        catch (Exception e)
+        {
+            return new ResultWrapperModel<OperationTagsModel[]>(null, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Runs operations on the specified text.
     /// </summary>
     /// <param name="model">The model with text and operations.</param>

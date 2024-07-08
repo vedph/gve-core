@@ -95,7 +95,7 @@ public abstract partial class CharChainOperation : OperationMetadata
     /// <param name="context">The context.</param>
     /// <returns>Input and output tags.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    protected (string inputTag, string outputTag) GetTags(
+    public (string inputTag, string outputTag) GetTags(
         ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
