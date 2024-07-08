@@ -57,6 +57,11 @@ public class Snapshot
     public string? OpStyle { get; set; }
 
     /// <summary>
+    /// Gets or sets the animation timelines.
+    /// </summary>
+    public IDictionary<string, AnimationTimeline>? Timelines { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Snapshot"/> class.
     /// </summary>
     public Snapshot()
