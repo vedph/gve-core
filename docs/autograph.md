@@ -43,4 +43,4 @@ Thus, the scope of our autograph model encompasses the area defined by the bound
 - [textual model](textual.md)
 - [diplomatic model](diplomatic.md)
 
-Once this model satisfies all of our requirements, it will be the foundation for structured and layered representation of its different parts and planes (textual and diplomatic, objective and subjective) at a high granularity level (up to the single character or visual trait). From this, we will then be able to generate many outputs including TEI documents with various schemas, complex and interactive UIs, or any other type of export.
+Once this model satisfies all our requirements, it will be the foundation for structured and layered representation of its different parts and planes (textual and diplomatic, objective and subjective) at a high granularity level (up to the single character or visual trait). From this, we will then be able to generate many outputs including TEI documents with various schemas, complex and interactive UIs, or any other type of export.
