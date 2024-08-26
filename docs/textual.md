@@ -186,7 +186,7 @@ The links now define 7 different versions of our text:
 
 So, a single chain structure represents 7 variants of the same text; these are 7 recipes, all using the same ingredients, which are always preserved in the box, whatever recipe we decide to follow.
 
-Whenever we apply an operation to our chain, we get a new version out; so we have the fully detailed text generation process, step by step, as defined by our interpretation. Of course, _not all of the versions output by this detailed process are eligible for representing what we really want to define as a text "version"_; maybe in our interpretation we have isolated 3 versions, corresponding to `v2` (`AVDC`), `v5` (`APCD`), and `v6` (`ABCD`), while discarding the other as just generative steps between them. The chain has a mechanism for this selection, but we must first introduce another feature of them before delving into its details.
+Whenever we apply an operation to our chain, we get a new version out; so we have the fully detailed text generation process, step by step, as defined by our interpretation. Of course, _not all the versions output by this detailed process are eligible for representing what we really want to define as a text "version"_; maybe in our interpretation we have isolated 3 versions, corresponding to `v2` (`AVDC`), `v5` (`APCD`), and `v6` (`ABCD`), while discarding the other as just generative steps between them. The chain has a mechanism for this selection, but we must first introduce another feature of them before delving into its details.
 
 To sum up, we have thus met the [first two requirements](#model-requirements) of our model:
 
@@ -196,7 +196,7 @@ To sum up, we have thus met the [first two requirements](#model-requirements) of
 
 Yet, we still have to address the last one:
 
-(3) represent the snapshot annotations both on their _textual_ and _visual_ form.
+(3) represent the snapshot annotations both in their _textual_ and _visual_ form.
 
 This implies delving into more details about our chain's operations, which will also show more about the data they carry and inject in their output.
 
@@ -233,11 +233,11 @@ All the operations thus share a common set of metadata, represented by:
   - _rank_: the probability rank attributed to the identification of this source.
   - _note_: an optional free text note.
 
-- **diplomatic** metadata: these metadata are specialized to represent the _visual_ aspects of an operation on the snaspshot's carrier (see the [diplomatic portion of the model](diplomatic.md)).
+- **diplomatic** metadata: these metadata are specialized to represent the _visual_ aspects of an operation on the snapshot's carrier (see the [diplomatic portion of the model](diplomatic.md)).
 
 ### Syntax
 
-Even though GVE will provide a UI to edit such operations, it also provides a text-based representation for them. This text format is used to represent their basic metadata, including features, but excluding specialized metadata (source and diplomatic). It is mostly used to speed up editing, or for diagnostic purposes.
+Even though GVE provides a UI to edit such operations, it also allows a text-based representation for them. This text format is used to represent their basic metadata, including features, but excluding specialized metadata (source and diplomatic). It is mostly used to speed up editing, or for diagnostic purposes.
 
 The general text-based syntax for these operations includes these components, from left to right:
 
