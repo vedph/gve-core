@@ -8,11 +8,11 @@ The autograph is central to GVE because it represents its starting point: for Go
 
 Let us first use our case study (GVE) to define some terms we use in the technical documentation with a specific algorithmic meaning.
 
-In the case of GVE, the essential source of epigrams is represented by autograph sheets from handbooks. Whatever its physical support(s), here we call an the physical support of an autograph text 🔖 **carrier**. In the case of our workbooks, a portion, one, or even more physical sheets referring to each single composition represent a carrier.
+In the case of GVE, the essential source of epigrams is represented by autograph sheets from handbooks. Whatever its physical support(s), here we call the physical support of an autograph text 🔖 **carrier**. In the case of our workbooks, a portion, one, or even more physical sheets referring to each single composition represent a carrier.
 
 The main challenge in modeling the content of these carriers is that they do not just represent a linear text; rather, they represent a sort of 🔖 **snapshot** of the creative process which in the author's mind would have led to the intended text. So, the carrier is the material support of the snapshot, which potentially contains many versions of a text.
 
-In fact, graphically the snapshot does not just represents a text, but it includes many corrections, rethinkings, or refactorings of it, in the form of various types of 🔖 **annotations** (deletions, insertions, transpositions, side notes, etc.).
+In fact, graphically the snapshot does not just represent a text, but it includes many corrections, rethinkings, or refactorings of it, in the form of various types of 🔖 **annotations** (deletions, insertions, transpositions, side notes, etc.).
 
 The snapshot is thus a sort of picture taken from the author's mind in relation to the text being composed at a given point in time. This does not necessarily imply that this is the end stage of the creative process underlying the text. The process may well have gone further on; but this is not reflected by the snapshot, which just represents a picture which froze an instant of this process at a given time.
 
