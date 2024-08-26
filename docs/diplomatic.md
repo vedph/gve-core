@@ -13,7 +13,7 @@ For instance, consider our usual mock snapshot:
 Here I have highlighted each portion of visuals with a different color, corresponding to the operations represented by the snapshot:
 
 - the red bar on top of `Z` represents its deletion.
-- the yellow bar on top of `R`, continued to the left up to a `V`, represent a replacement: `R` is replaced by `V`. The visuals here are 3: two segments and a `V` letter.
+- the yellow bar on top of `R`, continued to the left up to a `V`, represents a replacement: `R` is replaced by `V`. The visuals here are 3: two segments and a `V` letter.
 - the orange bar on top of `V` and the `B` drawn above it are the visuals corresponding to another replacement. This time, `V` is replaced by `B`.
 - the magenta arrow on top of `DC` represents a movement operation: `C` is moved before `D`, or alternatively, `D` and `C` are swapped. As in many other cases, here the choice depends on the one which best fits our interpretation.
 
