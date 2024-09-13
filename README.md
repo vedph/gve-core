@@ -41,6 +41,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-09-13: updated packages.
 - 2024-07-08:
   - added tags endpoint.
   - adjusted annotation operation so that it generates a new version cloning it from the input one and then adding its annotations.
