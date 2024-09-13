@@ -5,7 +5,13 @@
 🐋 Quick Docker image build (demo app):
 
 ```bash
-docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest
+docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --build-arg BUILDPLATFORM=linux
+```
+
+or for ARM:
+
+```bash
+docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --build-arg BUILDPLATFORM=arm64
 ```
 
 (replace with the current version).
@@ -16,10 +22,16 @@ To run the demo in Docker at <localhost:8080>, use this command:
 docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 ```
 
-To build API image:
+To build the API image:
 
 ```bash
-docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest
+docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=linux
+```
+
+or for ARM:
+
+```bash
+docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=arm64
 ```
 
 Real world example for demo:
@@ -41,7 +53,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
-- 2024-09-13: updated packages.
+- 2024-09-13:
+  - updated packages.
+  - added `--platform=$BUILDPLATFORM` to Docker build.
 - 2024-07-08:
   - added tags endpoint.
   - adjusted annotation operation so that it generates a new version cloning it from the input one and then adding its annotations.
