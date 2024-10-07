@@ -8,9 +8,9 @@ namespace Gve.Text.DTO;
 public class AnimationTween
 {
     /// <summary>
-    /// Gets or sets the type.
+    /// Gets or sets the tween type.
     /// </summary>
-    public AnimationTweenType Type { get; set; }
+    public string Type { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the selector for the target of this tween.
@@ -18,14 +18,14 @@ public class AnimationTween
     public string Selector { get; set; } = "";
 
     /// <summary>
-    /// Gets or sets the vars set.
+    /// Gets or sets the vars set serialized into a string.
     /// </summary>
-    public Dictionary<string, object>? Vars { get; set; }
+    public string? Vars { get; set; }
 
     /// <summary>
-    /// Gets or sets the secondary vars set.
+    /// Gets or sets the secondary vars set serialized into a string.
     /// </summary>
-    public Dictionary<string, object>? Vars2 { get; set; }
+    public string? Vars2 { get; set; }
 
     /// <summary>
     /// Gets or sets the optional position.
@@ -53,25 +53,3 @@ public class AnimationTween
         return $"[{Type}] {Label}: {Selector}";
     }
 }
-
-/// <summary>
-/// The type of a tween animation.
-/// </summary>
-public enum AnimationTweenType
-{
-    /// <summary>
-    /// To.
-    /// </summary>
-    To = 0,
-
-    /// <summary>
-    /// From.
-    /// </summary>
-    From,
-
-    /// <summary>
-    /// From and to.
-    /// </summary>
-    FromTo
-}
-
