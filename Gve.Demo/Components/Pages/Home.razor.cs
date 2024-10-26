@@ -1,5 +1,4 @@
 ﻿using Gve.Text;
-using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using System.Diagnostics;
@@ -174,7 +173,6 @@ public partial class Home
             Chain = context.Chain;
             ChainDump = context.Chain.Dump();
 
-            ChainTags.Insert(0, "");
             SelectedChainTag = ChainTags[0];
 
             StateHasChanged();

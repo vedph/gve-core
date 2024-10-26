@@ -8,27 +8,29 @@
 <h1>Chain</h1>
 <RadzenCard>
     <!-- input -->
-    <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="w-100" />
+    <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="full-width" />
     <div style="margin:8px 0">
         <StringView Chars="@TextChars" />
     </div>
 
     <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-                    class="w-100 font-monospace" Rows="8" />
-    <RadzenButton Text="Parse" Click="ParseOperationText"
-                  ButtonStyle="ButtonStyle.Primary" />
+                    class="full-width" Rows="8" />
 
-     @if (ChainTags.Count > 0)
-     {
-         <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags"/>
-     }
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+        <RadzenButton Text="Parse" Click="ParseOperationText"
+                      ButtonStyle="ButtonStyle.Primary" />
+
+        @if (ChainTags.Count > 0)
+        {
+            <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
+        }
+    </RadzenStack>
 
     <!-- parsed operations -->
     <RadzenPanel AllowCollapse="true">
         <HeaderTemplate>
-            <RadzenText TextStyle="TextStyle.H6"
-                        Class="rz-display-flex rz-align-items-center rz-m-0">
-                <RadzenIcon Icon="list_alt" class="rz-mr-1" /> operations
+            <RadzenText TextStyle="TextStyle.H6">
+                <RadzenIcon Icon="list_alt" /> operations
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
@@ -65,7 +67,7 @@
         <RadzenBadge Text="@Operations.Count.ToString()" />
     </RadzenButton>
 
-    <div class="rz-m-12">
+    <div class="full-width">
         <RadzenProgressBar Value="100" Visible="IsBusy"
                            Mode="ProgressBarMode.Indeterminate" />
     </div>
@@ -156,10 +158,11 @@
 
     @if (Chain != null)
     {
-        <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
-                        Multiple="true" Placeholder="chain tags"
-                        Style="margin-bottom:8px" />
-
+        <div>
+            <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
+                            Multiple="true" Placeholder="chain tags"
+                            Style="margin-bottom:8px" />
+        </div>
         <ChainView Chain="@Chain" Tags="@SelectedChainTags" />
     }
 </RadzenCard>

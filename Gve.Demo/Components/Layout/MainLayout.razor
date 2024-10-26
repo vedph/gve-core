@@ -1,25 +1,18 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<RadzenComponents/>
+<RadzenHeader>
+    <RadzenMenu>
+        <RadzenMenuItem Text="Home" Icon="home" Path="" />
+        <RadzenMenuItem Text="About" Path="about" Icon="info" />
+    </RadzenMenu>
+</RadzenHeader>
+<RadzenBody>
+    @Body
+</RadzenBody>
+<RadzenFooter>
+    <div class="text-center">
+        &copy; 2024 - GVE
     </div>
+</RadzenFooter>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="http://www.fusisoft.it/docs/gve/index.html" target="_blank">GVE</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
-
-<RadzenComponents />

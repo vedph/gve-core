@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="Gve.Demo.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    <!-- Radzen -->
     <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css" />
+    @* <RadzenTheme Theme="material" /> *@
     <!-- Blazor diagrams -->
     <link href="_content/Z.Blazor.Diagrams/style.min.css" rel="stylesheet" />
     <link href="_content/Z.Blazor.Diagrams/default.styles.min.css" rel="stylesheet" />
@@ -19,7 +20,8 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <!-- Radzen -->
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
     <!-- Blazor diagrams -->
     <script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
 </body>

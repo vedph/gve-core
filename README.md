@@ -53,6 +53,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-10-26: refactored Blazor demo removing Bootstrap.
 - 2024-10-22: updated packages.
 - 2024-10-18: updated packages.
 - 2024-10-08: updated packages.
