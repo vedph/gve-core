@@ -78,4 +78,48 @@ public sealed class CharChainOperationTest
         Assert.Equal("ABCD", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v6")));
     }
+
+    [Fact]
+    public void Execute_LimerickSample()
+    {
+        const string text = "there was an old man with a beard,\n" +
+            "who cried: \"It is just as I feared!\n" +
+            "four larks and a wren,\n" +
+            "two swans and a hen,\n" +
+            "all built their nests in my beard!\"";
+
+        // setup text
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom(text));
+        context.LastTag = "v0";
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // setup operations
+        const string operationsText =
+            // v0>v1
+            "40x5=\"said\"\n" +
+            // v1>v2
+            "99x5=\"crows\"\n" +
+            // v2>v3
+            "116+[\"have \" [*version^:alpha reason=\"metrical\"]\n" +
+            // v1>v4
+            "72x23<>95x21\n" +
+            // v4>v5
+            "155x5=\"owls\" [*version^:beta]\n";
+
+        List<CharChainOperation> operations = [];
+        foreach (string line in operationsText.Split('\n',
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            CharChainOperation op = CharChainOperation
+                .Parse<CharChainOperation>(line);
+            operations.Add(op);
+        }
+
+        // execute operations
+        foreach (CharChainOperation op in operations) op.Execute(context);
+
+        // TODO
+    }
 }
