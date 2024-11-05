@@ -54,7 +54,7 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         // get to target nodes
-        IList<ChainNode<char>> toNodes = GetReferenceNodes(context.Chain, outputTag,
+        IList<ChainNode<char>> toNodes = GetReferenceNodes(context.Chain, inputTag,
             To, ToRun);
 
         context.Chain.SwapRanges(inputTag, outputTag,

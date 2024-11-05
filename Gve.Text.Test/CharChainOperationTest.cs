@@ -120,6 +120,59 @@ public sealed class CharChainOperationTest
         // execute operations
         foreach (CharChainOperation op in operations) op.Execute(context);
 
-        // TODO
+        Assert.Equal(5, context.Steps.Count);
+
+        IList<string> tags = context.Chain.GetDistinctTags();
+        Assert.Equal(6, tags.Count);
+
+        // v0 (original)
+        Assert.Equal("v0", tags[0]);
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // v1 ("said" replaced "cried")
+        Assert.Equal("v1", tags[1]);
+        Assert.Equal("there was an old man with a beard,\n" +
+            "who said: \"It is just as I feared!\n" +
+            "four larks and a wren,\n" +
+            "two swans and a hen,\n" +
+            "all built their nests in my beard!\"",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v1")));
+
+        // v2 ("crows" replaced "swans")
+        Assert.Equal("v2", tags[2]);
+        Assert.Equal("there was an old man with a beard,\n" +
+            "who said: \"It is just as I feared!\n" +
+            "four larks and a wren,\n" +
+            "two crows and a hen,\n" +
+            "all built their nests in my beard!\"",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v2")));
+
+        // v3 ("have" added before "all"))
+        Assert.Equal("v3", tags[3]);
+        Assert.Equal("there was an old man with a beard,\n" +
+            "who said: \"It is just as I feared!\n" +
+            "four larks and a wren,\n" +
+            "two crows and a hen,\n" +
+            "have all built their nests in my beard!\"",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v3")));
+
+        // v4 (swapped verses 3-4)
+        Assert.Equal("v4", tags[4]);
+        Assert.Equal("there was an old man with a beard,\n" +
+            "who said: \"It is just as I feared!\n" +
+            "two crows and a hen,\n" +
+            "four larks and a wren,\n" +
+            "have all built their nests in my beard!\"",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v4")));
+
+        // v5 ("owls" replaced "crows")
+        Assert.Equal("v5", tags[5]);
+        Assert.Equal("there was an old man with a beard,\n" +
+            "who said: \"It is just as I feared!\n" +
+            "two owls and a hen,\n" +
+            "four larks and a wren,\n" +
+            "have all built their nests in my beard!\"",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v5")));
     }
 }
