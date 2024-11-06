@@ -98,15 +98,16 @@ public sealed class CharChainOperationTest
         // setup operations
         const string operationsText =
             // v0>v1
-            "40x5=\"said\"\n" +
+            "40x5=\"said\" [*log=\"said for cried\"]\n" +
             // v1>v2
-            "99x5=\"crows\"\n" +
+            "99x5=\"crows\" [*log=\"crows for swans\"]\n" +
             // v2>v3
-            "116+[\"have \" [*version^:alpha reason=\"metrical\"]\n" +
+            "116+[\"have \" [*log=\"insert have\" " +
+                "*version^=\"alpha\" reason=\"metrical\"]\n" +
             // v1>v4
-            "72x23<>95x21\n" +
+            "72x23<>95x21 [*log=\"swap verses\"]\n" +
             // v4>v5
-            "155x5=\"owls\" [*version^:beta]\n";
+            "155x5=\"owls\" [*log=\"owls for crows\" *version^=\"beta\"]\n";
 
         List<CharChainOperation> operations = [];
         foreach (string line in operationsText.Split('\n',
