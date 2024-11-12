@@ -27,6 +27,22 @@ public class OperationMetadata
     public const string OPID_KEY = "opid";
 
     /// <summary>
+    /// The key for the X coordinate feature. This is assigned to each node
+    /// which requires to be manually positioned. Usually this happens for
+    /// the first node of a set of nodes added by an operation; the others
+    /// just follow it.
+    /// </summary>
+    public const string X_KEY = "x";
+
+    /// <summary>
+    /// The key for the Y coordinate feature. This is assigned to each node
+    /// which requires to be manually positioned. Usually this happens for
+    /// the first node of a set of nodes added by an operation; the others
+    /// just follow it.
+    /// </summary>
+    public const string Y_KEY = "y";
+
+    /// <summary>
     /// The symbols corresponding to <see cref="OperationType"/>'s.
     /// </summary>
     public static readonly string[] TYPE_SYMBOLS =

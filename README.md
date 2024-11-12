@@ -55,7 +55,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ### 1.0.5
 
-- 2024-11-12: added `opid` feature to each node added by an operation (insertion or replacement). This allows to immediately identify the source of each node when it does not belong to the base text. Base text nodes are those whose IDs range from 1 to N where N is the length of the base text.
+- 2024-11-12:
+  - added `opid` feature to each node added by an operation (insertion or replacement). This allows to immediately identify the source of each node when it does not belong to the base text. Base text nodes are those whose IDs range from 1 to N where N is the length of the base text.
+  - extended behavior of `x` in `ChainOperationContextFeats.UpdateFeatures` to `y` too, under the assumption that an operation adds characters on the same line, where one is after the other. Should you find a corner-case situation where this is not true, you can multiply the operations, each with its own `x` and `y` features.
 
 ### 1.0.4
 

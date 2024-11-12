@@ -134,14 +134,17 @@ public class ChainOperationContextFeats
                     }
 
                     // update node features, except when the feature name
-                    // is x and it is not targeting the first node: this is
-                    // because x is reserved for the first node of a set of
+                    // is x/y and it is not targeting the first node: this is
+                    // because x/y are reserved for the first node of a set of
                     // target nodes. For instance, when adding a new set of
                     // nodes (via insertion or replacement), the first node
                     // is the one that actually gets positioned by
-                    // x (and y), while x will be calculated for the following
-                    // characters.
-                    if (++n == 1 || feature.Name != "x")
+                    // x and y, while x will be calculated and y inherited for
+                    // the following characters (unless they are explicitly
+                    // positioned)
+                    if (++n == 1 ||
+                        (feature.Name != OperationMetadata.X_KEY &&
+                         feature.Name != OperationMetadata.Y_KEY))
                     {
                         OperationFeature.UpdateFeature(feature, nodeFeats,
                             !names.Contains(feature.Name));
