@@ -66,8 +66,14 @@ public sealed class CharChainAddBeforeOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("A likes X", nodeFeatures[0].Value);
+        // opix
+        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = nodeFeatures.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("A likes X", f.Value);
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);

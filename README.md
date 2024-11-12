@@ -53,6 +53,10 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+### 1.0.5
+
+- 2024-11-12: added `opix` feature to each node added by an operation (insertion or replacement). This allows to immediately identify the source of each node when it does not belong to the base text. Base text nodes are those whose IDs range from 1 to N where N is the length of the base text.
+
 ### 1.0.4
 
 - 2024-11-11: fix to `ChainOperationContextFeats.UpdateFeatures` for `x` feature: when the feature name is `x`, it is set only for the first node in the set of the operation's target nodes. This allows for correct positioning of newly added nodes (via insertion or replacement). When adding a new set of nodes, the first node is the one that actually gets positioned by `x`, while the others are positioned next to it. Otherwise, all the new nodes would get the same `x` coordinate, and thus be displayed one on top of the other.

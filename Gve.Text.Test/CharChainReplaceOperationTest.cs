@@ -124,9 +124,15 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced A with X", context.Features[0].Value);
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("like X more", nodeFeatures[0].Value);
+        Assert.Equal(2, nodeFeatures.Count);
+        // opix
+        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = nodeFeatures.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like X more", f.Value);
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
@@ -168,11 +174,19 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced A with X", context.Features[0].Value);
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.Equal(2, nodeFeatures.Count);
-        Assert.Equal("x", nodeFeatures[0].Name);
-        Assert.Equal("25", nodeFeatures[0].Value);
-        Assert.Equal("y", nodeFeatures[1].Name);
-        Assert.Equal("50", nodeFeatures[1].Value);
+        Assert.Equal(3, nodeFeatures.Count);
+        // opix
+        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // x
+        f = nodeFeatures.Find(f => f.Name == "x");
+        Assert.NotNull(f);
+        Assert.Equal("25", f.Value);
+        // y
+        f = nodeFeatures.Find(f => f.Name == "y");
+        Assert.NotNull(f);
+        Assert.Equal("50", f.Value);
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
@@ -213,9 +227,15 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced AB with X", context.Features[0].Value);
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("like X more", nodeFeatures[0].Value);
+        Assert.Equal(2, nodeFeatures.Count);
+        // opix
+        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = nodeFeatures.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like X more", f.Value);
 
         // context steps
         Assert.Single(context.Steps);
@@ -258,14 +278,26 @@ public sealed class CharChainReplaceOperationTest
 
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("like XY more", nodeFeatures[0].Value);
+        Assert.Equal(2, nodeFeatures.Count);
+        // opix
+        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = nodeFeatures.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like XY more", f.Value);
 
         nodeFeatures = context.NodeFeatures["v1_5"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("like XY more", nodeFeatures[0].Value);
+        Assert.Equal(2, nodeFeatures.Count);
+        // opix
+        f = nodeFeatures.Find(f => f.Name == "opix");
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = nodeFeatures.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like XY more", f.Value);
 
         // context steps
         Assert.Single(context.Steps);

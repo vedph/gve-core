@@ -60,9 +60,16 @@ public sealed class CharChainReplaceOperation : CharChainOperation
             }
         }
 
+        // get added nodes and add to each an opix feature with the value
+        // equal to the ID of this operation
+        IList<ChainNode<char>> addedNodes = context.Chain.GetTagNodes(
+            outputTag, true);
+        context.UpdateFeatures(
+            [new OperationFeature("opix", Id, FeatureSetPolicy.Single)],
+            outputTag, addedNodes);
+
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, nodes,
-            context.Chain.GetTagNodes(outputTag, true));
+        UpdateContext(context, inputTag, outputTag, nodes, addedNodes);
     }
 
     /// <summary>
