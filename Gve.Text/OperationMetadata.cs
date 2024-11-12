@@ -21,6 +21,12 @@ public class OperationMetadata
     public const string SOURCE_KEY = "source";
 
     /// <summary>
+    /// The key for the operation ID feature. This is assigned to each node
+    /// added by an operation (=by insertion or replacement).
+    /// </summary>
+    public const string OPID_KEY = "opid";
+
+    /// <summary>
     /// The symbols corresponding to <see cref="OperationType"/>'s.
     /// </summary>
     public static readonly string[] TYPE_SYMBOLS =

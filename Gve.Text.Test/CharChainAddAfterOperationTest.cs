@@ -66,8 +66,9 @@ public sealed class CharChainAddAfterOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.Equal(2, nodeFeatures.Count);
-        // opix
-        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason

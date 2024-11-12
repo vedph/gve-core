@@ -125,8 +125,9 @@ public sealed class CharChainReplaceOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.Equal(2, nodeFeatures.Count);
-        // opix
-        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
@@ -175,8 +176,9 @@ public sealed class CharChainReplaceOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.Equal(3, nodeFeatures.Count);
-        // opix
-        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // x
@@ -228,8 +230,9 @@ public sealed class CharChainReplaceOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.Equal(2, nodeFeatures.Count);
-        // opix
-        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
@@ -279,8 +282,9 @@ public sealed class CharChainReplaceOperationTest
         // node features
         List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
         Assert.Equal(2, nodeFeatures.Count);
-        // opix
-        OperationFeature? f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
@@ -290,8 +294,8 @@ public sealed class CharChainReplaceOperationTest
 
         nodeFeatures = context.NodeFeatures["v1_5"];
         Assert.Equal(2, nodeFeatures.Count);
-        // opix
-        f = nodeFeatures.Find(f => f.Name == "opix");
+        // opid
+        f = nodeFeatures.Find(f => f.Name == OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason

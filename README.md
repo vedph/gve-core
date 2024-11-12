@@ -55,7 +55,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ### 1.0.5
 
-- 2024-11-12: added `opix` feature to each node added by an operation (insertion or replacement). This allows to immediately identify the source of each node when it does not belong to the base text. Base text nodes are those whose IDs range from 1 to N where N is the length of the base text.
+- 2024-11-12: added `opid` feature to each node added by an operation (insertion or replacement). This allows to immediately identify the source of each node when it does not belong to the base text. Base text nodes are those whose IDs range from 1 to N where N is the length of the base text.
 
 ### 1.0.4
 
