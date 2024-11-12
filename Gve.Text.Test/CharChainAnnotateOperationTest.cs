@@ -115,9 +115,7 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("y", nodeFeatures[0].Value);
 
         nodeFeatures = context.NodeFeatures["v0_2"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("x", nodeFeatures[0].Name);
-        Assert.Equal("y", nodeFeatures[0].Value);
+        Assert.Empty(nodeFeatures);
 
         // context steps
         Assert.Single(context.Steps);

@@ -120,17 +120,32 @@ public class ChainOperationContextFeats
             // else update features of each target node
             else if (nodes != null)
             {
+                int n = 0;
                 foreach (ChainNode<T> node in nodes!)
                 {
+                    // get or create node features list
                     string key = $"{tag!}_{node.Id}";
+
                     if (!NodeFeatures.TryGetValue(key,
                         out List<OperationFeature>? nodeFeats))
                     {
                         nodeFeats = [];
                         NodeFeatures[key] = nodeFeats;
                     }
-                    OperationFeature.UpdateFeature(feature, nodeFeats,
-                        !names.Contains(feature.Name));
+
+                    // update node features, except when the feature name
+                    // is x and it is not targeting the first node: this is
+                    // because x is reserved for the first node of a set of
+                    // target nodes. For instance, when adding a new set of
+                    // nodes (via insertion or replacement), the first node
+                    // is the one that actually gets positioned by
+                    // x (and y), while x will be calculated for the following
+                    // characters.
+                    if (++n == 1 || feature.Name != "x")
+                    {
+                        OperationFeature.UpdateFeature(feature, nodeFeats,
+                            !names.Contains(feature.Name));
+                    }
                 }
             }
 

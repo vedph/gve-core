@@ -139,7 +139,8 @@ public abstract partial class CharChainOperation : OperationMetadata
         // add the first node
         nodes.Add(node);
 
-        // if run is 1 (or 0, which is used for reference nodes), return the node only
+        // if run is 1 (or 0, which is used for reference nodes), return
+        // the node only
         if (run < 2)
         {
             return nodes;
@@ -329,8 +330,8 @@ public abstract partial class CharChainOperation : OperationMetadata
     /// </summary>
     /// <param name="tag">The output tag of this operation.</param>
     /// <param name="context">The context to update.</param>
-    /// <param name="targetNodes">The nodes to be used as targets for features. If
-    /// not specified, these will be calculated from the operation's target
+    /// <param name="targetNodes">The nodes to be used as targets for features.
+    /// If not specified, these will be calculated from the operation's target
     /// range.</param>
     /// <remarks>The <see cref="OperationMetadata.Rank"/> property when not
     /// 0 is added as a unique feature; anyway, it can be overridden by another
