@@ -11,7 +11,7 @@ docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --build-
 or for ARM:
 
 ```bash
-docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --build-arg BUILDPLATFORM=arm64
+docker build . -t vedph2020/gve-demo_arm:1.0.1 -t vedph2020/gve-demo_arm:latest --build-arg BUILDPLATFORM=arm64
 ```
 
 (replace with the current version).
@@ -25,13 +25,13 @@ docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 To build the API image:
 
 ```bash
-docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=linux
+docker build . -f Dockerfile-api -t vedph2020/gve-api:2.0.0 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=linux
 ```
 
 or for ARM:
 
 ```bash
-docker build . -f Dockerfile.api -t vedph2020/gve-api:0.0.1 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=arm64
+docker build . -f Dockerfile-api -t vedph2020/gve-api_arm:2.0.0 -t vedph2020/gve-api_arm:latest --build-arg BUILDPLATFORM=arm64
 ```
 
 Real world example for demo:
