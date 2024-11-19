@@ -53,6 +53,10 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+### 2.0.0
+
+- 2024-11-19: ⚠️ upgraded to .NET 9 except for `Gve.Demo` which is being hold back by its dependencies. To allow for the upgrade, the `Gve.Demo` project dependency on `Gve.Text` has been moved to a NuGet package rather than to the project in this solution. As soon as the required packages are updated, the project dependency will be restored.
+
 ### 1.0.5
 
 - 2024-11-12:

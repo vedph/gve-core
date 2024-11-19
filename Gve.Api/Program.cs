@@ -2,6 +2,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Gve.Api.Services;
+using Scalar.AspNetCore;
 using Serilog;
 
 namespace Gve.Api;
@@ -12,7 +13,7 @@ public static class Program
     {
         Console.WriteLine("ENVIRONMENT VARIABLES:");
         IDictionary dct = Environment.GetEnvironmentVariables();
-        List<string> keys = new();
+        List<string> keys = [];
         var enumerator = dct.GetEnumerator();
         while (enumerator.MoveNext())
         {
@@ -67,9 +68,8 @@ public static class Program
             return factory.CreateLogger("Logger");
         });
 
-        // Swagger/OpenAPI (https://aka.ms/aspnetcore/swashbuckle)
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddOpenApi();
     }
 
     private static void ConfigureLogger(WebApplicationBuilder builder)
@@ -110,13 +110,10 @@ public static class Program
         app.UseCors("CorsPolicy");
 
         // HTTP request pipeline
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-        //app.UseAuthorization();
         app.MapControllers();
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+
         app.Run();
     }
 }
