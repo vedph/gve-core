@@ -34,7 +34,21 @@ or for ARM:
 docker build . -f Dockerfile-api -t vedph2020/gve-api_arm:2.0.0 -t vedph2020/gve-api_arm:latest --build-arg BUILDPLATFORM=arm64
 ```
 
-Real world example for demo:
+Real world examples for demo:
+
+```txt
+there was an old man with a beard,
+who cried: "It is just as I feared!
+four larks and a wren,
+two swans and a hen,
+all built their nests in my beard!"
+
+40x5="said" [*log="said for cried" x="72" y="140" style="font-size:20px;fill:red"]
+99x5="crows" [*log="crows for swans" x="30" y="210" style="font-size:20px;fill:red"]
+116+["have " [*log="insert have" *version^="alpha" reason="metrical" x="20" y="250" style="font-size:20px;fill:red"]
+72x23<>95x21  [*log="swap verses"]
+155x5="owls" [*log="owls for crows" *version^="beta" x="110" y="210" style="font-size:20px;fill:red"]
+```
 
 ```txt
 Seyd Vernünftige mir g'rade Mitte gest
