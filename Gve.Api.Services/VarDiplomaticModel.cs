@@ -53,7 +53,7 @@ public class VarDiplomaticModel
         // and parent IDs
         if (!string.IsNullOrEmpty(G))
         {
-            GElements = new List<GElementModel>();
+            GElements = [];
             XElement g = XElement.Parse(G);
             foreach (XElement e in g.DescendantsAndSelf())
             {

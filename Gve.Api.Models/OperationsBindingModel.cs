@@ -1,4 +1,5 @@
 ﻿using Gve.Text.DTO;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gve.Api.Models;

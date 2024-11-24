@@ -12,13 +12,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-		<PackageReference Include="Scalar.AspNetCore" Version="1.2.43" />
+		<PackageReference Include="Scalar.AspNetCore" Version="1.2.44" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Gve.Api.Controllers\Gve.Api.Controllers.csproj" />
+		<ProjectReference Include="..\Gve.Api.Models\Gve.Api.Models.csproj" />
 		<ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 

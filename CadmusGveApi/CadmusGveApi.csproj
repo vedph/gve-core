@@ -10,10 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Cadmus.Api.Config" Version="10.1.2" />
 		<PackageReference Include="Cadmus.Api.Controllers" Version="10.1.0" />
 		<PackageReference Include="Cadmus.Api.Controllers.Import" Version="10.1.0" />
@@ -30,7 +26,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Polly" Version="8.5.0" />
-		<PackageReference Include="Scalar.AspNetCore" Version="1.2.43" />
+		<PackageReference Include="Scalar.AspNetCore" Version="1.2.44" />
 		<PackageReference Include="Serilog" Version="4.1.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
@@ -43,6 +39,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Cadmus.Gve.Services\Cadmus.Gve.Services.csproj" />
+		<ProjectReference Include="..\Gve.Api.Controllers\Gve.Api.Controllers.csproj" />
+		<ProjectReference Include="..\Gve.Api.Models\Gve.Api.Models.csproj" />
 	</ItemGroup>
 
 </Project>

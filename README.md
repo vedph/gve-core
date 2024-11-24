@@ -67,6 +67,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-11-24: moved controllers to libraries to allow sharing among APIs.
 - 2024-11-23: updated packages.
 
 ### 2.0.0
@@ -130,8 +131,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 - 2024-02-20: changed `VarOperation` ID to string and used [Nanoid](https://github.com/ai/nanoid) to generate IDs equal both on client and server side.
 - 2024-02-06: updated packages.
 - 2024-01-30: added Docker for demo.
-- 2024-01-15:
-  - added Cadmus-related packages.
+- 2024-01-15: added Cadmus-related packages.
 - 2024-01-09:
   - updated packages.
   - make `Feature`'s `Value` optional.

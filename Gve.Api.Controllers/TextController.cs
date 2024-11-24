@@ -2,6 +2,9 @@
 using Gve.Text;
 using Gve.Text.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Gve.Api.Controllers;
 
@@ -10,7 +13,7 @@ namespace Gve.Api.Controllers;
 /// </summary>
 /// <seealso cref="Controller" />
 [ApiController]
-[Route("text")]
+[Route("api/text")]
 public sealed class TextController : ControllerBase
 {
     /// <summary>

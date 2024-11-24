@@ -1,4 +1,6 @@
-﻿namespace Gve.Api.Models;
+﻿using System;
+
+namespace Gve.Api.Models;
 
 public class OperationTagsModel
 {
