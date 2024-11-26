@@ -508,6 +508,28 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void Execute_Replacing_Tail()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("say"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 3,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "id",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"replaced say with said\""),
+            ]
+        };
+        op.Execute(context);
+        Assert.Equal("said", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
     public void Execute_RealWorld()
     {
         // v0
