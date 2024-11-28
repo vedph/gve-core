@@ -67,6 +67,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+### 2.0.1
+
+- 2024-11-28: added `isNewTextHidden` to operation diplomatics.
 - 2024-11-24: moved controllers to libraries to allow sharing among APIs.
 - 2024-11-23: updated packages.
 

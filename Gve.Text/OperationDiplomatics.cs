@@ -16,6 +16,13 @@ public class OperationDiplomatics
     public string? G { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the new text nodes added by
+    /// this operation (when there are any) are to be initially hidden. This
+    /// happens when you want to apply some enter animation to them.
+    /// </summary>
+    public bool IsNewTextHidden { get; set; }
+
+    /// <summary>
     /// Gets or sets the optional generic set of features attached to the text
     /// variant as a whole (e.g. type, size, etc.).
     /// </summary>
