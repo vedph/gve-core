@@ -37,6 +37,14 @@ docker build . -f Dockerfile-api -t vedph2020/gve-api_arm:2.0.0 -t vedph2020/gve
 Real world examples for demo:
 
 ```txt
+1234567890
+he did say
+
+4x4- [*log="delete did"]
+10x1="id" [*log="replace say with said" *version^="beta"]
+```
+
+```txt
 there was an old man with a beard,
 who cried: "It is just as I feared!
 four larks and a wren,
@@ -66,6 +74,8 @@ or better, keeping into account also the requirements of diplomatic annotations:
 ```
 
 ## History
+
+- 2024-12-03: updated packages.
 
 ### 2.0.1
 
