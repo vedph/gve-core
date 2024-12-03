@@ -112,7 +112,10 @@ public static class Program
         // HTTP request pipeline
         app.MapControllers();
         app.MapOpenApi();
-        app.MapScalarApiReference();
+        app.MapScalarApiReference(options =>
+        {
+            options.WithTitle("GVE API");
+        });
 
         app.Run();
     }
