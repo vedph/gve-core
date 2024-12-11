@@ -75,6 +75,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2024-12-11: added endpoint `api/text/operations/run/chain`.
 - 2024-12-10: upgraded Gve.Demo to .NET 9 restoring the dependency from project in the same solution.
 - 2024-12-03: updated packages.
 

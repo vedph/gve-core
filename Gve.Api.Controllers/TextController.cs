@@ -177,4 +177,44 @@ public sealed class TextController : ControllerBase
             return new ResultWrapperModel<CharChainResultModel>(null, e.Message);
         }
     }
+
+    /// <summary>
+    /// Runs operations on the specified text returning data from the inner
+    /// chain structure.
+    /// </summary>
+    /// <param name="model">The model with text and operations.</param>
+    /// <returns>Object with either <c>result</c> or <c>error</c>
+    /// (an error message).</returns>
+    [HttpPost("operations/run/chain")]
+    [Produces("application/json")]
+    public ResultWrapperModel<CharChainModel>
+        GetChain([FromBody] TextOperationsBindingModel model)
+    {
+        try
+        {
+            // get operations
+            List<CharChainOperation> operations = model.Operations.Select(
+                s => s.ToOperation()).ToList();
+
+            // init chain with base text (v0)
+            ChainOperationContext<char> context = new();
+            context.Chain.Reset(GetNodesFrom(model.Text));
+            context.LastTag = "v0";
+
+            // execute all the operations in their order
+            List<string> tags = [];
+            foreach (CharChainOperation op in operations)
+            {
+                op.Execute(context);
+                tags.Add(context.LastTag);
+            }
+
+            CharChainModel result = new(context.Chain);
+            return new ResultWrapperModel<CharChainModel>(result);
+        }
+        catch (Exception e)
+        {
+            return new ResultWrapperModel<CharChainModel>(null, e.Message);
+        }
+    }
 }

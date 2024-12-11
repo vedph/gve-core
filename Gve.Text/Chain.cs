@@ -29,7 +29,7 @@ namespace Gve.Text;
 /// both nodes and links are immutable items of an unordered set.</remarks>
 public class Chain<T>
 {
-    private readonly object _locker = new();
+    private readonly Lock _locker = new();
     private int _maxId;
 
     /// <summary>
