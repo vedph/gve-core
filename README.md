@@ -75,6 +75,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2025-01-10: updated packages.
 - 2025-01-07: updated packages.
 - 2024-12-22: updated packages.
 - 2024-12-11: added endpoint `api/text/operations/run/chain`.
