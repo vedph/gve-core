@@ -1,37 +1,43 @@
 ﻿# GVE
 
+[VEdition](https://vedph.github.io/gve-doc) backend (code-named `GVE` = Goethe Venetian Epigrams). This solution contains 3 main projects:
+
+- the GVE API to be used with the corresponding [GVE frontend shell](https://github.com/vedph/gve-shell).
+- the Cadmus GVE API to be used with the corresponding [Cadmus editor frontend](https://github.com/vedph/cadmus-gve-app).
+- the GVE chain core demo, a minimalist web based UI (directly consuming core components via Blazor) to test the chain structure.
+
 ## Docker
 
-🐋 Quick Docker image build (demo app):
+🐋 Quick Docker image build (replace with the current versions): as you need a `buildx` container, first ensure to have started one like this:
 
-```bash
-docker build . -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --build-arg BUILDPLATFORM=linux
+```sh
+docker buildx create --use
 ```
 
-or for ARM:
+- 👉 GVE API:
 
-```bash
-docker build . -t vedph2020/gve-demo_arm:1.0.1 -t vedph2020/gve-demo_arm:latest --build-arg BUILDPLATFORM=arm64
+```sh
+docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64 -t vedph2020/gve-api:2.0.2 -t vedph2020/gve-api:latest --push
 ```
 
-(replace with the current version).
+- 👉 GVE CADMUS API:
+
+```bash
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:2.0.0 -t vedph2020/cadmus-gve-api:latest --push
+```
+
+- 👉 DEMO:
+
+```bash
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --push
+```
+
+## Demo
 
 To run the demo in Docker at <localhost:8080>, use this command:
 
 ```ps1
 docker run -it --rm -p 8080:80 --name gve-demo gve-demo
-```
-
-To build the API image:
-
-```bash
-docker build . -f Dockerfile-api -t vedph2020/gve-api:2.0.0 -t vedph2020/gve-api:latest --build-arg BUILDPLATFORM=linux
-```
-
-or for ARM:
-
-```bash
-docker build . -f Dockerfile-api -t vedph2020/gve-api_arm:2.0.0 -t vedph2020/gve-api_arm:latest --build-arg BUILDPLATFORM=arm64
 ```
 
 Real world examples for demo:
@@ -74,6 +80,8 @@ or better, keeping into account also the requirements of diplomatic annotations:
 ```
 
 ## History
+
+### 2.0.2
 
 - 2025-01-12: updated packages.
 - 2025-01-10: updated packages.
