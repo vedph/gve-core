@@ -15,8 +15,9 @@ public class ChainOperationContextFeats
     public List<OperationFeature> Features { get; } = [];
 
     /// <summary>
-    /// Gets the node features dictionary, where the key is a tuple of the
-    /// version tag and the node ID, and the value is a list of features.
+    /// Gets the node features dictionary, where key is a string built
+    /// from version tag and node ID (e.g. <c>v1_4</c>, and value is a list
+    /// of features.
     /// </summary>
     public Dictionary<string, List<OperationFeature>> NodeFeatures { get; } = [];
 
