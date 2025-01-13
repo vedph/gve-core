@@ -187,4 +187,15 @@ public class CharChainOperationSource
 
         return op;
     }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return ToOperation().ToString();
+    }
 }
