@@ -156,6 +156,8 @@ public sealed class TextController : ControllerBase
                 int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
+                    IList<Feature> feats = context.GetNodeFeatures(
+                            node.Id, tagsUpToCurrent);
                     CharChainNode m = new()
                     {
                         Id = node.Id,
@@ -163,8 +165,7 @@ public sealed class TextController : ControllerBase
                         Label = node.Label,
                         Data = node.Data,
                         SourceTag = node.SourceTag,
-                        Features = context.GetNodeFeatures(
-                            node.Id, tagsUpToCurrent)
+                        Features = feats.Count == 0? null : feats
                     };
                     result.TaggedNodes[tag].Add(m);
                 }
