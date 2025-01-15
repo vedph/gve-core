@@ -152,12 +152,10 @@ public sealed class TextController : ControllerBase
                 result.TaggedNodes[tag] = [];
 
                 // create their models with injected features from context
-                List<string> tagsUpToCurrent = tags[..(tags.IndexOf(tag) + 1)];
                 int i = 0;
                 foreach (ChainNode<char> node in nodes)
                 {
-                    IList<Feature> feats = context.GetNodeFeatures(
-                            node.Id, tagsUpToCurrent);
+                    IList<Feature> feats = context.GetNodeFeatures(node.Id, tag);
                     CharChainNode m = new()
                     {
                         Id = node.Id,

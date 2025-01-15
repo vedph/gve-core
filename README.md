@@ -17,7 +17,7 @@ docker buildx create --use
 - 👉 GVE API:
 
 ```sh
-docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64 -t vedph2020/gve-api:2.0.2 -t vedph2020/gve-api:latest --push
+docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64 -t vedph2020/gve-api:2.0.3 -t vedph2020/gve-api:latest --push
 ```
 
 - 👉 GVE CADMUS API:
@@ -83,7 +83,9 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ### 2.0.3
 
-- 2025-01-15: updated packages.
+- 2025-01-15:
+  - fix to `ChainOperationContextFeats.GetNodeFeatures` (need to look only at a single tag).
+  - updated packages.
 
 ### 2.0.2
 
