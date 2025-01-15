@@ -58,7 +58,7 @@ public partial class Home
             // v5 = APCD (beta)
             "4<>5\n" +
             // v6 = ABCD (gamma)
-            "(v3:) 4<>5 [*version^:=gamma]";
+            "(v3:) 4<>5 [*log=\"swap D with C\" *version^:=gamma]";
         OnTextChanged(_text);
     }
 
