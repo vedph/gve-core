@@ -23,7 +23,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64 -t ve
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:2.0.2 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:2.0.3 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
