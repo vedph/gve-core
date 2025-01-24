@@ -81,6 +81,8 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2025-01-20: updated packages.
+
 ### 2.0.3
 
 - 2025-01-15:
