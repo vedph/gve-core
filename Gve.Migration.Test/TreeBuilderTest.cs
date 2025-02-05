@@ -93,7 +93,7 @@ public class TreeBuilderTest
         TreeNode<CharChainNode> aNode = tree.Children[0];
         Assert.Equal('A', aNode.Data!.Data);
         Tuple<int, int> yx = aNode.GetYX();
-        Assert.Equal(1, yx.Item1);
+        Assert.Equal(2, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // A has 3 children: R, B, P
@@ -101,19 +101,19 @@ public class TreeBuilderTest
         TreeNode<CharChainNode> rNode = aNode.Children[0];
         Assert.Equal('R', rNode.Data!.Data);
         yx = aNode.GetYX();
-        Assert.Equal(2, yx.Item1);
+        Assert.Equal(3, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         TreeNode<CharChainNode> bNode = aNode.Children[1];
         Assert.Equal('B', bNode.Data!.Data);
         yx = aNode.GetYX();
-        Assert.Equal(2, yx.Item1);
+        Assert.Equal(3, yx.Item1);
         Assert.Equal(2, yx.Item2);
 
         TreeNode<CharChainNode> pNode = aNode.Children[2];
         Assert.Equal('P', pNode.Data!.Data);
         yx = aNode.GetYX();
-        Assert.Equal(2, yx.Item1);
+        Assert.Equal(3, yx.Item1);
         Assert.Equal(3, yx.Item2);
 
         // R has 2 children: D, Z
@@ -121,13 +121,13 @@ public class TreeBuilderTest
         TreeNode<CharChainNode> node = rNode.Children[0];
         Assert.Equal('D', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(3, yx.Item1);
+        Assert.Equal(4, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         node = rNode.Children[1];
         Assert.Equal('Z', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(3, yx.Item1);
+        Assert.Equal(4, yx.Item1);
         Assert.Equal(2, yx.Item2);
 
         // D has 1 child: C
@@ -135,7 +135,7 @@ public class TreeBuilderTest
         node = rNode.Children[0].Children[0];
         Assert.Equal('C', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
+        Assert.Equal(5, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // Z has 1 child: D
@@ -143,7 +143,7 @@ public class TreeBuilderTest
         node = rNode.Children[1].Children[0];
         Assert.Equal('D', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
+        Assert.Equal(5, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // B has 2 children: C, D
@@ -151,13 +151,13 @@ public class TreeBuilderTest
         node = bNode.Children[0];
         Assert.Equal('C', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(3, yx.Item1);
+        Assert.Equal(4, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         node = bNode.Children[1];
         Assert.Equal('D', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(3, yx.Item1);
+        Assert.Equal(4, yx.Item1);
         Assert.Equal(2, yx.Item2);
 
         // C has 1 child: D
@@ -165,7 +165,7 @@ public class TreeBuilderTest
         node = bNode.Children[0].Children[0];
         Assert.Equal('D', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
+        Assert.Equal(5, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // D has 1 child: C
@@ -173,7 +173,7 @@ public class TreeBuilderTest
         node = bNode.Children[1].Children[0];
         Assert.Equal('C', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
+        Assert.Equal(5, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // P has 1 child: D
@@ -181,7 +181,7 @@ public class TreeBuilderTest
         node = pNode.Children[0];
         Assert.Equal('D', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(3, yx.Item1);
+        Assert.Equal(4, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
         // D has 1 child: C
@@ -189,7 +189,7 @@ public class TreeBuilderTest
         node = pNode.Children[0].Children[0];
         Assert.Equal('C', node.Data!.Data);
         yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
+        Assert.Equal(5, yx.Item1);
         Assert.Equal(1, yx.Item2);
     }
 }
