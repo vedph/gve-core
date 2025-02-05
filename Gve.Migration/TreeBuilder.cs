@@ -40,8 +40,8 @@ public static class TreeBuilder
         FindLastEqualNodeRecursive(TreeNode<CharChainNode> currentNode,
         List<CharChainNode> nodes, int index)
     {
-        if (currentNode.Data == null || index >= nodes.Count ||
-            currentNode.Data!.Data != nodes[index].Data)
+        if (!currentNode.HasChildren || index >= nodes.Count ||
+            currentNode.Data?.Data != nodes[index].Data)
         {
             return (currentNode, index);
         }
