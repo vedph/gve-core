@@ -72,8 +72,8 @@ public class TreeBuilderTest
 
         Assert.NotNull(tree);
         // tree:
-        // - A (1.1)
-        //   - R (2.1)
+        // - A (1.1, v6 v5 v4 v3 v2 v1 v0)
+        //   - R (2.1, v1)
         //     - D (3.1)
         //       - C (4.1)
         //     - Z (3.2)
