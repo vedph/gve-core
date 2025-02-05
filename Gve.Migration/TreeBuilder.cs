@@ -41,7 +41,8 @@ public static class TreeBuilder
         List<CharChainNode> nodes, int index)
     {
         if (!currentNode.HasChildren || index >= nodes.Count ||
-            currentNode.Data?.Data != nodes[index].Data)
+            (currentNode.Data?.Data != null &&
+             currentNode.Data.Data != nodes[index].Data))
         {
             return (currentNode, index);
         }
