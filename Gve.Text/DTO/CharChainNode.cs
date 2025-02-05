@@ -40,6 +40,23 @@ public class CharChainNode
     public IList<Feature>? Features { get; set; }
 
     /// <summary>
+    /// Clones this instance.
+    /// </summary>
+    /// <returns>New instance.</returns>
+    public CharChainNode Clone()
+    {
+        return new CharChainNode
+        {
+            Id = Id,
+            Index = Index,
+            Label = Label,
+            Data = Data,
+            SourceTag = SourceTag,
+            Features = Features != null ? new List<Feature>(Features) : null
+        };
+    }
+
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>

@@ -12,6 +12,12 @@ namespace Gve.Migration;
 /// </summary>
 public static class TreeBuilder
 {
+    /// <summary>
+    /// The name of the tag feature added to the data payload of each tree node
+    /// to indicate the version it belongs to.
+    /// </summary>
+    public const string TAG_FEATURE_NAME = "_tag";
+
     private static List<CharChainNode> BuildVersionNodes(
         IList<ChainNode<char>> nodes,
         ChainOperationContext<char> context,
@@ -72,14 +78,29 @@ public static class TreeBuilder
         return FindLastEqualNodeRecursive(root, nodes, 0);
     }
 
-    public static TreeNode<CharChainNode> Build(ChainOperationContext<char> context)
+    /// <summary>
+    /// Builds a tree from the specified chain operation execution context.
+    /// Each chain version, starting from the latest, is projected on the tree
+    /// by reusing its starting nodes and adding new nodes as needed.
+    /// This reduces the multiple dimensions of the chain graph to the two
+    /// dimensions of a tree, of course incurring in nodes duplication.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>Root node of the tree. Each node except the root has payload
+    /// data equal to a cloned instance of the corresponding chain node, with
+    /// an added <see cref="TAG_FEATURE_NAME"/> feature to define the version
+    /// tag it belongs to.</returns>
+    /// <exception cref="ArgumentNullException">context</exception>
+    public static TreeNode<CharChainNode> Build(
+        ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         TreeNode<CharChainNode> root = new(null);
 
         // for each tag starting from the last one
         IList<string> tags = context.Chain.GetDistinctTags();
-        foreach (string tag in tags.Where(s => !string.IsNullOrEmpty(s)).Reverse())
+        foreach (string tag in tags.Where(s => !string.IsNullOrEmpty(s))
+            .Reverse())
         {
             // get the nodes tagged with this version
             List<CharChainNode> verNodes = BuildVersionNodes(
@@ -90,9 +111,28 @@ public static class TreeBuilder
                 FindNodeForBranching(root, verNodes);
 
             // add the remaining nodes as children of the branching node
+            if (length > 0)
+            {
+                // add a new tag feature to branch node data and to all its
+                // ascendants up to the root, excluded
+                TreeNode<CharChainNode> node = branchNode;
+                while (node?.Data != null)
+                {
+                    node.Data!.Features ??= [];
+                    node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+                        FeatureSetPolicy.Multiple));
+                    node = node.Parent!;
+                }
+            }
+
             foreach (CharChainNode node in verNodes.Skip(length))
             {
-                TreeNode<CharChainNode> child = new(node);
+                CharChainNode clone = node.Clone();
+                clone.Features ??= [];
+                clone.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+                    FeatureSetPolicy.Multiple));
+
+                TreeNode<CharChainNode> child = new(clone);
                 branchNode.AddChild(child);
                 branchNode = child;
             }
