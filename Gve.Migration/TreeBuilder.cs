@@ -42,40 +42,48 @@ public static class TreeBuilder
         return taggedNodes;
     }
 
-    private static (TreeNode<CharChainNode> node, int length)
-        FindLastEqualNodeRecursive(TreeNode<CharChainNode> currentNode,
-        List<CharChainNode> nodes, int index)
+    private static (TreeNode<CharChainNode> node, int matchLength) FindCommonPrefix(
+      TreeNode<CharChainNode> root,
+      List<CharChainNode> nodes)
     {
-        if (!currentNode.HasChildren || index >= nodes.Count ||
-            (currentNode.Data?.Data != null &&
-             currentNode.Data.Data != nodes[index].Data))
-        {
-            return (currentNode, index);
-        }
+        if (nodes.Count == 0 || !root.HasChildren) return (root, 0);
 
-        TreeNode<CharChainNode> bestMatchNode = currentNode;
-        int bestMatchLength = index;
+        TreeNode<CharChainNode> current = root;
+        int matchLength = 0;
 
-        foreach (TreeNode<CharChainNode> child in currentNode.Children)
+        while (current.HasChildren && matchLength < nodes.Count)
         {
-            var (matchedNode, matchedLength) = FindLastEqualNodeRecursive(
-                child, nodes, index + 1);
-            if (matchedLength > bestMatchLength)
+            bool foundMatch = false;
+            foreach (TreeNode<CharChainNode> child in current.Children)
             {
-                bestMatchNode = matchedNode;
-                bestMatchLength = matchedLength;
+                if (child.Data?.Data == nodes[matchLength].Data)
+                {
+                    current = child;
+                    matchLength++;
+                    foundMatch = true;
+                    break;
+                }
             }
+            if (!foundMatch) break;
         }
 
-        return (bestMatchNode, bestMatchLength);
+        return (current, matchLength);
     }
 
-    private static (TreeNode<CharChainNode> node, int length) FindNodeForBranching(
-        TreeNode<CharChainNode> root, List<CharChainNode> nodes)
+    private static void AddVersionTagToNode(TreeNode<CharChainNode> node,
+        string tag)
     {
-        if (!root.HasChildren) return (root, 0);
-
-        return FindLastEqualNodeRecursive(root, nodes, 0);
+        while (node?.Data != null)
+        {
+            node.Data.Features ??= [];
+            if (!node.Data.Features.Any(f =>
+                f.Name == TAG_FEATURE_NAME && f.Value == tag))
+            {
+                node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+                    FeatureSetPolicy.Multiple));
+            }
+            node = node.Parent!;
+        }
     }
 
     /// <summary>
@@ -92,49 +100,43 @@ public static class TreeBuilder
     /// tag it belongs to.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
     public static TreeNode<CharChainNode> Build(
-        ChainOperationContext<char> context)
+          ChainOperationContext<char> context)
     {
         ArgumentNullException.ThrowIfNull(context);
         TreeNode<CharChainNode> root = new(null);
 
-        // for each tag starting from the last one
-        IList<string> tags = context.Chain.GetDistinctTags();
-        foreach (string tag in tags.Where(s => !string.IsNullOrEmpty(s))
-            .Reverse())
+        // process tags in reverse order (newest to oldest)
+        IList<string> tags = context.Chain.GetDistinctTags()
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Reverse()
+            .ToList();
+
+        foreach (string tag in tags)
         {
-            // get the nodes tagged with this version
-            List<CharChainNode> verNodes = BuildVersionNodes(
+            // get nodes for this version
+            List<CharChainNode> versionNodes = BuildVersionNodes(
                 context.Chain.GetTagNodes(tag), context, tag);
 
-            // find the branching node for this version
-            (TreeNode<CharChainNode> branchNode, int length) =
-                FindNodeForBranching(root, verNodes);
+            // find where this version branches from existing tree
+            (TreeNode<CharChainNode> branchNode, int matchLength) =
+                FindCommonPrefix(root, versionNodes);
 
-            // add the remaining nodes as children of the branching node
-            if (length > 0)
-            {
-                // add a new tag feature to branch node data and to all its
-                // ascendants up to the root, excluded
-                TreeNode<CharChainNode> node = branchNode;
-                while (node?.Data != null)
-                {
-                    node.Data!.Features ??= [];
-                    node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                        FeatureSetPolicy.Multiple));
-                    node = node.Parent!;
-                }
-            }
+            // add version tag to matching nodes
+            if (matchLength > 0) AddVersionTagToNode(branchNode, tag);
 
-            foreach (CharChainNode node in verNodes.Skip(length))
+            // add remaining nodes as new branch
+            TreeNode<CharChainNode> currentNode = branchNode;
+            for (int i = matchLength; i < versionNodes.Count; i++)
             {
+                CharChainNode node = versionNodes[i];
                 CharChainNode clone = node.Clone();
                 clone.Features ??= [];
                 clone.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
                     FeatureSetPolicy.Multiple));
 
-                TreeNode<CharChainNode> child = new(clone);
-                branchNode.AddChild(child);
-                branchNode = child;
+                TreeNode<CharChainNode> newNode = new(clone);
+                currentNode.AddChild(newNode);
+                currentNode = newNode;
             }
         }
 
