@@ -4,62 +4,71 @@ using System.Xml.Linq;
 
 namespace Gve.Migration;
 
-public class TreeToXmlConverter<T>
+/// <summary>
+/// Converter from a tree to XML.
+/// </summary>
+/// <typeparam name="T">The tree node data type.</typeparam>
+public sealed class TreeToXmlConverter<T>
 {
+    /// <summary>
+    /// Gets or sets the name of the branching element.
+    /// </summary>
     public XName BranchingElementName { get; set; } = "app";
+
+    /// <summary>
+    /// Gets or sets the name of the first branch element.
+    /// </summary>
     public XName Branch1ElementName { get; set; } = "lem";
+
+    /// <summary>
+    /// Gets or sets the name of the second branch element.
+    /// </summary>
     public XName Branch2ElementName { get; set; } = "rdg";
 
-    private readonly Action<XElement, TreeNode<T>> _attributeInjector;
-
-    public TreeToXmlConverter(
-        Action<XElement, TreeNode<T>> attributeInjector)
-    {
-        _attributeInjector = attributeInjector;
-    }
+    /// <summary>
+    /// Gets or sets the optional attribute injector.
+    /// </summary>
+    public Action<XElement, TreeNode<T>>? AttributeInjector { get; set; }
 
     private XElement BuildBranchXml(TreeNode<T> node)
     {
-        // For a node with multiple children, create an app element
+        // for a node with multiple children, create an app element
         if (node.Children.Count > 1)
         {
             XElement app = new(BranchingElementName);
-            _attributeInjector(app, node);
+            AttributeInjector?.Invoke(app, node);
 
-            // First child goes in lem
-            XElement lem = new(Branch1ElementName);
-            _attributeInjector(lem, node.Children[0]);
-            app.Add(lem);
-            AddChildrenToElement(lem, node.Children[0]);
+            // first child
+            XElement child1 = new(Branch1ElementName);
+            AttributeInjector?.Invoke(child1, node.Children[0]);
+            app.Add(child1);
+            AddChildrenToElement(child1, node.Children[0]);
 
-            // Subsequent children each go in rdg
+            // subsequent children
             for (int i = 1; i < node.Children.Count; i++)
             {
-                XElement rdg = new(Branch2ElementName);
-                _attributeInjector(rdg, node.Children[i]);
-                app.Add(rdg);
-                AddChildrenToElement(rdg, node.Children[i]);
+                XElement child2 = new(Branch2ElementName);
+                AttributeInjector?.Invoke(child2, node.Children[i]);
+                app.Add(child2);
+                AddChildrenToElement(child2, node.Children[i]);
             }
 
             return app;
         }
-        // For a node with single child, create an element with the node's content
+        // for a node with single child, create an element with the node's content
         else if (node.Children.Count == 1)
         {
             XElement element = new(Branch1ElementName);
-            _attributeInjector(element, node);
+            AttributeInjector?.Invoke(element, node);
             AddChildrenToElement(element, node.Children[0]);
             return element;
         }
-        // For a leaf node, create an element with just the node's content
+        // for a leaf node, create an element with just the node's content
         else
         {
             XElement element = new(Branch1ElementName);
-            _attributeInjector(element, node);
-            if (node.Data != null)
-            {
-                element.Add(node.Data.ToString());
-            }
+            AttributeInjector?.Invoke(element, node);
+            if (node.Data != null) element.Add(node.Data.ToString());
             return element;
         }
     }
@@ -68,24 +77,24 @@ public class TreeToXmlConverter<T>
     {
         if (!node.HasChildren)
         {
-            if (node.Data != null)
-            {
-                element.Add(node.Data.ToString());
-            }
+            if (node.Data != null) element.Add(node.Data.ToString());
             return;
         }
 
         element.Add(BuildBranchXml(node));
     }
 
-    public XElement Convert(TreeNode<T> root)
+    /// <summary>
+    /// Converts the specified tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <returns>The root XML element or null if root has no children.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public XElement? Convert(TreeNode<T> root)
     {
-        if (!root.HasChildren)
-        {
-            XElement element = new(Branch1ElementName);
-            _attributeInjector(element, root);
-            return element;
-        }
+        ArgumentNullException.ThrowIfNull(root);
+
+        if (!root.HasChildren) return null;
 
         return BuildBranchXml(root);
     }
