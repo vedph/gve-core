@@ -72,124 +72,115 @@ public class TreeBuilderTest
 
         Assert.NotNull(tree);
         // tree:
-        // - A (1.1, v6 v5 v4 v3 v2 v1 v0)
-        //   - R (2.1, v1)
-        //     - D (3.1)
-        //       - C (4.1)
-        //     - Z (3.2)
-        //       - D (4.1)
-        //         - C (5.1)
-        //   - B (2.2)
-        //     - C (3.1)
-        //       - D (4.1)
-        //     - D (3.2)
-        //       - C (4.1)
-        //   - P (2.3)
-        //     - D (3.1)
-        //       - C (4.1)
+        // - A (2.1, v6 v5 v4 v3 v2 v1 v0)
+        //   - B (3.1, v6, v3)
+        //     - C (4.1, v6)
+        //       - D (5.1, v6)
+        //     - D (4.2, v3)
+        //       - C (5.1, v3)
+        //   - P (3.2, v5, v4)
+        //     - C (4.1, v5)
+        //       - D (5.1, v5)
+        //     - D (4.2, v4)
+        //       - C (5.1, v4)
+        //   - V (3.3, v2)
+        //     - D (4.1, v2)
+        //       - C (5.1, v2)
+        //   - R (3.4, v1, v0)
+        //     - D (4.1, v1)
+        //       - C (5.1, v1)
+        //     - Z (4.2, v0)
+        //       - D (5.1, v0)
+        //         - C (6.1, v0)
 
         // root is empty and has child A
         Assert.Single(tree.Children);
-        TreeNode<CharChainNode> aNode = tree.Children[0];
-        Assert.Equal('A', aNode.Data!.Data);
-        Tuple<int, int> yx = aNode.GetYX();
+        TreeNode<CharChainNode> a = tree.Children[0];
+        Assert.Equal('A', a.Data!.Data);
+        Tuple<int, int> yx = a.GetYX();
         Assert.Equal(2, yx.Item1);
         Assert.Equal(1, yx.Item2);
 
-        // A has 3 children: R, B, P
-        Assert.Equal(3, aNode.Children.Count);
-        TreeNode<CharChainNode> rNode = aNode.Children[0];
-        Assert.Equal('R', rNode.Data!.Data);
-        yx = aNode.GetYX();
-        Assert.Equal(3, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // A has 4 children: B, P, V, R
+        Assert.Equal(4, a.Children.Count);
+        TreeNode<CharChainNode> b = a.Children[0];
+        Assert.Equal('B', b.Data!.Data);
+        TreeNode<CharChainNode> p = a.Children[1];
+        Assert.Equal('P', p.Data!.Data);
+        TreeNode<CharChainNode> v = a.Children[2];
+        Assert.Equal('V', v.Data!.Data);
+        TreeNode<CharChainNode> r = a.Children[3];
+        Assert.Equal('R', r.Data!.Data);
 
-        TreeNode<CharChainNode> bNode = aNode.Children[1];
-        Assert.Equal('B', bNode.Data!.Data);
-        yx = aNode.GetYX();
-        Assert.Equal(3, yx.Item1);
-        Assert.Equal(2, yx.Item2);
+        // B has children C6, D3
+        Assert.Equal(2, b.Children.Count);
+        TreeNode<CharChainNode> c6 = b.Children[0];
+        Assert.Equal('C', c6.Data!.Data);
+        TreeNode<CharChainNode> d3 = b.Children[1];
+        Assert.Equal('D', d3.Data!.Data);
 
-        TreeNode<CharChainNode> pNode = aNode.Children[2];
-        Assert.Equal('P', pNode.Data!.Data);
-        yx = aNode.GetYX();
-        Assert.Equal(3, yx.Item1);
-        Assert.Equal(3, yx.Item2);
+        // C6 has child D6 with no children
+        Assert.Single(c6.Children);
+        TreeNode<CharChainNode> d6 = c6.Children[0];
+        Assert.Equal('D', d6.Data!.Data);
+        Assert.False(d6.HasChildren);
 
-        // R has 2 children: D, Z
-        Assert.Equal(2, rNode.Children.Count);
-        TreeNode<CharChainNode> node = rNode.Children[0];
-        Assert.Equal('D', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // D3 has child C3 with no children
+        Assert.Single(d3.Children);
+        TreeNode<CharChainNode> c3 = d3.Children[0];
+        Assert.Equal('C', c3.Data!.Data);
+        Assert.False(c3.HasChildren);
 
-        node = rNode.Children[1];
-        Assert.Equal('Z', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
-        Assert.Equal(2, yx.Item2);
+        // P has children C5, D4
+        Assert.Equal(2, p.Children.Count);
+        TreeNode<CharChainNode> c5 = p.Children[0];
+        Assert.Equal('C', c5.Data!.Data);
+        TreeNode<CharChainNode> d4 = p.Children[1];
+        Assert.Equal('D', d4.Data!.Data);
 
-        // D has 1 child: C
-        Assert.Single(rNode.Children[0].Children);
-        node = rNode.Children[0].Children[0];
-        Assert.Equal('C', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(5, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // C5 has child D5 with no children
+        Assert.Single(c5.Children);
+        TreeNode<CharChainNode> d5 = c5.Children[0];
+        Assert.Equal('D', d5.Data!.Data);
+        Assert.False(d5.HasChildren);
 
-        // Z has 1 child: D
-        Assert.Single(rNode.Children[1].Children);
-        node = rNode.Children[1].Children[0];
-        Assert.Equal('D', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(5, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // D4 has child C4 with no children
+        Assert.Single(d4.Children);
+        TreeNode<CharChainNode> c4 = d4.Children[0];
+        Assert.Equal('C', c4.Data!.Data);
+        Assert.False(c4.HasChildren);
 
-        // B has 2 children: C, D
-        Assert.Equal(2, bNode.Children.Count);
-        node = bNode.Children[0];
-        Assert.Equal('C', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // V2 has child D2
+        Assert.Single(v.Children);
+        TreeNode<CharChainNode> d2 = v.Children[0];
+        Assert.Equal('D', d2.Data!.Data);
 
-        node = bNode.Children[1];
-        Assert.Equal('D', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
-        Assert.Equal(2, yx.Item2);
+        // D2 has child C2 with no children
+        Assert.Single(d2.Children);
+        TreeNode<CharChainNode> c2 = d2.Children[0];
+        Assert.Equal('C', c2.Data!.Data);
+        Assert.False(c2.HasChildren);
 
-        // C has 1 child: D
-        Assert.Single(bNode.Children[0].Children);
-        node = bNode.Children[0].Children[0];
-        Assert.Equal('D', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(5, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // R has children D1, Z0
+        Assert.Equal(2, r.Children.Count);
+        TreeNode<CharChainNode> d1 = r.Children[0];
+        Assert.Equal('D', d1.Data!.Data);
+        TreeNode<CharChainNode> z0 = r.Children[1];
+        Assert.Equal('Z', z0.Data!.Data);
 
-        // D has 1 child: C
-        Assert.Single(bNode.Children[1].Children);
-        node = bNode.Children[1].Children[0];
-        Assert.Equal('C', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(5, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // D1 has child C1 with no children
+        Assert.Single(d1.Children);
+        TreeNode<CharChainNode> c1 = d1.Children[0];
+        Assert.Equal('C', c1.Data!.Data);
+        Assert.False(c1.HasChildren);
 
-        // P has 1 child: D
-        Assert.Single(pNode.Children);
-        node = pNode.Children[0];
-        Assert.Equal('D', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(4, yx.Item1);
-        Assert.Equal(1, yx.Item2);
-
-        // D has 1 child: C
-        Assert.Single(pNode.Children[0].Children);
-        node = pNode.Children[0].Children[0];
-        Assert.Equal('C', node.Data!.Data);
-        yx = node.GetYX();
-        Assert.Equal(5, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        // Z0 has child D0 with child C0 with no children
+        Assert.Single(z0.Children);
+        TreeNode<CharChainNode> d0 = z0.Children[0];
+        Assert.Equal('D', d0.Data!.Data);
+        Assert.Single(d0.Children);
+        TreeNode<CharChainNode> c0 = d0.Children[0];
+        Assert.Equal('C', c0.Data!.Data);
+        Assert.False(c0.HasChildren);
     }
 }
