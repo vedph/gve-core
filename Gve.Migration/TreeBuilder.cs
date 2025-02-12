@@ -19,9 +19,9 @@ public static class TreeBuilder
     public const string TAG_FEATURE_NAME = "_tag";
 
     private static List<CharChainNode> BuildVersionNodes(
-        IList<ChainNode<char>> nodes,
-        ChainOperationContext<char> context,
-        string tag)
+         IList<ChainNode<char>> nodes,
+         ChainOperationContext<char> context,
+         string tag)
     {
         List<CharChainNode> taggedNodes = [];
         int i = 0;
@@ -57,10 +57,9 @@ public static class TreeBuilder
             bool foundMatch = false;
             foreach (TreeNode<CharChainNode> child in current.Children)
             {
-                // skip blank fork nodes in matching
                 if (child.Data == null)
                 {
-                    var (deepNode, deepMatchLength) = FindCommonPrefix(child,
+                    (TreeNode<CharChainNode> deepNode, int deepMatchLength) = FindCommonPrefix(child,
                         nodes.Skip(matchLength).ToList(), binary);
                     if (deepMatchLength > 0)
                     {
@@ -69,10 +68,8 @@ public static class TreeBuilder
                         foundMatch = true;
                         break;
                     }
-                    continue;
                 }
-
-                if (child.Data.Data == nodes[matchLength].Data)
+                else if (child.Data.Data == nodes[matchLength].Data)
                 {
                     current = child;
                     matchLength++;
@@ -102,24 +99,34 @@ public static class TreeBuilder
         }
     }
 
-    private static void InsertBlankForkNode(
-        TreeNode<CharChainNode> parent,
-        TreeNode<CharChainNode> existingChild,
-        TreeNode<CharChainNode> newChild)
+    private static TreeNode<CharChainNode>? CreateNodeBranch(
+        List<CharChainNode> nodes,
+        int startIndex,
+        string tag)
     {
-        // Create blank fork node
-        TreeNode<CharChainNode> forkNode = new(null);
+        if (startIndex >= nodes.Count) return null;
 
-        // Replace existing child with fork node
-        int index = parent.Children.IndexOf(existingChild);
-        parent.Children[index] = forkNode;
-        forkNode.Parent = parent;
+        // create first node
+        CharChainNode firstNode = nodes[startIndex].Clone();
+        firstNode.Features ??= [];
+        firstNode.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+            FeatureSetPolicy.Multiple));
+        TreeNode<CharChainNode> branch = new(firstNode);
 
-        // Add existing child as first child of fork
-        forkNode.AddChild(existingChild);
+        // add remaining nodes
+        TreeNode<CharChainNode> current = branch;
+        for (int i = startIndex + 1; i < nodes.Count; i++)
+        {
+            CharChainNode node = nodes[i].Clone();
+            node.Features ??= [];
+            node.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+                FeatureSetPolicy.Multiple));
+            TreeNode<CharChainNode> next = new(node);
+            current.AddChild(next);
+            current = next;
+        }
 
-        // Add new child as second child of fork
-        forkNode.AddChild(newChild);
+        return branch;
     }
 
     private static void AddBranchToBinaryTree(
@@ -130,42 +137,65 @@ public static class TreeBuilder
     {
         if (startIndex >= nodes.Count) return;
 
-        // Create first node of new branch
-        CharChainNode firstNode = nodes[startIndex].Clone();
-        firstNode.Features ??= [];
-        firstNode.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-            FeatureSetPolicy.Multiple));
-        TreeNode<CharChainNode> newNode = new(firstNode);
+        TreeNode<CharChainNode>? newBranch = CreateNodeBranch(
+            nodes, startIndex, tag);
+        if (newBranch == null) return;
 
-        if (parent.Children.Count == 0)
+        // if parent has no children, just add the branch
+        if (!parent.HasChildren)
         {
-            // Simple case: no children yet
-            parent.AddChild(newNode);
+            parent.AddChild(newBranch);
+            return;
         }
-        else if (parent.Children.Count == 1)
+
+        // if parent already has a blank fork node child, use it
+        if (parent.Children.Count == 1 && parent.Children[0].Data == null)
         {
-            // Add as second child if only one child exists
-            parent.AddChild(newNode);
+            TreeNode<CharChainNode> fork = parent.Children[0];
+            if (fork.Children.Count < 2)
+            {
+                fork.AddChild(newBranch);
+            }
+            else
+            {
+                // create new fork node
+                TreeNode<CharChainNode> newFork = new(null);
+                TreeNode<CharChainNode> secondChild = fork.Children[1];
+                fork.Children[1] = newFork;
+                newFork.Parent = fork;
+                newFork.AddChild(secondChild);
+                newFork.AddChild(newBranch);
+            }
+            return;
         }
+
+        // create new blank fork node
+        TreeNode<CharChainNode> blankFork = new(null);
+
+        // if parent has one child, move it under fork
+        if (parent.Children.Count == 1)
+        {
+            TreeNode<CharChainNode> existingChild = parent.Children[0];
+            parent.Children.Clear();
+            parent.AddChild(blankFork);
+            blankFork.AddChild(existingChild);
+            blankFork.AddChild(newBranch);
+        }
+        // else parent has multiple children
         else
         {
-            // Insert fork node before second child
-            TreeNode<CharChainNode> secondChild = parent.Children[1];
-            InsertBlankForkNode(parent, secondChild, newNode);
-        }
+            List<TreeNode<CharChainNode>> existingChildren = [.. parent.Children];
+            parent.Children.Clear();
+            parent.AddChild(blankFork);
 
-        // Continue adding remaining nodes in the branch
-        TreeNode<CharChainNode> currentNode = newNode;
-        for (int i = startIndex + 1; i < nodes.Count; i++)
-        {
-            CharChainNode node = nodes[i].Clone();
-            node.Features ??= [];
-            node.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                FeatureSetPolicy.Multiple));
+            // first child gets original branches
+            TreeNode<CharChainNode> subFork = new(null);
+            blankFork.AddChild(subFork);
+            foreach (TreeNode<CharChainNode>? child in existingChildren)
+                subFork.AddChild(child);
 
-            TreeNode<CharChainNode> nextNode = new(node);
-            currentNode.AddChild(nextNode);
-            currentNode = nextNode;
+            // second child gets new branch
+            blankFork.AddChild(newBranch);
         }
     }
 
