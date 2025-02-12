@@ -59,8 +59,10 @@ public static class TreeBuilder
             {
                 if (child.Data == null)
                 {
-                    (TreeNode<CharChainNode> deepNode, int deepMatchLength) = FindCommonPrefix(child,
-                        nodes.Skip(matchLength).ToList(), binary);
+                    (TreeNode<CharChainNode> deepNode, int deepMatchLength) =
+                        FindCommonPrefix(child, [.. nodes.Skip(matchLength)],
+                        binary);
+
                     if (deepMatchLength > 0)
                     {
                         current = deepNode;
@@ -83,22 +85,38 @@ public static class TreeBuilder
         return (current, matchLength);
     }
 
-    private static void AddVersionTagToNode(TreeNode<CharChainNode> node,
+    /// <summary>
+    /// Adds the specified version tag to node and all its ascendant nodes
+    /// up to the root.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <param name="tag">The tag.</param>
+    private static void AddVersionTagToNode(TreeNode<CharChainNode>? node,
         string tag)
     {
-        while (node?.Data != null)
+        while (node != null)
         {
-            node.Data.Features ??= [];
-            if (!node.Data.Features.Any(f =>
-                f.Name == TAG_FEATURE_NAME && f.Value == tag))
+            if (node.Data != null)
             {
-                node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                    FeatureSetPolicy.Multiple));
+                node.Data.Features ??= [];
+                if (!node.Data.Features.Any(f =>
+                    f.Name == TAG_FEATURE_NAME && f.Value == tag))
+                {
+                    node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
+                        FeatureSetPolicy.Multiple));
+                }
             }
-            node = node.Parent!;
+            node = node.Parent;
         }
     }
 
+    /// <summary>
+    /// Creates a node branch for the specified nodes.
+    /// </summary>
+    /// <param name="nodes">The nodes to add to the new branch.</param>
+    /// <param name="startIndex">The start node index in nodes.</param>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>Branch node or null.</returns>
     private static TreeNode<CharChainNode>? CreateNodeBranch(
         List<CharChainNode> nodes,
         int startIndex,
