@@ -239,14 +239,16 @@ public class TreeBuilderTest
         //              - D (9.1, v0)
         //                - C (10.1, v0)
 
-        // root is empty and has child A
+        // 1.1 root is empty and has child A
         Assert.Single(tree.Children);
+
+        // 2.1 A
         TreeNode<CharChainNode> a = tree.Children[0];
         Assert.Equal('A', a.Data!.Data);
         Tuple<int, int> yx = a.GetYX();
         Assert.Equal(2, yx.Item1);
         Assert.Equal(1, yx.Item2);
-        // A versions
+        // A has all versions
         Assert.True(a.Data.Features?.Any(f =>
             f.Name == TreeBuilder.TAG_FEATURE_NAME &&
             f.Value == "v6"));
@@ -269,20 +271,27 @@ public class TreeBuilderTest
             f.Name == TreeBuilder.TAG_FEATURE_NAME &&
             f.Value == "v0"));
 
-        // A has 1 child x
+        // 2.1 A has 1 child x (level 3)
         Assert.Single(a.Children);
-        TreeNode<CharChainNode> x = a.Children[0];
-        Assert.Null(x.Data);
-        Assert.Equal(3, x.GetY());
+        TreeNode<CharChainNode> x3 = a.Children[0];
+        Assert.Null(x3.Data);
+        Assert.Equal(3, x3.GetY());
 
-        // x has 2 children: B, x (level 4)
-        Assert.Equal(2, x.Children.Count);
-        TreeNode<CharChainNode> b = x.Children[0];
+        // 3.1 x (level 3) has 2 children: B, x (level 4)
+        Assert.Equal(2, x3.Children.Count);
+        TreeNode<CharChainNode> b = x3.Children[0];
         Assert.Equal('B', b.Data!.Data);
-        TreeNode<CharChainNode> x4 = x.Children[1];
+        TreeNode<CharChainNode> x4 = x3.Children[1];
         Assert.Null(x4.Data);
+        // 4.1 B has v6 v3
+        Assert.True(b.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v6"));
+        Assert.True(b.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v3"));
 
-        // B has child x (level 5)
+        // 4.1 B has child x (level 5)
         Assert.Single(b.Children);
         TreeNode<CharChainNode> x5 = b.Children[0];
         Assert.Null(x5.Data);
@@ -295,13 +304,13 @@ public class TreeBuilderTest
         TreeNode<CharChainNode> d3 = x5.Children[1];
         Assert.Equal('D', d3.Data!.Data);
 
-        // C6 has child D6 with no children
+        // 6.1 C6 has child D6 with no children
         Assert.Single(c6.Children);
         TreeNode<CharChainNode> d6 = c6.Children[0];
         Assert.Equal('D', d6.Data!.Data);
         Assert.False(d6.HasChildren);
 
-        // D3 has child C3 with no children
+        // 6.2 D3 has child C3 with no children
         Assert.Single(d3.Children);
         TreeNode<CharChainNode> c3 = d3.Children[0];
         Assert.Equal('C', c3.Data!.Data);
