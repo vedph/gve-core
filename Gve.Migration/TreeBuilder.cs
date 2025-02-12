@@ -224,10 +224,9 @@ public static class TreeBuilder
         TreeNode<CharChainNode> root = new(null);
 
         // process tags in reverse order (newest to oldest)
-        IList<string> tags = context.Chain.GetDistinctTags()
+        IList<string> tags = [.. context.Chain.GetDistinctTags()
             .Where(s => !string.IsNullOrEmpty(s))
-            .Reverse()
-            .ToList();
+            .Reverse()];
 
         foreach (string tag in tags)
         {

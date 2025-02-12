@@ -246,11 +246,34 @@ public class TreeBuilderTest
         Tuple<int, int> yx = a.GetYX();
         Assert.Equal(2, yx.Item1);
         Assert.Equal(1, yx.Item2);
+        // A versions
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v6"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v5"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v4"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v3"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v2"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v1"));
+        Assert.True(a.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v0"));
 
         // A has 1 child x
         Assert.Single(a.Children);
         TreeNode<CharChainNode> x = a.Children[0];
         Assert.Null(x.Data);
+        Assert.Equal(3, x.GetY());
 
         // x has 2 children: B, x (level 4)
         Assert.Equal(2, x.Children.Count);
@@ -263,6 +286,7 @@ public class TreeBuilderTest
         Assert.Single(b.Children);
         TreeNode<CharChainNode> x5 = b.Children[0];
         Assert.Null(x5.Data);
+        Assert.Equal(5, x5.GetY());
 
         // x (level 5) has children C6, D3
         Assert.Equal(2, x5.Children.Count);
@@ -289,6 +313,7 @@ public class TreeBuilderTest
         Assert.Equal('P', p.Data!.Data);
         x5 = x4.Children[1];
         Assert.Null(x5.Data);
+        Assert.Equal(5, x5.GetY());
 
         // P has child x (level 6)
         Assert.Single(p.Children);
@@ -336,6 +361,7 @@ public class TreeBuilderTest
         Assert.Single(r.Children);
         x6 = r.Children[0];
         Assert.Null(x6.Data);
+        Assert.Equal(6, x6.GetY());
 
         // x (level 6) has children D1, Z0
         Assert.Equal(2, x6.Children.Count);
