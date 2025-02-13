@@ -4,6 +4,7 @@ using Gve.Text.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Gve.Migration;
 
@@ -118,9 +119,7 @@ public static class TreeBuilder
     /// <param name="tag">The version tag.</param>
     /// <returns>Branch node or null.</returns>
     private static TreeNode<CharChainNode>? CreateNodeBranch(
-        List<CharChainNode> nodes,
-        int startIndex,
-        string tag)
+        List<CharChainNode> nodes, int startIndex, string tag)
     {
         if (startIndex >= nodes.Count) return null;
 
@@ -148,10 +147,8 @@ public static class TreeBuilder
     }
 
     private static void AddBranchToBinaryTree(
-        TreeNode<CharChainNode> parent,
-        List<CharChainNode> nodes,
-        int startIndex,
-        string tag)
+        TreeNode<CharChainNode> parent, List<CharChainNode> nodes,
+        int startIndex, string tag)
     {
         if (startIndex >= nodes.Count) return;
 
@@ -235,8 +232,7 @@ public static class TreeBuilder
     /// tag it belongs to.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
     public static TreeNode<CharChainNode> Build(
-           ChainOperationContext<char> context,
-           bool binary)
+        ChainOperationContext<char> context, bool binary)
     {
         ArgumentNullException.ThrowIfNull(context);
         TreeNode<CharChainNode> root = new(null);
@@ -283,5 +279,43 @@ public static class TreeBuilder
         }
 
         return root;
+    }
+
+    /// <summary>
+    /// Dumps the text versions with their tags, as represented in the received
+    /// tree root node.
+    /// </summary>
+    /// <param name="root">The tree's root node.</param>
+    /// <returns>Dictionary where key=tag and value=text.</returns>
+    /// <exception cref="ArgumentNullException">root</exception>
+    public static Dictionary<string, string> DumpVersions(
+        TreeNode<CharChainNode> root)
+    {
+        ArgumentNullException.ThrowIfNull(root);
+
+        if (!root.HasChildren) return [];
+        Dictionary<string, StringBuilder> versions = [];
+
+        root.Traverse(node =>
+        {
+            if (node.Data?.Features != null)
+            {
+                foreach (Feature tagFeature in node.Data.Features)
+                {
+                    if (tagFeature.Name == TAG_FEATURE_NAME)
+                    {
+                        if (!versions.ContainsKey(tagFeature.Value!))
+                            versions[tagFeature.Value!] = new StringBuilder();
+                        versions[tagFeature.Value!].Append(node.Data.Data);
+                    }
+                }
+            }
+            return true;
+        });
+
+        Dictionary<string, string> results = [];
+        foreach (KeyValuePair<string, StringBuilder> kvp in versions)
+            results[kvp.Key] = kvp.Value.ToString();
+        return results;
     }
 }
