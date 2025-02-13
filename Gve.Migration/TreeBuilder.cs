@@ -286,9 +286,9 @@ public static class TreeBuilder
     /// tree root node.
     /// </summary>
     /// <param name="root">The tree's root node.</param>
-    /// <returns>Dictionary where key=tag and value=text.</returns>
-    /// <exception cref="ArgumentNullException">root or null if root has no
-    /// children</exception>
+    /// <returns>Dictionary where key=tag and value=text, or null if root has no
+    /// children.</returns>
+    /// <exception cref="ArgumentNullException">root</exception>
     public static IDictionary<string, string>? DumpVersions(
         TreeNode<CharChainNode> root)
     {
@@ -301,12 +301,13 @@ public static class TreeBuilder
         {
             if (node.Data?.Features != null)
             {
-                foreach (Feature tagFeature in node.Data.Features
-                    .Where(f => f.Name == TAG_FEATURE_NAME))
+                foreach (string tag in node.Data.Features
+                    .Where(f => f.Name == TAG_FEATURE_NAME)
+                    .Select(f => f.Value!))
                 {
-                    if (!versions.ContainsKey(tagFeature.Value!))
-                        versions[tagFeature.Value!] = new StringBuilder();
-                    versions[tagFeature.Value!].Append(node.Data.Data);
+                    if (!versions.ContainsKey(tag))
+                        versions[tag] = new StringBuilder();
+                    versions[tag].Append(node.Data.Data);
                 }
             }
             return true;
