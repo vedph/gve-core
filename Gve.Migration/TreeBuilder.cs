@@ -345,7 +345,8 @@ public static class TreeBuilder
             if (node.Parent != null)
                 sb.AppendLine($"  {ids[node.Parent]} -> {ids[node]};");
             sb.AppendLine(node.Data != null
-                ? $"  {ids[node]} [label=\"{node.Data.Data}\"];"
+                ? $"  {ids[node]} [label=\"{node.Data.Data}\", " +
+                    $"color=\"#c0c0f0\", style=\"filled\"];"
                 : $"  {ids[node]} [label=\"-\"];");
             return true;
         });
