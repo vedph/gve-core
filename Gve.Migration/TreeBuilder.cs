@@ -287,33 +287,32 @@ public static class TreeBuilder
     /// </summary>
     /// <param name="root">The tree's root node.</param>
     /// <returns>Dictionary where key=tag and value=text.</returns>
-    /// <exception cref="ArgumentNullException">root</exception>
-    public static Dictionary<string, string> DumpVersions(
+    /// <exception cref="ArgumentNullException">root or null if root has no
+    /// children</exception>
+    public static IDictionary<string, string>? DumpVersions(
         TreeNode<CharChainNode> root)
     {
         ArgumentNullException.ThrowIfNull(root);
 
-        if (!root.HasChildren) return [];
+        if (!root.HasChildren) return null;
         Dictionary<string, StringBuilder> versions = [];
 
         root.Traverse(node =>
         {
             if (node.Data?.Features != null)
             {
-                foreach (Feature tagFeature in node.Data.Features)
+                foreach (Feature tagFeature in node.Data.Features
+                    .Where(f => f.Name == TAG_FEATURE_NAME))
                 {
-                    if (tagFeature.Name == TAG_FEATURE_NAME)
-                    {
-                        if (!versions.ContainsKey(tagFeature.Value!))
-                            versions[tagFeature.Value!] = new StringBuilder();
-                        versions[tagFeature.Value!].Append(node.Data.Data);
-                    }
+                    if (!versions.ContainsKey(tagFeature.Value!))
+                        versions[tagFeature.Value!] = new StringBuilder();
+                    versions[tagFeature.Value!].Append(node.Data.Data);
                 }
             }
             return true;
         });
 
-        Dictionary<string, string> results = [];
+        SortedDictionary<string, string> results = [];
         foreach (KeyValuePair<string, StringBuilder> kvp in versions)
             results[kvp.Key] = kvp.Value.ToString();
         return results;
