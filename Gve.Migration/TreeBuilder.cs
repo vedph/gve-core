@@ -323,8 +323,17 @@ public static class TreeBuilder
         return results;
     }
 
+    /// <summary>
+    /// Builds the code for a Graphviz tree diagram representing the received
+    /// tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <returns>Graphviz code.</returns>
+    /// <exception cref="ArgumentNullException">root</exception>
     public static string BuildGraph(TreeNode<CharChainNode> root)
     {
+        ArgumentNullException.ThrowIfNull(root);
+
         StringBuilder sb = new();
         sb.AppendLine("digraph G {");
         int id = 0;
@@ -334,13 +343,9 @@ public static class TreeBuilder
         {
             ids[node] = ++id;
             if (node.Parent != null)
-            {
                 sb.AppendLine($"  {ids[node.Parent]} -> {ids[node]};");
-            }
             if (node.Data != null)
-            {
                 sb.AppendLine($"  {ids[node]} [label=\"{node.Data.Data}\"];");
-            }
             return true;
         });
 
