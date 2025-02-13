@@ -3,6 +3,7 @@ using Gve.Text;
 using Gve.Text.DTO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -276,6 +277,9 @@ public static class TreeBuilder
                     currentNode = newNode;
                 }
             }
+
+            //Debug.WriteLine("=== TAG: " + tag);
+            //Debug.WriteLine(root.Dump());
         }
 
         return root;
@@ -317,5 +321,30 @@ public static class TreeBuilder
         foreach (KeyValuePair<string, StringBuilder> kvp in versions)
             results[kvp.Key] = kvp.Value.ToString();
         return results;
+    }
+
+    public static string BuildGraph(TreeNode<CharChainNode> root)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("digraph G {");
+        int id = 0;
+        Dictionary<TreeNode<CharChainNode>, int> ids = [];
+
+        root.Traverse(node =>
+        {
+            ids[node] = ++id;
+            if (node.Parent != null)
+            {
+                sb.AppendLine($"  {ids[node.Parent]} -> {ids[node]};");
+            }
+            if (node.Data != null)
+            {
+                sb.AppendLine($"  {ids[node]} [label=\"{node.Data.Data}\"];");
+            }
+            return true;
+        });
+
+        sb.AppendLine("}");
+        return sb.ToString();
     }
 }
