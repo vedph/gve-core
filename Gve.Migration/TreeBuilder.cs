@@ -344,8 +344,9 @@ public static class TreeBuilder
             ids[node] = ++id;
             if (node.Parent != null)
                 sb.AppendLine($"  {ids[node.Parent]} -> {ids[node]};");
-            if (node.Data != null)
-                sb.AppendLine($"  {ids[node]} [label=\"{node.Data.Data}\"];");
+            sb.AppendLine(node.Data != null
+                ? $"  {ids[node]} [label=\"{node.Data.Data}\"];"
+                : $"  {ids[node]} [label=\"-\"];");
             return true;
         });
 
