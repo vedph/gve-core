@@ -344,10 +344,26 @@ public static class TreeBuilder
             ids[node] = ++id;
             if (node.Parent != null)
                 sb.AppendLine($"  {ids[node.Parent]} -> {ids[node]};");
-            sb.AppendLine(node.Data != null
-                ? $"  {ids[node]} [label=\"{node.Data.Data}\", " +
-                    $"color=\"#c0c0f0\", style=\"filled\"];"
-                : $"  {ids[node]} [label=\"-\"];");
+
+            if (node.Data != null)
+            {
+                string tags = node.Data.Features != null
+                    ? string.Join(" ", node.Data.Features
+                        .Where(f => f.Name == TAG_FEATURE_NAME)
+                        .Select(f => f.Value)
+                        .Order())
+                    : "";
+                sb.AppendLine(tags.Length > 0
+                    ? $"  {ids[node]} [label=\"{node.Data.Data}\", " +
+                      $"color=\"#c0c0f0\", style=\"filled\", xlabel=\"{tags}\"];"
+                    : $"  {ids[node]} [label=\"{node.Data.Data}\", " +
+                       "color=\"#c0c0f0\", style=\"filled\"];");
+            }
+            else
+            {
+                sb.AppendLine($"  {ids[node]} [label=\"-\"];");
+            }
+
             return true;
         });
 
