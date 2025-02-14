@@ -334,5 +334,48 @@ public class TreeBuilderTest
             f.Name == TreeBuilder.TAG_FEATURE_NAME &&
             f.Value == "v3"));
 
+        // 4.2 x (level 4) has 2 children: x (level 5), R
+        Assert.Equal(2, x4.Children.Count);
+        TreeNode<CharChainNode> x5b = x4.Children[0];
+        Assert.Null(x5b.Data);
+        Assert.Equal(5, x5b.GetY());
+        TreeNode<CharChainNode> r = x4.Children[1];
+        Assert.Equal('R', r.Data!.Data);
+
+        // 5.2 R has V1 v0
+        Assert.True(r.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v1"));
+        Assert.True(r.Data.Features?.Any(f =>
+            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
+            f.Value == "v0"));
+
+        // R has child x (level 6)
+        Assert.Single(r.Children);
+        TreeNode<CharChainNode> x6 = r.Children[0];
+        Assert.Null(x6.Data);
+        Assert.Equal(6, x6.GetY());
+
+        // x (level 6) has children D1 Z0
+        Assert.Equal(2, x6.Children.Count);
+        TreeNode<CharChainNode> d1 = x6.Children[0];
+        Assert.Equal('D', d1.Data!.Data);
+        TreeNode<CharChainNode> z0 = x6.Children[1];
+        Assert.Equal('Z', z0.Data!.Data);
+
+        // 7.1 D1 has child C1 with no children
+        Assert.Single(d1.Children);
+        TreeNode<CharChainNode> c1 = d1.Children[0];
+        Assert.Equal('C', c1.Data!.Data);
+        Assert.False(c1.HasChildren);
+
+        // 7.2 Z0 has child D0 with child C0 with no children
+        Assert.Single(z0.Children);
+        TreeNode<CharChainNode> d0 = z0.Children[0];
+        Assert.Equal('D', d0.Data!.Data);
+        Assert.Single(d0.Children);
+        TreeNode<CharChainNode> c0 = d0.Children[0];
+        Assert.Equal('C', c0.Data!.Data);
+        Assert.False(c0.HasChildren);
     }
 }
