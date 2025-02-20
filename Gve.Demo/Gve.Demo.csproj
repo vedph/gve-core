@@ -4,13 +4,13 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>2.0.3</Version>
-		<FileVersion>2.0.3</FileVersion>
-		<AssemblyVersion>2.0.3</AssemblyVersion>
+		<Version>2.0.4</Version>
+		<FileVersion>2.0.4</FileVersion>
+		<AssemblyVersion>2.0.4</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Radzen.Blazor" Version="5.9.7" />
+		<PackageReference Include="Radzen.Blazor" Version="6.0.18" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
 	</ItemGroup>
 

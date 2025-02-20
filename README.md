@@ -17,19 +17,19 @@ docker buildx create --use
 - 👉 GVE API:
 
 ```sh
-docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64 -t vedph2020/gve-api:2.0.3 -t vedph2020/gve-api:latest --push
+docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-api:2.0.3 -t vedph2020/gve-api:latest --push
 ```
 
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:2.0.3 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:2.0.3 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:1.0.1 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:2.0.4 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
@@ -81,6 +81,11 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+### 2.0.4
+
+- 2025-02-20:
+  - updated packages.
+  - fixed thesauri import in Cadmus API.
 - 2025-02-05: updated packages.
 - 2025-01-28: updated packages.
 - 2025-01-20: updated packages.
