@@ -81,6 +81,8 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2025-03-04: updated packages (Cadmus migration V2).
+
 ### 2.0.4
 
 - 2025-02-20:
