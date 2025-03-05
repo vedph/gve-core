@@ -97,9 +97,9 @@ public class TreeBuilderTest
         Assert.Single(tree.Children);
         TreeNode<CharChainNode> a = tree.Children[0];
         Assert.Equal('A', a.Data!.Data);
-        Tuple<int, int> yx = a.GetYX();
-        Assert.Equal(2, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        (int y, int x) = a.GetYX();
+        Assert.Equal(2, y);
+        Assert.Equal(1, x);
 
         // A has 4 children: B, P, V, R
         Assert.Equal(4, a.Children.Count);
@@ -246,9 +246,9 @@ public class TreeBuilderTest
         // 2.1 A
         TreeNode<CharChainNode> a = tree.Children[0];
         Assert.Equal('A', a.Data!.Data);
-        Tuple<int, int> yx = a.GetYX();
-        Assert.Equal(2, yx.Item1);
-        Assert.Equal(1, yx.Item2);
+        (int y, int x) = a.GetYX();
+        Assert.Equal(2, y);
+        Assert.Equal(1, x);
         // A has all versions
         Assert.True(a.Data.Features?.Any(f =>
             f.Name == TreeBuilder.TAG_FEATURE_NAME &&
