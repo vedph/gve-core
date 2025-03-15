@@ -81,6 +81,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2025-03-15: updated packages.
 - 2025-03-05: updated packages (Fusi.Tools 7 incorporating tree version merging).
 - 2025-03-04: updated packages (Cadmus migration V2).
 
