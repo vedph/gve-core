@@ -124,9 +124,9 @@ public class Chain<T>
     /// <returns>List, sorted alphabetically.</returns>
     public IList<string> GetDistinctTags()
     {
-        HashSet<string> tags = new(_nodes.Select(n => n.SourceTag));
+        HashSet<string> tags = [.. _nodes.Select(n => n.SourceTag)];
         foreach (ChainLink<T> link in _links) tags.Add(link.Tag);
-        return [.. tags.OrderBy(t => t)];
+        return [.. tags.Order()];
     }
 
     /// <summary>

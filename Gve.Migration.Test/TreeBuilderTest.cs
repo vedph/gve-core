@@ -1,7 +1,6 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Text;
 using Gve.Text.DTO;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +11,7 @@ public class TreeBuilderTest
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
         int n = 1;
-        return text.Select(c => new ChainNode<char>(c, new string(c, 1), n++))
-            .ToList();
+        return [.. text.Select(c => new ChainNode<char>(c, new string(c, 1), n++))];
     }
 
     private static List<CharChainOperation> GetOperations()

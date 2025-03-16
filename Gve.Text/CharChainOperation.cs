@@ -12,12 +12,47 @@ namespace Gve.Text;
 /// Base class for operations on a <see cref="Chain{T}"/>.
 /// </summary>
 /// <seealso cref="OperationMetadata" />
-public abstract partial class CharChainOperation : OperationMetadata
+/// <remarks>
+/// Initializes a new instance of the <see cref="CharChainOperation"/> class.
+/// </remarks>
+/// <param name="type">The operation type.</param>
+public abstract partial class CharChainOperation(OperationType type) :
+    OperationMetadata
 {
+    /// <summary>
+    /// The prefix assigned to all tracing features.
+    /// </summary>
+    public const string F_TRACE_PREFIX = "$";
+
+    /// <summary>
+    /// The suffix for the tag tracing feature.
+    /// </summary>
+    public const string F_TRACE_TAG = "tag";
+
+    /// <summary>
+    /// The suffix for the input left anchor tracing feature.
+    /// </summary>
+    public const string F_TRACE_ANCHOR_IN_LEFT = "anchor-in-l";
+
+    /// <summary>
+    /// The suffix for the input right anchor tracing feature.
+    /// </summary>
+    public const string F_TRACE_ANCHOR_IN_RIGHT = "anchor-in-r";
+
+    /// <summary>
+    /// The suffix for the output left anchor tracing feature.
+    /// </summary>
+    public const string F_TRACE_ANCHOR_OUT_LEFT = "anchor-out-l";
+
+    /// <summary>
+    /// The suffix for the output right anchor tracing feature.
+    /// </summary>
+    public const string F_TRACE_ANCHOR_OUT_RIGHT = "anchor-out-r";
+
     /// <summary>
     /// Gets or sets the operation type.
     /// </summary>
-    public OperationType Type { get; protected set; }
+    public OperationType Type { get; protected init; } = type;
 
     /// <summary>
     /// Gets or sets the input version tag for this operation. If null,
@@ -54,15 +89,6 @@ public abstract partial class CharChainOperation : OperationMetadata
     /// whose meaning varies depending on the operation type.
     /// </summary>
     public string? Value { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CharChainOperation"/> class.
-    /// </summary>
-    /// <param name="type">The operation type.</param>
-    protected CharChainOperation(OperationType type)
-    {
-        Type = type;
-    }
 
     [GeneratedRegex(@"^(?<tox>@)?(?<to>[0-9]+)")]
     protected static partial Regex ToRegex();
@@ -141,10 +167,7 @@ public abstract partial class CharChainOperation : OperationMetadata
 
         // if run is 1 (or 0, which is used for reference nodes), return
         // the node only
-        if (run < 2)
-        {
-            return nodes;
-        }
+        if (run < 2) return nodes;
 
         // else find end node by index from run (there must be one)
         ChainNode<char>? next = node;
@@ -429,6 +452,98 @@ public abstract partial class CharChainOperation : OperationMetadata
         {
             Result = GetVersionString(context, outputTag)
         });
+    }
+
+    /// <summary>
+    /// Gets the name of the tracing feature with the specified suffix.
+    /// </summary>
+    /// <param name="suffix">The trace feature suffix. This is the part of the
+    /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
+    /// </param>
+    /// <returns>Feature name.</returns>
+    protected string GetTracingFeatureName(string suffix)
+        => $"{F_TRACE_PREFIX}{Id}/{suffix}";
+
+    /// <summary>
+    /// Gets a new tracing feature for this operation.
+    /// </summary>
+    /// <param name="suffix">The trace feature suffix. This is the part of the
+    /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
+    /// </param>
+    /// <param name="value">The optional feature value.</param>
+    /// <returns>Feature.</returns>
+    public OperationFeature GetTracingFeature(string suffix, string? value = null)
+        => new(GetTracingFeatureName(suffix), value, FeatureSetPolicy.Single);
+
+    /// <summary>
+    /// Adds trace features to the specified nodes.
+    /// </summary>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <param name="afterExecution">if set to <c>true</c>, add the trace
+    /// features designed to be added after the operation execution; else,
+    /// add those designed to be added before the operation execution.</param>
+    /// <param name="nodes">The nodes.</param>
+    /// <param name="context">The context.</param>
+    protected void AddNodeTraceFeatures(string inputTag, string outputTag,
+        bool afterExecution, IList<ChainNode<char>> nodes,
+        ChainOperationContext<char> context)
+    {
+        ArgumentNullException.ThrowIfNull(inputTag);
+        ArgumentNullException.ThrowIfNull(outputTag);
+        ArgumentNullException.ThrowIfNull(nodes);
+
+        Dictionary<char, IList<OperationFeature>> features = [];
+
+        ChainNode<char>? leftNode = context.Chain.GetPreviousNode(
+            inputTag, nodes[0]);
+        ChainNode<char>? rightNode = context.Chain.GetNextNode(
+            inputTag, nodes[^1]);
+
+        if (afterExecution)
+        {
+            // output: output anchors for head and tail nodes
+            if (leftNode != null)
+            {
+                features['h'] =
+                [
+                    GetTracingFeature(F_TRACE_ANCHOR_OUT_LEFT, $"{leftNode.Id}")
+                ];
+            }
+            if (rightNode != null)
+            {
+                features['t'] =
+                [
+                    GetTracingFeature(F_TRACE_ANCHOR_OUT_RIGHT, $"{rightNode.Id}")
+                ];
+            }
+        }
+        else
+        {
+            // input: tag for all affected nodes and input anchors for head and
+            // tail nodes
+            features['b'] =
+            [
+                GetTracingFeature(F_TRACE_TAG, $"{inputTag}:{outputTag}")
+            ];
+
+            if (leftNode != null)
+            {
+                features['h'] =
+                [
+                    GetTracingFeature(F_TRACE_ANCHOR_IN_LEFT, $"{leftNode.Id}")
+                ];
+            }
+            if (rightNode != null)
+            {
+                features['t'] =
+                [
+                    GetTracingFeature(F_TRACE_ANCHOR_IN_RIGHT, $"{rightNode.Id}")
+                ];
+            }
+        }
+
+        context.UpdateTracingFeatures(features, outputTag, nodes);
     }
 
     /// <summary>

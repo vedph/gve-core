@@ -38,7 +38,7 @@ public class ChainOperationContextFeats
     {
         ArgumentNullException.ThrowIfNull(feats);
 
-        Features = new List<OperationFeature>(feats.Features);
+        Features = [.. feats.Features];
         NodeFeatures = new Dictionary<string, List<OperationFeature>>(
             feats.NodeFeatures);
     }
@@ -79,8 +79,7 @@ public class ChainOperationContextFeats
             string newKey = $"{targetTag}_{key[(sourceTag.Length + 1)..]}";
             if (includeShortLived)
             {
-                NodeFeatures[newKey] = new List<OperationFeature>(
-                    NodeFeatures[key]);
+                NodeFeatures[newKey] = [.. NodeFeatures[key]];
             }
             else
             {
@@ -89,6 +88,56 @@ public class ChainOperationContextFeats
                     .ToList();
             }
         }
+    }
+
+    private List<OperationFeature> EnsureNodeFeaturesFor<T>(string tag,
+        ChainNode<T> node)
+    {
+        // get or create node features list
+        string key = $"{tag}_{node.Id}";
+
+        List<OperationFeature>? nodeFeats;
+        if (!NodeFeatures.TryGetValue(key, out nodeFeats))
+        {
+            nodeFeats = [];
+            NodeFeatures[key] = nodeFeats;
+        }
+
+        return nodeFeats;
+    }
+
+    private void UpdateFeature<T>(OperationFeature feature, HashSet<string> names,
+        string? tag,
+        IList<ChainNode<T>>? nodes = null)
+    {
+        // if global, update context features
+        if (feature.IsGlobal)
+        {
+            OperationFeature.UpdateFeature(feature, Features,
+                !names.Contains(feature.Name));
+        }
+        // else update features of each target node
+        else if (nodes != null && tag != null)
+        {
+            int n = 0;
+            foreach (ChainNode<T> node in nodes)
+            {
+                // get or create node features list
+                List<OperationFeature> nodeFeats =
+                    EnsureNodeFeaturesFor(tag, node);
+
+                // update node features logic preserved from original code
+                if (++n == 1 ||
+                    (feature.Name != OperationMetadata.X_KEY &&
+                     feature.Name != OperationMetadata.Y_KEY))
+                {
+                    OperationFeature.UpdateFeature(feature, nodeFeats,
+                        !names.Contains(feature.Name));
+                }
+            }
+        }
+
+        names.Add(feature.Name);
     }
 
     /// <summary>
@@ -107,54 +156,49 @@ public class ChainOperationContextFeats
     {
         ArgumentNullException.ThrowIfNull(sources);
 
+        // only throw if nodes is not null but tag is null
+        if (nodes != null && tag == null)
+            throw new ArgumentNullException(nameof(tag));
+
         RemoveShortLivedFeatures();
         HashSet<string> names = [];
 
         foreach (OperationFeature feature in sources)
-        {
-            // if global, update context features
-            if (feature.IsGlobal)
-            {
-                OperationFeature.UpdateFeature(feature, Features,
-                    !names.Contains(feature.Name));
-            }
-            // else update features of each target node
-            else if (nodes != null)
-            {
-                int n = 0;
-                foreach (ChainNode<T> node in nodes!)
-                {
-                    // get or create node features list
-                    string key = $"{tag!}_{node.Id}";
+            UpdateFeature(feature, names, tag, nodes);
+    }
 
-                    if (!NodeFeatures.TryGetValue(key,
-                        out List<OperationFeature>? nodeFeats))
-                    {
-                        nodeFeats = [];
-                        NodeFeatures[key] = nodeFeats;
-                    }
+    /// <summary>
+    /// Updates the features of this context and/or of the <paramref name="nodes"/>
+    /// from the specified source features.
+    /// </summary>
+    /// <typeparam name="T">The data type of nodes.</typeparam>
+    /// <param name="sources">The source features dictionary, where key is
+    /// <c>h</c>=head, <c>t</c>=tail, <c>b</c>=body, and value is the list
+    /// of target nodes.</param>
+    /// <param name="tag">The tag the features belong to.</param>
+    /// <param name="nodes">The nodes targeted in the update.</param>
+    /// <exception cref="ArgumentNullException">sources</exception>
+    public void UpdateTracingFeatures<T>(
+        IDictionary<char, IList<OperationFeature>> sources,
+        string tag, IList<ChainNode<T>> nodes)
+    {
+        ArgumentNullException.ThrowIfNull(sources);
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(nodes);
 
-                    // update node features, except when the feature name
-                    // is x/y and it is not targeting the first node: this is
-                    // because x/y are reserved for the first node of a set of
-                    // target nodes. For instance, when adding a new set of
-                    // nodes (via insertion or replacement), the first node
-                    // is the one that actually gets positioned by
-                    // x and y, while x will be calculated and y inherited for
-                    // the following characters (unless they are explicitly
-                    // positioned)
-                    if (++n == 1 ||
-                        (feature.Name != OperationMetadata.X_KEY &&
-                         feature.Name != OperationMetadata.Y_KEY))
-                    {
-                        OperationFeature.UpdateFeature(feature, nodeFeats,
-                            !names.Contains(feature.Name));
-                    }
-                }
-            }
+        HashSet<string> names = [];
 
-            names.Add(feature.Name);
-        }
+        // head features for first node
+        foreach (OperationFeature feature in sources['h'])
+            UpdateFeature(feature, names, tag, [nodes[0]]);
+
+        // tail feature for last node
+        foreach (OperationFeature feature in sources['t'])
+            UpdateFeature(feature, names, tag, [nodes[^1]]);
+
+        // body features for all nodes
+        foreach (OperationFeature feature in sources['b'])
+            UpdateFeature(feature, names, tag, nodes);
     }
 
     /// <summary>

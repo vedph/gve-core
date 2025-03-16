@@ -216,4 +216,57 @@ public sealed class OperationFeatureTest
 
         Assert.Equal("name=value", result);
     }
+
+    [Fact]
+    public void Constructor_ShouldSetIsShortLived()
+    {
+        OperationFeature feature = new("name", "value",
+            FeatureSetPolicy.Single, isShortLived: true);
+
+        Assert.Equal("name", feature.Name);
+        Assert.Equal("value", feature.Value);
+        Assert.Equal(FeatureSetPolicy.Single, feature.SetPolicy);
+        Assert.True(feature.IsShortLived);
+    }
+
+    [Fact]
+    public void ToString_ShouldReturnNegatedNameAndValue()
+    {
+        OperationFeature feature = new("name", "value", isNegated: true);
+
+        string result = feature.ToString();
+
+        Assert.Equal("!name=value", result);
+    }
+
+    [Fact]
+    public void ToString_ShouldReturnGlobalNameAndValue()
+    {
+        OperationFeature feature = new("name", "value", isGlobal: true);
+
+        string result = feature.ToString();
+
+        Assert.Equal("*name=value", result);
+    }
+
+    [Fact]
+    public void ToString_ShouldReturnShortLivedNameAndValue()
+    {
+        OperationFeature feature = new("name", "value", isShortLived: true);
+
+        string result = feature.ToString();
+
+        Assert.Equal("name^=value", result);
+    }
+
+    [Fact]
+    public void ToString_ShouldReturnNegatedGlobalShortLivedNameAndValue()
+    {
+        OperationFeature feature = new("name", "value", isNegated: true,
+            isGlobal: true, isShortLived: true);
+
+        string result = feature.ToString();
+
+        Assert.Equal("!*name^=value", result);
+    }
 }

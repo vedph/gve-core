@@ -15,7 +15,7 @@ public sealed class ChainOperationContextFeatsTest
             OperationFeature.Parse("*u:=U"),
         ];
 
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
 
         Assert.Equal(2, feats.Features.Count);
         Assert.Contains(feats.Features, x => x.Name == "a" && x.Value == "A");
@@ -31,11 +31,11 @@ public sealed class ChainOperationContextFeatsTest
             OperationFeature.Parse("*a=A"),
             OperationFeature.Parse("*u:=U"),
         ];
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
         srcFeats.Clear();
         srcFeats.Add(OperationFeature.Parse("*u:=U2"));
 
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
 
         Assert.Equal(2, feats.Features.Count);
         Assert.Contains(feats.Features, x => x.Name == "a" && x.Value == "A");
@@ -51,11 +51,11 @@ public sealed class ChainOperationContextFeatsTest
             OperationFeature.Parse("*a=A"),
             OperationFeature.Parse("*u:=U"),
         ];
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
         srcFeats.Clear();
         srcFeats.Add(OperationFeature.Parse("!*a"));
 
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
 
         Assert.Single(feats.Features);
         Assert.Contains(feats.Features, x => x.Name == "u" && x.Value == "U");
@@ -70,9 +70,9 @@ public sealed class ChainOperationContextFeatsTest
             OperationFeature.Parse("*a=A"),
             OperationFeature.Parse("*u^:=U"),
         ];
-        feats.UpdateFeatures<char>(srcFeats);
+        feats.UpdateFeatures<char>(srcFeats, "v1");
 
-        feats.UpdateFeatures<char>([]);
+        feats.UpdateFeatures<char>([], "v1");
 
         Assert.Single(feats.Features);
         Assert.Contains(feats.Features, x => x.Name == "a" && x.Value == "A");
