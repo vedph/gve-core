@@ -115,8 +115,11 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Contains(nodeFeatures, f => f.Name == "x" && f.Value == "y");
 
         nodeFeatures = context.NodeFeatures["v1_2"];
-        Assert.Single(nodeFeatures);
+        Assert.Equal(2, nodeFeatures.Count);
         Assert.Contains(nodeFeatures, f => f.Name == tagName && f.Value == "v0:v1");
+        string anchorName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_ANCHOR_OUT_RIGHT);
+        Assert.Contains(nodeFeatures, f => f.Name == anchorName && f.Value == "3");
 
         // context steps
         Assert.Single(context.Steps);

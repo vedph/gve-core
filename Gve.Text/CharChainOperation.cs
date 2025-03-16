@@ -513,9 +513,9 @@ public abstract partial class CharChainOperation(OperationType type) :
         Dictionary<char, IList<OperationFeature>> features = [];
 
         ChainNode<char>? leftNode = context.Chain.GetPreviousNode(
-            inputTag, nodes[0]);
+            afterExecution? outputTag : inputTag, nodes[0]);
         ChainNode<char>? rightNode = context.Chain.GetNextNode(
-            inputTag, nodes[^1]);
+            afterExecution ? outputTag : inputTag, nodes[^1]);
 
         if (afterExecution)
         {
