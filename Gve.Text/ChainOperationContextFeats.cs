@@ -96,8 +96,8 @@ public class ChainOperationContextFeats
         // get or create node features list
         string key = $"{tag}_{node.Id}";
 
-        List<OperationFeature>? nodeFeats;
-        if (!NodeFeatures.TryGetValue(key, out nodeFeats))
+        if (!NodeFeatures.TryGetValue(key,
+            out List<OperationFeature>? nodeFeats))
         {
             nodeFeats = [];
             NodeFeatures[key] = nodeFeats;
@@ -189,16 +189,25 @@ public class ChainOperationContextFeats
         HashSet<string> names = [];
 
         // head features for first node
-        foreach (OperationFeature feature in sources['h'])
-            UpdateFeature(feature, names, tag, [nodes[0]]);
+        if (sources.TryGetValue('h', out IList<OperationFeature>? heads))
+        {
+            foreach (OperationFeature feature in heads)
+                UpdateFeature(feature, names, tag, [nodes[0]]);
+        }
 
         // tail feature for last node
-        foreach (OperationFeature feature in sources['t'])
-            UpdateFeature(feature, names, tag, [nodes[^1]]);
+        if (sources.TryGetValue('t', out IList<OperationFeature>? tails))
+        {
+            foreach (OperationFeature feature in tails)
+                UpdateFeature(feature, names, tag, [nodes[^1]]);
+        }
 
         // body features for all nodes
-        foreach (OperationFeature feature in sources['b'])
-            UpdateFeature(feature, names, tag, nodes);
+        if (sources.TryGetValue('b', out IList<OperationFeature>? bodies))
+        {
+            foreach (OperationFeature feature in bodies)
+                UpdateFeature(feature, names, tag, nodes);
+        }
     }
 
     /// <summary>

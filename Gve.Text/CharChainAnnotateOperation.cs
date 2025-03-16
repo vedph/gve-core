@@ -5,7 +5,9 @@ using System.Text;
 namespace Gve.Text;
 
 /// <summary>
-/// Annotate operation for a chain of characters.
+/// Annotate operation for a chain of characters. This operation does not
+/// affect the text but just adds features to the selected range of nodes.
+/// Arguments: AT, RUN.
 /// </summary>
 /// <seealso cref="CharChainOperation" />
 public sealed class CharChainAnnotateOperation : CharChainOperation
@@ -35,7 +37,11 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
 
         // add features to context
         IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, outputTag);
+        AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
+
         UpdateContext(context, inputTag, outputTag, nodes, nodes);
+
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
     }
 
     /// <summary>

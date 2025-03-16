@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -46,12 +45,12 @@ public sealed class CharChainAnnotateOperationTest
     public void Execute_At0()
     {
         ChainOperationContext<char> context = new();
-        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        context.Chain.AppendRange("v0", "v1", TestHelper.GetNodesFrom("ABC"));
         CharChainAnnotateOperation op = new()
         {
             At = 0,
             InputTag = "v0",
-            OutputTag = "v0",
+            OutputTag = "v1",
             Features =
             [
                 OperationFeature.Parse("*log:=\"context annotation\""),
@@ -61,9 +60,9 @@ public sealed class CharChainAnnotateOperationTest
         op.Execute(context);
 
         Assert.Equal("ABC", TestHelper.GetVersionString(
-            context.Chain.GetTagNodes("v0")));
+            context.Chain.GetTagNodes("v1")));
         // context tag
-        Assert.Equal("v0", context.LastTag);
+        Assert.Equal("v1", context.LastTag);
         // context features
         Assert.Single(context.Features);
         Assert.Equal("log", context.Features[0].Name);
@@ -73,7 +72,7 @@ public sealed class CharChainAnnotateOperationTest
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
-        Assert.Equal("v0", context.Steps[0].OutputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Empty(context.Steps[0].FeatureSet.NodeFeatures);
@@ -83,44 +82,46 @@ public sealed class CharChainAnnotateOperationTest
     public void Execute_At1Run2()
     {
         ChainOperationContext<char> context = new();
-        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        context.Chain.AppendRange("v0", "v1", TestHelper.GetNodesFrom("ABC"));
         CharChainAnnotateOperation op = new()
         {
             At = 1,
             Run = 2,
             InputTag = "v0",
-            OutputTag = "v0",
+            OutputTag = "v1",
             Features =
             [
                 OperationFeature.Parse("*log:=\"context annotation\""),
                 new OperationFeature("x", "y"),
-            ]
+            ],
         };
 
         op.Execute(context);
 
         Assert.Equal("ABC", TestHelper.GetVersionString(
-            context.Chain.GetTagNodes("v0")));
+            context.Chain.GetTagNodes("v1")));
         // context tag
-        Assert.Equal("v0", context.LastTag);
+        Assert.Equal("v1", context.LastTag);
         // context features
         Assert.Single(context.Features);
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("context annotation", context.Features[0].Value);
         // node features
         Assert.Equal(2, context.NodeFeatures.Count);
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v0_1"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("x", nodeFeatures[0].Name);
-        Assert.Equal("y", nodeFeatures[0].Value);
+        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
+        Assert.Equal(2, nodeFeatures.Count);
+        string tagName = op.GetTracingFeatureName(CharChainOperation.F_TRACE_TAG);
+        Assert.Contains(nodeFeatures, f => f.Name == tagName && f.Value == "v0:v1");
+        Assert.Contains(nodeFeatures, f => f.Name == "x" && f.Value == "y");
 
-        nodeFeatures = context.NodeFeatures["v0_2"];
-        Assert.Empty(nodeFeatures);
+        nodeFeatures = context.NodeFeatures["v1_2"];
+        Assert.Single(nodeFeatures);
+        Assert.Contains(nodeFeatures, f => f.Name == tagName && f.Value == "v0:v1");
 
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
-        Assert.Equal("v0", context.Steps[0].OutputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);

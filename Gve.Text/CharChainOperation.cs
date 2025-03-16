@@ -90,6 +90,12 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// </summary>
     public string? Value { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether trace features should not be
+    /// added.
+    /// </summary>
+    public bool NoTraceFeatures { get; set; }
+
     [GeneratedRegex(@"^(?<tox>@)?(?<to>[0-9]+)")]
     protected static partial Regex ToRegex();
 
@@ -461,8 +467,12 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
     /// </param>
     /// <returns>Feature name.</returns>
-    protected string GetTracingFeatureName(string suffix)
-        => $"{F_TRACE_PREFIX}{Id}/{suffix}";
+    /// <exception cref="ArgumentNullException">suffix</exception>
+    public string GetTracingFeatureName(string suffix)
+    {
+        ArgumentNullException.ThrowIfNull(suffix);
+        return $"{F_TRACE_PREFIX}{Id}/{suffix}";
+    }
 
     /// <summary>
     /// Gets a new tracing feature for this operation.
@@ -472,11 +482,16 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// </param>
     /// <param name="value">The optional feature value.</param>
     /// <returns>Feature.</returns>
+    /// <exception cref="ArgumentNullException">suffix</exception>
     public OperationFeature GetTracingFeature(string suffix, string? value = null)
-        => new(GetTracingFeatureName(suffix), value, FeatureSetPolicy.Single);
+    {
+        ArgumentNullException.ThrowIfNull(suffix);
+        return new(GetTracingFeatureName(suffix), value, FeatureSetPolicy.Single);
+    }
 
     /// <summary>
-    /// Adds trace features to the specified nodes.
+    /// Adds trace features to the specified nodes unless
+    /// <see cref="NoTraceFeatures"/> is true.
     /// </summary>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
@@ -492,6 +507,8 @@ public abstract partial class CharChainOperation(OperationType type) :
         ArgumentNullException.ThrowIfNull(inputTag);
         ArgumentNullException.ThrowIfNull(outputTag);
         ArgumentNullException.ThrowIfNull(nodes);
+
+        if (NoTraceFeatures || nodes.Count == 0) return;
 
         Dictionary<char, IList<OperationFeature>> features = [];
 
@@ -543,7 +560,8 @@ public abstract partial class CharChainOperation(OperationType type) :
             }
         }
 
-        context.UpdateTracingFeatures(features, outputTag, nodes);
+        if (features.Count > 0)
+            context.UpdateTracingFeatures(features, outputTag, nodes);
     }
 
     /// <summary>
