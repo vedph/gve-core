@@ -109,7 +109,8 @@ public sealed class CharChainReplaceOperationTest
             [
                 OperationFeature.Parse("*log:=\"replaced A with X\""),
                 new OperationFeature("reason", "like X more")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -160,7 +161,8 @@ public sealed class CharChainReplaceOperationTest
                 OperationFeature.Parse("*log:=\"replaced A with X\""),
                 OperationFeature.Parse("x:=\"25\""),
                 OperationFeature.Parse("y:=\"50\""),
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -214,7 +216,8 @@ public sealed class CharChainReplaceOperationTest
             [
                 OperationFeature.Parse("*log:=\"replaced AB with X\""),
                 new OperationFeature("reason", "like X more")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -265,7 +268,8 @@ public sealed class CharChainReplaceOperationTest
             [
                 OperationFeature.Parse("*log:=\"replaced B with XY\""),
                 new OperationFeature("reason", "like XY more")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -310,6 +314,84 @@ public sealed class CharChainReplaceOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
+    }
+
+    [Fact]
+    public void Execute_ReplaceRange_TraceFeatures()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainReplaceOperation op = new()
+        {
+            At = 2,
+            Run = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "XY",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"replaced B with XY\""),
+                    new OperationFeature("reason", "like XY more")
+            ]
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AXYC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("replaced B with XY", context.Features[0].Value);
+
+        // node features
+        string segFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG);
+
+        // v0_2 (B)
+        List<OperationFeature> features = context.NodeFeatures["v0_2"];
+        Assert.Single(features);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+
+        // v1_4 (X)
+        features = context.NodeFeatures["v1_4"];
+        Assert.Equal(3, features.Count);
+        // opid
+        OperationFeature? f = features.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = features.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like XY more", f.Value);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+
+        // v1_5 (Y)
+        features = context.NodeFeatures["v1_5"];
+        Assert.Equal(3, features.Count);
+        // opid
+        f = features.Find(f => f.Name == OperationMetadata.OPID_KEY);
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = features.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("like XY more", f.Value);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
