@@ -247,21 +247,21 @@ public sealed class CharChainDeleteOperationTest
 
         // node features
         Assert.Equal(4, context.NodeFeatures.Count);
-        string segFeatName = op.GetTracingFeatureName(
-            CharChainOperation.F_TRACE_SEG);
+        string segInName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_IN);
 
         // input nodes:
         // v0_2
         List<OperationFeature> features = context.NodeFeatures["v0_2"];
         Assert.Single(features);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@1");
 
         // v0_3
         features = context.NodeFeatures["v0_3"];
         Assert.Single(features);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@2");
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@2");
 
         // output nodes:
         // v1_2
@@ -269,16 +269,16 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal(2, features.Count);
         // reason
         Assert.Contains(features, f => f.Name == "reason" && f.Value == "don't like BC");
-        // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+        // segment (inherited from v0)
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@1");
 
         // v1_3
         features = context.NodeFeatures["v1_3"];
         Assert.Equal(2, features.Count);
         // reason
         Assert.Contains(features, f => f.Name == "reason" && f.Value == "don't like BC");
-        // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
+        // segment (inherited from v0)
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@2");
 
         // context steps
         Assert.Single(context.Steps);

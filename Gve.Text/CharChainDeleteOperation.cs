@@ -49,8 +49,7 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         UpdateContext(context, inputTag, outputTag, nodes,
             GetReferenceNodes(context.Chain, inputTag));
 
-        // add trace features to nodes after executing the operation
-        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
+        // no trace features for nodes after executing the operation
     }
 
     /// <summary>

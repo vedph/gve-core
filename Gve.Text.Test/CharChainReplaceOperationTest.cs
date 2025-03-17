@@ -348,13 +348,17 @@ public sealed class CharChainReplaceOperationTest
 
         // node features
         string segFeatName = op.GetTracingFeatureName(
-            CharChainOperation.F_TRACE_SEG);
+            CharChainOperation.F_TRACE_SEG_IN);
 
+        // input nodes
         // v0_2 (B)
         List<OperationFeature> features = context.NodeFeatures["v0_2"];
         Assert.Single(features);
         // segment
         Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+
+        // output nodes
+        segFeatName = op.GetTracingFeatureName(CharChainOperation.F_TRACE_SEG_OUT);
 
         // v1_4 (X)
         features = context.NodeFeatures["v1_4"];

@@ -109,32 +109,41 @@ public sealed class CharChainAnnotateOperationTest
 
         // node features target 4 nodes (2 for input and 2 for output)
         Assert.Equal(4, context.NodeFeatures.Count);
-        string segFeatName = op.GetTracingFeatureName(
-            CharChainOperation.F_TRACE_SEG);
+        string segInName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_IN);
 
         // input nodes:
         // v0_1
         List<OperationFeature> features = context.NodeFeatures["v0_1"];
         Assert.Single(features);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@1");
 
         // v0_2
         features = context.NodeFeatures["v0_2"];
         Assert.Single(features);
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@2");
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@2");
 
         // output nodes:
+        string segOutName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_OUT);
+
         // v1_1
         features = context.NodeFeatures["v1_1"];
-        Assert.Equal(2, features.Count);
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+        Assert.Equal(3, features.Count);
+        // segment
+        Assert.Contains(features, f => f.Name == segOutName && f.Value == "v1@1");
+        // inherited segment
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@1");
         // x (this gets added only to the first node of the segment)
         Assert.Contains(features, f => f.Name == "x" && f.Value == "y");
 
         features = context.NodeFeatures["v1_2"];
-        Assert.Single(features);
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
+        Assert.Equal(2, features.Count);
+        // segment
+        Assert.Contains(features, f => f.Name == segOutName && f.Value == "v1@2");
+        // inherited segment
+        Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@2");
 
         // context steps
         Assert.Single(context.Steps);

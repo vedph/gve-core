@@ -25,15 +25,26 @@ public abstract partial class CharChainOperation(OperationType type) :
     public const string F_TRACE_PREFIX = "$";
 
     /// <summary>
-    /// The suffix for the tagged segment tracing feature. This is added to
-    /// all the nodes belonging to an input/output segment, i.e. a sequence
-    /// of contiguous nodes defined by AT and RUN.
+    /// The suffix for the input tagged segment tracing feature. This is added
+    /// to all the nodes belonging to an input segment, i.e. a sequence
+    /// of contiguous nodes affected by an operation.
     /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
     /// <c>NR</c>=ordinal number of node in sequence starting from 1.
     /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
     /// </para>
     /// </summary>
-    public const string F_TRACE_SEG = "seg";
+    public const string F_TRACE_SEG_IN = "seg-in";
+
+    /// <summary>
+    /// The suffix for the output tagged segment tracing feature. This is added
+    /// to all the nodes belonging to an output segment, i.e. a sequence
+    /// of contiguous nodes affected by an operation.
+    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
+    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
+    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG_OUT = "seg-out";
 
     /// <summary>
     /// Gets or sets the operation type.
@@ -518,7 +529,8 @@ public abstract partial class CharChainOperation(OperationType type) :
         for (int i = 0; i < nodes.Count; i++)
         {
             OperationFeature f = GetTracingFeature(
-                F_TRACE_SEG, $"{ tag}@{i + 1}");
+                afterExecution? F_TRACE_SEG_OUT : F_TRACE_SEG_IN,
+                $"{ tag}@{i + 1}");
             context.UpdateTracingFeatures(f, tag, nodes[i]);
         }
 
