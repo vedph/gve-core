@@ -106,20 +106,35 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Single(context.Features);
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("context annotation", context.Features[0].Value);
-        // node features
-        Assert.Equal(2, context.NodeFeatures.Count);
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
-        Assert.Equal(2, nodeFeatures.Count);
-        string tagName = op.GetTracingFeatureName(CharChainOperation.F_TRACE_TAG);
-        Assert.Contains(nodeFeatures, f => f.Name == tagName && f.Value == "v0:v1");
-        Assert.Contains(nodeFeatures, f => f.Name == "x" && f.Value == "y");
 
-        nodeFeatures = context.NodeFeatures["v1_2"];
-        Assert.Equal(2, nodeFeatures.Count);
-        Assert.Contains(nodeFeatures, f => f.Name == tagName && f.Value == "v0:v1");
-        string anchorName = op.GetTracingFeatureName(
-            CharChainOperation.F_TRACE_ANCHOR_OUT_RIGHT);
-        Assert.Contains(nodeFeatures, f => f.Name == anchorName && f.Value == "3");
+        // node features target 4 nodes (2 for input and 2 for output)
+        Assert.Equal(4, context.NodeFeatures.Count);
+        string segFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG);
+
+        // input nodes:
+        // v0_1
+        List<OperationFeature> features = context.NodeFeatures["v0_1"];
+        Assert.Single(features);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+
+        // v0_2
+        features = context.NodeFeatures["v0_2"];
+        Assert.Single(features);
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@2");
+
+        // output nodes:
+        // v1_1
+        features = context.NodeFeatures["v1_1"];
+        Assert.Equal(2, features.Count);
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+        // x (this gets added only to the first node of the segment)
+        Assert.Contains(features, f => f.Name == "x" && f.Value == "y");
+
+        features = context.NodeFeatures["v1_2"];
+        Assert.Single(features);
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
 
         // context steps
         Assert.Single(context.Steps);
@@ -127,6 +142,6 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }

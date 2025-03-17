@@ -172,14 +172,11 @@ public class ChainOperationContextFeats
     /// from the specified source features.
     /// </summary>
     /// <typeparam name="T">The data type of nodes.</typeparam>
-    /// <param name="sources">The source features dictionary, where key is
-    /// <c>h</c>=head, <c>t</c>=tail, <c>b</c>=body, and value is the list
-    /// of target nodes.</param>
+    /// <param name="sources">The source features.</param>
     /// <param name="tag">The tag the features belong to.</param>
     /// <param name="nodes">The nodes targeted in the update.</param>
     /// <exception cref="ArgumentNullException">sources</exception>
-    public void UpdateTracingFeatures<T>(
-        IDictionary<char, IList<OperationFeature>> sources,
+    public void UpdateTracingFeatures<T>(IList<OperationFeature> sources,
         string tag, IList<ChainNode<T>> nodes)
     {
         ArgumentNullException.ThrowIfNull(sources);
@@ -188,26 +185,28 @@ public class ChainOperationContextFeats
 
         HashSet<string> names = [];
 
-        // head features for first node
-        if (sources.TryGetValue('h', out IList<OperationFeature>? heads))
-        {
-            foreach (OperationFeature feature in heads)
-                UpdateFeature(feature, names, tag, [nodes[0]]);
-        }
+        foreach (OperationFeature feature in sources)
+            UpdateFeature(feature, names, tag, nodes);
+    }
 
-        // tail feature for last node
-        if (sources.TryGetValue('t', out IList<OperationFeature>? tails))
-        {
-            foreach (OperationFeature feature in tails)
-                UpdateFeature(feature, names, tag, [nodes[^1]]);
-        }
+    /// <summary>
+    /// Updates the tracing features of the specified target node with the
+    /// specified feature.
+    /// </summary>
+    /// <typeparam name="T">The data type of the nodes.</typeparam>
+    /// <param name="source">The source feature.</param>
+    /// <param name="tag">The tag the features belong to.</param>
+    /// <param name="node">The node targeted in the update.</param>
+    /// <exception cref="ArgumentNullException">source, tag or node</exception>
+    public void UpdateTracingFeatures<T>(OperationFeature source, string tag,
+        ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(tag);
+        ArgumentNullException.ThrowIfNull(node);
 
-        // body features for all nodes
-        if (sources.TryGetValue('b', out IList<OperationFeature>? bodies))
-        {
-            foreach (OperationFeature feature in bodies)
-                UpdateFeature(feature, names, tag, nodes);
-        }
+        HashSet<string> names = [];
+        UpdateFeature(source, names, tag, [node]);
     }
 
     /// <summary>

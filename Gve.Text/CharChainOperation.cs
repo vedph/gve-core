@@ -25,29 +25,15 @@ public abstract partial class CharChainOperation(OperationType type) :
     public const string F_TRACE_PREFIX = "$";
 
     /// <summary>
-    /// The suffix for the tag tracing feature.
+    /// The suffix for the tagged segment tracing feature. This is added to
+    /// all the nodes belonging to an input/output segment, i.e. a sequence
+    /// of contiguous nodes defined by AT and RUN.
+    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
+    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
+    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
+    /// </para>
     /// </summary>
-    public const string F_TRACE_TAG = "tag";
-
-    /// <summary>
-    /// The suffix for the input left anchor tracing feature.
-    /// </summary>
-    public const string F_TRACE_ANCHOR_IN_LEFT = "anchor-in-l";
-
-    /// <summary>
-    /// The suffix for the input right anchor tracing feature.
-    /// </summary>
-    public const string F_TRACE_ANCHOR_IN_RIGHT = "anchor-in-r";
-
-    /// <summary>
-    /// The suffix for the output left anchor tracing feature.
-    /// </summary>
-    public const string F_TRACE_ANCHOR_OUT_LEFT = "anchor-out-l";
-
-    /// <summary>
-    /// The suffix for the output right anchor tracing feature.
-    /// </summary>
-    public const string F_TRACE_ANCHOR_OUT_RIGHT = "anchor-out-r";
+    public const string F_TRACE_SEG = "seg";
 
     /// <summary>
     /// Gets or sets the operation type.
@@ -490,6 +476,22 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
+    /// Adds more operation-specific node trace features after the generic ones
+    /// have been added. Called by <see cref="AddNodeTraceFeatures(string, 
+    /// string, bool, IList{ChainNode{char}}, ChainOperationContext{char})"/>.
+    /// </summary>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <param name="afterExecution">if set to <c>true</c> [after execution].</param>
+    /// <param name="nodes">The nodes.</param>
+    /// <param name="context">The context.</param>
+    protected virtual void AddMoreNodeTraceFeatures(string inputTag,
+        string outputTag, bool afterExecution, IList<ChainNode<char>> nodes,
+        ChainOperationContext<char> context)
+    {
+    }
+
+    /// <summary>
     /// Adds trace features to the specified nodes unless
     /// <see cref="NoTraceFeatures"/> is true.
     /// </summary>
@@ -510,58 +512,18 @@ public abstract partial class CharChainOperation(OperationType type) :
 
         if (NoTraceFeatures || nodes.Count == 0) return;
 
-        Dictionary<char, IList<OperationFeature>> features = [];
-
-        ChainNode<char>? leftNode = context.Chain.GetPreviousNode(
-            afterExecution? outputTag : inputTag, nodes[0]);
-        ChainNode<char>? rightNode = context.Chain.GetNextNode(
-            afterExecution ? outputTag : inputTag, nodes[^1]);
-
-        if (afterExecution)
+        // all the operations will add tracing features for the input/output
+        // range defined by AT and RUN, except when RUN is 0 (=additions)
+        string tag = afterExecution ? outputTag : inputTag;
+        for (int i = 0; i < nodes.Count; i++)
         {
-            // output: output anchors for head and tail nodes
-            if (leftNode != null)
-            {
-                features['h'] =
-                [
-                    GetTracingFeature(F_TRACE_ANCHOR_OUT_LEFT, $"{leftNode.Id}")
-                ];
-            }
-            if (rightNode != null)
-            {
-                features['t'] =
-                [
-                    GetTracingFeature(F_TRACE_ANCHOR_OUT_RIGHT, $"{rightNode.Id}")
-                ];
-            }
-        }
-        else
-        {
-            // input: tag for all affected nodes and input anchors for head and
-            // tail nodes
-            features['b'] =
-            [
-                GetTracingFeature(F_TRACE_TAG, $"{inputTag}:{outputTag}")
-            ];
-
-            if (leftNode != null)
-            {
-                features['h'] =
-                [
-                    GetTracingFeature(F_TRACE_ANCHOR_IN_LEFT, $"{leftNode.Id}")
-                ];
-            }
-            if (rightNode != null)
-            {
-                features['t'] =
-                [
-                    GetTracingFeature(F_TRACE_ANCHOR_IN_RIGHT, $"{rightNode.Id}")
-                ];
-            }
+            OperationFeature f = GetTracingFeature(
+                F_TRACE_SEG, $"{ tag}@{i + 1}");
+            context.UpdateTracingFeatures(f, tag, nodes[i]);
         }
 
-        if (features.Count > 0)
-            context.UpdateTracingFeatures(features, outputTag, nodes);
+        AddMoreNodeTraceFeatures(inputTag, outputTag, afterExecution, nodes,
+            context);
     }
 
     /// <summary>
