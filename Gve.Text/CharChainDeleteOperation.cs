@@ -32,6 +32,9 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         // get target nodes
         IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
+        // add trace features to nodes before executing the operation
+        AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
+
         // apply to single node or range
         if (nodes.Count > 1)
         {
@@ -45,6 +48,9 @@ public sealed class CharChainDeleteOperation : CharChainOperation
         // update context metadata
         UpdateContext(context, inputTag, outputTag, nodes,
             GetReferenceNodes(context.Chain, inputTag));
+
+        // add trace features to nodes after executing the operation
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
     }
 
     /// <summary>

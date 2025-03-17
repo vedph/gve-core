@@ -139,7 +139,8 @@ public sealed class CharChainDeleteOperationTest
             [
                 OperationFeature.Parse("*log:=\"deleted A from ABC\""),
                 new OperationFeature("reason", "don't like A")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -153,10 +154,10 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted A from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("don't like A", nodeFeatures[0].Value);
+        List<OperationFeature> features = context.NodeFeatures["v1_1"];
+        Assert.NotEmpty(features);
+        Assert.Equal("reason", features[0].Name);
+        Assert.Equal("don't like A", features[0].Value);
         // context steps
         Assert.Single(context.Steps);
         Assert.Equal("v0", context.Steps[0].InputTag);
@@ -181,7 +182,8 @@ public sealed class CharChainDeleteOperationTest
             [
                 OperationFeature.Parse("*log:=\"deleted BC from ABC\""),
                 new OperationFeature("reason", "don't like BC")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -195,15 +197,15 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("deleted BC from ABC", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_2"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("don't like BC", nodeFeatures[0].Value);
+        List<OperationFeature> features = context.NodeFeatures["v1_2"];
+        Assert.NotEmpty(features);
+        Assert.Equal("reason", features[0].Name);
+        Assert.Equal("don't like BC", features[0].Value);
 
-        nodeFeatures = context.NodeFeatures["v1_3"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("don't like BC", nodeFeatures[0].Value);
+        features = context.NodeFeatures["v1_3"];
+        Assert.NotEmpty(features);
+        Assert.Equal("reason", features[0].Name);
+        Assert.Equal("don't like BC", features[0].Value);
 
         // context steps
         Assert.Single(context.Steps);
@@ -212,5 +214,78 @@ public sealed class CharChainDeleteOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
+    }
+
+    [Fact]
+    public void Execute_DeleteRange_TraceFeatures()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainDeleteOperation op = new()
+        {
+            At = 2,
+            Run = 2,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"deleted BC from ABC\""),
+                new OperationFeature("reason", "don't like BC")
+            ],
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("A", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("deleted BC from ABC", context.Features[0].Value);
+
+        // node features
+        Assert.Equal(4, context.NodeFeatures.Count);
+        string segFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG);
+
+        // input nodes:
+        // v0_2
+        List<OperationFeature> features = context.NodeFeatures["v0_2"];
+        Assert.Single(features);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+
+        // v0_3
+        features = context.NodeFeatures["v0_3"];
+        Assert.Single(features);
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@2");
+
+        // output nodes:
+        // v1_2
+        features = context.NodeFeatures["v1_2"];
+        Assert.Equal(2, features.Count);
+        // reason
+        Assert.Contains(features, f => f.Name == "reason" && f.Value == "don't like BC");
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+
+        // v1_3
+        features = context.NodeFeatures["v1_3"];
+        Assert.Equal(2, features.Count);
+        // reason
+        Assert.Contains(features, f => f.Name == "reason" && f.Value == "don't like BC");
+        // segment
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
