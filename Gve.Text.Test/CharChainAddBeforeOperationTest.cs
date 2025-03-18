@@ -132,9 +132,7 @@ public sealed class CharChainAddBeforeOperationTest
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
-        f = features.Find(f => f.Name == "reason");
-        Assert.NotNull(f);
-        Assert.Equal("A likes X", f.Value);
+        Assert.Contains(features, f => f.Name == "reason" && f.Value == "A likes X");
         // segment features
         string segFeatName = op.GetTracingFeatureName(
             CharChainOperation.F_TRACE_SEG_OUT);

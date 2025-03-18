@@ -57,6 +57,15 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation,
         // get to node
         ChainNode<char> toNode = GetToNode(context.Chain, inputTag);
 
+        // add trace features before moving the input segment
+        AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
+        // add anchor feature to reference node
+        if (!NoTraceFeatures)
+        {
+            OperationFeature f = GetTracingFeature(F_TRACE_ANCHOR, inputTag);
+            context.UpdateTracingFeatures(f, inputTag, toNode);
+        }
+
         // apply to single node or range
         if (nodes.Count > 1)
         {
@@ -71,6 +80,9 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation,
         // update context metadata
         UpdateContext(context, inputTag, outputTag, nodes,
             GetReferenceNodes(context.Chain, inputTag));
+
+        // add segment features to added nodes
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
     }
 
     /// <summary>
