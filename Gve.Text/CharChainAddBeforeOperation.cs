@@ -35,13 +35,20 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
         // get tags
         (string inputTag, string outputTag) = GetTags(context);
 
-        // get bound node
+        // get ref node
         IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
 
         if (nodes.Count > 1)
         {
             throw new InvalidOperationException(
                 "Add-before operation cannot have a RUN different from 0.");
+        }
+
+        // add anchor feature to reference node
+        if (!NoTraceFeatures)
+        {
+            OperationFeature f = GetTracingFeature(F_TRACE_ANCHOR, inputTag);
+            context.UpdateTracingFeatures(f, inputTag, nodes[0]);
         }
 
         // apply to single node or range
@@ -66,6 +73,9 @@ public sealed class CharChainAddBeforeOperation : CharChainOperation
 
         // update context metadata (target nodes are the added nodes)
         UpdateContext(context, inputTag, outputTag, nodes, addedNodes);
+
+        // add segment features to added nodes
+        AddNodeTraceFeatures(inputTag, outputTag, true, addedNodes, context);
     }
 
     /// <summary>

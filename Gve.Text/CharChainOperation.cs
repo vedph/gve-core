@@ -47,6 +47,37 @@ public abstract partial class CharChainOperation(OperationType type) :
     public const string F_TRACE_SEG_OUT = "seg-out";
 
     /// <summary>
+    /// The suffix for the input tagged second segment tracing feature. This
+    /// is added to all the nodes belonging to the second input segment, i.e.
+    /// a sequence of contiguous nodes affected by the swap operation.
+    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
+    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
+    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG2_IN = "seg2-in";
+
+    /// <summary>
+    /// The suffix for the output tagged second segment tracing feature. This
+    /// is added to all the nodes belonging to the second output segment,
+    /// i.e. a sequence of contiguous nodes affected by the swap operation.
+    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
+    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
+    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG2_OUT = "seg2-out";
+
+    /// <summary>
+    /// The suffix for the anchor tracing feature. This is added to the node
+    /// used as the anchor for an add before/after or move before/after operation.
+    /// <para>The value is <c>TAG</c>=version tag. By definition, an anchor
+    /// is always represented by a single node, before or after which something
+    /// happens.</para>
+    /// </summary>
+    public const string F_TRACE_ANCHOR = "anchor";
+
+    /// <summary>
     /// Gets or sets the operation type.
     /// </summary>
     public OperationType Type { get; protected init; } = type;
@@ -503,8 +534,10 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
-    /// Adds trace features to the specified nodes unless
-    /// <see cref="NoTraceFeatures"/> is true.
+    /// Adds segment in or out trace features to the specified nodes unless
+    /// <see cref="NoTraceFeatures"/> is true. Additional features can be
+    /// added at the end of this method by overriding
+    /// <see cref="AddMoreNodeTraceFeatures"/>.
     /// </summary>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>

@@ -50,7 +50,8 @@ public sealed class CharChainAddAfterOperationTest
             [
                 OperationFeature.Parse("*log:=\"added X after A\""),
                 OperationFeature.Parse("reason=\"A likes X\"")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -63,16 +64,17 @@ public sealed class CharChainAddAfterOperationTest
         Assert.Single(context.Features);
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("added X after A", context.Features[0].Value);
+
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.Equal(2, nodeFeatures.Count);
+        List<OperationFeature> features = context.NodeFeatures["v1_4"];
+        Assert.Equal(2, features.Count);
         // opid
-        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+        OperationFeature? f = features.Find(f => f.Name ==
             OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
-        f = nodeFeatures.Find(f => f.Name == "reason");
+        f = features.Find(f => f.Name == "reason");
         Assert.NotNull(f);
         Assert.Equal("A likes X", f.Value);
         // context steps
@@ -82,5 +84,68 @@ public sealed class CharChainAddAfterOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+    }
+
+    [Fact]
+    public void Execute_At1_TraceFeatures()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainAddAfterOperation op = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"added X after A\""),
+                OperationFeature.Parse("reason=\"A likes X\"")
+            ],
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("AXBC", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("added X after A", context.Features[0].Value);
+
+        // node features:
+        // input: v0_1 (A)
+        List<OperationFeature> features = context.NodeFeatures["v0_1"];
+        string anchorFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_ANCHOR);
+        Assert.Contains(features, f => f.Name == anchorFeatName &&
+            f.Value == "v0");
+
+        // output: v1_4 (X)
+        features = context.NodeFeatures["v1_4"];
+        Assert.Equal(3, features.Count);
+        // opid
+        OperationFeature? f = features.Find(f => f.Name ==
+            OperationMetadata.OPID_KEY);
+        Assert.NotNull(f);
+        Assert.Equal(op.Id, f.Value);
+        // reason
+        f = features.Find(f => f.Name == "reason");
+        Assert.NotNull(f);
+        Assert.Equal("A likes X", f.Value);
+        // segment features
+        string segFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_OUT);
+        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
