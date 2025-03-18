@@ -57,6 +57,10 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         IList<ChainNode<char>> toNodes = GetReferenceNodes(context.Chain, inputTag,
             To, ToRun);
 
+        // add trace features to segments before execution
+        AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, false, toNodes, context);
+
         context.Chain.SwapRanges(inputTag, outputTag,
             nodes[0], nodes[^1],
             toNodes[0], toNodes[^1]);
@@ -67,6 +71,10 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag, To, ToRun));
 
         UpdateContext(context, inputTag, outputTag, nodes, targetNodes);
+
+        // add trace features to segments after execution
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, toNodes, context);
     }
 
     /// <summary>

@@ -63,7 +63,8 @@ public sealed class CharChainSwapOperationTest
             [
                 OperationFeature.Parse("*log:=\"swapped A with C\""),
                 new OperationFeature("reason", "A and C are jealous")
-            ]
+            ],
+            NoTraceFeatures = true
         };
 
         op.Execute(context);
@@ -76,16 +77,17 @@ public sealed class CharChainSwapOperationTest
         Assert.Single(context.Features);
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("swapped A with C", context.Features[0].Value);
-        // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_1"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("A and C are jealous", nodeFeatures[0].Value);
 
-        nodeFeatures = context.NodeFeatures["v1_3"];
-        Assert.NotEmpty(nodeFeatures);
-        Assert.Equal("reason", nodeFeatures[0].Name);
-        Assert.Equal("A and C are jealous", nodeFeatures[0].Value);
+        // node features
+        List<OperationFeature> features = context.NodeFeatures["v1_1"];
+        Assert.NotEmpty(features);
+        Assert.Equal("reason", features[0].Name);
+        Assert.Equal("A and C are jealous", features[0].Value);
+
+        features = context.NodeFeatures["v1_3"];
+        Assert.NotEmpty(features);
+        Assert.Equal("reason", features[0].Name);
+        Assert.Equal("A and C are jealous", features[0].Value);
 
         // context steps
         Assert.Single(context.Steps);
@@ -94,5 +96,89 @@ public sealed class CharChainSwapOperationTest
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
         Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
+    }
+
+    [Fact]
+    public void Execute_At1Run1To3Run1_TraceFeatures()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+        CharChainSwapOperation op = new()
+        {
+            At = 1,
+            To = 3,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Features =
+            [
+                OperationFeature.Parse("*log:=\"swapped A with C\""),
+                new OperationFeature("reason", "A and C are jealous")
+            ],
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("CBA", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+        // context tag
+        Assert.Equal("v1", context.LastTag);
+        // context features
+        Assert.Single(context.Features);
+        Assert.Equal("log", context.Features[0].Name);
+        Assert.Equal("swapped A with C", context.Features[0].Value);
+
+        // node features
+        // input:
+        // v0_1 (A)
+        List<OperationFeature> features = context.NodeFeatures["v0_1"];
+        Assert.Single(features);
+        // segment in
+        string segInFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_IN);
+        Assert.Contains(features, f => f.Name == segInFeatName &&
+            f.Value == "v0@1");
+        // v0_3 (C)
+        features = context.NodeFeatures["v0_3"];
+        Assert.Single(features);
+        // segment in
+        Assert.Contains(features, f => f.Name == segInFeatName &&
+            f.Value == "v0@1");
+
+        // output:
+        // v1_1 (C)
+        features = context.NodeFeatures["v1_1"];
+        Assert.Equal(3, features.Count);
+        // reason
+        Assert.Contains(features, f => f.Name == "reason" &&
+            f.Value == "A and C are jealous");
+        // segment in (inherited)
+        Assert.Contains(features, f => f.Name == segInFeatName &&
+            f.Value == "v0@1");
+        // segment out
+        string segOutFeatName = op.GetTracingFeatureName(
+            CharChainOperation.F_TRACE_SEG_OUT);
+        Assert.Contains(features, f => f.Name == segOutFeatName &&
+            f.Value == "v1@1");
+
+        // v1_3 (A)
+        features = context.NodeFeatures["v1_3"];
+        Assert.Equal(3, features.Count);
+        // reason
+        Assert.Contains(features, f => f.Name == "reason" &&
+            f.Value == "A and C are jealous");
+        // segment in (inherited)
+        Assert.Contains(features, f => f.Name == segInFeatName &&
+            f.Value == "v0@1");
+        // segment out
+        Assert.Contains(features, f => f.Name == segOutFeatName &&
+            f.Value == "v1@1");
+
+        // context steps
+        Assert.Single(context.Steps);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
+        Assert.Single(context.Steps[0].FeatureSet.Features);
+        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
