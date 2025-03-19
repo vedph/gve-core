@@ -219,6 +219,7 @@ public sealed class CharChainDeleteOperationTest
     [Fact]
     public void Execute_DeleteRange_TraceFeatures()
     {
+        // delete BC from ABC
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
         CharChainDeleteOperation op = new()
@@ -254,14 +255,16 @@ public sealed class CharChainDeleteOperationTest
         Assert.Single(features);
         // segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // v0_3
         features = context.NodeFeatures["v0_3"];
         Assert.Single(features);
         // segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@2");
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{op.Id} v0:v1 2");
 
         // output nodes:
         // v1_2
@@ -270,9 +273,10 @@ public sealed class CharChainDeleteOperationTest
         // reason
         Assert.Contains(features, f =>
             f.Name == "reason" && f.Value == "don't like BC");
-        // segment (inherited from v0)
+        // del
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
+            f.Name == CharChainOperation.DEL_KEY &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // v1_3
         features = context.NodeFeatures["v1_3"];
@@ -280,9 +284,10 @@ public sealed class CharChainDeleteOperationTest
         // reason
         Assert.Contains(features, f =>
             f.Name == "reason" && f.Value == "don't like BC");
-        // segment (inherited from v0)
+        // del
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@2");
+            f.Name == CharChainOperation.DEL_KEY &&
+            f.Value == $"{op.Id} v0:v1 2");
 
         // context steps
         Assert.Single(context.Steps);

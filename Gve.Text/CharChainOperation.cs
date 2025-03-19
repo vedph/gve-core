@@ -432,8 +432,7 @@ public abstract partial class CharChainOperation(OperationType type) :
 
     /// <summary>
     /// Adds more operation-specific node trace features after the generic ones
-    /// have been added. Called by <see cref="AddNodeTraceFeatures(string, 
-    /// string, bool, IList{ChainNode{char}}, ChainOperationContext{char})"/>.
+    /// have been added. Called by <see cref="AddNodeTraceFeatures"/>.
     /// </summary>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>

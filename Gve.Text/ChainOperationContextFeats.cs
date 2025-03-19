@@ -194,6 +194,23 @@ public class ChainOperationContextFeats
             UpdateFeature(feature, names, tag, nodes);
     }
 
+    /// <summary>
+    /// Updates the features of a specific node.
+    /// </summary>
+    /// <typeparam name="T">The data type of the nodes.</typeparam>
+    /// <param name="source">The source feature.</param>
+    /// <param name="tag">The tag the features belong to.</param>
+    /// <param name="node">The node targeted in the update.</param>
+    /// <exception cref="ArgumentNullException">source or tag or node</exception>
+    public void UpdateNodeFeatures<T>(
+        OperationFeature source, string tag, ChainNode<T> node)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(node);
+
+        UpdateFeature(source, [], tag, [node]);
+    }
+
     //public void UpdateTraceFeatures<T>(IList<OperationFeature> sources,
     //    string tag, IList<ChainNode<T>> nodes)
     //{

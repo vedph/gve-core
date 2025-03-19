@@ -22,9 +22,30 @@ public class OperationMetadata
 
     /// <summary>
     /// The key for the operation ID feature. This is assigned to each node
-    /// added by an operation (=by insertion or replacement).
+    /// added by an operation (=by insertion or replacement). The value contains
+    /// the operation ID.
     /// </summary>
     public const string OPID_KEY = "opid";
+
+    /// <summary>
+    /// The key for the delete feature. This is assigned to each node which
+    /// was deleted by a delete operation. Once a node is deleted, it still
+    /// remains in the chain, but it's detached from the output sequence of
+    /// nodes and will never be re-attached to it.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    /// </summary>
+    /// <remarks>This feature has the same value format as most of the trace
+    /// features, but it's not a trace feature because it persists forever
+    /// once attached to a node. So, together with <see cref="OPID_KEY"/> these
+    /// feature mark the entrance and exit of a node as versions define new
+    /// sequences.
+    /// </remarks>
+    public const string DEL_KEY = "del";
 
     /// <summary>
     /// The key for the X coordinate feature. This is assigned to each node
