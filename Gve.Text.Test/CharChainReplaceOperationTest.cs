@@ -319,6 +319,7 @@ public sealed class CharChainReplaceOperationTest
     [Fact]
     public void Execute_ReplaceRange_TraceFeatures()
     {
+        // replace B with XY in ABC
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
         CharChainReplaceOperation op = new()
@@ -353,7 +354,8 @@ public sealed class CharChainReplaceOperationTest
         Assert.Single(features);
         // segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // output nodes
         // v1_4 (X)
@@ -370,7 +372,8 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("like XY more", f.Value);
         // segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // v1_5 (Y)
         features = context.NodeFeatures["v1_5"];
@@ -385,7 +388,8 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("like XY more", f.Value);
         // segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@2");
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{op.Id} v0:v1 2");
 
         // context steps
         Assert.Single(context.Steps);
@@ -393,7 +397,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
