@@ -101,6 +101,7 @@ public sealed class CharChainSwapOperationTest
     [Fact]
     public void Execute_At1Run1To3Run1_TraceFeatures()
     {
+        // swap A with C in ABC
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
         CharChainSwapOperation op = new()
@@ -134,40 +135,38 @@ public sealed class CharChainSwapOperationTest
         Assert.Single(features);
         // segment in
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{op.Id} v0:v1 1");
         // v0_3 (C)
         features = context.NodeFeatures["v0_3"];
         Assert.Single(features);
         // segment in
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
+            f.Name == OperationFeature.F_TRACE_SEG2_IN &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // output:
         // v1_1 (C)
         features = context.NodeFeatures["v1_1"];
-        Assert.Equal(3, features.Count);
+        Assert.Equal(2, features.Count);
         // reason
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A and C are jealous");
-        // segment in (inherited)
-        Assert.Contains(features, f => f.Name == OperationFeature.F_TRACE_SEG_IN &&
-            f.Value == "v0@1");
         // segment out
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
+            f.Name == OperationFeature.F_TRACE_SEG2_OUT &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // v1_3 (A)
         features = context.NodeFeatures["v1_3"];
-        Assert.Equal(3, features.Count);
+        Assert.Equal(2, features.Count);
         // reason
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A and C are jealous");
-        // segment in (inherited)
-        Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v0@1");
         // segment out
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // context steps
         Assert.Single(context.Steps);
