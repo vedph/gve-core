@@ -118,7 +118,7 @@ public sealed class CharChainAddBeforeOperationTest
         // node features
         // input: v0_1 (A)
         List<OperationFeature> features = context.NodeFeatures["v0_1"];
-        string anchorFeatName = op.GetTracingFeatureName(
+        string anchorFeatName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_ANCHOR);
         Assert.Contains(features, f => f.Name == anchorFeatName &&
             f.Value == "v0");
@@ -134,7 +134,7 @@ public sealed class CharChainAddBeforeOperationTest
         // reason
         Assert.Contains(features, f => f.Name == "reason" && f.Value == "A likes X");
         // segment features
-        string segFeatName = op.GetTracingFeatureName(
+        string segFeatName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_OUT);
         Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
 

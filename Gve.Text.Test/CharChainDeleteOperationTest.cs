@@ -247,7 +247,7 @@ public sealed class CharChainDeleteOperationTest
 
         // node features
         Assert.Equal(4, context.NodeFeatures.Count);
-        string segInName = op.GetTracingFeatureName(
+        string segInName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_IN);
 
         // input nodes:

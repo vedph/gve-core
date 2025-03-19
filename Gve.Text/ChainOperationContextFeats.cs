@@ -169,15 +169,15 @@ public class ChainOperationContextFeats
     }
 
     /// <summary>
-    /// Updates the features of this context and/or of the <paramref name="nodes"/>
-    /// from the specified source features.
+    /// Updates the trace features of this context and/or of the
+    /// <paramref name="nodes"/> from the specified source features.
     /// </summary>
     /// <typeparam name="T">The data type of nodes.</typeparam>
     /// <param name="sources">The source features.</param>
     /// <param name="tag">The tag the features belong to.</param>
     /// <param name="nodes">The nodes targeted in the update.</param>
     /// <exception cref="ArgumentNullException">sources</exception>
-    public void UpdateTracingFeatures<T>(IList<OperationFeature> sources,
+    public void UpdateTraceFeatures<T>(IList<OperationFeature> sources,
         string tag, IList<ChainNode<T>> nodes)
     {
         ArgumentNullException.ThrowIfNull(sources);
@@ -191,7 +191,7 @@ public class ChainOperationContextFeats
     }
 
     /// <summary>
-    /// Updates the tracing features of the specified target node with the
+    /// Updates the trace features of the specified target node with the
     /// specified feature.
     /// </summary>
     /// <typeparam name="T">The data type of the nodes.</typeparam>
@@ -199,7 +199,7 @@ public class ChainOperationContextFeats
     /// <param name="tag">The tag the features belong to.</param>
     /// <param name="node">The node targeted in the update.</param>
     /// <exception cref="ArgumentNullException">source, tag or node</exception>
-    public void UpdateTracingFeatures<T>(OperationFeature source, string tag,
+    public void UpdateTraceFeatures<T>(OperationFeature source, string tag,
         ChainNode<T> node)
     {
         ArgumentNullException.ThrowIfNull(source);

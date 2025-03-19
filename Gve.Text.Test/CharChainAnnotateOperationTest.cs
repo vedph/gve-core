@@ -109,7 +109,7 @@ public sealed class CharChainAnnotateOperationTest
 
         // node features target 4 nodes (2 for input and 2 for output)
         Assert.Equal(4, context.NodeFeatures.Count);
-        string segInName = op.GetTracingFeatureName(
+        string segInName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_IN);
 
         // input nodes:
@@ -125,7 +125,7 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Contains(features, f => f.Name == segInName && f.Value == "v0@2");
 
         // output nodes:
-        string segOutName = op.GetTracingFeatureName(
+        string segOutName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_OUT);
 
         // v1_1

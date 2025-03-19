@@ -62,8 +62,8 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation,
         // add anchor feature to reference node
         if (!NoTraceFeatures)
         {
-            OperationFeature f = GetTracingFeature(F_TRACE_ANCHOR, inputTag);
-            context.UpdateTracingFeatures(f, inputTag, toNode);
+            OperationFeature f = GetTraceFeature(F_TRACE_ANCHOR, inputTag);
+            context.UpdateTraceFeatures(f, inputTag, toNode);
         }
 
         // apply to single node or range

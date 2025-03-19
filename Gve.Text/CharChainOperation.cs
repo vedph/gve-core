@@ -489,21 +489,21 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
-    /// Gets the name of the tracing feature with the specified suffix.
+    /// Gets the name of the trace feature with the specified suffix.
     /// </summary>
     /// <param name="suffix">The trace feature suffix. This is the part of the
     /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
     /// </param>
     /// <returns>Feature name.</returns>
     /// <exception cref="ArgumentNullException">suffix</exception>
-    public string GetTracingFeatureName(string suffix)
+    public string GetTraceFeatureName(string suffix)
     {
         ArgumentNullException.ThrowIfNull(suffix);
         return $"{F_TRACE_PREFIX}{Id}/{suffix}";
     }
 
     /// <summary>
-    /// Gets a new tracing feature for this operation.
+    /// Gets a new trace feature for this operation.
     /// </summary>
     /// <param name="suffix">The trace feature suffix. This is the part of the
     /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
@@ -511,10 +511,10 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// <param name="value">The optional feature value.</param>
     /// <returns>Feature.</returns>
     /// <exception cref="ArgumentNullException">suffix</exception>
-    public OperationFeature GetTracingFeature(string suffix, string? value = null)
+    public OperationFeature GetTraceFeature(string suffix, string? value = null)
     {
         ArgumentNullException.ThrowIfNull(suffix);
-        return new(GetTracingFeatureName(suffix), value, FeatureSetPolicy.Single);
+        return new(GetTraceFeatureName(suffix), value, FeatureSetPolicy.Single);
     }
 
     /// <summary>
@@ -561,10 +561,10 @@ public abstract partial class CharChainOperation(OperationType type) :
         string tag = afterExecution ? outputTag : inputTag;
         for (int i = 0; i < nodes.Count; i++)
         {
-            OperationFeature f = GetTracingFeature(
+            OperationFeature f = GetTraceFeature(
                 afterExecution? F_TRACE_SEG_OUT : F_TRACE_SEG_IN,
                 $"{ tag}@{i + 1}");
-            context.UpdateTracingFeatures(f, tag, nodes[i]);
+            context.UpdateTraceFeatures(f, tag, nodes[i]);
         }
 
         AddMoreNodeTraceFeatures(inputTag, outputTag, afterExecution, nodes,

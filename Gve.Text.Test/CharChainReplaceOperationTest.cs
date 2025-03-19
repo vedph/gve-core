@@ -347,7 +347,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced B with XY", context.Features[0].Value);
 
         // node features
-        string segFeatName = op.GetTracingFeatureName(
+        string segFeatName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_IN);
 
         // input nodes
@@ -358,7 +358,7 @@ public sealed class CharChainReplaceOperationTest
         Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
 
         // output nodes
-        segFeatName = op.GetTracingFeatureName(CharChainOperation.F_TRACE_SEG_OUT);
+        segFeatName = op.GetTraceFeatureName(CharChainOperation.F_TRACE_SEG_OUT);
 
         // v1_4 (X)
         features = context.NodeFeatures["v1_4"];

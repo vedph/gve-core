@@ -133,7 +133,7 @@ public sealed class CharChainSwapOperationTest
         List<OperationFeature> features = context.NodeFeatures["v0_1"];
         Assert.Single(features);
         // segment in
-        string segInFeatName = op.GetTracingFeatureName(
+        string segInFeatName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_IN);
         Assert.Contains(features, f => f.Name == segInFeatName &&
             f.Value == "v0@1");
@@ -155,7 +155,7 @@ public sealed class CharChainSwapOperationTest
         Assert.Contains(features, f => f.Name == segInFeatName &&
             f.Value == "v0@1");
         // segment out
-        string segOutFeatName = op.GetTracingFeatureName(
+        string segOutFeatName = op.GetTraceFeatureName(
             CharChainOperation.F_TRACE_SEG_OUT);
         Assert.Contains(features, f => f.Name == segOutFeatName &&
             f.Value == "v1@1");
