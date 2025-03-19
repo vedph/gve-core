@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Gve.Text;
 
@@ -15,6 +16,31 @@ public sealed class CharChainDeleteOperation : CharChainOperation
     /// </summary>
     public CharChainDeleteOperation() : base(OperationType.Delete)
     {
+    }
+
+    /// <summary>
+    /// Adds more operation-specific node trace features after the generic ones
+    /// have been added. This adds the deleted feature to each deleted node.
+    /// </summary>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <param name="afterExecution">Not used.</param>
+    /// <param name="nodes">The nodes.</param>
+    /// <param name="context">The context.</param>
+    protected override void AddMoreNodeTraceFeatures(string inputTag,
+        string outputTag, bool afterExecution,
+        IList<ChainNode<char>> nodes, ChainOperationContext<char> context)
+    {
+        if (NoTraceFeatures) return;
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            OperationFeature f = NewTraceFeature(
+                OperationFeature.F_TRACE_DELETED,
+                inputTag, outputTag,
+                i + 1);
+            context.UpdateTraceFeatures(f, outputTag, nodes[i]);
+        }
     }
 
     /// <summary>

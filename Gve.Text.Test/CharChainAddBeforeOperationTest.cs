@@ -118,10 +118,9 @@ public sealed class CharChainAddBeforeOperationTest
         // node features
         // input: v0_1 (A)
         List<OperationFeature> features = context.NodeFeatures["v0_1"];
-        string anchorFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_ANCHOR);
-        Assert.Contains(features, f => f.Name == anchorFeatName &&
-            f.Value == "v0");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_ANCHOR &&
+            f.Value == $"{op.Id} v0:v1");
 
         // output: v1_4 (X)
         features = context.NodeFeatures["v1_4"];
@@ -132,11 +131,12 @@ public sealed class CharChainAddBeforeOperationTest
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // reason
-        Assert.Contains(features, f => f.Name == "reason" && f.Value == "A likes X");
+        Assert.Contains(features, f => f.Name == "reason" &&
+            f.Value == "A likes X");
         // segment features
-        string segFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_OUT);
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // context steps
         Assert.Single(context.Steps);
@@ -144,6 +144,6 @@ public sealed class CharChainAddBeforeOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }

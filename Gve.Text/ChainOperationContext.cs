@@ -66,8 +66,8 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
         return max;
     }
 
-    private static void DumpFeatures(IList<OperationFeature> features,
-    StringBuilder sb, int indent = 2)
+    private static void DumpFeatures(List<OperationFeature> features,
+        StringBuilder sb, int indent = 2)
     {
         string indentStr = new(' ', indent);
         int totalFeatures = features.Count;
@@ -97,22 +97,31 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
 
         if (node)
         {
-            string? version = null;
-            foreach (string key in NodeFeatures.Keys.Order())
+            // get keys sorted by version (value) and node ID (number)
+            var sortedKeys = NodeFeatures.Keys
+                .Select(key => (
+                    Value: key,
+                    Prefix: key.AsSpan(0, key.LastIndexOf('_')).ToString(),
+                    Number: int.Parse(key.AsSpan(key.LastIndexOf('_') + 1),
+                        CultureInfo.InvariantCulture)
+                ))
+                .OrderBy(x => x.Prefix, StringComparer.Ordinal)
+                .ThenBy(x => x.Number);
+
+            string? prefix = null;
+            foreach (var key in sortedKeys)
             {
-                // read version ID from string before the first underscore
-                // and append an empty line if changed
-                string v = key[..key.IndexOf('_')];
-                if (version != null && v != version) sb.AppendLine();
-                version = v;
+                if (prefix != null && key.Prefix != prefix) sb.AppendLine();
+                prefix = key.Prefix;
 
                 // feature
-                sb.Append("- ").Append(key);
+                sb.Append("- ").Append(key.Value);
 
                 // read node ID from string after the last underscore
-                ReadOnlySpan<char> span = key.AsSpan();
+                ReadOnlySpan<char> span = key.Value.AsSpan();
                 int i = span.LastIndexOf('_');
-                int nodeId = int.Parse(span[(i + 1)..], CultureInfo.InvariantCulture);
+                int nodeId = int.Parse(span[(i + 1)..],
+                    CultureInfo.InvariantCulture);
 
                 // find the node in the chain and dump it
                 ChainNode<T>? target = Chain.FindNode(nodeId);
@@ -121,7 +130,7 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
 
                 // append features
                 sb.AppendLine(":");
-                DumpFeatures(NodeFeatures[key], sb);
+                DumpFeatures(NodeFeatures[key.Value], sb);
             }
         }
         else

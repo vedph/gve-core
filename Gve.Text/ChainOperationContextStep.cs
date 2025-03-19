@@ -4,7 +4,10 @@ using System.Collections.Generic;
 namespace Gve.Text;
 
 /// <summary>
-/// A step in a <see cref="ChainOperationContext{T}"/>.
+/// A step in a <see cref="ChainOperationContext{T}"/>. This contains metadata
+/// resulting after executing a single operation in the chain: the operation
+/// metadata, its input and output version tags, and the features accumulated up
+/// to this step, both for the whole context and for specific nodes.
 /// </summary>
 public class ChainOperationContextStep
 {

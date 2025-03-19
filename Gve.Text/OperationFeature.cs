@@ -13,6 +13,87 @@ namespace Gve.Text;
 /// <seealso cref="Feature" />
 public partial record OperationFeature : Feature
 {
+    #region Constants for trace features
+    /// <summary>
+    /// The prefix assigned to all tracing features.
+    /// </summary>
+    public const string F_TRACE_PREFIX = "$";
+
+    /// <summary>
+    /// The name for the input tagged segment tracing feature. This is added
+    /// to all the nodes belonging to an input segment, i.e. a sequence
+    /// of contiguous nodes affected by an operation.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG_IN = "$seg-in";
+
+    /// <summary>
+    /// The name for the output tagged segment tracing feature. This is added
+    /// to all the nodes belonging to an output segment, i.e. a sequence
+    /// of contiguous nodes affected by an operation.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG_OUT = "$seg-out";
+
+    /// <summary>
+    /// The name for the input tagged second segment tracing feature. This
+    /// is added to all the nodes belonging to the second input segment, i.e.
+    /// a sequence of contiguous nodes affected by the swap operation.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG2_IN = "$seg2-in";
+
+    /// <summary>
+    /// The name for the output tagged second segment tracing feature. This
+    /// is added to all the nodes belonging to the second output segment,
+    /// i.e. a sequence of contiguous nodes affected by the swap operation.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    /// </summary>
+    public const string F_TRACE_SEG2_OUT = "$seg2-out";
+
+    /// <summary>
+    /// The name for the anchor tracing feature. This is added to the node
+    /// used as the anchor for an add before/after or move before/after operation.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag.
+    /// For instance, <c>9499e8e0c6 v2:v3</c>=version tag v3, derived from
+    /// version tag v2 by operation ID 9499e8e0c6.</para>
+    /// </summary>
+    public const string F_TRACE_ANCHOR = "$anchor";
+
+    /// <summary>
+    /// The name for the deleted tracing feature. This is added to all the nodes
+    /// removed by a delete operation.
+    /// </summary>
+    /// <para>The value is <c>OPID TAGIN:TAGOUT NR</c> where <c>OPID</c>=operation
+    /// ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag, <c>NR</c>=ordinal
+    /// number of node in sequence starting from 1.
+    /// For instance, <c>9499e8e0c6 v2:v3 1</c>=1st node of the segment for
+    /// version tag v3, derived from version tag v2 by operation ID 9499e8e0c6.
+    /// </para>
+    public const string F_TRACE_DELETED = "$del";
+    #endregion
+
     /// <summary>
     /// Gets or sets a value indicating whether this feature is negated.
     /// A negated feature means that any existing feature with the same name
@@ -31,6 +112,14 @@ public partial record OperationFeature : Feature
     /// When true, the feature is removed on the next update.
     /// </summary>
     public bool IsShortLived { get; init; }
+
+    /// <summary>
+    /// Determines whether this feature is a trace feature.
+    /// </summary>
+    /// <returns><c>true</c> if is trace feature; otherwise, <c>false</c>.
+    /// </returns>
+    public bool IsTraceFeature =>
+        Name.StartsWith(F_TRACE_PREFIX, StringComparison.Ordinal);
 
     [GeneratedRegex(
         @"^(?<t>\!)?(?<g>\*)?(?<n>[^^:=]+)(?<s>\^)?(?:(?<p>[:=])?=(?<v>(?:""[^""]+"")|(?:[^\s]+)))?$")]

@@ -59,7 +59,7 @@ public sealed class CharChainSwapOperation : CharChainOperation,
 
         // add trace features to segments before execution
         AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
-        AddNodeTraceFeatures(inputTag, outputTag, false, toNodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, false, toNodes, context, true);
 
         context.Chain.SwapRanges(inputTag, outputTag,
             nodes[0], nodes[^1],
@@ -74,7 +74,7 @@ public sealed class CharChainSwapOperation : CharChainOperation,
 
         // add trace features to segments after execution
         AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
-        AddNodeTraceFeatures(inputTag, outputTag, true, toNodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, toNodes, context, true);
     }
 
     /// <summary>

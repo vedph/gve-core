@@ -133,16 +133,14 @@ public sealed class CharChainSwapOperationTest
         List<OperationFeature> features = context.NodeFeatures["v0_1"];
         Assert.Single(features);
         // segment in
-        string segInFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_IN);
-        Assert.Contains(features, f => f.Name == segInFeatName &&
-            f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
         // v0_3 (C)
         features = context.NodeFeatures["v0_3"];
         Assert.Single(features);
         // segment in
-        Assert.Contains(features, f => f.Name == segInFeatName &&
-            f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
 
         // output:
         // v1_1 (C)
@@ -152,13 +150,11 @@ public sealed class CharChainSwapOperationTest
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A and C are jealous");
         // segment in (inherited)
-        Assert.Contains(features, f => f.Name == segInFeatName &&
+        Assert.Contains(features, f => f.Name == OperationFeature.F_TRACE_SEG_IN &&
             f.Value == "v0@1");
         // segment out
-        string segOutFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_OUT);
-        Assert.Contains(features, f => f.Name == segOutFeatName &&
-            f.Value == "v1@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
 
         // v1_3 (A)
         features = context.NodeFeatures["v1_3"];
@@ -167,11 +163,11 @@ public sealed class CharChainSwapOperationTest
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A and C are jealous");
         // segment in (inherited)
-        Assert.Contains(features, f => f.Name == segInFeatName &&
-            f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v0@1");
         // segment out
-        Assert.Contains(features, f => f.Name == segOutFeatName &&
-            f.Value == "v1@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
 
         // context steps
         Assert.Single(context.Steps);

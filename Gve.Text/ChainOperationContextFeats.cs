@@ -44,32 +44,57 @@ public class ChainOperationContextFeats
             feats.NodeFeatures);
     }
 
-    private void RemoveShortLivedFeatures()
+    /// <summary>
+    /// Removes all the features matching the specified predicate function.
+    /// </summary>
+    /// <param name="testFunc">The predicate function.</param>
+    /// <param name="context">True to remove context features.</param>
+    /// <param name="node">True to remove node features.</param>
+    /// <exception cref="ArgumentNullException">testFunc</exception>
+    public void RemoveFeatures(Func<OperationFeature, bool> testFunc,
+        bool context = true, bool node = true)
     {
-        for (int i = Features.Count - 1; i >= 0; i--)
+        ArgumentNullException.ThrowIfNull(testFunc);
+
+        if (context)
         {
-            if (Features[i].IsShortLived) Features.RemoveAt(i);
+            for (int i = Features.Count - 1; i >= 0; i--)
+            {
+                if (testFunc(Features[i])) Features.RemoveAt(i);
+            }
         }
 
-        foreach (List<OperationFeature> nodeFeats in NodeFeatures.Values)
+        if (node)
         {
-            for (int i = nodeFeats.Count - 1; i >= 0; i--)
+            foreach (List<OperationFeature> nodeFeats in NodeFeatures.Values)
             {
-                if (nodeFeats[i].IsShortLived) nodeFeats.RemoveAt(i);
+                for (int i = nodeFeats.Count - 1; i >= 0; i--)
+                {
+                    if (testFunc(nodeFeats[i])) nodeFeats.RemoveAt(i);
+                }
+            }
+
+            // remove all the entries in NodeFeatures having empty values
+            foreach (string key in NodeFeatures.Keys.ToList())
+            {
+                if (NodeFeatures[key].Count == 0) NodeFeatures.Remove(key);
             }
         }
     }
 
     /// <summary>
-    /// Copies the features from a tagged set to another.
+    /// Copies the features from a tagged set to another. Usually this
+    /// excludes the short-lived and trace features, unless specified.
     /// </summary>
     /// <param name="sourceTag">The source tag.</param>
     /// <param name="targetTag">The target tag.</param>
     /// <param name="includeShortLived">True to include in the copy also
     /// the short-lived features in source.</param>
+    /// <param name="includeTrace">True to include in the copy also the
+    /// trace features in source.</param>
     /// <exception cref="ArgumentNullException">sourceTag or targetTag</exception>
     public void CopyTaggedNodeFeatures(string sourceTag, string targetTag,
-        bool includeShortLived = false)
+        bool includeShortLived = false, bool includeTrace = false)
     {
         ArgumentNullException.ThrowIfNull(sourceTag);
         ArgumentNullException.ThrowIfNull(targetTag);
@@ -78,15 +103,15 @@ public class ChainOperationContextFeats
             .Where(k => k.StartsWith($"{sourceTag}_")).ToList())
         {
             string newKey = $"{targetTag}_{key[(sourceTag.Length + 1)..]}";
-            if (includeShortLived)
+            if (includeShortLived && includeTrace)
             {
                 NodeFeatures[newKey] = [.. NodeFeatures[key]];
             }
             else
             {
-                NodeFeatures[newKey] = NodeFeatures[key]
-                    .Where(f => !f.IsShortLived)
-                    .ToList();
+                NodeFeatures[newKey] = [.. NodeFeatures[key]
+                    .Where(f => (!f.IsShortLived  || includeShortLived) &&
+                                (!f.IsTraceFeature || includeTrace))];
             }
         }
     }
@@ -127,7 +152,7 @@ public class ChainOperationContextFeats
                 List<OperationFeature> nodeFeats =
                     EnsureNodeFeaturesFor(tag, node);
 
-                // update node features logic preserved from original code
+                // update node features
                 if (++n == 1 ||
                     (feature.Name != OperationMetadata.X_KEY &&
                      feature.Name != OperationMetadata.Y_KEY))
@@ -161,34 +186,26 @@ public class ChainOperationContextFeats
         if (nodes != null && tag == null)
             throw new ArgumentNullException(nameof(tag));
 
-        RemoveShortLivedFeatures();
-        HashSet<string> names = [];
+        // remove short-lived features
+        RemoveFeatures(f => f.IsShortLived);
 
+        HashSet<string> names = [];
         foreach (OperationFeature feature in sources)
             UpdateFeature(feature, names, tag, nodes);
     }
 
-    /// <summary>
-    /// Updates the trace features of this context and/or of the
-    /// <paramref name="nodes"/> from the specified source features.
-    /// </summary>
-    /// <typeparam name="T">The data type of nodes.</typeparam>
-    /// <param name="sources">The source features.</param>
-    /// <param name="tag">The tag the features belong to.</param>
-    /// <param name="nodes">The nodes targeted in the update.</param>
-    /// <exception cref="ArgumentNullException">sources</exception>
-    public void UpdateTraceFeatures<T>(IList<OperationFeature> sources,
-        string tag, IList<ChainNode<T>> nodes)
-    {
-        ArgumentNullException.ThrowIfNull(sources);
-        ArgumentNullException.ThrowIfNull(tag);
-        ArgumentNullException.ThrowIfNull(nodes);
+    //public void UpdateTraceFeatures<T>(IList<OperationFeature> sources,
+    //    string tag, IList<ChainNode<T>> nodes)
+    //{
+    //    ArgumentNullException.ThrowIfNull(sources);
+    //    ArgumentNullException.ThrowIfNull(tag);
+    //    ArgumentNullException.ThrowIfNull(nodes);
 
-        HashSet<string> names = [];
+    //    HashSet<string> names = [];
 
-        foreach (OperationFeature feature in sources)
-            UpdateFeature(feature, names, tag, nodes);
-    }
+    //    foreach (OperationFeature feature in sources)
+    //        UpdateFeature(feature, names, tag, nodes);
+    //}
 
     /// <summary>
     /// Updates the trace features of the specified target node with the

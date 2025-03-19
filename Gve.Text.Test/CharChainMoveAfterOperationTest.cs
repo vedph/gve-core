@@ -122,19 +122,16 @@ public sealed class CharChainMoveAfterOperationTest
         // input: v0_3 (C)
         List<OperationFeature> features = context.NodeFeatures["v0_3"];
         Assert.Single(features);
-        string anchorFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_ANCHOR);
-        Assert.Contains(features, f => f.Name == anchorFeatName &&
-            f.Value == "v0");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_ANCHOR && f.Value == "v0");
 
         // output:
         // v0_1 (A)
         // input segment (inherited)
         features = context.NodeFeatures["v0_1"];
         Assert.Single(features);
-        string segInFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_IN);
-        Assert.Contains(features, f => f.Name == segInFeatName && f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
 
         // v1_1 (A) 
         features = context.NodeFeatures["v1_1"];
@@ -143,11 +140,11 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A likes C");
         // input segment (inherited)
-        Assert.Contains(features, f => f.Name == segInFeatName && f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
         // output segment
-        string segOutFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_OUT);
-        Assert.Contains(features, f => f.Name == segOutFeatName && f.Value == "v1@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
 
         // context steps
         Assert.Single(context.Steps);

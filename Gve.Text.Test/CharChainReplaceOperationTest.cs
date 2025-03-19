@@ -347,19 +347,15 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("replaced B with XY", context.Features[0].Value);
 
         // node features
-        string segFeatName = op.GetTraceFeatureName(
-            CharChainOperation.F_TRACE_SEG_IN);
-
         // input nodes
         // v0_2 (B)
         List<OperationFeature> features = context.NodeFeatures["v0_2"];
         Assert.Single(features);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v0@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
 
         // output nodes
-        segFeatName = op.GetTraceFeatureName(CharChainOperation.F_TRACE_SEG_OUT);
-
         // v1_4 (X)
         features = context.NodeFeatures["v1_4"];
         Assert.Equal(3, features.Count);
@@ -373,7 +369,8 @@ public sealed class CharChainReplaceOperationTest
         Assert.NotNull(f);
         Assert.Equal("like XY more", f.Value);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@1");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
 
         // v1_5 (Y)
         features = context.NodeFeatures["v1_5"];
@@ -387,7 +384,8 @@ public sealed class CharChainReplaceOperationTest
         Assert.NotNull(f);
         Assert.Equal("like XY more", f.Value);
         // segment
-        Assert.Contains(features, f => f.Name == segFeatName && f.Value == "v1@2");
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@2");
 
         // context steps
         Assert.Single(context.Steps);

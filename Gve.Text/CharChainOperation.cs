@@ -20,64 +20,6 @@ public abstract partial class CharChainOperation(OperationType type) :
     OperationMetadata
 {
     /// <summary>
-    /// The prefix assigned to all tracing features.
-    /// </summary>
-    public const string F_TRACE_PREFIX = "$";
-
-    /// <summary>
-    /// The suffix for the input tagged segment tracing feature. This is added
-    /// to all the nodes belonging to an input segment, i.e. a sequence
-    /// of contiguous nodes affected by an operation.
-    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
-    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
-    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
-    /// </para>
-    /// </summary>
-    public const string F_TRACE_SEG_IN = "seg-in";
-
-    /// <summary>
-    /// The suffix for the output tagged segment tracing feature. This is added
-    /// to all the nodes belonging to an output segment, i.e. a sequence
-    /// of contiguous nodes affected by an operation.
-    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
-    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
-    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
-    /// </para>
-    /// </summary>
-    public const string F_TRACE_SEG_OUT = "seg-out";
-
-    /// <summary>
-    /// The suffix for the input tagged second segment tracing feature. This
-    /// is added to all the nodes belonging to the second input segment, i.e.
-    /// a sequence of contiguous nodes affected by the swap operation.
-    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
-    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
-    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
-    /// </para>
-    /// </summary>
-    public const string F_TRACE_SEG2_IN = "seg2-in";
-
-    /// <summary>
-    /// The suffix for the output tagged second segment tracing feature. This
-    /// is added to all the nodes belonging to the second output segment,
-    /// i.e. a sequence of contiguous nodes affected by the swap operation.
-    /// <para>The value is <c>TAG@NR</c> where <c>TAG</c>=version tag and
-    /// <c>NR</c>=ordinal number of node in sequence starting from 1.
-    /// For instance, <c>v2@1</c>=1st node of the segment for version tag v2.
-    /// </para>
-    /// </summary>
-    public const string F_TRACE_SEG2_OUT = "seg2-out";
-
-    /// <summary>
-    /// The suffix for the anchor tracing feature. This is added to the node
-    /// used as the anchor for an add before/after or move before/after operation.
-    /// <para>The value is <c>TAG</c>=version tag. By definition, an anchor
-    /// is always represented by a single node, before or after which something
-    /// happens.</para>
-    /// </summary>
-    public const string F_TRACE_ANCHOR = "anchor";
-
-    /// <summary>
     /// Gets or sets the operation type.
     /// </summary>
     public OperationType Type { get; protected init; } = type;
@@ -489,35 +431,6 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
-    /// Gets the name of the trace feature with the specified suffix.
-    /// </summary>
-    /// <param name="suffix">The trace feature suffix. This is the part of the
-    /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
-    /// </param>
-    /// <returns>Feature name.</returns>
-    /// <exception cref="ArgumentNullException">suffix</exception>
-    public string GetTraceFeatureName(string suffix)
-    {
-        ArgumentNullException.ThrowIfNull(suffix);
-        return $"{F_TRACE_PREFIX}{Id}/{suffix}";
-    }
-
-    /// <summary>
-    /// Gets a new trace feature for this operation.
-    /// </summary>
-    /// <param name="suffix">The trace feature suffix. This is the part of the
-    /// tracing feature name after the prefix built with <c>$</c> + ID + <c>/</c>.
-    /// </param>
-    /// <param name="value">The optional feature value.</param>
-    /// <returns>Feature.</returns>
-    /// <exception cref="ArgumentNullException">suffix</exception>
-    public OperationFeature GetTraceFeature(string suffix, string? value = null)
-    {
-        ArgumentNullException.ThrowIfNull(suffix);
-        return new(GetTraceFeatureName(suffix), value, FeatureSetPolicy.Single);
-    }
-
-    /// <summary>
     /// Adds more operation-specific node trace features after the generic ones
     /// have been added. Called by <see cref="AddNodeTraceFeatures(string, 
     /// string, bool, IList{ChainNode{char}}, ChainOperationContext{char})"/>.
@@ -534,6 +447,32 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
+    /// Creates a new trace feature for this operation, with the specified
+    /// name and optional ordinal number.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <param name="ordinal">The optional ordinal number or 0 for no ordinal.
+    /// </param>
+    /// <returns>New feature.</returns>
+    /// <exception cref="ArgumentNullException">name or inputTag or outputTag
+    /// </exception>
+    public OperationFeature NewTraceFeature(string name, string inputTag,
+        string outputTag, int ordinal = 0)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(inputTag);
+        ArgumentNullException.ThrowIfNull(outputTag);
+
+        return new(name,
+            ordinal == 0
+                ? $"{Id} {inputTag}:{outputTag}"
+                : $"{Id} {inputTag}:{outputTag} {ordinal}",
+            FeatureSetPolicy.Single);
+    }
+
+    /// <summary>
     /// Adds segment in or out trace features to the specified nodes unless
     /// <see cref="NoTraceFeatures"/> is true. Additional features can be
     /// added at the end of this method by overriding
@@ -546,9 +485,11 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// add those designed to be added before the operation execution.</param>
     /// <param name="nodes">The nodes.</param>
     /// <param name="context">The context.</param>
+    /// <param name="second">True to add features referring to the second of
+    /// two segments. This is used only for swap.</param>
     protected void AddNodeTraceFeatures(string inputTag, string outputTag,
         bool afterExecution, IList<ChainNode<char>> nodes,
-        ChainOperationContext<char> context)
+        ChainOperationContext<char> context, bool second = false)
     {
         ArgumentNullException.ThrowIfNull(inputTag);
         ArgumentNullException.ThrowIfNull(outputTag);
@@ -559,11 +500,26 @@ public abstract partial class CharChainOperation(OperationType type) :
         // all the operations will add tracing features for the input/output
         // range defined by AT and RUN, except when RUN is 0 (=additions)
         string tag = afterExecution ? outputTag : inputTag;
+        string name;
+        if (second)
+        {
+            name = afterExecution
+                ? OperationFeature.F_TRACE_SEG2_OUT
+                : OperationFeature.F_TRACE_SEG2_IN;
+        }
+        else
+        {
+            name = afterExecution
+                ? OperationFeature.F_TRACE_SEG_OUT
+                : OperationFeature.F_TRACE_SEG_IN;
+        }
+
         for (int i = 0; i < nodes.Count; i++)
         {
-            OperationFeature f = GetTraceFeature(
-                afterExecution? F_TRACE_SEG_OUT : F_TRACE_SEG_IN,
-                $"{ tag}@{i + 1}");
+            OperationFeature f = NewTraceFeature(
+                name,
+                inputTag, outputTag,
+                i + 1);
             context.UpdateTraceFeatures(f, tag, nodes[i]);
         }
 
