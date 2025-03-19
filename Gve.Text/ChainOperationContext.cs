@@ -97,8 +97,16 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
 
         if (node)
         {
+            string? version = null;
             foreach (string key in NodeFeatures.Keys.Order())
             {
+                // read version ID from string before the first underscore
+                // and append an empty line if changed
+                string v = key[..key.IndexOf('_')];
+                if (version != null && v != version) sb.AppendLine();
+                version = v;
+
+                // feature
                 sb.Append("- ").Append(key);
 
                 // read node ID from string after the last underscore
