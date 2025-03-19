@@ -92,6 +92,7 @@ public sealed class CharChainMoveAfterOperationTest
     [Fact]
     public void Execute_At1Run1To3_TraceFeatures()
     {
+        // move A after C in ABC
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
         CharChainMoveAfterOperation op = new()
@@ -119,32 +120,32 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("moved A after C", context.Features[0].Value);
 
         // node features
-        // input: v0_3 (C)
-        List<OperationFeature> features = context.NodeFeatures["v0_3"];
+        // input:
+        // v0_1 (A)
+        List<OperationFeature> features = context.NodeFeatures["v0_1"];
         Assert.Single(features);
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_ANCHOR && f.Value == "v0");
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{op.Id} v0:v1 1");
+
+        // v0_3 (C)
+        features = context.NodeFeatures["v0_3"];
+        Assert.Single(features);
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_ANCHOR &&
+            f.Value == $"{op.Id} v0:v1");
 
         // output:
-        // v0_1 (A)
-        // input segment (inherited)
-        features = context.NodeFeatures["v0_1"];
-        Assert.Single(features);
-        Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
-
         // v1_1 (A) 
         features = context.NodeFeatures["v1_1"];
-        Assert.Equal(3, features.Count);
+        Assert.Equal(2, features.Count);
         // reason
         Assert.Contains(features, f => f.Name == "reason" &&
             f.Value == "A likes C");
-        // input segment (inherited)
-        Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_IN && f.Value == "v0@1");
         // output segment
         Assert.Contains(features, f =>
-            f.Name == OperationFeature.F_TRACE_SEG_OUT && f.Value == "v1@1");
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{op.Id} v0:v1 1");
 
         // context steps
         Assert.Single(context.Steps);
@@ -152,6 +153,6 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }
