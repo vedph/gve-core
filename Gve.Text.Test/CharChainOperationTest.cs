@@ -7,8 +7,9 @@ namespace Gve.Text.Test;
 public sealed class CharChainOperationTest
 {
     [Fact]
-    public void Execute_ManyOperations_AutoTags()
+    public void Execute_MockSample()
     {
+        // https://vedph.github.io/gve-doc/model/sample-arzdc.html
         // setup text
         // 12345
         // ARZDC
@@ -20,18 +21,16 @@ public sealed class CharChainOperationTest
 
         // setup operations
         const string operationsText =
-            // v0>v1
-            "3- [*log=\"delete Z\"]\n" +
-            // v1>v2
-            "2=V [*log=\"replace R with V\"]\n" +
-            // v2>v3
-            "6=B [*log=\"replace V with B\"]\n" +
-            // v1>v4
-            "(v1:) 2=P [*log=\"replace R with P\"]\n" +
-            // v4>v5
-            "4<>5\n" +
-            // v3>v6
-            "(v3:) 4<>5";
+            // v0>v1 del Z
+            "3- [*log=\"delete Z\" reason:=\"don't like Z\"]\n" +
+            // v1>v2 rep R=V (alpha)
+            "2=V [*log=\"replace R with V\" *version^:=alpha]\n" +
+            // v2>v3 rep V=B
+            "6=B [*log=\"replace V with B\" reason:=\"like B\"]\n" +
+            // v1>v4 (v1) rep R=P (beta)
+            "(v1:) 2=P [*log=\"replace R with P\" *version^:=beta]\n" +
+            // v4>v5 (v3) swap D/C
+            "(v3:) 4<>5 [*version^:=gamma]";
 
         List<CharChainOperation> operations = [];
         foreach (string line in operationsText.Split('\n',
@@ -45,43 +44,46 @@ public sealed class CharChainOperationTest
         // execute operations
         foreach (CharChainOperation op in operations) op.Execute(context);
 
-        Assert.Equal(6, context.Steps.Count);
+        Assert.Equal(5, context.Steps.Count);
 
         IList<string> tags = context.Chain.GetDistinctTags();
-        Assert.Equal(7, tags.Count);
+        Assert.Equal(6, tags.Count);
 
+        // v0 ARZDC
         Assert.Equal("v0", tags[0]);
         Assert.Equal("ARZDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v0")));
 
+        // v1 ARDC
         Assert.Equal("v1", tags[1]);
         Assert.Equal("ARDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v1")));
 
+        // v2 AVDC
         Assert.Equal("v2", tags[2]);
         Assert.Equal("AVDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v2")));
 
+        // v3 ABDC
         Assert.Equal("v3", tags[3]);
         Assert.Equal("ABDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v3")));
 
+        // v4 APDC
         Assert.Equal("v4", tags[4]);
         Assert.Equal("APDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v4")));
 
+        // v5 ABCD
         Assert.Equal("v5", tags[5]);
-        Assert.Equal("APCD", TestHelper.GetVersionString(
-            context.Chain.GetTagNodes("v5")));
-
-        Assert.Equal("v6", tags[6]);
         Assert.Equal("ABCD", TestHelper.GetVersionString(
-            context.Chain.GetTagNodes("v6")));
+            context.Chain.GetTagNodes("v5")));
     }
 
     [Fact]
     public void Execute_LimerickSample()
     {
+        // https://vedph.github.io/gve-doc/model/sample-limerick.html
         const string text = "there was an old man with a beard,\n" +
             "who cried: \"It is just as I feared!\n" +
             "four larks and a wren,\n" +
