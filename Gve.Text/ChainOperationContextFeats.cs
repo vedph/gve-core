@@ -111,7 +111,7 @@ public class ChainOperationContextFeats
             {
                 NodeFeatures[newKey] = [.. NodeFeatures[key]
                     .Where(f => (!f.IsShortLived  || includeShortLived) &&
-                                (!f.IsTraceFeature || includeTrace))];
+                                (!f.IsTraceFeature() || includeTrace))];
             }
         }
     }

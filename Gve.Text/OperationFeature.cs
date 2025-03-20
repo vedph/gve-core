@@ -113,14 +113,6 @@ public partial record OperationFeature : Feature
     /// </summary>
     public bool IsShortLived { get; init; }
 
-    /// <summary>
-    /// Determines whether this feature is a trace feature.
-    /// </summary>
-    /// <returns><c>true</c> if is trace feature; otherwise, <c>false</c>.
-    /// </returns>
-    public bool IsTraceFeature =>
-        Name.StartsWith(F_TRACE_PREFIX, StringComparison.Ordinal);
-
     [GeneratedRegex(
         @"^(?<t>\!)?(?<g>\*)?(?<n>[^^:=]+)(?<s>\^)?(?:(?<p>[:=])?=(?<v>(?:""[^""]+"")|(?:[^\s]+)))?$")]
     private static partial Regex OpNameValueRegex();
@@ -149,6 +141,14 @@ public partial record OperationFeature : Feature
         IsGlobal = isGlobal;
         IsShortLived = isShortLived;
     }
+
+    /// <summary>
+    /// Determines whether this feature is a trace feature.
+    /// </summary>
+    /// <returns><c>true</c> if is trace feature; otherwise, <c>false</c>.
+    /// </returns>
+    public bool IsTraceFeature() =>
+        Name.StartsWith(F_TRACE_PREFIX, StringComparison.Ordinal);
 
     /// <summary>
     /// Parses the specified text representing a feature, with syntax
