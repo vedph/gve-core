@@ -67,6 +67,11 @@
         <RadzenBadge Text="@Operations.Count.ToString()" />
     </RadzenButton>
 
+    <div>
+        <RadzenCheckBox @bind-Value="@NoTraceFeatures" Name="ckNoTrace"/>
+        <RadzenLabel Text="no trace features" Component="ckNoTrace"/>
+    </div>
+
     <div class="full-width">
         <RadzenProgressBar Value="100" Visible="IsBusy"
                            Mode="ProgressBarMode.Indeterminate" />

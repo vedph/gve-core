@@ -43,6 +43,7 @@ public partial class Home
     }
     public IList<string> SelectedChainTags { get; set; } = [];
     public IList<CharModel> TextChars { get; set; } = [];
+    public bool NoTraceFeatures { get; set; }
 
     public Home()
     {
@@ -144,6 +145,7 @@ public partial class Home
 
             foreach (CharChainOperation op in Operations)
             {
+                op.NoTraceFeatures = NoTraceFeatures;
                 op.Execute(context);
             }
 
