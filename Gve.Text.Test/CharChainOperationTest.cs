@@ -6,6 +6,20 @@ namespace Gve.Text.Test;
 
 public sealed class CharChainOperationTest
 {
+    private static void AssertDeletedZFeatures(IList<OperationFeature> features,
+        string opId)
+    {
+        Assert.Equal(2, features.Count);
+        // reason
+        Assert.Contains(features, f =>
+            f.Name == "reason" &&
+            f.Value == "don't like Z");
+        // del
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.DEL_KEY &&
+            f.Value == $"{opId} v0:v1 1");
+    }
+
     [Fact]
     public void Execute_MockSample()
     {
@@ -49,12 +63,12 @@ public sealed class CharChainOperationTest
         IList<string> tags = context.Chain.GetDistinctTags();
         Assert.Equal(6, tags.Count);
 
-        // v0 ARZDC
+        // v0 ARZDC (base text: Z in)
         Assert.Equal("v0", tags[0]);
         Assert.Equal("ARZDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v0")));
 
-        // v1 ARDC
+        // v1 ARDC (del Z: Z out)
         Assert.Equal("v1", tags[1]);
         Assert.Equal("ARDC", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v1")));
@@ -78,6 +92,157 @@ public sealed class CharChainOperationTest
         Assert.Equal("v5", tags[5]);
         Assert.Equal("ABCD", TestHelper.GetVersionString(
             context.Chain.GetTagNodes("v5")));
+
+        // node features:
+        // v0_3 (Z)
+        List<OperationFeature> features = context.NodeFeatures["v0_3"];
+        Assert.Single(features);
+        // $seg-in (Z)
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{operations[0].Id} v0:v1 1");
+
+        IList<ChainNode<char>> deletedNodes = context.GetDeletedNodes("v1");
+        Assert.Single(deletedNodes);
+        Assert.Equal('Z', deletedNodes[0].Data);
+
+        // v1_3 (Z)
+        features = context.NodeFeatures["v1_3"];
+        AssertDeletedZFeatures(features, operations[0].Id);
+
+        // v1_2 (R)
+        features = context.NodeFeatures["v1_2"];
+        Assert.Equal(2, features.Count);
+
+        // as we have branching, R is the input of two different ops
+        // $seg-in for v2
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{operations[1].Id} v1:v2 1");
+        // $seg-in for v4
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{operations[3].Id} v1:v4 1");
+
+        // v2_3 (Z): inherited
+        features = context.NodeFeatures["v1_3"];
+        AssertDeletedZFeatures(features, operations[0].Id);
+
+        // v2_6 (V)
+        features = context.NodeFeatures["v2_6"];
+        Assert.Equal(3, features.Count);
+        // opid
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[1].Id);
+        // $seg-out from v2
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{operations[1].Id} v1:v2 1");
+        // $seg-in for v3
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{operations[2].Id} v2:v3 1");
+
+        // v3_3 (Z): inherited
+        features = context.NodeFeatures["v3_3"];
+        AssertDeletedZFeatures(features, operations[0].Id);
+
+        // v3_6 (V): inherited
+        // opid
+        features = context.NodeFeatures["v3_6"];
+        Assert.Single(features);
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[1].Id);
+
+        // v3_4 (D)
+        // $seg-in for v5
+        features = context.NodeFeatures["v3_4"];
+        Assert.Single(features);
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_IN &&
+            f.Value == $"{operations[4].Id} v3:v5 1");
+
+        // v3_5 (C)
+        // $seg2-in for v5
+        features = context.NodeFeatures["v3_5"];
+        Assert.Single(features);
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG2_IN &&
+            f.Value == $"{operations[4].Id} v3:v5 1");
+
+        // v3_7 (B)
+        features = context.NodeFeatures["v3_7"];
+        Assert.Equal(3, features.Count);
+        // opid
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[2].Id);
+        // reason
+        Assert.Contains(features, f =>
+            f.Name == "reason" &&
+            f.Value == "like B");
+        // $seg-out from v3
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{operations[2].Id} v2:v3 1");
+
+        // v4_3 (Z): inherited
+        features = context.NodeFeatures["v4_3"];
+        AssertDeletedZFeatures(features, operations[0].Id);
+
+        // v4_8 (P)
+        features = context.NodeFeatures["v4_8"];
+        Assert.Equal(2, features.Count);
+        // opid
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[3].Id);
+        // $seg-out from v4
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{operations[3].Id} v1:v4 1");
+
+        // v5_3 (Z): inherited
+        features = context.NodeFeatures["v5_3"];
+        AssertDeletedZFeatures(features, operations[0].Id);
+
+        // v5_4 (D)
+        features = context.NodeFeatures["v5_4"];
+        Assert.Single(features);
+        // $seg2-out from v5
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG2_OUT &&
+            f.Value == $"{operations[4].Id} v3:v5 1");
+
+        // v5_5 (C)
+        features = context.NodeFeatures["v5_5"];
+        Assert.Single(features);
+        // $seg-out from v5
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_SEG_OUT &&
+            f.Value == $"{operations[4].Id} v3:v5 1");
+
+        // v5_6 (V): inherited
+        features = context.NodeFeatures["v5_6"];
+        Assert.Single(features);
+        // opid
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[1].Id);
+
+        // v5_7 (B): inherited
+        features = context.NodeFeatures["v5_7"];
+        Assert.Equal(2, features.Count);
+        // opid
+        Assert.Contains(features, f =>
+            f.Name == OperationMetadata.OPID_KEY &&
+            f.Value == operations[2].Id);
+        // reason
+        Assert.Contains(features, f =>
+            f.Name == "reason" &&
+            f.Value == "like B");
     }
 
     [Fact]

@@ -467,8 +467,7 @@ public abstract partial class CharChainOperation(OperationType type) :
         return new(name,
             ordinal == 0
                 ? $"{Id} {inputTag}:{outputTag}"
-                : $"{Id} {inputTag}:{outputTag} {ordinal}",
-            FeatureSetPolicy.Single);
+                : $"{Id} {inputTag}:{outputTag} {ordinal}");
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Gve.Text;
 
@@ -64,6 +65,47 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
         }
 
         return max;
+    }
+
+    /// <summary>
+    /// Gets the deleted nodes present in the specified version.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="operationId">The operation identifier, to filter the results
+    /// so that only nodes deleted by that operation are returned.</param>
+    /// <returns>Nodes.</returns>
+    /// <exception cref="ArgumentNullException">tag</exception>
+    public IList<ChainNode<T>> GetDeletedNodes(string tag,
+        string? operationId = null)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        // get all the nodes with feature KEY_DELETED having output version
+        // tag equal to tag, sorted by operation ID and node ordinal
+        string prefix = tag + "_";
+        Dictionary<Tuple<string, int>, ChainNode<T>> nodes = [];
+        foreach (string key in NodeFeatures.Keys.Where(k => k.StartsWith(prefix)))
+        {
+            OperationFeature? del = NodeFeatures[key].Find(
+                f => f.Name == OperationMetadata.DEL_KEY);
+            if (del == null) continue;
+
+            // extract from del value the operation ID and node ordinal
+            // (value has format OPID TAGIN:TAGOUT NR)
+            ReadOnlySpan<char> span = del.Value.AsSpan();
+            string opId = span[..span.IndexOf(' ')].ToString();
+            if (operationId != null && operationId != opId) continue;
+
+            int ordinal = int.Parse(span[(span.LastIndexOf(' ') + 1)..],
+                CultureInfo.InvariantCulture);
+            nodes[Tuple.Create(opId, ordinal)] = Chain.FindNode(int.Parse(
+                key[(prefix.Length)..], CultureInfo.InvariantCulture))!;
+        }
+
+        // return nodes sorted by operation ID and node ordinal
+        return [.. nodes.Keys.OrderBy(k => k.Item1)
+            .ThenBy(k => k.Item2)
+            .Select(k => nodes[k])];
     }
 
     private static void DumpFeatures(List<OperationFeature> features,

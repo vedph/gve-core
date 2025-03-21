@@ -145,7 +145,7 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
-    public void Execute_ReplaceSingleWithFeats()
+    public void Execute_ReplaceSingle_TraceFeatures()
     {
         ChainOperationContext<char> context = new();
         context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
@@ -176,19 +176,19 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("log", context.Features[0].Name);
         Assert.Equal("replaced A with X", context.Features[0].Value);
         // node features
-        List<OperationFeature> nodeFeatures = context.NodeFeatures["v1_4"];
-        Assert.Equal(3, nodeFeatures.Count);
+        List<OperationFeature> features = context.NodeFeatures["v1_4"];
+        Assert.Equal(3, features.Count);
         // opid
-        OperationFeature? f = nodeFeatures.Find(f => f.Name ==
+        OperationFeature? f = features.Find(f => f.Name ==
             OperationMetadata.OPID_KEY);
         Assert.NotNull(f);
         Assert.Equal(op.Id, f.Value);
         // x
-        f = nodeFeatures.Find(f => f.Name == "x");
+        f = features.Find(f => f.Name == "x");
         Assert.NotNull(f);
         Assert.Equal("25", f.Value);
         // y
-        f = nodeFeatures.Find(f => f.Name == "y");
+        f = features.Find(f => f.Name == "y");
         Assert.NotNull(f);
         Assert.Equal("50", f.Value);
         // context steps
