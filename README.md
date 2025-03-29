@@ -81,6 +81,7 @@ or better, keeping into account also the requirements of diplomatic annotations:
 
 ## History
 
+- 2025-03-29: updated packages.
 - 2025-03-20:
   - added no trace features option to demo.
   - updated packages.
