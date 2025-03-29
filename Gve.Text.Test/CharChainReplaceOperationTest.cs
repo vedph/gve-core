@@ -74,6 +74,52 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void ParseOperation_AtRunGroupFeats()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>("1x2=X@group [*g=1]");
+
+        Assert.Equal(OperationType.Replace, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.False(op.AtAsIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(2, op.Run);
+        Assert.Equal("X", op.Value);
+
+        Assert.Equal(0, op.Rank);
+        Assert.Equal("group", op.GroupId);
+        Assert.Single(op.Features);
+
+        Assert.Equal("g", op.Features[0].Name);
+        Assert.True(op.Features[0].IsGlobal);
+        Assert.Equal("1", op.Features[0].Value);
+    }
+
+    [Fact]
+    public void ParseOperation_AtRunRankGroupFeats()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>("1x2=X^1@group [*g=1]");
+
+        Assert.Equal(OperationType.Replace, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.False(op.AtAsIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(2, op.Run);
+        Assert.Equal("X", op.Value);
+
+        Assert.Equal(1, op.Rank);
+        Assert.Equal("group", op.GroupId);
+        Assert.Single(op.Features);
+
+        Assert.Equal("g", op.Features[0].Name);
+        Assert.True(op.Features[0].IsGlobal);
+        Assert.Equal("1", op.Features[0].Value);
+    }
+
+    [Fact]
     public void ParseOperation_VerAt1Run1()
     {
         CharChainReplaceOperation op = CharChainOperation

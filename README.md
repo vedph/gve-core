@@ -79,6 +79,19 @@ or better, keeping into account also the requirements of diplomatic annotations:
 29x10="gegen über gestellt" [*log:="replace Mitte gest with gegen über gestellt" loc=below]
 ```
 
+```txt
+he had a red hat for sure,
+and long moustache and grey beard.
+
+32+[\"very \" [*log=\"insert 'very ' before 'long'\"]
+10x3="green" [*log="replace 'red' with 'green'"]
+51x5- [*log="delete grey" *version^="A"]
+18x9>[1@fs [*log=\"move 'for sure,' before 'he'\"]
+17-@fs [*log="delete tail ' '"]
+1+[" "@fs [*log="insert space before 'he'"]
+37x9<>56x5 [*log="swap 'moustache' / 'beard'" *version^="B"]
+```
+
 ## History
 
 - 2025-03-29: updated packages.

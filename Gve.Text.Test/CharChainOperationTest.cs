@@ -343,4 +343,103 @@ public sealed class CharChainOperationTest
             "have all built their nests in my beard!\"",
             TestHelper.GetVersionString(context.Chain.GetTagNodes("v5")));
     }
+
+    [Fact]
+    public void Execute_MockSample2()
+    {
+        // https://vedph.github.io/gve-doc/model/sample-limerick.html
+        const string text =
+          // 123456789-123456789-1234567
+            "he had a red hat for sure,\n" +
+          // 89-123456789-123456789-123456789-1
+            "and long moustache and grey beard.";
+
+        // setup text
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom(text));
+        context.LastTag = "v0";
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // setup operations
+        const string operationsText =
+            // v0>v1
+            "32+[\"very \" [*log=\"insert 'very ' before 'long'\"]\n" +
+            // v1>v2
+            "10x3=\"green\" [*log=\"replace 'red' with 'green'\"]\n" +
+            // v2>v3
+            "51x5- [*log=\"delete grey\" *version^=\"A\"]\n" +
+            // v3>v4
+            "18x9>[1@fs [*log=\"move 'for sure,' before 'he'\"]\n" +
+            // v4>v5
+            "17-@fs [*log=\"delete tail ' '\"]\n" +
+            // v5>v6
+            "1+[\" \"@fs [*log=\"insert space before 'he'\"]\n" +
+            // v6>v7
+            "37x9<>56x5 [*log=\"swap 'moustache' / 'beard'\" *version^=\"B\"]";
+
+        List<CharChainOperation> operations = [];
+        foreach (string line in operationsText.Split('\n',
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            CharChainOperation op = CharChainOperation
+                .Parse<CharChainOperation>(line);
+            operations.Add(op);
+        }
+
+        // execute operations
+        foreach (CharChainOperation op in operations) op.Execute(context);
+
+        Assert.Equal(7, context.Steps.Count);
+
+        IList<string> tags = context.Chain.GetDistinctTags();
+        Assert.Equal(8, tags.Count);
+
+        // v0 (original)
+        Assert.Equal("v0", tags[0]);
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // v1 ("very " added before "long")
+        Assert.Equal("v1", tags[1]);
+        Assert.Equal("he had a red hat for sure,\n" +
+            "and very long moustache and grey beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v1")));
+
+        // v2 ("green" replaced "red")
+        Assert.Equal("v2", tags[2]);
+        Assert.Equal("he had a green hat for sure,\n" +
+            "and very long moustache and grey beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v2")));
+
+        // v3 ("grey" deleted)
+        Assert.Equal("v3", tags[3]);
+        Assert.Equal("he had a green hat for sure,\n" +
+            "and very long moustache and beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v3")));
+
+        // v4 ("for sure," moved before "he")
+        Assert.Equal("v4", tags[4]);
+        Assert.Equal("for sure,he had a green hat \n" +
+            "and very long moustache and beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v4")));
+
+        // v5 (tail " " deleted)
+        Assert.Equal("v5", tags[5]);
+        Assert.Equal("for sure,he had a green hat\n" +
+            "and very long moustache and beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v5")));
+
+        // v6 (space added before "he")
+        Assert.Equal("v6", tags[6]);
+        Assert.Equal("for sure, he had a green hat\n" +
+            "and very long moustache and beard.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v6")));
+
+        // v7 ("moustache" and "beard" swapped)
+        Assert.Equal("v7", tags[7]);
+        Assert.Equal("for sure, he had a green hat\n" +
+            "and very long beard and moustache.",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v7")));
+    }
 }
