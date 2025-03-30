@@ -368,7 +368,7 @@ public sealed class CharChainOperationTest
             // v1>v2
             "10x3=\"green\" [*log=\"replace 'red' with 'green'\"]\n" +
             // v2>v3
-            "51x5- [*log=\"delete grey\" *version^=\"A\"]\n" +
+            "51x5- [*log=\"delete 'grey '\" *version^=\"A\"]\n" +
             // v3>v4
             "18x9>[1@fs [*log=\"move 'for sure,' before 'he'\"]\n" +
             // v4>v5
