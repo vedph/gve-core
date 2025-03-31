@@ -3,9 +3,9 @@
     <RadzenColumn Size="12" SizeLG="8">
         <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2"
-                TagName="TagName.H3">new version</RadzenText>
+                        TagName="TagName.H3">new version</RadzenText>
             <RadzenTextArea @bind-Value="@NewVersion" class="rz-w-100"
-                Placeholder="version" Rows="3" />
+                            Placeholder="version" Rows="3" />
             <RadzenButton Click="@AddVersion">add</RadzenButton>
         </RadzenCard>
     </RadzenColumn>
@@ -14,15 +14,25 @@
 <!-- versions -->
 <RadzenRow Gap="2rem" RowGap="2rem" class="rz-m-0 rz-m-md-12">
     <RadzenDataGrid AllowAlternatingRows="true" Data="@Versions"
-                    AllowSorting="true" AllowFiltering="true"
-                    TItem="TaggedText"
+                    AllowFiltering="true" TItem="TaggedText"
                     SelectionMode="DataGridSelectionMode.Single"
                     FilterMode="FilterMode.Simple"
                     Title="versions">
         <Columns>
+            <RadzenDataGridColumn Width="9em" TItem="TaggedText" Title="">
+                <Template>
+                    <RadzenButton Click="@(() => MoveVersionUp(context))"
+                                  Icon="arrow_upward" />
+                    <RadzenButton Click="@(() => MoveVersionDown(context))"
+                                  Icon="arrow_downward" />
+                    <RadzenButton Click="@(() => RemoveVersion(context))"
+                                  Icon="delete" ButtonStyle="ButtonStyle.Danger" />
+                </Template>
+            </RadzenDataGridColumn>
+
             <RadzenDataGridColumn Width="4em" TItem="TaggedText" Property="Tag"
-                Title="tag"/>
-            
+                                  Title="tag" />
+
             <RadzenDataGridColumn TItem="TaggedText" Property="Text" Title="text">
                 <Template>
                     <div style="white-space: normal">@context.Text</div>

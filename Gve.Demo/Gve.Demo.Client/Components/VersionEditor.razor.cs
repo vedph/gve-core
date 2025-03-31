@@ -1,4 +1,6 @@
-﻿namespace Gve.Demo.Client.Components;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace Gve.Demo.Client.Components;
 
 public record TaggedText
 {
@@ -13,17 +15,17 @@ public record TaggedText
 
 public partial class VersionEditor
 {
-    private readonly List<TaggedText> _versions = [];
+    [Parameter]
+    public List<TaggedText> Versions { get; set; } = [];
 
     public string? NewVersion { get; set; }
-    public IQueryable<TaggedText> Versions => _versions.AsQueryable();
 
     private string GetNextVersionTag()
     {
         int max = 0;
         foreach (TaggedText version in Versions)
         {
-            if (int.TryParse(version.Tag[1..], out var n) && max < n)
+            if (int.TryParse(version.Tag[1..], out int n) && max < n)
                 max = n;
         }
         return $"v{max + 1}";
@@ -32,42 +34,48 @@ public partial class VersionEditor
     public void AddVersion()
     {
         if (string.IsNullOrEmpty(NewVersion) ||
-            _versions.Count > 0 && _versions[^1].Text == NewVersion)
+            (Versions.Count > 0 && Versions[^1].Text == NewVersion))
         {
             return;
         }
 
         if (!string.IsNullOrWhiteSpace(NewVersion))
         {
-            _versions.Add(new TaggedText
-            {
-                Tag = GetNextVersionTag(), Text = NewVersion
-            });
+            Versions = [
+                .. Versions,
+                new TaggedText { Tag = GetNextVersionTag(), Text = NewVersion }
+            ];
         }
     }
 
     public void RemoveVersion(TaggedText version)
     {
-        _versions.Remove(version);
+        List<TaggedText> newVersions = [.. Versions];
+        newVersions.Remove(version);
+        Versions = newVersions;
     }
 
     public void MoveVersionUp(TaggedText version)
     {
-        int index = _versions.IndexOf(version);
+        int index = Versions.IndexOf(version);
         if (index > 0)
         {
-            _versions.RemoveAt(index);
-            _versions.Insert(index - 1, version);
+            List<TaggedText> newVersions = [.. Versions];
+            newVersions.RemoveAt(index);
+            newVersions.Insert(index - 1, version);
+            Versions = newVersions;
         }
     }
 
     public void MoveVersionDown(TaggedText version)
     {
-        int index = _versions.IndexOf(version);
-        if (index < _versions.Count - 1)
+        int index = Versions.IndexOf(version);
+        if (index < Versions.Count - 1)
         {
-            _versions.RemoveAt(index);
-            _versions.Insert(index + 1, version);
+            List<TaggedText> newVersions = [.. Versions];
+            newVersions.RemoveAt(index);
+            newVersions.Insert(index + 1, version);
+            Versions = newVersions;
         }
     }
 }
