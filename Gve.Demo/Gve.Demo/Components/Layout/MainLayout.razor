@@ -1,0 +1,30 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenComponents @rendermode="InteractiveAuto" />
+
+<div class="page">
+    <main>
+        <RadzenHeader>
+            <RadzenMenu>
+                <RadzenMenuItem Text="Home" Icon="home" Path="" />
+                <RadzenMenuItem Text="Snapshot" Icon="share" Path="snapshot" />
+                <RadzenMenuItem Text="Export" Icon="input" Path="export" />
+                <RadzenMenuItem Text="About" Path="about" Icon="info" />
+            </RadzenMenu>
+        </RadzenHeader>
+        <RadzenBody>
+            @Body
+        </RadzenBody>
+        <RadzenFooter>
+            <div class="text-center">
+                &copy; 2024 - GVE
+            </div>
+        </RadzenFooter>
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

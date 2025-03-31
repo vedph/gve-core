@@ -1,0 +1,173 @@
+﻿@page "/snapshot"
+@rendermode InteractiveServer
+@inject NotificationService NotificationService
+@using Gve.Text
+
+<PageTitle>Snapshot</PageTitle>
+
+<h1>Snapshot</h1>
+<RadzenCard>
+    <!-- input -->
+    <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="rz-w-100" />
+    <div style="margin:8px 0">
+        <StringView Chars="@TextChars" />
+    </div>
+
+    <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
+                    class="rz-w-100" Rows="8" />
+
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+        <RadzenButton Text="Parse" Click="ParseOperationText"
+                      ButtonStyle="ButtonStyle.Primary" />
+
+        @if (ChainTags.Count > 0)
+        {
+            <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
+        }
+    </RadzenStack>
+
+    <!-- parsed operations -->
+    <RadzenPanel AllowCollapse="true">
+        <HeaderTemplate>
+            <RadzenText TextStyle="TextStyle.H6">
+                <RadzenIcon Icon="list_alt" /> operations
+            </RadzenText>
+        </HeaderTemplate>
+        <ChildContent>
+            <RadzenDataGrid AllowAlternatingRows="true" AllowSorting="true"
+                            AllowFiltering="true" Data="@Operations"
+                            TItem="CharChainOperation" @ref="OperationsGrid"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            FilterMode="FilterMode.Advanced"
+                            LogicalFilterOperator="LogicalFilterOperator.Or"
+                            Title="operations">
+                <Columns>
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Type" Title="type" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="InputTag" Title="tag-in" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="OutputTag" Title="tag-out" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="At" Title="at" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Run" Title="run" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Value" Title="value" />
+                </Columns>
+            </RadzenDataGrid>
+        </ChildContent>
+    </RadzenPanel>
+</RadzenCard>
+
+<RadzenCard>
+    <!-- run -->
+    <RadzenButton Text="Run" Click="RunOperations">
+        run
+        <RadzenBadge Text="@Operations.Count.ToString()" />
+    </RadzenButton>
+
+    <div>
+        <RadzenCheckBox @bind-Value="@NoTraceFeatures" Name="ckNoTrace"/>
+        <RadzenLabel Text="no trace features" Component="ckNoTrace"/>
+    </div>
+
+    <div class="rz-w-100">
+        <RadzenProgressBar Value="100" Visible="IsBusy"
+                           Mode="ProgressBarMode.Indeterminate" />
+    </div>
+
+    <!-- results -->
+    <RadzenTabs RenderMode="TabRenderMode.Client">
+        <Tabs>
+            <RadzenTabsItem Text="texts">
+                <RadzenDataGrid AllowAlternatingRows="true" Data="@TaggedTexts"
+                                AllowSorting="true" AllowFiltering="true"
+                                TItem="Tuple<string,string>"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="texts">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                                              Property="Item1" Title="tag" />
+                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                                              Property="Item2" Title="text" />
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="steps">
+                <RadzenDataGrid AllowAlternatingRows="true" Data="@Steps"
+                                AllowSorting="true" AllowFiltering="true"
+                                @ref="StepsGrid"
+                                TItem="ChainOperationContextStep"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="steps">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="InputTag" Title="tin" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="OutputTag" Title="tout" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="Operation" Title="operation" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="Result" Title="text" />
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="FeatureSet.Features"
+                                              Title="c-features">
+                            <Template>
+                                <ul>
+                                    @foreach (var f in context.FeatureSet.Features)
+                                    {
+                                        <li>
+                                            <span class="@(f.Name == "version" ? "feature-important" : "")">@f</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
+                                              Property="FeatureSet.NodeFeatures"
+                                              Title="n-features">
+                            <Template>
+                                @foreach (var kvp in context.FeatureSet.NodeFeatures)
+                                {
+                                    <strong>@kvp.Key</strong>
+                                    <ul>
+                                        @foreach (var f in kvp.Value)
+                                        {
+                                            <li>@f</li>
+                                        }
+                                    </ul>
+                                }
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="chain">
+                <div style="display: grid; grid-template-columns: auto 1fr; gap: 16px">
+                    <div>
+                        <pre>@ChainDump</pre>
+                    </div>
+                    <RadzenChart>
+                        <RadzenPieSeries Data="@ChainStats" Title="chain"
+                                         CategoryProperty="Item1" ValueProperty="Item2">
+                            <RadzenSeriesDataLabels Visible="true" />
+                        </RadzenPieSeries>
+                    </RadzenChart>
+                </div>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+
+    @if (Chain != null)
+    {
+        <div>
+            <RadzenDropDown @bind-Value="@SelectedChainTags" Data="@ChainTags"
+                            Multiple="true" Placeholder="chain tags"
+                            Style="margin-bottom:8px" />
+        </div>
+        <ChainView Chain="@Chain" Tags="@SelectedChainTags" />
+    }
+</RadzenCard>
