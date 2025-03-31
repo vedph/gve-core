@@ -13,27 +13,21 @@
 
 <!-- versions -->
 <RadzenRow Gap="2rem" RowGap="2rem" class="rz-m-0 rz-m-md-12">
-    
-    <RadzenDataList Data="@Versions" TItem="@TaggedText" class="rz-w-100">
-        <Template Context="version">
-            <RadzenCard Variant="Variant.Outlined" class="rz-p-0 rz-w-100">
-                <RadzenRow class="flex-row rz-w-100">
-                    <RadzenColumn class="col-title flex-col-auto">@version.Tag</RadzenColumn>
-                    <RadzenColumn class="flex-col-auto">
-                        <div class="button-row">
-                            <RadzenButton Click="@(() => MoveVersionUp(version))"
-                                          Icon="arrow_upward" />
-                            <RadzenButton Click="@(() => MoveVersionDown(version))"
-                                          Icon="arrow_downward" />
-                            <RadzenButton Click="@(() => RemoveVersion(version))"
-                                Icon="delete" ButtonStyle="ButtonStyle.Danger"/>
-                        </div>
-                    </RadzenColumn>
-                    <RadzenColumn class="flex-col-fill">
-                        <RadzenText>@version.Text</RadzenText>
-                    </RadzenColumn>
-                </RadzenRow>
-            </RadzenCard>
-        </Template>
-    </RadzenDataList>
+    <RadzenDataGrid AllowAlternatingRows="true" Data="@Versions"
+                    AllowSorting="true" AllowFiltering="true"
+                    TItem="TaggedText"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    FilterMode="FilterMode.Simple"
+                    Title="versions">
+        <Columns>
+            <RadzenDataGridColumn Width="4em" TItem="TaggedText" Property="Tag"
+                Title="tag"/>
+            
+            <RadzenDataGridColumn TItem="TaggedText" Property="Text" Title="text">
+                <Template>
+                    <div style="white-space: normal">@context.Text</div>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </RadzenRow>

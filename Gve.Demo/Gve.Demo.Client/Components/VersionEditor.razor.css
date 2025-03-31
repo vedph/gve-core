@@ -1,15 +1,1 @@
-﻿.col-title {
-    background-color: var(--rz-secondary-lighter);
-    color: var(--rz-color-on-secondary-lighter);
-}
-.flex-row {
-    display: flex;
-}
-
-.flex-col-auto {
-    flex: 0 0 auto;
-}
-
-.flex-col-fill {
-    flex: 1 1 auto;
-}
+﻿
