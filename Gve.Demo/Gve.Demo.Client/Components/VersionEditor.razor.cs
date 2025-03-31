@@ -55,6 +55,17 @@ public partial class VersionEditor
         Versions = newVersions;
     }
 
+    private static List<TaggedText> AssignTags(List<TaggedText> versions)
+    {
+        int n = 1;
+        List<TaggedText> newVersions = [];
+        foreach (TaggedText version in versions)
+        {
+            newVersions.Add(new TaggedText { Tag = $"v{n++}", Text = version.Text });
+        }
+        return newVersions;
+    }
+
     public void MoveVersionUp(TaggedText version)
     {
         int index = Versions.IndexOf(version);
@@ -63,7 +74,7 @@ public partial class VersionEditor
             List<TaggedText> newVersions = [.. Versions];
             newVersions.RemoveAt(index);
             newVersions.Insert(index - 1, version);
-            Versions = newVersions;
+            Versions = AssignTags(newVersions);
         }
     }
 
@@ -75,7 +86,7 @@ public partial class VersionEditor
             List<TaggedText> newVersions = [.. Versions];
             newVersions.RemoveAt(index);
             newVersions.Insert(index + 1, version);
-            Versions = newVersions;
+            Versions = AssignTags(newVersions);
         }
     }
 }
