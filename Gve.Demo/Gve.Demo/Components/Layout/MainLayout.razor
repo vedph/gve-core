@@ -2,29 +2,42 @@
 
 <RadzenComponents @rendermode="InteractiveAuto" />
 
-<div class="page">
-    <main>
-        <RadzenHeader>
-            <RadzenMenu>
-                <RadzenMenuItem Text="Home" Icon="home" Path="" />
-                <RadzenMenuItem Text="Snapshot" Icon="share" Path="snapshot" />
-                <RadzenMenuItem Text="Export" Icon="input" Path="export" />
-                <RadzenMenuItem Text="About" Path="about" Icon="info" />
-            </RadzenMenu>
-        </RadzenHeader>
-        <RadzenBody>
+<RadzenLayout>
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            <RadzenLabel Text="GVE" />
+        </RadzenStack>
+    </RadzenHeader>
+
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Home" Icon="home" Path="" />
+            <RadzenPanelMenuItem Text="Snapshot" Icon="share" Path="snapshot" />
+            <RadzenPanelMenuItem Text="Export" Icon="input" Path="export" />
+            <RadzenPanelMenuItem Text="About" Icon="info" Path="about" />
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+
+    <RadzenBody>
+        <div class="rz-p-4">
             @Body
-        </RadzenBody>
-        <RadzenFooter>
-            <div class="text-center">
-                &copy; 2024 - GVE
-            </div>
-        </RadzenFooter>
-    </main>
-</div>
+        </div>
+    </RadzenBody>
+
+    <RadzenFooter>
+        <div class="text-center">
+            &copy; 2024 - GVE
+        </div>
+    </RadzenFooter>
+</RadzenLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    bool sidebarExpanded = true;
+}
