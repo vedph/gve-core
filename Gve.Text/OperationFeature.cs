@@ -132,11 +132,8 @@ public partial record OperationFeature : Feature
         FeatureSetPolicy setPolicy = FeatureSetPolicy.Multiple,
         bool isNegated = false,
         bool isGlobal = false,
-        bool isShortLived = false)
+        bool isShortLived = false) : base(name, value, setPolicy)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        Value = value;
-        SetPolicy = setPolicy;
         IsNegated = isNegated;
         IsGlobal = isGlobal;
         IsShortLived = isShortLived;

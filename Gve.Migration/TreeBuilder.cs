@@ -11,6 +11,7 @@ namespace Gve.Migration;
 /// <summary>
 /// Tree builder for a chain operation context.
 /// </summary>
+[Obsolete]
 public static class TreeBuilder
 {
     /// <summary>

@@ -68,7 +68,7 @@ public sealed class TreeToXmlConverter<T>
         {
             XElement element = new(Branch1ElementName);
             AttributeInjector?.Invoke(element, node);
-            if (node.Data != null) element.Add(node.Data.ToString());
+            if (node.Data is not null) element.Add(node.Data.ToString());
             return element;
         }
     }
@@ -77,7 +77,7 @@ public sealed class TreeToXmlConverter<T>
     {
         if (!node.HasChildren)
         {
-            if (node.Data != null) element.Add(node.Data.ToString());
+            if (node.Data is not null) element.Add(node.Data.ToString());
             return;
         }
 

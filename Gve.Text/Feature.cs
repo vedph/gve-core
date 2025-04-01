@@ -7,31 +7,12 @@ namespace Gve.Text;
 /// <summary>
 /// A generic name=value (or just named) feature.
 /// </summary>
-public record Feature
+public record Feature : NamedValue
 {
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
-    public string Name { get; init; }
-
-    /// <summary>
-    /// Gets the value. Usually there is a value, but in some cases a feature
-    /// is used just as a flag, in which case the value is null.
-    /// </summary>
-    public string? Value { get; init; }
-
     /// <summary>
     /// The feature set policy.
     /// </summary>
     public FeatureSetPolicy SetPolicy { get; init; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Feature"/> class.
-    /// </summary>
-    public Feature()
-    {
-        Name = "";
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Feature"/> class.
@@ -42,9 +23,8 @@ public record Feature
     /// <exception cref="ArgumentNullException">name</exception>
     public Feature(string name, string? value,
         FeatureSetPolicy setPolicy = FeatureSetPolicy.Multiple)
+        : base(name, value)
     {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        Value = value;
         SetPolicy = setPolicy;
     }
 
