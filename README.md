@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-04-01: updated packages.
 - 2025-03-29: updated packages.
 - 2025-03-20:
   - added no trace features option to demo.
