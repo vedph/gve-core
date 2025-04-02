@@ -173,10 +173,12 @@ public sealed class VersionTreeBuilder
         }
     }
 
-    private static int GetRefNodeId(ChainOperationContext<char> context,
-        CharChainOperation op, string tag, int headId, int tailId)
+    private static (int id1, int id2) GetRefNodeId(
+        ChainOperationContext<char> context, CharChainOperation op,
+        string tag, int headId, int head2Id, int nextSegOutId)
     {
-        int id = 0;
+        int id1;
+        int id2 = 0;
 
         switch (op.Type)
         {
@@ -189,24 +191,27 @@ public sealed class VersionTreeBuilder
                 // Find the node before the 1st one with seg-in feature:
                 // this will be the insertion point for the deleted nodes
                 // (0=beginning of tree)
-                id = context.Chain.GetPreviousNode(
+                id1 = context.Chain.GetPreviousNode(
                     tag, context.Chain.FindNode(headId)!)?.Id ?? 0;
                 break;
 
             case OperationType.Replace:
-                // TODO
+                // insert before the 1st segout of the next version
+                id1 = nextSegOutId;
                 break;
 
             case OperationType.Swap:
-                // TODO
+                // insert 1 before 1st seg2in, and 2 before 1st segin
+                id1 = head2Id;
+                id2 = headId;
                 break;
 
             default:
-                id = -1;
+                id1 = -1;
                 break;
         }
 
-        return id;
+        return (id1, id2);
     }
 
     private static List<ChainNode<char>> CollectNodes(
@@ -219,16 +224,44 @@ public sealed class VersionTreeBuilder
         return nodes;
     }
 
-    private void RestoreDeletions(ChainOperationContext<char> context,
+    /// <summary>
+    /// Gets the ID of the first node of the output segment in the specified
+    /// version.
+    /// </summary>
+    /// <param name="context">The execution context.</param>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>ID or 0 if no output segment in version.</returns>
+    private static int GetHeadSegOutId(ChainOperationContext<char> context,
+        string tag)
+    {
+        // the key prefix in node features for the specified version
+        string prefix = tag + "_";
+
+        foreach (string key in context.NodeFeatures.Keys
+            .Where(k => k.StartsWith(prefix)))
+        {
+            // get the requested feature if present
+            OperationFeature? f = context.NodeFeatures[key].FirstOrDefault(
+                f => f.Name == OperationFeature.F_TRACE_SEG_OUT);
+
+            // if found, add the ID with its ordinal
+            if (f != null) return int.Parse(key.AsSpan(prefix.Length));
+        }
+
+        return 0;
+    }
+
+    private static void RestoreDeletions(ChainOperationContext<char> context,
         IList<CharChainOperation> operations,
         IList<string> tags, int tagIndex, TreeNode<ExportedSegment> root)
     {
         int i = tagIndex - 1;
         while (i > -1)
         {
-            // collect IDs of all the nodes with seg-in feature
+            // collect IDs of all the nodes with seg-in feature in this version
             List<int> inIds = GetIdsOfNodesWithFeature(context, tags[i], false);
-            // collect IDs of all the nodes with seg2-in feature
+
+            // collect IDs of all the nodes with seg2-in feature in this version
             List<int> in2Ids = GetIdsOfNodesWithFeature(context, tags[i], true);
 
             // nothing to do if no seg-in
@@ -242,15 +275,17 @@ public sealed class VersionTreeBuilder
 
             // get the corresponding operation
             CharChainOperation op = operations.First(o => o.Id == opId);
-            int refNodeId = GetRefNodeId(context, op, tags[tagIndex],
-                inIds[0], inIds[^1]);
+            var (id1, id2) = GetRefNodeId(context, op, tags[tagIndex],
+                inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
+                GetHeadSegOutId(context, tags[i]));
 
             // we care only about operations which imply deletions
-            if (refNodeId > -1)
+            if (id1 > -1)
             {
                 // feature prefix to be used when creating the new nodes
                 // for their seg-in features (OPID TAGIN:TAGOUT + space)
-                string featPrefix = $"{opId} {tags[tagIndex]}:{tags[tagIndex + 1]} ";
+                string featPrefix =
+                    $"{opId} {tags[tagIndex]}:{tags[tagIndex + 1]} ";
 
                 // insert seg-in nodes before reference node:
                 // collect source nodes in the order specified by inIds
@@ -258,7 +293,7 @@ public sealed class VersionTreeBuilder
                     CollectNodes(context, tags[i], inIds);
 
                 // insert the collected nodes
-                InsertNodes(inNodes, root, featPrefix, refNodeId);
+                InsertNodes(inNodes, root, featPrefix, id1);
 
                 // insert seg2-in nodes before reference node:
                 // collect source nodes in the order specified by in2Ids
@@ -266,7 +301,7 @@ public sealed class VersionTreeBuilder
                     CollectNodes(context, tags[i], in2Ids);
 
                 // insert the collected nodes
-                InsertNodes(in2Nodes, root, featPrefix, refNodeId);
+                InsertNodes(in2Nodes, root, featPrefix, id2);
             }
 
             // move to previous version
@@ -384,7 +419,7 @@ public sealed class VersionTreeBuilder
     /// will be included.
     /// </summary>
     /// <returns>The root blank node of the tree.</returns>
-    /// <exception cref="ArgumentNullException">chain or tag</exception>
+    /// <exception cref="ArgumentNullException">text or operations</exception>
     public IDictionary<string, TreeNode<ExportedSegment>>
         Build(string text, IList<CharChainOperation> operations)
     {

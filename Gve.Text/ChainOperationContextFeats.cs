@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Gve.Text;
 
@@ -211,19 +210,6 @@ public class ChainOperationContextFeats
         UpdateFeature(source, [], tag, [node]);
     }
 
-    //public void UpdateTraceFeatures<T>(IList<OperationFeature> sources,
-    //    string tag, IList<ChainNode<T>> nodes)
-    //{
-    //    ArgumentNullException.ThrowIfNull(sources);
-    //    ArgumentNullException.ThrowIfNull(tag);
-    //    ArgumentNullException.ThrowIfNull(nodes);
-
-    //    HashSet<string> names = [];
-
-    //    foreach (OperationFeature feature in sources)
-    //        UpdateFeature(feature, names, tag, nodes);
-    //}
-
     /// <summary>
     /// Updates the trace features of the specified target node with the
     /// specified feature.
@@ -242,6 +228,26 @@ public class ChainOperationContextFeats
 
         HashSet<string> names = [];
         UpdateFeature(source, names, tag, [node]);
+    }
+
+    /// <summary>
+    /// Gets all the node features for the version with the specified tag.
+    /// </summary>
+    /// <param name="tag">The version tag.</param>
+    /// <returns>Dictionary where key=node ID and value=node features.</returns>
+    public Dictionary<int, IList<Feature>> GetTagNodeFeatures(string tag)
+    {
+        ArgumentNullException.ThrowIfNull(tag);
+
+        string prefix = $"{tag}_";
+        Dictionary<int, IList<Feature>> result = [];
+        foreach(string key in NodeFeatures.Keys.Where(k => k.StartsWith(prefix)))
+        {
+            int id = int.Parse(key.AsSpan(prefix.Length));
+            result[id] = [..(IList<Feature>)NodeFeatures[key]];
+        }
+
+        return result;
     }
 
     /// <summary>
