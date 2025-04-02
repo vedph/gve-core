@@ -2,15 +2,14 @@
 using Gve.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gve.Migration.Test;
 
 public sealed class SabaTest
 {
-    private static ChainOperationContext<char> GetContext()
+    private static (
+        ChainOperationContext<char> Context,
+        List<CharChainOperation> Operations) GetContext()
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html
         const string text =
@@ -55,14 +54,14 @@ public sealed class SabaTest
         // execute operations
         foreach (CharChainOperation op in operations) op.Execute(context);
 
-        return context;
+        return (context, operations);
     }
 
     [Fact]
     public void Export_Scenario_Saba()
     {
         // get chain and its context
-        ChainOperationContext<char> context = GetContext();
+        var (context, operations) = GetContext();
 
         // get tree for final version (v7)
         VersionTreeBuilder builder = new()
@@ -79,7 +78,7 @@ public sealed class SabaTest
         };
 
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context);
+            builder.Build(context, operations);
 
         Assert.Equal(8, versionTrees.Count);
 

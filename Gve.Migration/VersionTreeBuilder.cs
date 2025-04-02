@@ -35,7 +35,10 @@ public sealed class VersionTreeBuilder
 
     /// <summary>
     /// Gets or sets a value indicating whether to include deleted nodes
-    /// in the tree.
+    /// in the tree. When this is true, for each generated version the builder
+    /// will backtrack to the previous versions one after another, and insert
+    /// nodes deleted by delete, replace, move, or swap operations at their
+    /// place, with a delete feature.
     /// </summary>
     public bool IncludeDeletions { get; set; }
 
@@ -54,18 +57,238 @@ public sealed class VersionTreeBuilder
     }
 
     /// <summary>
+    /// Gets the IDs of all nodes with a segment/segment-2 feature in the
+    /// specified version.
+    /// </summary>
+    /// <param name="context">The execution context.</param>
+    /// <param name="tag">The version tag.</param>
+    /// <param name="secondary">if set to <c>true</c>, look for segment-2 features.
+    /// </param>
+    /// <returns>List of IDs, sorted by their segment ordinal.</returns>
+    private static List<int> GetIdsOfNodesWithFeature(
+        ChainOperationContext<char> context, string tag, bool secondary)
+    {
+        // the key prefix in node features for the specified version
+        string prefix = tag + "_";
+
+        // collect IDs and their ordinals
+        Dictionary<int, int> idAndNr = [];
+
+        foreach (string key in context.NodeFeatures.Keys
+            .Where(k => k.StartsWith(prefix)))
+        {
+            // get the requested feature if present
+            OperationFeature? f = context.NodeFeatures[key].FirstOrDefault(
+                f => secondary
+                    ? f.Name == OperationFeature.F_TRACE_SEG2_IN
+                    : f.Name == OperationFeature.F_TRACE_SEG_IN);
+
+            // if found, add the ID with its ordinal
+            if (f != null)
+            {
+                // parse ID from key (e.g. "v1_123" => 123)
+                int id = int.Parse(key.AsSpan(prefix.Length));
+
+                // parse NR from f.Value (OPID TAGIN:TAGOUT NR)
+                int i = f.Value!.LastIndexOf(' ') + 1;
+                idAndNr[id] = int.Parse(f.Value.AsSpan(i));
+            }
+        }
+
+        // return IDs sorted by nr
+        return [.. idAndNr.OrderBy(kv => kv.Value).Select(kv => kv.Key)];
+    }
+
+    /// <summary>
+    /// Inserts new nodes into the tree whose root node is <paramref name="root"/>,
+    /// after the reference node whose exported segment has the specified
+    /// identifier.
+    /// </summary>
+    /// <param name="sources">The sources.</param>
+    /// <param name="root">The root.</param>
+    /// <param name="featPrefix">The feature prefix.</param>
+    /// <param name="refId">The reference identifier.</param>
+    private static void InsertNodes(List<ChainNode<char>> sources,
+        TreeNode<ExportedSegment> root, string featPrefix, int refId)
+    {
+        // create the branch of new nodes
+        TreeNode<ExportedSegment>? branch = null, current = null;
+        int n = 1;
+        foreach (ChainNode<char> source in sources)
+        {
+            TreeNode<ExportedSegment> newNode = new()
+            {
+                Data = new ExportedSegment
+                {
+                    SourceId = source.Id,
+                    Text = source.Label,
+                    Features =
+                    [
+                        new(OperationFeature.F_TRACE_DELETED,
+                            $"{featPrefix} {n++}")
+                    ]
+                }
+            };
+            if (branch == null)
+            {
+                branch = newNode;
+                current = branch;
+            }
+            else
+            {
+                current = current!.AddChild(newNode);
+            }
+        }
+        if (branch == null) return;
+
+        // find the reference node in the tree unless it's 0 (=beginning)
+        TreeNode<ExportedSegment>? refNode = null;
+        if (refId != 0)
+        {
+            root.Traverse(n =>
+            {
+                if (n.Data?.SourceId == refId)
+                {
+                    refNode = n;
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        // insert the branch after refNode
+        // get the tail to attach past the inserted branch
+        TreeNode<ExportedSegment>? tail = refNode?.FirstChild ?? root.FirstChild;
+        // insert branch
+        if (refNode == null)
+        {
+            root.AddChild(branch);
+        }
+        else
+        {
+            // attach tail
+            if (tail != null) tail.Parent = current;
+            // attach branch to refNode
+            refNode.AddChild(branch);
+        }
+    }
+
+    private static int GetRefNodeId(ChainOperationContext<char> context,
+        CharChainOperation op, string tag, int headId, int tailId)
+    {
+        int id = 0;
+
+        switch (op.Type)
+        {
+            case OperationType.Delete:
+            case OperationType.MoveBefore:
+            case OperationType.MoveAfter:
+                // delete and move select the nodes to act on, which are
+                // then marked by seg-in feature. These are the nodes
+                // to insert back into the tree.
+                // Find the node before the 1st one with seg-in feature:
+                // this will be the insertion point for the deleted nodes
+                // (0=beginning of tree)
+                id = context.Chain.GetPreviousNode(
+                    tag, context.Chain.FindNode(headId)!)?.Id ?? 0;
+                break;
+
+            case OperationType.Replace:
+                // TODO
+                break;
+
+            case OperationType.Swap:
+                // TODO
+                break;
+
+            default:
+                id = -1;
+                break;
+        }
+
+        return id;
+    }
+
+    private static List<ChainNode<char>> CollectNodes(
+        ChainOperationContext<char> context, string tag, List<int> ids)
+    {
+        IList<ChainNode<char>> tagNodes = context.Chain.GetTagNodes(tag);
+        List<ChainNode<char>> nodes = [];
+        foreach (int id in ids)
+            nodes.Add(tagNodes.First(n => n.Id == id));
+        return nodes;
+    }
+
+    private void RestoreDeletions(ChainOperationContext<char> context,
+        IList<CharChainOperation> operations,
+        IList<string> tags, int tagIndex, TreeNode<ExportedSegment> root)
+    {
+        int i = tagIndex - 1;
+        while (i > -1)
+        {
+            // collect IDs of all the nodes with seg-in feature
+            List<int> inIds = GetIdsOfNodesWithFeature(context, tags[i], false);
+            // collect IDs of all the nodes with seg2-in feature
+            List<int> in2Ids = GetIdsOfNodesWithFeature(context, tags[i], true);
+
+            // nothing to do if no seg-in
+            if (inIds.Count == 0) continue;
+
+            // extract OPID from feature: all the collected nodes have the same,
+            // so we just use the first one as source
+            string value = context.NodeFeatures[$"{tags[tagIndex]}_{inIds[0]}"]
+                .First(f => f.Name == OperationFeature.F_TRACE_SEG_IN).Value!;
+            string opId = value[..value.IndexOf(' ')];
+
+            // get the corresponding operation
+            CharChainOperation op = operations.First(o => o.Id == opId);
+            int refNodeId = GetRefNodeId(context, op, tags[tagIndex],
+                inIds[0], inIds[^1]);
+
+            // we care only about operations which imply deletions
+            if (refNodeId > -1)
+            {
+                // feature prefix to be used when creating the new nodes
+                // for their seg-in features (OPID TAGIN:TAGOUT + space)
+                string featPrefix = $"{opId} {tags[tagIndex]}:{tags[tagIndex + 1]} ";
+
+                // insert seg-in nodes before reference node:
+                // collect source nodes in the order specified by inIds
+                List<ChainNode<char>> inNodes =
+                    CollectNodes(context, tags[i], inIds);
+
+                // insert the collected nodes
+                InsertNodes(inNodes, root, featPrefix, refNodeId);
+
+                // insert seg2-in nodes before reference node:
+                // collect source nodes in the order specified by in2Ids
+                List<ChainNode<char>> in2Nodes =
+                    CollectNodes(context, tags[i], in2Ids);
+
+                // insert the collected nodes
+                InsertNodes(in2Nodes, root, featPrefix, refNodeId);
+            }
+
+            // move to previous version
+            i--;
+        }
+    }
+
+    /// <summary>
     /// Builds a version linear tree from the specified execution context.
     /// This method builds the tree for each version tag with the features
     /// selected in <see cref="FeatureNames"/>. If this is not set, all features
     /// will be included.
     /// </summary>
     /// <param name="context">The execution context.</param>
+    /// <param name="operations">The operations executed on the context.</param>
     /// <returns>The root blank node of the tree.</returns>
-    /// <exception cref="ArgumentNullException">chain or tag</exception>
-    public IDictionary<string, TreeNode<ExportedSegment>>
-        Build(ChainOperationContext<char> context)
+    /// <exception cref="ArgumentNullException">chain or operations</exception>
+    public IDictionary<string, TreeNode<ExportedSegment>> Build(
+        ChainOperationContext<char> context, IList<CharChainOperation> operations)
     {
         ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(operations);
 
         // for each version in build order (distinct ensures that we
         // have no duplicates, even if this is not expected here)
@@ -74,7 +297,9 @@ public sealed class VersionTreeBuilder
         // setup a cache for trace features as we process each version
         Dictionary<int, List<NamedValue>> traceFeats = [];
 
-        foreach (string tag in context.Chain.GetDistinctTags())
+        // for each version tag
+        IList<string> tags = context.Chain.GetDistinctTags();
+        foreach (string tag in tags)
         {
             // get nodes for tag
             IList<ChainNode<char>> sources = context.Chain.GetTagNodes(tag);
@@ -85,6 +310,7 @@ public sealed class VersionTreeBuilder
 
             // add branch
             TreeNode<ExportedSegment> current = root;
+            int i = 0;
             foreach (ChainNode<char> source in sources)
             {
                 // get selected node features
@@ -139,6 +365,12 @@ public sealed class VersionTreeBuilder
                             new NamedValue(feature.Name, feature.Value));
                     }
                 }
+
+                // restore deletions if requested
+                if (IncludeDeletions)
+                    RestoreDeletions(context, operations, tags, i, root);
+
+                i++;
             } // node-for
         }
 
@@ -172,6 +404,6 @@ public sealed class VersionTreeBuilder
             tags.Add(context.LastTag);
         }
 
-        return Build(context);
+        return Build(context, operations);
     }
 }
