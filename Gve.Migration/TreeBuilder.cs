@@ -10,6 +10,7 @@ namespace Gve.Migration;
 
 /// <summary>
 /// Tree builder for a chain operation context.
+/// TODO: replace implementation with nested version merger from Fusi.Tools.Data.
 /// </summary>
 [Obsolete]
 public static class TreeBuilder

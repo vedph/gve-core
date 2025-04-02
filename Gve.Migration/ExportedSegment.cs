@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Fusi.Tools.Data;
 
 namespace Gve.Migration;
 
 /// <summary>
-/// An exported segment of text.
+/// An exported segment of text. This is typically used as the payload of
+/// a <see cref="TreeNode{T}"/> when building the linear tree to start the export
+/// process with.
 /// </summary>
 public class ExportedSegment
 {
     /// <summary>
-    /// The before-end-of-line feature name.
+    /// Gets or sets the source identifier for this segment. This is initially
+    /// set to the source node ID when building the linear tree character by
+    /// character.
     /// </summary>
-    public const string F_BEFORE_EOL = "before-eol";
+    public int SourceId { get; set; }
 
     /// <summary>
     /// Gets or sets the segment's text.
