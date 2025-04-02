@@ -74,7 +74,7 @@ public sealed class SabaTest
                 OperationFeature.F_TRACE_SEG2_OUT,
                 OperationFeature.F_TRACE_DELETED
             ],
-            FlattenTraceFeatures = true,
+            TraceFeatureFlattening = true,
             IncludeDeletions = true
         };
 

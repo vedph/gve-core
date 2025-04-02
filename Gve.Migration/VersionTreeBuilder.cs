@@ -31,7 +31,7 @@ public sealed class VersionTreeBuilder
     /// When this is true, the trace features linked to nodes are not only drawn
     /// from the each processed version, but also from all the previous versions.
     /// </summary>
-    public bool FlattenTraceFeatures { get; set; }
+    public bool TraceFeatureFlattening { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether to include deleted nodes
@@ -271,7 +271,11 @@ public sealed class VersionTreeBuilder
             List<int> in2Ids = GetIdsOfNodesWithFeature(context, tags[i], true);
 
             // nothing to do if no seg-in
-            if (inIds.Count == 0) continue;
+            if (inIds.Count == 0)
+            {
+                i--;
+                continue;
+            }
 
             // extract OPID from feature: all the collected nodes have the same,
             // so we just use the first one as source
@@ -315,6 +319,19 @@ public sealed class VersionTreeBuilder
         }
     }
 
+    private static void FlattenTraceFeatures(List<NamedValue>? nodeTraceFeats,
+        List<NamedValue> targetFeats)
+    {
+        foreach (NamedValue traceFeat in nodeTraceFeats)
+        {
+            if (targetFeats.All(f => f.Name != traceFeat.Name &&
+                f.Value != traceFeat.Value))
+            {
+                targetFeats.Add(traceFeat);
+            }
+        }
+    }
+
     /// <summary>
     /// Builds a version linear tree from the specified execution context.
     /// This method builds the tree for each version tag with the features
@@ -340,8 +357,10 @@ public sealed class VersionTreeBuilder
 
         // for each version tag
         IList<string> tags = context.Chain.GetDistinctTags();
-        foreach (string tag in tags)
+        for (int i = 0; i < tags.Count; i++)
         {
+            string tag = tags[i];
+
             // get nodes for tag
             IList<ChainNode<char>> sources = context.Chain.GetTagNodes(tag);
 
@@ -355,7 +374,6 @@ public sealed class VersionTreeBuilder
 
             // add branch
             TreeNode<ExportedSegment> current = root;
-            int i = 0;
             foreach (ChainNode<char> source in sources)
             {
                 // get selected node features
@@ -371,17 +389,10 @@ public sealed class VersionTreeBuilder
                 }
 
                 // flatten trace features from previous versions if requested
-                if (FlattenTraceFeatures && traceFeats.TryGetValue(
+                if (TraceFeatureFlattening && traceFeats.TryGetValue(
                     source.Id, out List<NamedValue>? nodeTraceFeats))
                 {
-                    foreach (NamedValue traceFeat in nodeTraceFeats)
-                    {
-                        if (targetFeats.All(f => f.Name != traceFeat.Name &&
-                            f.Value != traceFeat.Value))
-                        {
-                            targetFeats.Add(traceFeat);
-                        }
-                    }
+                    FlattenTraceFeatures(nodeTraceFeats, targetFeats);
                 }
 
                 // add child with text, version tag and features
@@ -398,7 +409,7 @@ public sealed class VersionTreeBuilder
 
                 // cache all the trace features from node for next version
                 // flattening
-                if (FlattenTraceFeatures && sourceFeats.Any(f =>
+                if (TraceFeatureFlattening && sourceFeats.Any(f =>
                     f.Name.StartsWith(OperationFeature.F_TRACE_PREFIX)))
                 {
                     if (!traceFeats.ContainsKey(source.Id))
@@ -416,9 +427,7 @@ public sealed class VersionTreeBuilder
                 // restore deletions if requested
                 if (IncludeDeletions)
                     RestoreDeletions(context, operations, tags, i, root);
-
-                i++;
-            } // node-for
+            }
         }
 
         return versions;
