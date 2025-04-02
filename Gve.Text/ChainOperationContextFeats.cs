@@ -244,7 +244,7 @@ public class ChainOperationContextFeats
         foreach(string key in NodeFeatures.Keys.Where(k => k.StartsWith(prefix)))
         {
             int id = int.Parse(key.AsSpan(prefix.Length));
-            result[id] = [..(IList<Feature>)NodeFeatures[key]];
+            result[id] = [..NodeFeatures[key].Cast<Feature>()];
         }
 
         return result;

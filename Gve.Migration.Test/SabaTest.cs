@@ -13,9 +13,9 @@ public sealed class SabaTest
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html
         const string text =
-            // 123456789-123456789-1234567
+          // 123456789-123456789-1234567
             "he had a red hat for sure,\n" +
-            // 89-123456789-123456789-123456789-1
+          // 89-123456789-123456789-123456789-1
             "and long moustache and grey beard.";
 
         // setup text
@@ -74,7 +74,8 @@ public sealed class SabaTest
                 OperationFeature.F_TRACE_SEG2_OUT,
                 OperationFeature.F_TRACE_DELETED
             ],
-            FlattenTraceFeatures = true
+            FlattenTraceFeatures = true,
+            IncludeDeletions = true
         };
 
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =

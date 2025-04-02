@@ -38,7 +38,13 @@ public sealed class VersionTreeBuilder
     /// in the tree. When this is true, for each generated version the builder
     /// will backtrack to the previous versions one after another, and insert
     /// nodes deleted by delete, replace, move, or swap operations at their
-    /// place, with a delete feature.
+    /// place, with a delete feature. This relies on trace features: each
+    /// operation injects segment-in trace features in the input version nodes,
+    /// representing the nodes selected by it; and segment-out trace features
+    /// in the output version nodes, representing the nodes produced or affected
+    /// by it. So, when going backwards, we can find the nodes to insert by
+    /// selecting nodes with segment-in features produced by operations which
+    /// delete these segments, e.g. delete, replace, move, swap.
     /// </summary>
     public bool IncludeDeletions { get; set; }
 
@@ -339,6 +345,10 @@ public sealed class VersionTreeBuilder
             // get nodes for tag
             IList<ChainNode<char>> sources = context.Chain.GetTagNodes(tag);
 
+            // get nodes features for tag
+            Dictionary<int, IList<Feature>> sourceTagFeats =
+                context.GetTagNodeFeatures(tag);
+
             // create blank root
             TreeNode<ExportedSegment> root = new();
             versions[tag] = root;
@@ -349,8 +359,10 @@ public sealed class VersionTreeBuilder
             foreach (ChainNode<char> source in sources)
             {
                 // get selected node features
-                IList<Feature> sourceFeats = context.GetNodeFeatures(
-                    source.Id, tag);
+                IList<Feature> sourceFeats = sourceTagFeats.TryGetValue(
+                    source.Id, out IList<Feature>? value) ? value : [];
+
+                // inject only the selected features
                 List<NamedValue> targetFeats = [];
                 foreach (Feature feature in sourceFeats
                     .Where(f => IsFeatureIncluded(f.Name)))
