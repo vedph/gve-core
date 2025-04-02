@@ -83,6 +83,11 @@ public sealed class SabaTest
 
         Assert.Equal(8, versionTrees.Count);
 
+        // v7 tree:
+        // for sure, he had a green hat|and very long beard and moustache.
+        // gggggggggg.........22222.........11111.....77777.....777777777.
+        // g=4,5,6
+        TreeNode<ExportedSegment> tree = versionTrees["v7"];
         // TODO
     }
 }

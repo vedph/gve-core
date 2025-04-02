@@ -33,6 +33,12 @@ public sealed class VersionTreeBuilder
     /// </summary>
     public bool FlattenTraceFeatures { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether to include deleted nodes
+    /// in the tree.
+    /// </summary>
+    public bool IncludeDeletions { get; set; }
+
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
         List<ChainNode<char>> nodes = new(text.Length);
