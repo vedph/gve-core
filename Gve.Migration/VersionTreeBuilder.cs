@@ -423,11 +423,11 @@ public sealed class VersionTreeBuilder
                             new NamedValue(feature.Name, feature.Value));
                     }
                 }
-
-                // restore deletions if requested
-                if (IncludeDeletions)
-                    RestoreDeletions(context, operations, tags, i, root);
             }
+
+            // restore deletions if requested
+            if (IncludeDeletions)
+                RestoreDeletions(context, operations, tags, i, root);
         }
 
         return versions;

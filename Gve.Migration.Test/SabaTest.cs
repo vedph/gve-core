@@ -9,7 +9,7 @@ public sealed class SabaTest
 {
     private static (
         ChainOperationContext<char> Context,
-        List<CharChainOperation> Operations) GetContext()
+        List<CharChainOperation> Operations) GetHatContext()
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html
         const string text =
@@ -58,10 +58,10 @@ public sealed class SabaTest
     }
 
     [Fact]
-    public void Export_Scenario_Saba()
+    public void Export_Scenario_Saba_Hat()
     {
         // get chain and its context
-        var (context, operations) = GetContext();
+        var (context, operations) = GetHatContext();
 
         // get tree for final version (v7)
         VersionTreeBuilder builder = new()
