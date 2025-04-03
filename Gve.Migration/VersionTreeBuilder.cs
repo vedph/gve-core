@@ -106,20 +106,17 @@ public sealed class VersionTreeBuilder
         return [.. idAndNr.OrderBy(kv => kv.Value).Select(kv => kv.Key)];
     }
 
-    /// <summary>
-    /// Inserts new nodes into the tree whose root node is <paramref name="root"/>,
-    /// before the reference node whose exported segment has the specified
-    /// identifier.
-    /// </summary>
-    /// <param name="sources">The sources.</param>
-    /// <param name="root">The root.</param>
-    /// <param name="featPrefix">The feature prefix.</param>
-    /// <param name="refId">The reference identifier, or 0 for appending nodes
-    /// at the end.</param>
-    private static void InsertNodesBefore(List<ChainNode<char>> sources,
-        TreeNode<ExportedSegment> root, string featPrefix, int refId)
+    private static TreeNode<ExportedSegment> GetLastBranchNode(
+        TreeNode<ExportedSegment> root)
     {
-        // create the branch of new nodes
+        TreeNode<ExportedSegment>? current = root;
+        while (current?.FirstChild != null) current = current.FirstChild;
+        return current!;
+    }
+
+    private static TreeNode<ExportedSegment>? BuildBranch(
+        List<ChainNode<char>> sources, string featPrefix)
+    {
         TreeNode<ExportedSegment>? branch = null, current = null;
         int n = 1;
         foreach (ChainNode<char> source in sources)
@@ -147,27 +144,32 @@ public sealed class VersionTreeBuilder
                 current = current!.AddChild(newNode);
             }
         }
-        if (branch == null) return;
+        return branch;
+    }
 
+    private static TreeNode<ExportedSegment>? GetRefNodeFromId(
+        TreeNode<ExportedSegment> root, int id)
+    {
         // find the reference node in the tree unless it's 0 (=end):
         // consider that the node ID might be duplicated because of restored
         // nodes; so, if there is just 1 ID, use it; if there are many,
         // pick the one which is not deleted; else pick the first (and only)
         // deleted one
         TreeNode<ExportedSegment>? refNode = null;
-        if (refId != 0)
+        if (id != 0)
         {
             List<TreeNode<ExportedSegment>> nodes = [];
             root.Traverse(n =>
             {
-                if (n.Data?.SourceId == refId) nodes.Add(n);
+                if (n.Data?.SourceId == id) nodes.Add(n);
                 return true;
             });
 
             switch (nodes.Count)
             {
                 case 0: break;
-                case 1: refNode = nodes[0];
+                case 1:
+                    refNode = nodes[0];
                     break;
                 default:
                     refNode = nodes.FirstOrDefault(n =>
@@ -178,6 +180,28 @@ public sealed class VersionTreeBuilder
             }
         }
 
+        return refNode;
+    }
+
+    /// <summary>
+    /// Inserts new nodes into the tree whose root node is <paramref name="root"/>,
+    /// before the reference node whose exported segment has the specified
+    /// identifier.
+    /// </summary>
+    /// <param name="sources">The sources.</param>
+    /// <param name="root">The root.</param>
+    /// <param name="featPrefix">The feature prefix.</param>
+    /// <param name="refId">The reference identifier, or 0 for appending nodes
+    /// at the end.</param>
+    private static void InsertNodesBefore(List<ChainNode<char>> sources,
+        TreeNode<ExportedSegment> root, string featPrefix, int refId)
+    {
+        // create the branch of new nodes
+        TreeNode<ExportedSegment>? branch = BuildBranch(sources, featPrefix);
+        if (branch == null) return;
+
+        TreeNode<ExportedSegment>? refNode = GetRefNodeFromId(root, refId);
+
         // insert the branch before the reference node
         if (refNode != null)
         {
@@ -186,7 +210,8 @@ public sealed class VersionTreeBuilder
             parent?.Children.Remove(refNode);
 
             // attach refNode as the child of the last node in the branch
-            current!.AddChild(refNode);
+            TreeNode<ExportedSegment> last = GetLastBranchNode(branch);
+            last.AddChild(refNode);
 
             // attach the branch to the original parent of refNode
             if (parent != null) parent.AddChild(branch);
@@ -195,8 +220,7 @@ public sealed class VersionTreeBuilder
         else
         {
             // insert at the end of the tree
-            TreeNode<ExportedSegment>? last = root.FirstChild;
-            while (last != null) last = last.FirstChild;
+            TreeNode<ExportedSegment>? last = GetLastBranchNode(root);
 
             if (last != null) last.AddChild(branch);
             else root.AddChild(branch);
