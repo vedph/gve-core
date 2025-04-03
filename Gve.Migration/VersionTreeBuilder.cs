@@ -3,6 +3,7 @@ using Gve.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gve.Migration;
 
@@ -113,7 +114,8 @@ public sealed class VersionTreeBuilder
     /// <param name="sources">The sources.</param>
     /// <param name="root">The root.</param>
     /// <param name="featPrefix">The feature prefix.</param>
-    /// <param name="refId">The reference identifier.</param>
+    /// <param name="refId">The reference identifier, or 0 for appending nodes
+    /// at the end.</param>
     private static void InsertNodesBefore(List<ChainNode<char>> sources,
         TreeNode<ExportedSegment> root, string featPrefix, int refId)
     {
@@ -240,11 +242,12 @@ public sealed class VersionTreeBuilder
         return refNode?.Data?.SourceId ?? refId;
     }
 
-    private (int id1, int id2) GetRefNodeId(
-        ChainOperationContext<char> context, CharChainOperation op,
-        int headId, int head2Id, int nextSegOutId,
+    private (int id1, int id2) GetRefNodeId(Chain<char> chain,
+        string tag, CharChainOperation op,
+        int headId, int tailId, int head2Id, int nextSegOutId,
         TreeNode<ExportedSegment> root)
     {
+        // first find the head(s) of the deleted segment(s)
         int id1;
         int id2 = 0;
 
@@ -253,9 +256,17 @@ public sealed class VersionTreeBuilder
             case OperationType.Delete:
             case OperationType.MoveBefore:
             case OperationType.MoveAfter:
-                // insert before 1st seg-in (deleted) node
-                id1 = context.Chain.FindNode(headId)!.Id;
-                break;
+                // insert before 1st seg-in (deleted) node, but the problem
+                // is that this node won't be present in the output version:
+                // so we need to use the node past the last deleted node
+                // (which can be null when the last node(s) get deleted)
+                ChainNode<char>? next = chain.GetNextNode(
+                    tag, chain.FindNode(tailId)!);
+
+                // if not found, restore at end
+                if (next == null) return (0, 0);
+                // else restore before it
+                return (next.Id, 0);
 
             case OperationType.Replace:
                 // insert before the 1st segout of the next version
@@ -273,8 +284,11 @@ public sealed class VersionTreeBuilder
                 break;
         }
 
+        // nothing to restore
+        if (id1 == -1) return (-1, 0);
+
         // adjust IDs based on the target tree structure
-        if (id1 > -1 && IncludeDeletions)
+        if (IncludeDeletions)
         {
             id1 = AdjustReferenceId(root, id1);
             if (id2 > 0) id2 = AdjustReferenceId(root, id2);
@@ -357,8 +371,10 @@ public sealed class VersionTreeBuilder
 
             // get the corresponding operation
             CharChainOperation op = operations.First(o => o.Id == opId);
-            var (id1, id2) = GetRefNodeId(context, op,
-                inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
+
+            // get the reference node ID(s) for inserting restored nodes
+            var (id1, id2) = GetRefNodeId(context.Chain, tags[i], op,
+                inIds[0], inIds[^1], in2Ids.Count > 0 ? in2Ids[0] : 0,
                 GetHeadSegOutId(context, tags[i + 1]),
                 root);
 
