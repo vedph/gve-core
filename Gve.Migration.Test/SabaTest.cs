@@ -59,7 +59,7 @@ public sealed class SabaTest
             // a| |n |i |c |e |  |c |a |t
 
             // v4>v5: swap 'nice' with 'cat'
-            "16x5<>13x3 [*log=\"swap 'nice' with 'cat'\"]\n" +
+            "16x4<>13x3 [*log=\"swap 'nice' with 'cat'\"]\n" +
             // 1|2|13|14|15|20|16|17|18|19
             // a| |c |a |t |  |n |i |c |e
 

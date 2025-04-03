@@ -579,35 +579,90 @@ public class Chain<T>
         ArgumentNullException.ThrowIfNull(firstNode);
         ArgumentNullException.ThrowIfNull(lastNode);
 
+        // nope if firstNode and lastNode are not in nodes
+        if (!_nodes.Contains(firstNode) || !_nodes.Contains(lastNode))
+            return false;
+
         ChainLink<T>? left = GetNodePreviousLink(tag, firstNode);
         ChainLink<T>? right = GetNodeNextLink(tag, lastNode);
-
-        if (left == null || right == null) return false;
 
         List<ChainLink<T>> links;
 
         // if deleting all nodes, just remove all the links from the version
-        if (left.IsHead && right.IsTail)
+        if ((left?.IsHead == true || left == null) && (right?.IsTail == true || right == null))
         {
             if (tag == newTag)
             {
                 _links.RemoveAll(l => l.Tag == tag);
             }
+            else
+            {
+                // Don't copy any links to the new version
+            }
+            return true;
+        }
+
+        // corner case: first nodes through the middle (no left link but right
+        // exists): (-:A [A] A:B [B] B:C) [C] C:D [D] D:-
+        if (left == null && right != null)
+        {
+            // get all links between firstNode and lastNode
+            links = GetLinksBetween(tag, firstNode, lastNode);
+            AddVersion(tag, newTag, [.. links]);
+
+            // add new head link
+            _links.Add(new ChainLink<T>(newTag, null, right.Target));
+
+            // if new tag is the same as tag, delete the old links
+            if (tag == newTag)
+            {
+                foreach (ChainLink<T> l in links) _links.Remove(l);
+                // also remove the head link pointing to firstNode
+                ChainLink<T>? oldHead = _links.Find(l => l.Tag == tag &&
+                    l.IsHead && l.Target == firstNode);
+                if (oldHead != null) _links.Remove(oldHead);
+            }
+
+            return true;
+        }
+
+        // corner case: middle through the last nodes (no right link but left
+        // exists): -:A [A] A:B [B] (B:C [C] C:D [D] D:-)
+        if (left != null && right == null)
+        {
+            // get all links between firstNode and lastNode
+            links = GetLinksBetween(tag, firstNode, lastNode);
+            if (left != null) links.Add(left);
+            AddVersion(tag, newTag, [.. links]);
+
+            // add new tail link
+            _links.Add(new ChainLink<T>(newTag, left!.Source, null));
+
+            // if new tag is the same as tag, delete the old links
+            if (tag == newTag)
+            {
+                foreach (ChainLink<T> l in links) _links.Remove(l);
+                // also remove the tail link from lastNode
+                ChainLink<T>? oldTail = _links.Find(l => l.Tag == tag &&
+                    l.IsTail && l.Source == lastNode);
+                if (oldTail != null) _links.Remove(oldTail);
+            }
+
             return true;
         }
 
         // first nodes: (-:A [A] A:B [B] B:C) [C] C:-
-        if (left.IsHead)
+        if (left?.IsHead == true)
         {
             // copy the source state into a new one excluding
             // left + right + inner links
             links = GetLinksBetween(tag, firstNode, lastNode);
             links.Add(left);
-            links.Add(right);
-            AddVersion(tag, newTag, links.ToArray());
+            links.Add(right!);
+            AddVersion(tag, newTag, [.. links]);
 
             // add new head link
-            _links.Add(new ChainLink<T>(newTag, null, right.Target));
+            _links.Add(new ChainLink<T>(newTag, null, right!.Target));
 
             // if new tag is the same as tag, delete the old links
             if (tag == newTag)
@@ -619,15 +674,15 @@ public class Chain<T>
         }
 
         // last nodes: -:A [A] (A:B [B] B:C [C] C:-)
-        if (right.IsTail)
+        if (right?.IsTail == true)
         {
             // copy the source state into a new one excluding left + inner links
             links = GetLinksBetween(tag, firstNode, lastNode);
             links.Add(left!);
-            AddVersion(tag, newTag, links.ToArray());
+            AddVersion(tag, newTag, [.. links]);
 
             // add new tail link
-            _links.Add(new ChainLink<T>(newTag, lastNode, null));
+            _links.Add(new ChainLink<T>(newTag, left!.Source, null));
 
             // if new tag is the same as tag, delete the old links
             if (tag == newTag)
@@ -643,10 +698,10 @@ public class Chain<T>
         links = GetLinksBetween(tag, firstNode, lastNode);
         links.Add(left!);
         links.Add(right!);
-        AddVersion(tag, newTag, links.ToArray());
+        AddVersion(tag, newTag, [.. links]);
 
         // add new link A:C
-        _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
+        _links.Add(new ChainLink<T>(newTag, left!.Source, right!.Target));
 
         // if new tag is the same as tag, delete the old links
         if (tag == newTag)
