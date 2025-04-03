@@ -59,6 +59,9 @@ public class ExportedSegment
     public override string ToString()
     {
         StringBuilder sb = new();
+
+        if (SourceId != 0) sb.Append('#').Append(SourceId).Append(": ");
+
         sb.Append(Text);
         if (Features?.Count > 0)
         {
