@@ -106,6 +106,11 @@ public sealed class VersionTreeBuilder
         return [.. idAndNr.OrderBy(kv => kv.Value).Select(kv => kv.Key)];
     }
 
+    /// <summary>
+    /// Gets the last node in the specified linear tree branch.
+    /// </summary>
+    /// <param name="root">The root node of the branch.</param>
+    /// <returns>The last (=leaf) node.</returns>
     private static TreeNode<ExportedSegment> GetLastBranchNode(
         TreeNode<ExportedSegment> root)
     {
@@ -147,14 +152,19 @@ public sealed class VersionTreeBuilder
         return branch;
     }
 
+    /// <summary>
+    /// Gets the reference node from its node ID. Note that the ID might be
+    /// duplicated because of restored nodes. So, if there is 1 ID only, use
+    /// it; if there are many, pick the one which is not deleted; else pick
+    /// the first (and only) deleted one.
+    /// </summary>
+    /// <param name="root">The root.</param>
+    /// <param name="id">The node ID. When 0, null will be always returned.
+    /// </param>
+    /// <returns>The node or null.</returns>
     private static TreeNode<ExportedSegment>? GetRefNodeFromId(
         TreeNode<ExportedSegment> root, int id)
     {
-        // find the reference node in the tree unless it's 0 (=end):
-        // consider that the node ID might be duplicated because of restored
-        // nodes; so, if there is just 1 ID, use it; if there are many,
-        // pick the one which is not deleted; else pick the first (and only)
-        // deleted one
         TreeNode<ExportedSegment>? refNode = null;
         if (id != 0)
         {
@@ -240,16 +250,7 @@ public sealed class VersionTreeBuilder
         if (refId == 0) return 0; // beginning of tree, no adjustment needed
 
         // find the node in the tree with SourceId == refId
-        TreeNode<ExportedSegment>? refNode = null;
-        root.Traverse(n =>
-        {
-            if (n.Data?.SourceId == refId)
-            {
-                refNode = n;
-                return false;
-            }
-            return true;
-        });
+        TreeNode<ExportedSegment>? refNode = GetRefNodeFromId(root, refId);
 
         // if we couldn't find the exact node, we need to find the closest match
         // (the node that would come right after our insertion point)
