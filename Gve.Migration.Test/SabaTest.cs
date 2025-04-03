@@ -9,6 +9,97 @@ public sealed class SabaTest
 {
     private static (
         ChainOperationContext<char> Context,
+        List<CharChainOperation> Operations) GetPenContext()
+    {
+        // https://vedph.github.io/gve-doc/model/sample-limerick.html
+                          // 123456789
+        const string text = "a red pen";
+
+        // setup text
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom(text));
+        context.LastTag = "v0";
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // setup operations
+        const string operationsText =
+            // v0>v1: delete 'red '
+            "3x4- [*log=\"delete 'red '\"]\n" +
+            // 1|2|7|8|9
+            // a| |p|e|n
+
+            // v1>v2: replace 'pen' with 'hat'
+            "7x3=\"hat\" [*log=\"replace 'pen' with 'hat'\"]\n" +
+            // 1|2|10|11|12
+            // a| |h |a |t
+
+            // v2>v3: replace 'hat' with 'cat'
+            "10x3=\"cat\" [*log=\"replace 'hat' with 'cat'\"]\n" +
+            // 1|2|13|14|15
+            // a| |c |a |t
+
+            // v3>v4: insert 'nice ' before 'cat'
+            "13+[\"nice \" [*log=\"insert 'nice ' before 'cat'\"]\n" +
+            // 1|2|16|17|18|19|20|13|14|15
+            // a| |n |i |c |e |  |c |a |t
+
+            // v4>v5: swap 'nice' with 'cat'
+            "16x5<>13x3 [*log=\"swap 'nice' with 'cat'\"]\n" +
+            // 1|2|13|14|15|20|16|17|18|19
+            // a| |c |a |t |  |n |i |c |e
+
+            // v5>v6: insert 'is ' before 'nice'
+            "16+[\"is \" [*log=\"insert 'is ' before 'nice'\"]";
+            // 1|2|13|14|15|20|21|22|23|16|17|18|19
+            // a| |c |a |t |  |i |s |  |n |i |c |e
+
+        List<CharChainOperation> operations = [];
+        foreach (string line in operationsText.Split('\n',
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            CharChainOperation op = CharChainOperation
+                .Parse<CharChainOperation>(line);
+            operations.Add(op);
+        }
+
+        // execute operations
+        foreach (CharChainOperation op in operations) op.Execute(context);
+
+        return (context, operations);
+    }
+
+    [Fact]
+    public void Export_Scenario_Saba_Pen()
+    {
+        // get chain and its context
+        var (context, operations) = GetPenContext();
+
+        // get tree for final version (v7)
+        VersionTreeBuilder builder = new()
+        {
+            FeatureNames =
+            [
+                OperationFeature.F_TRACE_SEG_IN,
+                OperationFeature.F_TRACE_SEG2_IN,
+                OperationFeature.F_TRACE_SEG_OUT,
+                OperationFeature.F_TRACE_SEG2_OUT,
+                OperationFeature.F_TRACE_DELETED
+            ],
+            TraceFeatureFlattening = true,
+            IncludeDeletions = true
+        };
+
+        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
+            builder.Build(context, operations);
+
+        Assert.Equal(7, versionTrees.Count);
+
+        // TODO
+    }
+
+    private static (
+        ChainOperationContext<char> Context,
         List<CharChainOperation> Operations) GetHatContext()
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html

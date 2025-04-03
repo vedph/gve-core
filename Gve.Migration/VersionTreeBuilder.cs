@@ -162,20 +162,21 @@ public sealed class VersionTreeBuilder
             });
         }
 
-        // insert the branch after refNode
-        // get the tail to attach past the inserted branch
-        TreeNode<ExportedSegment>? tail = refNode?.FirstChild ?? root.FirstChild;
-        // insert branch
         if (refNode == null)
         {
+            // inserting at the beginning
+            TreeNode<ExportedSegment>? tail = root.FirstChild;
+            if (tail != null) root.RemoveChild(tail);
             root.AddChild(branch);
+            if (tail != null) current!.AddChild(tail);
         }
         else
         {
-            // attach tail
-            if (tail != null) tail.Parent = current;
-            // attach branch to refNode
+            // inserting after refNode
+            TreeNode<ExportedSegment>? tail = refNode.FirstChild;
+            if (tail != null) refNode.RemoveChild(tail);
             refNode.AddChild(branch);
+            if (tail != null) current!.AddChild(tail);
         }
     }
 
@@ -259,9 +260,9 @@ public sealed class VersionTreeBuilder
 
     private static void RestoreDeletions(ChainOperationContext<char> context,
         IList<CharChainOperation> operations,
-        IList<string> tags, int tagIndex, TreeNode<ExportedSegment> root)
+        IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
     {
-        int i = tagIndex - 1;
+        int i = tagStartIndex - 1;
         while (i > -1)
         {
             // collect IDs of all the nodes with seg-in feature in this version
@@ -279,13 +280,13 @@ public sealed class VersionTreeBuilder
 
             // extract OPID from feature: all the collected nodes have the same,
             // so we just use the first one as source
-            string value = context.NodeFeatures[$"{tags[tagIndex]}_{inIds[0]}"]
+            string value = context.NodeFeatures[$"{tags[i]}_{inIds[0]}"]
                 .First(f => f.Name == OperationFeature.F_TRACE_SEG_IN).Value!;
             string opId = value[..value.IndexOf(' ')];
 
             // get the corresponding operation
             CharChainOperation op = operations.First(o => o.Id == opId);
-            var (id1, id2) = GetRefNodeId(context, op, tags[tagIndex],
+            var (id1, id2) = GetRefNodeId(context, op, tags[i],
                 inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
                 GetHeadSegOutId(context, tags[i]));
 
@@ -295,7 +296,7 @@ public sealed class VersionTreeBuilder
                 // feature prefix to be used when creating the new nodes
                 // for their seg-in features (OPID TAGIN:TAGOUT + space)
                 string featPrefix =
-                    $"{opId} {tags[tagIndex]}:{tags[tagIndex + 1]} ";
+                    $"{opId} {tags[i]}:{tags[i + 1]} ";
 
                 // insert seg-in nodes before reference node:
                 // collect source nodes in the order specified by inIds
@@ -305,13 +306,16 @@ public sealed class VersionTreeBuilder
                 // insert the collected nodes
                 InsertNodes(inNodes, root, featPrefix, id1);
 
-                // insert seg2-in nodes before reference node:
-                // collect source nodes in the order specified by in2Ids
-                List<ChainNode<char>> in2Nodes =
-                    CollectNodes(context, tags[i], in2Ids);
+                if (in2Ids.Count > 0)
+                {
+                    // insert seg2-in nodes before reference node:
+                    // collect source nodes in the order specified by in2Ids
+                    List<ChainNode<char>> in2Nodes =
+                        CollectNodes(context, tags[i], in2Ids);
 
-                // insert the collected nodes
-                InsertNodes(in2Nodes, root, featPrefix, id2);
+                    // insert the collected nodes
+                    InsertNodes(in2Nodes, root, featPrefix, id2);
+                }
             }
 
             // move to previous version
@@ -348,8 +352,6 @@ public sealed class VersionTreeBuilder
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(operations);
 
-        // for each version in build order (distinct ensures that we
-        // have no duplicates, even if this is not expected here)
         Dictionary<string, TreeNode<ExportedSegment>> versions = [];
 
         // setup a cache for trace features as we process each version
