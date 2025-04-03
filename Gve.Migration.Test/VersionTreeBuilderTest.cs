@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Gve.Migration.Test;
 
-public sealed class SabaTest
+public sealed class VersionTreeBuilderTest
 {
     private static string GetTreeText(TreeNode<ExportedSegment> tree)
     {
@@ -84,7 +84,7 @@ public sealed class SabaTest
     }
 
     [Fact]
-    public void Export_Scenario_Saba_Pen_No_Deletions()
+    public void Build_Pen_NoDeletions()
     {
         // get chain and its context
         var (context, operations) = GetPenContext();
@@ -146,7 +146,7 @@ public sealed class SabaTest
     }
 
     [Fact]
-    public void Export_Scenario_Saba_Pen_Deletions()
+    public void Build_Pen_Deletions()
     {
         // get chain and its context
         var (context, operations) = GetPenContext();
@@ -258,7 +258,7 @@ public sealed class SabaTest
     }
 
     [Fact]
-    public void Export_Scenario_Saba_Hat()
+    public void Build_Hat_Deletions()
     {
         // get chain and its context
         var (context, operations) = GetHatContext();
