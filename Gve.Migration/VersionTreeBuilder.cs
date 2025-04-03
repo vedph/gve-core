@@ -394,7 +394,7 @@ public sealed class VersionTreeBuilder
         }
     }
 
-    private static void FlattenTraceFeatures(List<NamedValue>? nodeTraceFeats,
+    private static void FlattenTraceFeatures(List<NamedValue> nodeTraceFeats,
         List<NamedValue> targetFeats)
     {
         foreach (NamedValue traceFeat in nodeTraceFeats)
