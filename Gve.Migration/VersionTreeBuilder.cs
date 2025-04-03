@@ -305,6 +305,7 @@ public sealed class VersionTreeBuilder
         // the key prefix in node features for the specified version
         string prefix = tag + "_";
 
+        // look for the first node with seg-out feature in TAG_ID keys
         foreach (string key in context.NodeFeatures.Keys
             .Where(k => k.StartsWith(prefix)))
         {
@@ -313,7 +314,15 @@ public sealed class VersionTreeBuilder
                 f => f.Name == OperationFeature.F_TRACE_SEG_OUT);
 
             // if found, add the ID with its ordinal
-            if (f != null) return int.Parse(key.AsSpan(prefix.Length));
+            if (f != null)
+            {
+                // extract NR from value (OPID TAGIN:TAGOUT NR)
+                int i = f.Value!.LastIndexOf(' ') + 1;
+                int nr = int.Parse(f.Value.AsSpan(i));
+
+                // if NR is 1 (=segment head), return the ID of the node
+                if (nr == 1) return int.Parse(key.AsSpan(prefix.Length));
+            }
         }
 
         return 0;
@@ -349,7 +358,7 @@ public sealed class VersionTreeBuilder
             CharChainOperation op = operations.First(o => o.Id == opId);
             var (id1, id2) = GetRefNodeId(context, op, tags[i],
                 inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
-                GetHeadSegOutId(context, tags[i]),
+                GetHeadSegOutId(context, tags[i + 1]),
                 root);
 
             // we care only about operations which imply deletions
