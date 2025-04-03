@@ -180,9 +180,63 @@ public sealed class VersionTreeBuilder
         }
     }
 
-    private static (int id1, int id2) GetRefNodeId(
+    /// <summary>
+    /// Adjusts the reference node ID to account for deleted nodes that have
+    /// already been restored in the tree.
+    /// </summary>
+    /// <param name="root">The root node of the tree.</param>
+    /// <param name="refId">The original reference ID from the chain.</param>
+    /// <returns>The ID of the node before which deleted nodes should be inserted.
+    /// </returns>
+    private static int AdjustReferenceId(TreeNode<ExportedSegment> root, int refId)
+    {
+        if (refId == 0) return 0; // beginning of tree, no adjustment needed
+
+        // find the node in the tree with SourceId == refId
+        TreeNode<ExportedSegment>? refNode = null;
+        root.Traverse(n =>
+        {
+            if (n.Data?.SourceId == refId)
+            {
+                refNode = n;
+                return false;
+            }
+            return true;
+        });
+
+        // if we couldn't find the exact node, we need to find the closest match
+        // (the node that would come right after our insertion point)
+        if (refNode == null)
+        {
+            // find a node with a SourceId greater than refId
+            TreeNode<ExportedSegment>? nextNode = null;
+            int minGreaterId = int.MaxValue;
+
+            root.Traverse(n =>
+            {
+                if (n.Data?.SourceId > refId && n.Data.SourceId < minGreaterId)
+                {
+                    nextNode = n;
+                    minGreaterId = n.Data.SourceId;
+                }
+                return true;
+            });
+
+            if (nextNode != null)
+            {
+                // find the parent of this node (which is our insertion point)
+                refNode = nextNode.Parent;
+            }
+        }
+
+        // if we still couldn't find a reference point, use the original ID
+        return refNode?.Data?.SourceId ?? refId;
+    }
+
+    private (int id1, int id2) GetRefNodeId(
         ChainOperationContext<char> context, CharChainOperation op,
-        string tag, int headId, int head2Id, int nextSegOutId)
+        string tag, int headId, int head2Id, int nextSegOutId,
+        TreeNode<ExportedSegment> root)
     {
         int id1;
         int id2 = 0;
@@ -216,6 +270,13 @@ public sealed class VersionTreeBuilder
             default:
                 id1 = -1;
                 break;
+        }
+
+        // adjust IDs based on the target tree structure
+        if (id1 > -1 && IncludeDeletions)
+        {
+            id1 = AdjustReferenceId(root, id1);
+            if (id2 > 0) id2 = AdjustReferenceId(root, id2);
         }
 
         return (id1, id2);
@@ -258,7 +319,7 @@ public sealed class VersionTreeBuilder
         return 0;
     }
 
-    private static void RestoreDeletions(ChainOperationContext<char> context,
+    private void RestoreDeletions(ChainOperationContext<char> context,
         IList<CharChainOperation> operations,
         IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
     {
@@ -288,7 +349,8 @@ public sealed class VersionTreeBuilder
             CharChainOperation op = operations.First(o => o.Id == opId);
             var (id1, id2) = GetRefNodeId(context, op, tags[i],
                 inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
-                GetHeadSegOutId(context, tags[i]));
+                GetHeadSegOutId(context, tags[i]),
+                root);
 
             // we care only about operations which imply deletions
             if (id1 > -1)
