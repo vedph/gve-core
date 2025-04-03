@@ -119,6 +119,14 @@ public sealed class VersionTreeBuilder
         return current!;
     }
 
+    /// <summary>
+    /// Builds a linear tree branch of export nodes from the specified source
+    /// nodes.
+    /// </summary>
+    /// <param name="sources">The source nodes tree.</param>
+    /// <param name="featPrefix">The features prefix for newly added features
+    /// in built nodes.</param>
+    /// <returns>The root of the built branch.</returns>
     private static TreeNode<ExportedSegment>? BuildBranch(
         List<ChainNode<char>> sources, string featPrefix)
     {
@@ -382,6 +390,17 @@ public sealed class VersionTreeBuilder
         return 0;
     }
 
+    /// <summary>
+    /// Recursively restore the deleted nodes in the exported branch whose
+    /// root node is <paramref name="root"/>, starting from the specified
+    /// version tag, backwards.
+    /// </summary>
+    /// <param name="context">The execution context.</param>
+    /// <param name="operations">The operations.</param>
+    /// <param name="tags">The versions tags.</param>
+    /// <param name="tagStartIndex">The index of the tag to start from,
+    /// backwards.</param>
+    /// <param name="root">The root of the output branch.</param>
     private void RestoreDeletions(ChainOperationContext<char> context,
         IList<CharChainOperation> operations,
         IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
