@@ -2,11 +2,25 @@
 using Gve.Text;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Gve.Migration.Test;
 
 public sealed class SabaTest
 {
+    private static string GetTreeText(TreeNode<ExportedSegment> tree)
+    {
+        StringBuilder sb = new();
+
+        tree.Traverse(node =>
+        {
+            if (node.Data != null) sb.Append(node.Data.Text);
+            return true;
+        });
+
+        return sb.ToString();
+    }
+
     private static (
         ChainOperationContext<char> Context,
         List<CharChainOperation> Operations) GetPenContext()
@@ -70,7 +84,69 @@ public sealed class SabaTest
     }
 
     [Fact]
-    public void Export_Scenario_Saba_Pen()
+    public void Export_Scenario_Saba_Pen_No_Deletions()
+    {
+        // get chain and its context
+        var (context, operations) = GetPenContext();
+
+        // get tree for final version (v7)
+        VersionTreeBuilder builder = new()
+        {
+            FeatureNames =
+            [
+                OperationFeature.F_TRACE_SEG_IN,
+                OperationFeature.F_TRACE_SEG2_IN,
+                OperationFeature.F_TRACE_SEG_OUT,
+                OperationFeature.F_TRACE_SEG2_OUT,
+                OperationFeature.F_TRACE_DELETED
+            ],
+            TraceFeatureFlattening = true,
+            IncludeDeletions = false
+        };
+
+        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
+            builder.Build(context, operations);
+
+        Assert.Equal(7, versionTrees.Count);
+
+        // v0 tree: a red pen
+        TreeNode<ExportedSegment> tree = versionTrees["v0"];
+        string text = GetTreeText(tree);
+        Assert.Equal("a red pen", text);
+
+        // v1 tree: a pen
+        tree = versionTrees["v1"];
+        text = GetTreeText(tree);
+        Assert.Equal("a pen", text);
+
+        // v2 tree: a hat
+        tree = versionTrees["v2"];
+        text = GetTreeText(tree);
+        Assert.Equal("a hat", text);
+
+        // v3 tree: a cat
+        tree = versionTrees["v3"];
+        text = GetTreeText(tree);
+        Assert.Equal("a cat", text);
+
+        // v4 tree: a nice cat
+        tree = versionTrees["v4"];
+        text = GetTreeText(tree);
+        Assert.Equal("a nice cat", text);
+
+        // v5 tree: a cat nice
+        tree = versionTrees["v5"];
+        text = GetTreeText(tree);
+        Assert.Equal("a cat nice", text);
+
+        // v6 tree: a cat is nice
+        tree = versionTrees["v6"];
+        text = GetTreeText(tree);
+        Assert.Equal("a cat is nice", text);
+    }
+
+    [Fact]
+    public void Export_Scenario_Saba_Pen_Deletions()
     {
         // get chain and its context
         var (context, operations) = GetPenContext();
@@ -95,7 +171,40 @@ public sealed class SabaTest
 
         Assert.Equal(7, versionTrees.Count);
 
-        // TODO
+        // v0 tree: a red pen
+        TreeNode<ExportedSegment> tree = versionTrees["v0"];
+        string text = GetTreeText(tree);
+        Assert.Equal("a red pen", text);
+
+        // v1 tree: a {red }pen
+        tree = versionTrees["v1"];
+        text = GetTreeText(tree);
+        Assert.Equal("a red pen", text);
+
+        // v2 tree: a {red }{pen}hat
+        tree = versionTrees["v2"];
+        text = GetTreeText(tree);
+        Assert.Equal("a red penhat", text);
+
+        // v3 tree: a {red }{pen}{hat}cat
+        tree = versionTrees["v3"];
+        text = GetTreeText(tree);
+        Assert.Equal("a red penhatcat", text);
+
+        // v4 tree: a nice {red }{pen}{hat}cat
+        tree = versionTrees["v4"];
+        text = GetTreeText(tree);
+        Assert.Equal("a nice red penhatcat", text);
+
+        // v5 tree: a {red }{pen}{hat}cat nice
+        tree = versionTrees["v5"];
+        text = GetTreeText(tree);
+        Assert.Equal("a red penhatcat nice", text);
+
+        // v6 tree: a {red }{pen}{hat}cat is nice
+        tree = versionTrees["v6"];
+        text = GetTreeText(tree);
+        Assert.Equal("a red penhatcat is nice", text);
     }
 
     private static (

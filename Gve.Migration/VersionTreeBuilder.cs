@@ -127,7 +127,7 @@ public sealed class VersionTreeBuilder
                 Data = new ExportedSegment
                 {
                     SourceId = source.Id,
-                    Text = source.Label,
+                    Text = source.Data.ToString(),
                     Features =
                     [
                         new(OperationFeature.F_TRACE_DELETED,
@@ -403,7 +403,7 @@ public sealed class VersionTreeBuilder
                     Data = new ExportedSegment
                     {
                         SourceId = source.Id,
-                        Text = source.Label,
+                        Text = source.Data.ToString(),
                         Tags = [tag],
                         Features = targetFeats.Count == 0 ? null : targetFeats
                     }

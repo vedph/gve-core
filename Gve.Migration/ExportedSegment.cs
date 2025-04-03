@@ -60,7 +60,12 @@ public class ExportedSegment
     {
         StringBuilder sb = new();
         sb.Append(Text);
-        if (Features?.Count > 0) sb.Append(" (F=").Append(Features.Count).Append(')');
+        if (Features?.Count > 0)
+        {
+            sb.Append(" (");
+            sb.AppendJoin(", ", Features.Select(f => f.ToString()));
+            sb.Append(')');
+        }
         if (Tags?.Count > 0)
             sb.Append(" [").AppendJoin(",", Tags).Append(']');
         return sb.ToString();
