@@ -3,7 +3,7 @@ using Gve.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Gve.Migration;
 
@@ -48,6 +48,81 @@ public sealed class VersionTreeBuilder
     /// delete these segments, e.g. delete, replace, move, swap.
     /// </summary>
     public bool IncludeDeleted { get; set; }
+
+    /// <summary>
+    /// Gets the text corresponding to the specified version tree.
+    /// </summary>
+    /// <param name="tree">The root node of the tree to get text from.</param>
+    /// <param name="wrapDeleted">if set to <c>true</c>, wrap deleted text
+    /// in braces.</param>
+    /// <returns>Text.</returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static string GetTreeText(TreeNode<ExportedSegment> tree,
+        bool wrapDeleted = false)
+    {
+        ArgumentNullException.ThrowIfNull(tree);
+
+        StringBuilder sb = new();
+
+        if (!wrapDeleted)
+        {
+            tree.Traverse(node =>
+            {
+                if (node.Data != null) sb.Append(node.Data.Text);
+                return true;
+            });
+            return sb.ToString();
+        }
+
+        string? currentValue = null;
+        tree.Traverse(node =>
+        {
+            if (node.Data == null) return true;
+
+            NamedValue? deletedFeature = node.Data.Features?.FirstOrDefault(f =>
+                f.Name == OperationFeature.F_TRACE_DELETED);
+            string? deletedValue = deletedFeature?.Value;
+
+            // check for transition between non-deleted and deleted text
+            if (deletedValue != null)
+            {
+                // extract OPID from value (up to first space excluded)
+                int i = deletedValue.IndexOf(' ');
+                deletedValue = i < 0 ? deletedValue : deletedValue[..i];
+
+                if (currentValue == null)
+                {
+                    // start of deleted segment
+                    currentValue = deletedValue;
+                    sb.Append('{');
+                }
+                else if (currentValue != deletedValue)
+                {
+                    // end of deleted segment
+                    sb.Append('}');
+                    // start of new deleted segment
+                    currentValue = deletedValue;
+                    sb.Append('{');
+                }
+            }
+            else if (currentValue != null)
+            {
+                // end of deleted segment
+                currentValue = null;
+                sb.Append('}');
+            }
+
+            // always append the text
+            sb.Append(node.Data.Text);
+
+            return true;
+        });
+
+        // close any open deletion segment at the end
+        if (currentValue != null) sb.Append('}');
+
+        return sb.ToString();
+    }
 
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
