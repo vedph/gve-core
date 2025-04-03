@@ -242,9 +242,9 @@ public sealed class VersionTreeBuilder
         return refNode?.Data?.SourceId ?? refId;
     }
 
-    private (int id1, int id2) GetRefNodeId(Chain<char> chain,
-        string tag, CharChainOperation op,
-        int headId, int tailId, int head2Id, int nextSegOutId,
+    private (int id1, int id2) GetRefNodeId(ChainOperationContext<char> context,
+        IList<string> tags, int tagIndex, CharChainOperation op,
+        int headId, int tailId, int head2Id,
         TreeNode<ExportedSegment> root)
     {
         // first find the head(s) of the deleted segment(s)
@@ -260,8 +260,8 @@ public sealed class VersionTreeBuilder
                 // is that this node won't be present in the output version:
                 // so we need to use the node past the last deleted node
                 // (which can be null when the last node(s) get deleted)
-                ChainNode<char>? next = chain.GetNextNode(
-                    tag, chain.FindNode(tailId)!);
+                ChainNode<char>? next = context.Chain.GetNextNode(
+                    tags[tagIndex], context.Chain.FindNode(tailId)!);
 
                 // if not found, restore at end
                 if (next == null) return (0, 0);
@@ -270,7 +270,7 @@ public sealed class VersionTreeBuilder
 
             case OperationType.Replace:
                 // insert before the 1st segout of the next version
-                id1 = nextSegOutId;
+                id1 = GetHeadSegOutId(context, tags[tagIndex + 1]);
                 break;
 
             case OperationType.Swap:
@@ -373,9 +373,8 @@ public sealed class VersionTreeBuilder
             CharChainOperation op = operations.First(o => o.Id == opId);
 
             // get the reference node ID(s) for inserting restored nodes
-            var (id1, id2) = GetRefNodeId(context.Chain, tags[i], op,
+            var (id1, id2) = GetRefNodeId(context, tags, i, op,
                 inIds[0], inIds[^1], in2Ids.Count > 0 ? in2Ids[0] : 0,
-                GetHeadSegOutId(context, tags[i + 1]),
                 root);
 
             // we care only about operations which imply deletions
