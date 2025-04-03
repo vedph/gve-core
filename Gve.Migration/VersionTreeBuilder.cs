@@ -47,7 +47,7 @@ public sealed class VersionTreeBuilder
     /// selecting nodes with segment-in features produced by operations which
     /// delete these segments, e.g. delete, replace, move, swap.
     /// </summary>
-    public bool IncludeDeletions { get; set; }
+    public bool IncludeDeleted { get; set; }
 
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
@@ -302,7 +302,7 @@ public sealed class VersionTreeBuilder
         if (id1 == -1) return (-1, 0);
 
         // adjust IDs based on the target tree structure
-        if (IncludeDeletions)
+        if (IncludeDeleted)
         {
             id1 = AdjustReferenceId(root, id1);
             if (id2 > 0) id2 = AdjustReferenceId(root, id2);
@@ -529,7 +529,7 @@ public sealed class VersionTreeBuilder
             }
 
             // restore deletions if requested
-            if (IncludeDeletions)
+            if (IncludeDeleted)
                 RestoreDeletions(context, operations, tags, i, root);
         }
 

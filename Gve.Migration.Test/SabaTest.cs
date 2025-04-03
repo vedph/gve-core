@@ -101,7 +101,7 @@ public sealed class SabaTest
                 OperationFeature.F_TRACE_DELETED
             ],
             TraceFeatureFlattening = true,
-            IncludeDeletions = false
+            IncludeDeleted = false
         };
 
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
@@ -163,7 +163,7 @@ public sealed class SabaTest
                 OperationFeature.F_TRACE_DELETED
             ],
             TraceFeatureFlattening = true,
-            IncludeDeletions = true
+            IncludeDeleted = true
         };
 
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
@@ -275,7 +275,7 @@ public sealed class SabaTest
                 OperationFeature.F_TRACE_DELETED
             ],
             TraceFeatureFlattening = true,
-            IncludeDeletions = true
+            IncludeDeleted = true
         };
 
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
