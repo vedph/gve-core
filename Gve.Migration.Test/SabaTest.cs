@@ -176,32 +176,32 @@ public sealed class SabaTest
         string text = GetTreeText(tree);
         Assert.Equal("a red pen", text);
 
-        // v1 tree: a {red }pen
+        // v1 tree (del): a {red }pen
         tree = versionTrees["v1"];
         text = GetTreeText(tree);
         Assert.Equal("a red pen", text);
 
-        // v2 tree: a {red }{pen}hat
+        // v2 tree (rep): a {red }{pen}hat
         tree = versionTrees["v2"];
         text = GetTreeText(tree);
         Assert.Equal("a red penhat", text);
 
-        // v3 tree: a {red }{pen}{hat}cat
+        // v3 tree (rep): a {red }{pen}{hat}cat
         tree = versionTrees["v3"];
         text = GetTreeText(tree);
         Assert.Equal("a red penhatcat", text);
 
-        // v4 tree: a nice {red }{pen}{hat}cat
+        // v4 tree (ins): a nice {red }{pen}{hat}cat
         tree = versionTrees["v4"];
         text = GetTreeText(tree);
         Assert.Equal("a nice red penhatcat", text);
 
-        // v5 tree: a {red }{pen}{hat}cat nice
+        // v5 tree (swp): a {red }{pen}{hat}cat nice
         tree = versionTrees["v5"];
         text = GetTreeText(tree);
         Assert.Equal("a red penhatcat nice", text);
 
-        // v6 tree: a {red }{pen}{hat}cat is nice
+        // v6 tree: (ins) a {red }{pen}{hat}cat is nice
         tree = versionTrees["v6"];
         text = GetTreeText(tree);
         Assert.Equal("a red penhatcat is nice", text);

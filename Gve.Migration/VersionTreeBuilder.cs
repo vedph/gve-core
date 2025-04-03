@@ -149,24 +149,33 @@ public sealed class VersionTreeBuilder
         }
         if (branch == null) return;
 
-        // find the reference node in the tree unless it's 0 (=end)
+        // find the reference node in the tree unless it's 0 (=end):
+        // consider that the node ID might be duplicated because of restored
+        // nodes; so, if there is just 1 ID, use it; if there are many,
+        // pick the one which is not deleted; else pick the first (and only)
+        // deleted one
         TreeNode<ExportedSegment>? refNode = null;
         if (refId != 0)
         {
+            List<TreeNode<ExportedSegment>> nodes = [];
             root.Traverse(n =>
             {
-                // the reference node can't be a deleted one
-                // (this avoids inserting at the wrong place in case of
-                // duplicate nodes from restorations, e.g. in a swap)
-                if (n.Data?.SourceId == refId &&
-                    n.Data.Features?.All(f => f.Name !=
-                        OperationFeature.F_TRACE_DELETED) == true)
-                {
-                    refNode = n;
-                    return false;
-                }
+                if (n.Data?.SourceId == refId) nodes.Add(n);
                 return true;
             });
+
+            switch (nodes.Count)
+            {
+                case 0: break;
+                case 1: refNode = nodes[0];
+                    break;
+                default:
+                    refNode = nodes.FirstOrDefault(n =>
+                        n.Data?.Features?.All(f =>
+                            f.Name != OperationFeature.F_TRACE_DELETED) == true)
+                        ?? nodes[0];
+                    break;
+            }
         }
 
         // insert the branch before the reference node
