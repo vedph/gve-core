@@ -2,6 +2,7 @@
 using Gve.Text;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -480,6 +481,7 @@ public sealed class VersionTreeBuilder
         IList<CharChainOperation> operations,
         IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
     {
+        Debug.WriteLine($"--RESTORE from {tagStartIndex}");//@@
         int i = tagStartIndex - 1;
         while (i > -1)
         {
@@ -539,6 +541,7 @@ public sealed class VersionTreeBuilder
             }
 
             // move to previous version
+            Debug.WriteLine($"i={i} tag={tags[i]}: \"{GetTreeText(root, true)}\"");//@@
             i--;
         }
     }

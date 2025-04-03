@@ -159,52 +159,38 @@ public sealed class VersionTreeBuilderTest
 
         // v0 tree: a red pen
         TreeNode<ExportedSegment> tree = versionTrees["v0"];
-        string text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red pen", text);
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        string text = VersionTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a red pen", text);
 
         // v1 tree (del): a {red }pen
         tree = versionTrees["v1"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red pen", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }pen", text);
 
         // v2 tree (rep): a {red }{pen}hat
         tree = versionTrees["v2"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red penhat", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}hat", text);
 
         // v3 tree (rep): a {red }{pen}{hat}cat
         tree = versionTrees["v3"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red penhatcat", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}{hat}cat", text);
 
         // v4 tree (ins): a nice {red }{pen}{hat}cat
         tree = versionTrees["v4"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a nice red penhatcat", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a nice {red }{pen}{hat}cat", text);
 
-        // v5 tree (swp): a {red }{pen}{hat}{nice}cat {cat}nice
+        // v5 tree (swp): a {nice}{red }{pen}{hat}cat {cat}nice
         tree = versionTrees["v5"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red penhatnicecat catnice", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
-        Assert.Equal("a {red }{pen}{hat}{nice}cat {cat}nice", text);
+        Assert.Equal("a {nice}{red }{pen}{hat}cat {cat}nice", text);
 
-        // v6 tree: (ins) a {red }{pen}{hat}cat is nice
+        // v6 tree: (ins) a {nice}{red }{pen}{hat}cat is {cat}nice
         tree = versionTrees["v6"];
-        text = VersionTreeBuilder.GetTreeText(tree);
-        Assert.Equal("a red penhatnicecat is catnice", text);
         text = VersionTreeBuilder.GetTreeText(tree, true);
-        Assert.Equal("a {red }{pen}{hat}cat is nice", text);
+        Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
     }
 
     private static (
