@@ -107,14 +107,14 @@ public sealed class VersionTreeBuilder
 
     /// <summary>
     /// Inserts new nodes into the tree whose root node is <paramref name="root"/>,
-    /// after the reference node whose exported segment has the specified
+    /// before the reference node whose exported segment has the specified
     /// identifier.
     /// </summary>
     /// <param name="sources">The sources.</param>
     /// <param name="root">The root.</param>
     /// <param name="featPrefix">The feature prefix.</param>
     /// <param name="refId">The reference identifier.</param>
-    private static void InsertNodes(List<ChainNode<char>> sources,
+    private static void InsertNodesBefore(List<ChainNode<char>> sources,
         TreeNode<ExportedSegment> root, string featPrefix, int refId)
     {
         // create the branch of new nodes
@@ -131,7 +131,7 @@ public sealed class VersionTreeBuilder
                     Features =
                     [
                         new(OperationFeature.F_TRACE_DELETED,
-                            $"{featPrefix} {n++}")
+                            $"{featPrefix}{n++}")
                     ]
                 }
             };
@@ -147,7 +147,7 @@ public sealed class VersionTreeBuilder
         }
         if (branch == null) return;
 
-        // find the reference node in the tree unless it's 0 (=beginning)
+        // find the reference node in the tree unless it's 0 (=end)
         TreeNode<ExportedSegment>? refNode = null;
         if (refId != 0)
         {
@@ -162,21 +162,28 @@ public sealed class VersionTreeBuilder
             });
         }
 
-        if (refNode == null)
+        // insert the branch before the reference node
+        if (refNode != null)
         {
-            // inserting at the beginning
-            TreeNode<ExportedSegment>? tail = root.FirstChild;
-            if (tail != null) root.RemoveChild(tail);
-            root.AddChild(branch);
-            if (tail != null) current!.AddChild(tail);
+            // detach refNode from its parent
+            TreeNode<ExportedSegment>? parent = refNode.Parent;
+            parent?.Children.Remove(refNode);
+
+            // attach refNode as the child of the last node in the branch
+            current!.AddChild(refNode);
+
+            // attach the branch to the original parent of refNode
+            if (parent != null) parent.AddChild(branch);
+            else root.AddChild(branch);
         }
         else
         {
-            // inserting after refNode
-            TreeNode<ExportedSegment>? tail = refNode.FirstChild;
-            if (tail != null) refNode.RemoveChild(tail);
-            refNode.AddChild(branch);
-            if (tail != null) current!.AddChild(tail);
+            // insert at the end of the tree
+            TreeNode<ExportedSegment>? last = root.FirstChild;
+            while (last != null) last = last.FirstChild;
+
+            if (last != null) last.AddChild(branch);
+            else root.AddChild(branch);
         }
     }
 
@@ -235,7 +242,7 @@ public sealed class VersionTreeBuilder
 
     private (int id1, int id2) GetRefNodeId(
         ChainOperationContext<char> context, CharChainOperation op,
-        string tag, int headId, int head2Id, int nextSegOutId,
+        int headId, int head2Id, int nextSegOutId,
         TreeNode<ExportedSegment> root)
     {
         int id1;
@@ -246,14 +253,8 @@ public sealed class VersionTreeBuilder
             case OperationType.Delete:
             case OperationType.MoveBefore:
             case OperationType.MoveAfter:
-                // delete and move select the nodes to act on, which are
-                // then marked by seg-in feature. These are the nodes
-                // to insert back into the tree.
-                // Find the node before the 1st one with seg-in feature:
-                // this will be the insertion point for the deleted nodes
-                // (0=beginning of tree)
-                id1 = context.Chain.GetPreviousNode(
-                    tag, context.Chain.FindNode(headId)!)?.Id ?? 0;
+                // insert before 1st seg-in (deleted) node
+                id1 = context.Chain.FindNode(headId)!.Id;
                 break;
 
             case OperationType.Replace:
@@ -356,7 +357,7 @@ public sealed class VersionTreeBuilder
 
             // get the corresponding operation
             CharChainOperation op = operations.First(o => o.Id == opId);
-            var (id1, id2) = GetRefNodeId(context, op, tags[i],
+            var (id1, id2) = GetRefNodeId(context, op,
                 inIds[0], in2Ids.Count > 0 ? in2Ids[0] : 0,
                 GetHeadSegOutId(context, tags[i + 1]),
                 root);
@@ -375,7 +376,7 @@ public sealed class VersionTreeBuilder
                     CollectNodes(context, tags[i], inIds);
 
                 // insert the collected nodes
-                InsertNodes(inNodes, root, featPrefix, id1);
+                InsertNodesBefore(inNodes, root, featPrefix, id1);
 
                 if (in2Ids.Count > 0)
                 {
@@ -385,7 +386,7 @@ public sealed class VersionTreeBuilder
                         CollectNodes(context, tags[i], in2Ids);
 
                     // insert the collected nodes
-                    InsertNodes(in2Nodes, root, featPrefix, id2);
+                    InsertNodesBefore(in2Nodes, root, featPrefix, id2);
                 }
             }
 
@@ -475,7 +476,7 @@ public sealed class VersionTreeBuilder
                     {
                         SourceId = source.Id,
                         Text = source.Data.ToString(),
-                        Tags = [tag],
+                        //Tags = [tag],
                         Features = targetFeats.Count == 0 ? null : targetFeats
                     }
                 });
