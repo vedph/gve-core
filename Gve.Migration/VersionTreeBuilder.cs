@@ -155,7 +155,12 @@ public sealed class VersionTreeBuilder
         {
             root.Traverse(n =>
             {
-                if (n.Data?.SourceId == refId)
+                // the reference node can't be a deleted one
+                // (this avoids inserting at the wrong place in case of
+                // duplicate nodes from restorations, e.g. in a swap)
+                if (n.Data?.SourceId == refId &&
+                    n.Data.Features?.All(f => f.Name !=
+                        OperationFeature.F_TRACE_DELETED) == true)
                 {
                     refNode = n;
                     return false;
