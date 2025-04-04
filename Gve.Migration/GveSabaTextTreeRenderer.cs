@@ -2,13 +2,16 @@
 using Fusi.Tools.Data;
 using Proteus.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
 namespace Gve.Migration;
 
 /// <summary>
-/// A "Saba"-like TEI renderer for the GVE project.
+/// A "Saba"-like TEI renderer for the GVE project. This renders a TEI structure
+/// like that used for the Saba 1919 Project, based on the hierarchy <c>app</c>,
+/// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup.
 /// <para>Tag: <c>text-tree-renderer.gve-saba</c>.</para>
 /// </summary>
 /// <seealso cref="TextTreeRenderer" />
@@ -16,7 +19,17 @@ namespace Gve.Migration;
 public sealed class GveSabaTextTreeRenderer : TextTreeRenderer,
     IConfigurable<XmlTextTreeRendererOptions>
 {
-    private XmlTextTreeRendererOptions _options = new();
+    private XmlTextTreeRendererOptions _options = new()
+    {
+        RootElement = "tei:app",
+        BlockElements = new Dictionary<string, string>
+        {
+            { "default", "tei:rdg" },
+            { "final", "tei:lem" }
+        },
+    };
+
+    private GveRendererContext? _context;
 
     /// <summary>
     /// Configures this renderer with the specified options.
@@ -41,10 +54,18 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer,
         ArgumentNullException.ThrowIfNull(tree);
         ArgumentNullException.ThrowIfNull(context);
 
-        // get the root element name
+        // cast context
+        _context = context as GveRendererContext;
+        if (_context == null)
+        {
+            throw new InvalidOperationException(
+                $"Context must be of type {nameof(GveRendererContext)}.");
+        }
+
+        // get the root element name (app)
         XName rootName = _options.ResolvePrefixedName(_options.RootElement);
 
-        // get the block name
+        // get the block name (lem/rdg)
         string blockType = "default";
         if (context.Data.TryGetValue(
             XmlTextTreeRendererOptions.CONTEXT_BLOCK_TYPE_KEY,
