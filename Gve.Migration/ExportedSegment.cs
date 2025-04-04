@@ -171,4 +171,55 @@ public class ExportedSegment
             sb.Append(" [").AppendJoin(",", Tags).Append(']');
         return sb.ToString();
     }
+
+    /// <summary>
+    /// Merges the source segment into the target segment, or just copy the
+    /// source segment when the target is null.
+    /// </summary>
+    /// <param name="source">The source segment or null.</param>
+    /// <param name="target">The target segment or null.</param>
+    /// <returns>Merged segment or null when both segments are null.</returns>
+    public static ExportedSegment? MergeSegments(ExportedSegment? source,
+        ExportedSegment? target)
+    {
+        // nothing to do for an empty source
+        if (source == null) return target;
+
+        // just copy the source data if the target is empty
+        if (target == null) return source;
+
+        // merge text
+        if (source.Text != null)
+        {
+            target.Text = target.Text != null ?
+                target.Text + source.Text : source.Text;
+        }
+
+        // merge features
+        if (source.Features != null)
+        {
+            foreach (var f in source.Features)
+                target.AddFeature(f.Name, f.Value!);
+        }
+
+        // merge tags
+        if (source.Tags != null)
+        {
+            if (target.Tags == null)
+                target.Tags = source.Tags;
+            else
+                target.Tags.UnionWith(source.Tags);
+        }
+
+        // merge data
+        if (source.Payloads != null)
+        {
+            if (target.Payloads == null)
+                target.Payloads = source.Payloads;
+            else
+                target.Payloads.AddRange(source.Payloads);
+        }
+
+        return target;
+    }
 }
