@@ -14,6 +14,8 @@ The general flow for exporting GVE as covered by this library is summarized here
 
 ### 1. Text Tree Builder
 
+This first stage is the only one which is specific to GVE. Once it has been executed, the data is in a format which can be used by any text tree renderer, and the rest of the pipeline is generic and reusable. The same approach is used by the Cadmus export subsystem.
+
 A `GveTextTreeBuilder` is used to build a linear text tree, representing a text version derived from a GVE chain. The built tree has a blank root node and a single branch stemming from it, where each node represents a character and is parent of the next character node.
 
 - input: the execution context for GVE operations (`ChainOperationContext<char>`) and the operations themselves; or alternatively, a base text and the operations.
@@ -91,13 +93,16 @@ So, this filter produces a dynamically generated segmentation of the text, where
 
 Once we have prepared the text tree, we can render it into the desired format. The rendering is done by an implementation of `ITextTreeRenderer`, which takes the tree and produces some representation of it.
 
-Note that the renderer adopts a strategy already used by Proteus in its text filters: there, each text filter internally handles its data with the model it prefers: some of them use a string; others use a `StringBuilder`; others use an `XElement`; and so forth. Their concatenation is still possible thanks to an adapter which uses different plug services. Each plug service can convert a given type from a string or into a string.
+- input: a text tree plus the renderer context. In the case of GVE, this is an instance of `GveRendererContext`, which has additional properties to include the GVE data source (chain output and its operations). This can be used by some modules in the rendering pipeline to extract more data from the GVE chain.
+- output: an `object` (or null) representing the rendered text. This is not necessarily a string.
 
-The adaptation through this adapter only happens when types don't match. When two consecutive filters work on the same type (like both using XElement), no adaptation occurs. In this case, the output from the first filter passes directly to the next filter without any unnecessary string conversion. This optimization avoids the performance and potential data loss costs of converting between identical types unnecessarily.
+The reason for the `object` output type is flexibility. The renderer here adopts a strategy already used by Proteus in its text filters: there, each text filter internally handles its data with the model it prefers: some of them use a string; others use a `StringBuilder`; others use an `XElement`; and so forth. Their concatenation is still possible thanks to an adapter which uses different plug services. Each plug service can convert a given type from a string or into a string.
+
+The adaptation only happens when types don't match. When two consecutive filters work on the same type (like both using XElement), no adaptation occurs. In this case, the output from the first filter passes directly to the next filter without any unnecessary string conversion. This optimization avoids the performance and potential data loss costs of converting between identical types unnecessarily.
 
 This architecture is especially useful with modules in a pipeline, like in Proteus text filters, because each of them is free to use its best model for the task, and the pipeline can be easily extended with new modules without breaking the existing ones.
 
-So, the same applies to the text tree renderer: its return type is an `object` (or `null`) just like for text filters, because this allows the maximum flexibility in the rendering process. The renderer can return a string, an XElement, or any other type, and the caller can then decide how to handle it.
+So, the same applies to the text tree renderer: its return type is an `object` (or `null`) just like for text filters, because this allows the maximum flexibility in the rendering process. The renderer can return a `string`, an `XElement`, or any other type, and the caller can then decide how to handle it.
 
 Thus, if we are rendering a tree into XML, often the best choice is to use an `XElement` as the output type. This allows us to build a tree of XML elements, which can then be easily manipulated or serialized into a string.
 
@@ -107,3 +112,7 @@ So, two architectural choices are made here:
 
 - use a **tree structure** to represent text with nodes (each having a text segment data payload), rather than just an array of text segments. This is very useful when we need to manipulate the underlying structure before materializing it into markup like XML, because we can transform the tree to branch at will.
 - use a **generic object** as the output type of the renderer, which allows us to use this type-free rendition, followed by a type-free pipeline of filters for further refinement.
+
+### 4. Filter Result
+
+The rendering result can be further refined with the aid of a Proteus pipeline of text filters. For instance, we might have some string-based filters which make some final adjustments to the generated XML text using some replacements.
