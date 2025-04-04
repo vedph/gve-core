@@ -39,7 +39,7 @@ Once we have a representation of the GVE text versions and their metadata into t
 
 Note that when starting the filtering stage we always have a linear tree; then, according to the filters used this might or not be modified into a non-linear tree with multiple branches.
 
-A fundamental filter here is `LinearMergeTextTreeFilter`, which merges multiple nodes of a linea tree into a single node, whose text is the concatenation of the text of all the merged nodes. Merging is done by checking the features of the nodes: all the subsequent nodes having the same set of features (both for their name and their value) are merged into a single node.
+A fundamental filter here is `LinearMergeTextTreeFilter`, usually applied as the first in the chain. This merges multiple nodes of a linea tree into a single node, whose text is the concatenation of the text of all the merged nodes. Merging is done by checking the features of the nodes: all the subsequent nodes having the same set of features (both for their name and their value) are merged into a single node.
 
 Note that you are in charge of defining the features you want to be considered as merging criteria; you can define both their names, and any number of replacement filters for their values. For instance, consider this code fragment (from a unit test):
 
@@ -86,3 +86,11 @@ filter.Configure(new MergeTextTreeFilterOptions
 This means that we consider as grouping criteria for segmentation only the segment out and delete trace features; also, we filter their values so that we extract from them only the operation ID (the first word in the string).
 
 So, this filter produces a dynamically generated segmentation of the text, where each segment is represented by a single node and its text is linked to the same metadata (features). Such segmentation provides maximum efficiency for the subsequent rendering, because we always use the segment with the maximum extent, whatever it is, from a single character to hundreds of them.
+
+### 3. Render Text Tree
+
+Once we have prepared the text tree, we can render it into the desired format. The rendering is done by an implementation of `ITextTreeRenderer`, which takes the tree and produces some representation of it.
+
+Note that the renderer adopts a strategy already used by Proteus in its text filters: there, each text filter internally handles its data with the model it prefers: some of them use a string; others use a `StringBuilder`; others use an `XElement`; and so forth. Their concatenation is still possible thanks to an adapter which uses different plug services. Each plug service can convert a given type from a string or into a string.
+
+TODO
