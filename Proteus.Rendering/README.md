@@ -93,4 +93,17 @@ Once we have prepared the text tree, we can render it into the desired format. T
 
 Note that the renderer adopts a strategy already used by Proteus in its text filters: there, each text filter internally handles its data with the model it prefers: some of them use a string; others use a `StringBuilder`; others use an `XElement`; and so forth. Their concatenation is still possible thanks to an adapter which uses different plug services. Each plug service can convert a given type from a string or into a string.
 
-TODO
+The adaptation through this adapter only happens when types don't match. When two consecutive filters work on the same type (like both using XElement), no adaptation occurs. In this case, the output from the first filter passes directly to the next filter without any unnecessary string conversion. This optimization avoids the performance and potential data loss costs of converting between identical types unnecessarily.
+
+This architecture is especially useful with modules in a pipeline, like in Proteus text filters, because each of them is free to use its best model for the task, and the pipeline can be easily extended with new modules without breaking the existing ones.
+
+So, the same applies to the text tree renderer: its return type is an `object` (or `null`) just like for text filters, because this allows the maximum flexibility in the rendering process. The renderer can return a string, an XElement, or any other type, and the caller can then decide how to handle it.
+
+Thus, if we are rendering a tree into XML, often the best choice is to use an `XElement` as the output type. This allows us to build a tree of XML elements, which can then be easily manipulated or serialized into a string.
+
+Additionally, this allows to connect the result of rendering to a Proteus pipeline of text filters, which can be used to further refine the output.
+
+So, two architectural choices are made here:
+
+- use a **tree structure** to represent text with nodes (each having a text segment data payload), rather than just an array of text segments. This is very useful when we need to manipulate the underlying structure before materializing it into markup like XML, because we can transform the tree to branch at will.
+- use a **generic object** as the output type of the renderer, which allows us to use this type-free rendition, followed by a type-free pipeline of filters for further refinement.
