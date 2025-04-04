@@ -3,7 +3,6 @@ using Fusi.Tools.Data;
 using Proteus.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace Gve.Migration;
@@ -14,9 +13,9 @@ namespace Gve.Migration;
 /// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup.
 /// <para>Tag: <c>text-tree-renderer.gve-saba</c>.</para>
 /// </summary>
-/// <seealso cref="TextTreeRenderer" />
+/// <seealso cref="TextTreeRenderer{HandledType}" />
 [Tag("text-tree-renderer.gve-saba")]
-public sealed class GveSabaTextTreeRenderer : TextTreeRenderer,
+public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
     IConfigurable<XmlTextTreeRendererOptions>
 {
     private XmlTextTreeRendererOptions _options = new()
@@ -48,7 +47,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer,
     /// <param name="context">The renderer context.</param>
     /// <returns>Rendered output.</returns>
     /// <exception cref="ArgumentNullException">tree or context</exception>
-    protected override string DoRender(TreeNode<ExportedSegment> tree,
+    protected override XElement DoRender(TreeNode<ExportedSegment> tree,
         IRendererContext context)
     {
         ArgumentNullException.ThrowIfNull(tree);
@@ -77,22 +76,13 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer,
         XName blockName = _options.ResolvePrefixedName(
             _options.BlockElements[blockType]);
 
-        // create root element
+        // create root element and add block as its child
         XElement root = new(rootName);
         XElement block = new(blockName);
         root.Add(block);
 
         // TODO
 
-        return _options.IsRootIncluded
-            ? root.ToString(_options.IsIndented
-                ? SaveOptions.OmitDuplicateNamespaces
-                : SaveOptions.OmitDuplicateNamespaces |
-                  SaveOptions.DisableFormatting)
-            : string.Concat(root.Nodes().Select(
-                node => node.ToString(_options.IsIndented
-                ? SaveOptions.OmitDuplicateNamespaces
-                : SaveOptions.OmitDuplicateNamespaces |
-                    SaveOptions.DisableFormatting)));
+        return root;
     }
 }

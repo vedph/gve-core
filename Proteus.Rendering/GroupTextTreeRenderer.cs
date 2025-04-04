@@ -6,8 +6,9 @@ namespace Proteus.Rendering;
 /// A text tree renderer which handles items groups so that each group becomes
 /// a distinct TEI document in output.
 /// </summary>
-/// <seealso cref="TextTreeRenderer" />
-public abstract class GroupTextTreeRenderer : TextTreeRenderer
+/// <seealso cref="TextTreeRenderer{HandledType}" />
+public abstract class GroupTextTreeRenderer<HandledType> :
+    TextTreeRenderer<HandledType>
 {
     private int _group;
     private string? _pendingGroupId;
@@ -54,23 +55,17 @@ public abstract class GroupTextTreeRenderer : TextTreeRenderer
         _pendingGroupId = GetGroupId(context);
     }
 
-    /// <summary>
-    /// Renders the tail of the output. This is called by the item composer
-    /// once when ending the rendering process and can be used to output
-    /// specific content at the document's end.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <returns>Tail content.</returns>
-    public override string RenderTail(IRendererContext context)
-    {
-        // close a group if any
-        if (_group > 0 && !string.IsNullOrEmpty(GroupTailTemplate))
-        {
-            return TextTemplate.FillTemplate(
-                GroupTailTemplate, context.Data);
-        }
-        return "";
-    }
+    // TODO: possibly implement in derived renderers handling string
+    //public override HandledType? RenderTail(IRendererContext context)
+    //{
+    //    // close a group if any
+    //    if (_group > 0 && !string.IsNullOrEmpty(GroupTailTemplate))
+    //    {
+    //        return TextTemplate.FillTemplate(
+    //            GroupTailTemplate, context.Data);
+    //    }
+    //    return default;
+    //}
 
     /// <summary>
     /// Wraps the received XML in the group head and tail templates, if any.

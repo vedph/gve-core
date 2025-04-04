@@ -1,6 +1,7 @@
 ﻿using Fusi.Tools;
 using Fusi.Tools.Configuration;
 using Fusi.Tools.Data;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -19,6 +20,11 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
     IConfigurable<MergeTextTreeFilterOptions>
 {
     private MergeTextTreeFilterOptions _options = new();
+
+    /// <summary>
+    /// Gets or sets the logger.
+    /// </summary>
+    public ILogger? Logger { get; set; }
 
     private HashSet<string> GetRelevantFeatures(
         TreeNode<ExportedSegment> node)

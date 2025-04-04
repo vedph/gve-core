@@ -1,11 +1,12 @@
 ﻿using Fusi.Tools.Data;
+using Proteus.Core;
 
 namespace Proteus.Rendering;
 
 /// <summary>
 /// Renderer of text trees.
 /// </summary>
-public interface ITextTreeRenderer : IHasRendererFilters
+public interface ITextTreeRenderer : IHasLogger
 {
     /// <summary>
     /// Resets the state of this renderer if any. This is called once before
@@ -21,14 +22,14 @@ public interface ITextTreeRenderer : IHasRendererFilters
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Head content.</returns>
-    string RenderHead(IRendererContext context);
+    object? RenderHead(IRendererContext context);
 
     /// <summary>
     /// Called when items group has changed.
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="prevGroupId">The previous group identifier.</param>
-    void OnGroupChanged(IRendererContext context, string? prevGroupId);
+    //void OnGroupChanged(IRendererContext context, string? prevGroupId);
 
     /// <summary>
     /// Renders the specified tree.
@@ -36,7 +37,7 @@ public interface ITextTreeRenderer : IHasRendererFilters
     /// <param name="tree">The tree.</param>
     /// <param name="context">The rendering context.</param>
     /// <returns>Rendition.</returns>
-    string Render(TreeNode<ExportedSegment> tree, IRendererContext context);
+    object? Render(TreeNode<ExportedSegment> tree, IRendererContext context);
 
     /// <summary>
     /// Renders the tail of the output. This is called by the item composer
@@ -45,5 +46,5 @@ public interface ITextTreeRenderer : IHasRendererFilters
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Tail content.</returns>
-    string RenderTail(IRendererContext context);
+    object? RenderTail(IRendererContext context);
 }

@@ -1,14 +1,16 @@
 ﻿using Fusi.Tools.Data;
+using Proteus.Core;
 
 namespace Proteus.Rendering;
 
 /// <summary>
 /// A filter to be applied to a text tree.
 /// </summary>
-public interface ITextTreeFilter
+public interface ITextTreeFilter : IHasLogger
 {
     /// <summary>
-    /// Applies this filter to the specified tree, generating a new tree.
+    /// Applies this filter to the specified tree, generating a new tree
+    /// or just returning the received one.
     /// </summary>
     /// <param name="tree">The tree's root node.</param>
     /// <param name="source">The source being rendered.</param>

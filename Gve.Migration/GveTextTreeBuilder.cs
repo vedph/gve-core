@@ -569,7 +569,8 @@ public sealed class GveTextTreeBuilder
     /// </summary>
     /// <param name="context">The execution context.</param>
     /// <param name="operations">The operations executed on the context.</param>
-    /// <returns>The root blank node of the tree.</returns>
+    /// <returns>A dictionary where each version tag is the key and its value
+    /// is the root blank node of the corresponding linear text tree.</returns>
     /// <exception cref="ArgumentNullException">chain or operations</exception>
     public IDictionary<string, TreeNode<ExportedSegment>> Build(
         ChainOperationContext<char> context, IList<CharChainOperation> operations)
@@ -661,12 +662,13 @@ public sealed class GveTextTreeBuilder
     }
 
     /// <summary>
-    /// Builds a version linear tree from the specified base text and operations
+    /// Builds versions linear trees from the specified base text and operations
     /// on it. This method builds the tree for each version tag with the features
     /// selected in <see cref="FeatureNames"/>. If this is not set, all features
     /// will be included.
     /// </summary>
-    /// <returns>The root blank node of the tree.</returns>
+    /// <returns>A dictionary where each version tag is the key and its value
+    /// is the root blank node of the corresponding linear text tree.</returns>
     /// <exception cref="ArgumentNullException">text or operations</exception>
     public IDictionary<string, TreeNode<ExportedSegment>>
         Build(string text, IList<CharChainOperation> operations)

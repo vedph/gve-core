@@ -1,19 +1,23 @@
-﻿// infrastructure, to be moved
-using Fusi.Tools.Data;
+﻿using Fusi.Tools.Data;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 
 namespace Proteus.Rendering;
 
 /// <summary>
 /// Base class for <see cref="ITextTreeRenderer"/> implementations.
 /// </summary>
-public abstract class TextTreeRenderer : IHasRendererFilters
+public abstract class TextTreeRenderer<HandledType>
 {
     /// <summary>
-    /// Gets the optional filters to apply after the renderer completes.
+    /// Gets the type of the text object handled by this filter.
     /// </summary>
-    public IList<IRendererFilter> Filters { get; } = [];
+    public Type TextType => typeof(HandledType);
+
+    /// <summary>
+    /// Gets or sets the optional logger.
+    /// </summary>
+    public ILogger? Logger { get; set; }
 
     /// <summary>
     /// Resets the state of this renderer if any. This is called once before
@@ -32,7 +36,7 @@ public abstract class TextTreeRenderer : IHasRendererFilters
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Head content.</returns>
-    public virtual string RenderHead(IRendererContext context)
+    public virtual object RenderHead(IRendererContext context)
     {
         return "";
     }
@@ -56,9 +60,9 @@ public abstract class TextTreeRenderer : IHasRendererFilters
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Tail content.</returns>
-    public virtual string RenderTail(IRendererContext context)
+    public virtual HandledType? RenderTail(IRendererContext context)
     {
-        return "";
+        return default;
     }
 
     /// <summary>
@@ -67,7 +71,7 @@ public abstract class TextTreeRenderer : IHasRendererFilters
     /// <param name="tree">The root node of the text tree.</param>
     /// <param name="context">The renderer context.</param>
     /// <returns>Rendered output.</returns>
-    protected abstract string DoRender(TreeNode<ExportedSegment> tree,
+    protected abstract HandledType? DoRender(TreeNode<ExportedSegment> tree,
         IRendererContext context);
 
     /// <summary>
@@ -77,17 +81,11 @@ public abstract class TextTreeRenderer : IHasRendererFilters
     /// <param name="context">The renderer context.</param>
     /// <returns>Rendered output.</returns>
     /// <exception cref="ArgumentNullException">tree</exception>
-    public string Render(TreeNode<ExportedSegment> tree,
+    public HandledType? Render(TreeNode<ExportedSegment> tree,
         IRendererContext context)
     {
         ArgumentNullException.ThrowIfNull(tree);
 
-        string result = DoRender(tree, context);
-
-        // apply filters
-        foreach (IRendererFilter filter in Filters)
-            result = filter.Apply(result, context);
-
-        return result;
+        return DoRender(tree, context);
     }
 }

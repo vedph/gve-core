@@ -1,0 +1,88 @@
+# Proteus.Rendering
+
+## Overview
+
+The `Proteus.Rendering` library is a collection of rendering utilities and components designed to leverage the Proteus framework to render some data into text (e.g. plain text, HTML, XML, etc.).
+
+Currently this is being developed to provide all the generic, reusable models and logic for rendering data into text, in order to serve both the GVE (`Gve.Migration` project in this solution) and Cadmus (`Cadmus.Migration` solution) export subsystems.
+
+The code in this library is mostly derived from `Cadmus.Migration`, with the necessary changes to make it reusable and generic. When the library is stable, it will be moved to the `Proteus` solution and the `Cadmus.Migration` project will be refactored to use it.
+
+## GVE Export
+
+The general flow for exporting GVE as covered by this library is summarized here.
+
+### 1. Text Tree Builder
+
+A `GveTextTreeBuilder` is used to build a linear text tree, representing a text version derived from a GVE chain. The built tree has a blank root node and a single branch stemming from it, where each node represents a character and is parent of the next character node.
+
+- input: the execution context for GVE operations (`ChainOperationContext<char>`) and the operations themselves; or alternatively, a base text and the operations.
+- output: a dictionary where each version tag is the key and its value is the root blank node of the corresponding linear text tree.
+
+The logic of this builder is modified by its parameters:
+
+- `FeatureNames`: the filter features names. When set, only features with names equal to the names in this list are included in the tree.
+- `IsFilterInverted`: when true, the filter is inverted, i.e. only features with names NOT in the list are included in the tree.
+- `TraceFeatureFlattening`: a value indicating whether to flatten trace features. When this is true, the trace features linked to nodes are not only drawn from the each processed version, but also from all the previous versions.
+- `IncludeDeleted`: a value indicating whether to include deleted nodes in the tree. When this is true, for each generated version the builder will backtrack to the previous versions one after another, and insert nodes deleted by delete, replace, move, or swap operations at their place, with a delete feature. This relies on trace features: each operation injects segment-in trace features in the input version nodes, representing the nodes selected by it; and segment-out trace features in the output version nodes, representing the nodes produced or affected by it. So, when going backwards, we can find the nodes to insert by selecting nodes with segment-in features produced by operations which delete these segments, e.g. delete, replace, move, swap.
+
+The task of this builder is essentially adapting the input data to the generic rendition pipeline which follows. This is based on a linear tree, which can be variously filtered before being rendered.
+
+Note that given the multi-dimensional nature of a GVE chain, the builder produces multiple trees, one per text version. Each of them will then have to go through the successive stages of filtering and rendering.
+
+### 2. Text Tree Filters
+
+Once we have a representation of the GVE text versions and their metadata into trees, for each tree we can apply a series of filters to adapt it to the desired output format. The filters are applied in a chain, where each filter can modify the tree and pass it to the next one.
+
+- input: a text tree.
+- output: a text tree (the same instance, or a new one if modified).
+
+Note that when starting the filtering stage we always have a linear tree; then, according to the filters used this might or not be modified into a non-linear tree with multiple branches.
+
+A fundamental filter here is `LinearMergeTextTreeFilter`, which merges multiple nodes of a linea tree into a single node, whose text is the concatenation of the text of all the merged nodes. Merging is done by checking the features of the nodes: all the subsequent nodes having the same set of features (both for their name and their value) are merged into a single node.
+
+Note that you are in charge of defining the features you want to be considered as merging criteria; you can define both their names, and any number of replacement filters for their values. For instance, consider this code fragment (from a unit test):
+
+```cs
+GveTextTreeBuilder builder = new()
+{
+    FeatureNames =
+    [
+        OperationFeature.F_TRACE_SEG_IN,
+        OperationFeature.F_TRACE_SEG2_IN,
+        OperationFeature.F_TRACE_SEG_OUT,
+        OperationFeature.F_TRACE_SEG2_OUT,
+        OperationFeature.F_TRACE_DELETED
+    ],
+    TraceFeatureFlattening = true,
+    IncludeDeleted = true
+};
+```
+
+Here the builder will include the trace features for segment in, segment out, and deleted nodes. Later, we configure the filter as follows:
+
+```cs
+LinearMergeTextTreeFilter filter = new();
+filter.Configure(new MergeTextTreeFilterOptions
+{
+    Features =
+    [
+        OperationFeature.F_TRACE_SEG_OUT,
+        OperationFeature.F_TRACE_SEG2_OUT,
+        OperationFeature.F_TRACE_DELETED
+    ],
+    ValueFilters =
+    [
+        new MergeTextTreeFilterRepOption
+        {
+            IsRegex = true,
+            Find = "^([^ ]+).*$",
+            Replace = "$1",
+        }
+    ]
+});
+```
+
+This means that we consider as grouping criteria for segmentation only the segment out and delete trace features; also, we filter their values so that we extract from them only the operation ID (the first word in the string).
+
+So, this filter produces a dynamically generated segmentation of the text, where each segment is represented by a single node and its text is linked to the same metadata (features). Such segmentation provides maximum efficiency for the subsequent rendering, because we always use the segment with the maximum extent, whatever it is, from a single character to hundreds of them.
