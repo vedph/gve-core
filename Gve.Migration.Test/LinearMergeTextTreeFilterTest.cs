@@ -44,7 +44,8 @@ public sealed class LinearMergeTextTreeFilterTest
             [
                 new MergeTextTreeFilterRepOption
                 {
-                    Find = "$([^ ]+)",
+                    IsRegex = true,
+                    Find = "^([^ ]+).*$",
                     Replace = "$1",
                 }
             ]

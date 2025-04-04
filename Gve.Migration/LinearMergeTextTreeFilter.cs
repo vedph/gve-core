@@ -46,56 +46,6 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
         return keys;
     }
 
-    private static void MergeNodes(TreeNode<ExportedSegment> source,
-        TreeNode<ExportedSegment> target)
-    {
-        // nothing to do for an empty source
-        if (source.Data == null) return;
-
-        // just copy the source data if the target is empty
-        if (target.Data == null)
-        {
-            target.Data = source.Data;
-            return;
-        }
-
-        // merge text
-        if (source.Data.Text != null)
-        {
-            target.Data.Text = target.Data.Text != null?
-                target.Data.Text + source.Data.Text : source.Data.Text;
-        }
-
-        // merge features
-        if (source.Data.Features != null)
-        {
-            foreach (var f in source.Data.Features)
-                target.Data.AddFeature(f.Name, f.Value!);
-        }
-
-        // merge tags
-        if (source.Data.Tags != null)
-        {
-            if (target.Data.Tags == null)
-            {
-                target.Data.Tags = source.Data.Tags;
-            }
-            else
-            {
-                target.Data.Tags.UnionWith(source.Data.Tags);
-            }
-        }
-
-        // merge data
-        if (source.Data.Payloads != null)
-        {
-            if (target.Data.Payloads == null)
-                target.Data.Payloads = source.Data.Payloads;
-            else
-                target.Data.Payloads.AddRange(source.Data.Payloads);
-        }
-    }
-
     /// <summary>
     /// Applies this filter to the specified tree, generating a new tree or
     /// just returning the source tree if no merge is possible.
@@ -138,7 +88,8 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
                 (_options.NoBreakAtLF || current.Data?.Text?.EndsWith('\n') != true))
             {
                 // merge into current and move to next child
-                MergeNodes(current, target);
+                target.Data = ExportedSegment.MergeSegments(current.Data,
+                    target.Data);
                 current = current.FirstChild;
             }
             else
@@ -148,6 +99,8 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
                 // move to next child
                 current = current.FirstChild;
             }
+
+            segFeats = feats;
         }
 
         return root;
@@ -171,8 +124,13 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
 public class MergeTextTreeFilterRepOption
 {
     /// <summary>
-    /// Gets or sets the find text. When starting with $, it's a regex
-    /// consisting of the string after $.
+    /// Gets or sets a value indicating whether <see cref="Find"/> is a regex
+    /// rather than a literal string.
+    /// </summary>
+    public bool IsRegex { get; set; }
+
+    /// <summary>
+    /// Gets or sets the find text or expression.
     /// </summary>
     public required string Find { get; set; }
 
@@ -187,7 +145,7 @@ public class MergeTextTreeFilterRepOption
     /// <returns>String.</returns>
     public override string ToString()
     {
-        return $"{Find} => {Replace}";
+        return $"{(IsRegex? "\u24c7" : "")}{Find} => {Replace}";
     }
 }
 
@@ -231,11 +189,10 @@ public class MergeTextTreeFilterOptions
             _regexes = new List<Regex?>(ValueFilters.Count);
             if (ValueFilters != null)
             {
-                foreach (string find in ValueFilters.Select(f => f.Find))
+                foreach (MergeTextTreeFilterRepOption filter in ValueFilters)
                 {
-                    Regex? regex = find.StartsWith('$')
-                        ? new Regex(find[1..])
-                        : null;
+                    Regex? regex = filter.IsRegex
+                        ? new Regex(filter.Find) : null;
                     _regexes.Add(regex);
                 }
             }
