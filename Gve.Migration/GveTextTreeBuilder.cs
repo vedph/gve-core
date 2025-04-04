@@ -14,7 +14,7 @@ namespace Gve.Migration;
 /// stemming from it, where each node represents a character and is parent of
 /// the next character node.
 /// </summary>
-public sealed class VersionTreeBuilder
+public sealed class GveTextTreeBuilder
 {
     /// <summary>
     /// Gets or sets the filter features names. When set, only features with

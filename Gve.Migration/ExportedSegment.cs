@@ -1,8 +1,10 @@
-﻿using Gve.Text;
+﻿// infrastructure, to be moved
+using Gve.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Fusi.Tools.Data;
+using System;
 
 namespace Gve.Migration;
 
@@ -14,11 +16,15 @@ namespace Gve.Migration;
 public class ExportedSegment
 {
     /// <summary>
-    /// Gets or sets the source identifier for this segment. This is initially
-    /// set to the source node ID when building the linear tree character by
-    /// character.
+    /// Gets or sets the source identifier for this segment. When used, this
+    /// usually derives from the source item for this segment.
     /// </summary>
     public int SourceId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the optional type.
+    /// </summary>
+    public string? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the segment's text.
@@ -36,6 +42,95 @@ public class ExportedSegment
     public HashSet<string>? Tags { get; set; }
 
     /// <summary>
+    /// Gets or sets optional data payload. This is a list of objects, because
+    /// usually a segment just has a single object representing its data; but
+    /// segments could be merged and data could thus become a list of objects
+    /// from each merged segment.
+    /// </summary>
+    public List<object>? Payloads { get; set; }
+
+    /// <summary>
+    /// Adds the specified feature. If the features list property is null,
+    /// the list will be created before adding the feature to it.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="unique">True if the feature name must be unique in the
+    /// set. In this case, if a feature with the same name exists, it will
+    /// be replaced by the new one.</param>
+    /// <exception cref="ArgumentNullException">name or value</exception>
+    public void AddFeature(string name, string value, bool unique = false)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(value);
+
+        if (Features != null)
+        {
+            // never add a feature with both name and value equal to an existing
+            // feature
+            if (Features.Any(f => f.Name == name && f.Value == value))
+            {
+                return;
+            }
+
+            // replace existing feature with same name if unique is true
+            if (unique && Features.Any(f => f.Name == name))
+            {
+                // remove all features with name
+                foreach (NamedValue feature in Features.Where(
+                    f => f.Name == name).ToList())
+                {
+                    Features.Remove(feature);
+                }
+            }
+        }
+
+        Features ??= [];
+        Features.Add(new NamedValue(name, value));
+    }
+
+    /// <summary>
+    /// Removes all the features, or all the features matching the specified
+    /// name, or all the features matching the specified name and value.
+    /// </summary>
+    /// <param name="name">The optional name.</param>
+    /// <param name="value">The optional value.</param>
+    public void RemoveFeatures(string? name = null, string? value = null)
+    {
+        if (Features == null) return;
+
+        if (name == null)
+        {
+            Features = null;
+            return;
+        }
+
+        Features = [.. Features.Where(f => f.Name != name ||
+            (value != null && f.Value != value))];
+    }
+
+    /// <summary>
+    /// Determines whether this span has any features with the specified name
+    /// or name and value when <paramref name="value"/> is not null.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The optional value. If not specified, only the
+    /// name is matched.</param>
+    /// <returns>
+    ///   <c>true</c> if the specified name has the feature; otherwise,
+    ///   <c>false</c>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">name</exception>
+    public bool HasFeature(string name, string? value = null)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        if (Features == null) return false;
+        return Features.Any(f => f.Name == name &&
+            (value == null || f.Value == value));
+    }
+
+    /// <summary>
     /// Clones this instance.
     /// </summary>
     /// <returns>New segment.</returns>
@@ -43,10 +138,13 @@ public class ExportedSegment
     {
         return new ExportedSegment
         {
+            SourceId = SourceId,
+            Type = Type,
             Text = Text,
             Features = Features?.Select(f =>
                 new NamedValue(f.Name, f.Value)).ToList(),
-            Tags = Tags == null ? null : [.. Tags]
+            Tags = Tags == null ? null : [.. Tags],
+            Payloads = Payloads == null? null : [.. Payloads],
         };
     }
 

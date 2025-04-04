@@ -1,0 +1,19 @@
+﻿// infrastructure, to be moved
+using Fusi.Tools.Data;
+
+namespace Gve.Migration;
+
+/// <summary>
+/// A filter to be applied to a text tree.
+/// </summary>
+public interface ITextTreeFilter
+{
+    /// <summary>
+    /// Applies this filter to the specified tree, generating a new tree.
+    /// </summary>
+    /// <param name="tree">The tree's root node.</param>
+    /// <param name="source">The source being rendered.</param>
+    /// <returns>The root node of the new tree.</returns>
+    public TreeNode<ExportedSegment> Apply(TreeNode<ExportedSegment> tree,
+        object? source = null);
+}

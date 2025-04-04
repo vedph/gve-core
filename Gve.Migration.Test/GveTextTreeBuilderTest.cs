@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Gve.Migration.Test;
 
-public sealed class VersionTreeBuilderTest
+public sealed class GveTextTreeBuilderTest
 {
-    private static (
+    internal static (
         ChainOperationContext<char> Context,
         List<CharChainOperation> Operations) GetPenContext()
     {
@@ -76,7 +76,7 @@ public sealed class VersionTreeBuilderTest
         var (context, operations) = GetPenContext();
 
         // get tree for final version (v7)
-        VersionTreeBuilder builder = new()
+        GveTextTreeBuilder builder = new()
         {
             FeatureNames =
             [
@@ -97,37 +97,37 @@ public sealed class VersionTreeBuilderTest
 
         // v0 tree: a red pen
         TreeNode<ExportedSegment> tree = versionTrees["v0"];
-        string text = VersionTreeBuilder.GetTreeText(tree);
+        string text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a red pen", text);
 
         // v1 tree: a pen
         tree = versionTrees["v1"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a pen", text);
 
         // v2 tree: a hat
         tree = versionTrees["v2"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a hat", text);
 
         // v3 tree: a cat
         tree = versionTrees["v3"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat", text);
 
         // v4 tree: a nice cat
         tree = versionTrees["v4"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a nice cat", text);
 
         // v5 tree: a cat nice
         tree = versionTrees["v5"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat nice", text);
 
         // v6 tree: a cat is nice
         tree = versionTrees["v6"];
-        text = VersionTreeBuilder.GetTreeText(tree);
+        text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat is nice", text);
     }
 
@@ -138,7 +138,7 @@ public sealed class VersionTreeBuilderTest
         var (context, operations) = GetPenContext();
 
         // get tree for final version (v7)
-        VersionTreeBuilder builder = new()
+        GveTextTreeBuilder builder = new()
         {
             FeatureNames =
             [
@@ -159,37 +159,37 @@ public sealed class VersionTreeBuilderTest
 
         // v0 tree: a red pen
         TreeNode<ExportedSegment> tree = versionTrees["v0"];
-        string text = VersionTreeBuilder.GetTreeText(tree, true);
+        string text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a red pen", text);
 
         // v1 tree (del): a {red }pen
         tree = versionTrees["v1"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }pen", text);
 
         // v2 tree (rep): a {red }{pen}hat
         tree = versionTrees["v2"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}hat", text);
 
         // v3 tree (rep): a {red }{pen}{hat}cat
         tree = versionTrees["v3"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}{hat}cat", text);
 
         // v4 tree (ins): a nice {red }{pen}{hat}cat
         tree = versionTrees["v4"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a nice {red }{pen}{hat}cat", text);
 
         // v5 tree (swp): a {nice}{red }{pen}{hat}cat {cat}nice
         tree = versionTrees["v5"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat {cat}nice", text);
 
         // v6 tree: (ins) a {nice}{red }{pen}{hat}cat is {cat}nice
         tree = versionTrees["v6"];
-        text = VersionTreeBuilder.GetTreeText(tree, true);
+        text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
     }
 
@@ -250,7 +250,7 @@ public sealed class VersionTreeBuilderTest
         var (context, operations) = GetHatContext();
 
         // get tree for final version (v7)
-        VersionTreeBuilder builder = new()
+        GveTextTreeBuilder builder = new()
         {
             FeatureNames =
             [
