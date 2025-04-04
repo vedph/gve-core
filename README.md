@@ -94,6 +94,8 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-04-04: adding infrastructure and rendering to Gve.Migration. All the files belonging to generic infrastructure are marked by a comment in their first line, and they will be later moved into their own independent module, to be shared by both GVE and Cadmus. Until then, the export subsystems of these two projects will be developed in parallel, until they get mature enough to be merged into a third, shared module.
+- 2025-04-03: fixed bug in chain's delete range.
 - 2025-04-01: updated packages.
 - 2025-03-29: updated packages.
 - 2025-03-20:
