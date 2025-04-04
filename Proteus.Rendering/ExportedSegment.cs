@@ -1,12 +1,11 @@
-﻿// infrastructure, to be moved
-using Gve.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Fusi.Tools.Data;
 using System;
+using Fusi.Tools;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// An exported segment of text. This is typically used as the payload of
@@ -34,7 +33,7 @@ public class ExportedSegment
     /// <summary>
     /// Gets or sets the features linked to this segment.
     /// </summary>
-    public List<NamedValue>? Features { get; set; }
+    public List<StringPair>? Features { get; set; }
 
     /// <summary>
     /// Gets or sets the tags attached to this segment.
@@ -77,7 +76,7 @@ public class ExportedSegment
             if (unique && Features.Any(f => f.Name == name))
             {
                 // remove all features with name
-                foreach (NamedValue feature in Features.Where(
+                foreach (StringPair feature in Features.Where(
                     f => f.Name == name).ToList())
                 {
                     Features.Remove(feature);
@@ -86,7 +85,7 @@ public class ExportedSegment
         }
 
         Features ??= [];
-        Features.Add(new NamedValue(name, value));
+        Features.Add(new StringPair(name, value));
     }
 
     /// <summary>
@@ -106,7 +105,7 @@ public class ExportedSegment
         }
 
         Features = [.. Features.Where(f => f.Name != name ||
-            (value != null && f.Value != value))];
+            value != null && f.Value != value)];
     }
 
     /// <summary>
@@ -142,7 +141,7 @@ public class ExportedSegment
             Type = Type,
             Text = Text,
             Features = Features?.Select(f =>
-                new NamedValue(f.Name, f.Value)).ToList(),
+                new StringPair(f.Name, f.Value)).ToList(),
             Tags = Tags == null ? null : [.. Tags],
             Payloads = Payloads == null? null : [.. Payloads],
         };

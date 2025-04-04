@@ -1,7 +1,6 @@
-﻿// infrastructure, to be moved
-using Fusi.Tools.Data;
+﻿using Fusi.Tools.Data;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// Renderer of text trees.

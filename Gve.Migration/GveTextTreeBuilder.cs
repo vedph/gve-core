@@ -1,5 +1,7 @@
-﻿using Fusi.Tools.Data;
+﻿using Fusi.Tools;
+using Fusi.Tools.Data;
 using Gve.Text;
+using Proteus.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -80,7 +82,7 @@ public sealed class GveTextTreeBuilder
         {
             if (node.Data == null) return true;
 
-            NamedValue? deletedFeature = node.Data.Features?.FirstOrDefault(f =>
+            StringPair? deletedFeature = node.Data.Features?.FirstOrDefault(f =>
                 f.Name == OperationFeature.F_TRACE_DELETED);
             string? deletedValue = deletedFeature?.Value;
 
@@ -546,10 +548,10 @@ public sealed class GveTextTreeBuilder
         }
     }
 
-    private static void FlattenTraceFeatures(List<NamedValue> nodeTraceFeats,
-        List<NamedValue> targetFeats)
+    private static void FlattenTraceFeatures(List<StringPair> nodeTraceFeats,
+        List<StringPair> targetFeats)
     {
-        foreach (NamedValue traceFeat in nodeTraceFeats)
+        foreach (StringPair traceFeat in nodeTraceFeats)
         {
             if (targetFeats.All(f => f.Name != traceFeat.Name &&
                 f.Value != traceFeat.Value))
@@ -578,7 +580,7 @@ public sealed class GveTextTreeBuilder
         Dictionary<string, TreeNode<ExportedSegment>> versions = [];
 
         // setup a cache for trace features as we process each version
-        Dictionary<int, List<NamedValue>> traceFeats = [];
+        Dictionary<int, List<StringPair>> traceFeats = [];
 
         // for each version tag
         IList<string> tags = context.Chain.GetDistinctTags();
@@ -606,16 +608,16 @@ public sealed class GveTextTreeBuilder
                     source.Id, out IList<Feature>? value) ? value : [];
 
                 // inject only the selected features
-                List<NamedValue> targetFeats = [];
+                List<StringPair> targetFeats = [];
                 foreach (Feature feature in sourceFeats
                     .Where(f => IsFeatureIncluded(f.Name)))
                 {
-                    targetFeats.Add(new NamedValue(feature.Name, feature.Value));
+                    targetFeats.Add(new StringPair(feature.Name, feature.Value));
                 }
 
                 // flatten trace features from previous versions if requested
                 if (TraceFeatureFlattening && traceFeats.TryGetValue(
-                    source.Id, out List<NamedValue>? nodeTraceFeats))
+                    source.Id, out List<StringPair>? nodeTraceFeats))
                 {
                     FlattenTraceFeatures(nodeTraceFeats, targetFeats);
                 }
@@ -645,7 +647,7 @@ public sealed class GveTextTreeBuilder
                             OperationFeature.F_TRACE_PREFIX)))
                     {
                         traceFeats[source.Id].Add(
-                            new NamedValue(feature.Name, feature.Value));
+                            new StringPair(feature.Name, feature.Value));
                     }
                 }
             }

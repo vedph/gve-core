@@ -1,13 +1,11 @@
-﻿// generic, to be moved
+﻿using Fusi.Tools;
 using Fusi.Tools.Configuration;
 using Fusi.Tools.Data;
-using Gve.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// A merge filter for linear trees. This filter merges multiple
@@ -29,7 +27,7 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
         if (node.Data?.Features == null || node.Data.Features.Count == 0)
             return keys;
 
-        foreach (NamedValue f in node.Data.Features)
+        foreach (StringPair f in node.Data.Features)
         {
             if (_options.Features?.Contains(f.Name) != false)
             {

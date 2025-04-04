@@ -1,7 +1,6 @@
-﻿// infrastructure, to be moved
-using Fusi.Tools;
+﻿using Fusi.Tools;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// Renderer context. This includes a generic metadata dictionary.

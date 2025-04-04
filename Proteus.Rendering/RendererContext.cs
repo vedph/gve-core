@@ -1,10 +1,9 @@
-﻿// infrastructure, to be moved
-using Fusi.Tools;
+﻿using Fusi.Tools;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// Default implementation of <see cref="IRendererContext"/>.

@@ -1,5 +1,4 @@
-﻿// infrastructure, to be moved
-namespace Gve.Migration;
+﻿namespace Proteus.Rendering;
 
 /// <summary>
 /// Renderer filter. This represents any filter applied after the

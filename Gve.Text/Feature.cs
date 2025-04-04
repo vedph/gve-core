@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fusi.Tools;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +8,7 @@ namespace Gve.Text;
 /// <summary>
 /// A generic name=value (or just named) feature.
 /// </summary>
-public record Feature : NamedValue
+public record Feature : StringPair
 {
     /// <summary>
     /// The feature set policy.

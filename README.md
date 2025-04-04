@@ -94,7 +94,11 @@ and long moustache and grey beard.
 
 ## History
 
-- 2025-04-04: adding infrastructure and rendering to Gve.Migration. All the files belonging to generic infrastructure are marked by a comment in their first line, and they will be later moved into their own independent module, to be shared by both GVE and Cadmus. Until then, the export subsystems of these two projects will be developed in parallel, until they get mature enough to be merged into a third, shared module.
+### 3.0.0
+
+- 2025-04-04:
+  - ⚠️ refactored to use `StringPair` from `Fusi.Tools` as the base for features removing `NamedValue` which had the same model. This is a breaking change even if the model is the same.
+  - temporarily added to this solution a Proteus library project (`Proteus.Rendering`) which has NO dependencies on GVE. It is GVE which, together with Cadmus migration subsystem, will depend on it once this is completed. For this reason most of its code derives from `Cadmus.Migration` with minimal adjustments to make it more generic and independent from both Cadmus and GVE.
 - 2025-04-03: fixed bug in chain's delete range.
 - 2025-04-01: updated packages.
 - 2025-03-29: updated packages.

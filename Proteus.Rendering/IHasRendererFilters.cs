@@ -1,7 +1,6 @@
-﻿// infrastructure, to be moved
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// Interface implemented by components having renderer filters.

@@ -1,10 +1,9 @@
-﻿// infrastructure, to be moved
-using Fusi.Tools.Data;
+﻿using Fusi.Tools.Data;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace Gve.Migration;
+namespace Proteus.Rendering;
 
 /// <summary>
 /// A map of IDs between source and target. Sources are data like a fragment,
