@@ -10,7 +10,12 @@ The code in this library is mostly derived from `Cadmus.Migration`, with the nec
 
 ## GVE Export
 
-The general flow for exporting GVE as covered by this library is summarized here.
+The general flow for exporting GVE as covered by this library is summarized here. The main components used for GVE rendering currently are:
+
+1. `GveTextTreeBuilder`: builds a linear text tree from a GVE chain.
+2. `LinearMergeTextTreeFilter`: merges nodes in a linear text tree.
+3. `GveSabaTextTreeRenderer`: renders a linear text tree into Saba-like XML. This renderer covers a single text version, encoded in `rdg`/`lem`.
+4. `GveSabaCompositeTextTreeRenderer`: a composite renderer using `GveSabaTextTreeRenderer` for each sub-tree. This renders the root `app` element with a `rdg`/`lem` child for each text version.
 
 ### 1. Text Tree Builder
 
