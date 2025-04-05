@@ -6,7 +6,7 @@ namespace Proteus.Rendering;
 /// <summary>
 /// Renderer of text trees.
 /// </summary>
-public interface ITextTreeRenderer : IHasLogger
+public interface ITextTreeRenderer<THandledType> : IHasLogger
 {
     /// <summary>
     /// Resets the state of this renderer if any. This is called once before
@@ -22,7 +22,7 @@ public interface ITextTreeRenderer : IHasLogger
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Head content.</returns>
-    object? RenderHead(IRendererContext context);
+    THandledType? RenderHead(IRendererContext context);
 
     /// <summary>
     /// Called when items group has changed.
@@ -37,7 +37,7 @@ public interface ITextTreeRenderer : IHasLogger
     /// <param name="tree">The tree.</param>
     /// <param name="context">The rendering context.</param>
     /// <returns>Rendition.</returns>
-    object? Render(TreeNode<ExportedSegment> tree, IRendererContext context);
+    THandledType? Render(TreeNode<ExportedSegment> tree, IRendererContext context);
 
     /// <summary>
     /// Renders the tail of the output. This is called by the item composer
@@ -46,5 +46,5 @@ public interface ITextTreeRenderer : IHasLogger
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Tail content.</returns>
-    object? RenderTail(IRendererContext context);
+    THandledType? RenderTail(IRendererContext context);
 }

@@ -13,9 +13,9 @@ namespace Gve.Migration;
 /// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup.
 /// <para>Tag: <c>text-tree-renderer.gve-saba</c>.</para>
 /// </summary>
-/// <seealso cref="TextTreeRenderer{HandledType}" />
+/// <seealso cref="TextTreeRenderer{THandledType}" />
 [Tag("text-tree-renderer.gve-saba")]
-public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
+public sealed class GveSabaTextTreeRenderer : CompositeTextTreeRenderer<XElement>,
     IConfigurable<XmlTextTreeRendererOptions>
 {
     private XmlTextTreeRendererOptions _options = new()

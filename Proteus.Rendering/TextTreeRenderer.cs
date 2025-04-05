@@ -5,14 +5,14 @@ using System;
 namespace Proteus.Rendering;
 
 /// <summary>
-/// Base class for <see cref="ITextTreeRenderer"/> implementations.
+/// Base class for <see cref="ITextTreeRenderer{THandledType}"/> implementations.
 /// </summary>
-public abstract class TextTreeRenderer<HandledType>
+public abstract class TextTreeRenderer<THandledType>
 {
     /// <summary>
     /// Gets the type of the text object handled by this filter.
     /// </summary>
-    public Type TextType => typeof(HandledType);
+    public Type TextType => typeof(THandledType);
 
     /// <summary>
     /// Gets or sets the optional logger.
@@ -36,9 +36,9 @@ public abstract class TextTreeRenderer<HandledType>
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Head content.</returns>
-    public virtual object RenderHead(IRendererContext context)
+    public virtual THandledType? RenderHead(IRendererContext context)
     {
-        return "";
+        return default;
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public abstract class TextTreeRenderer<HandledType>
     /// </summary>
     /// <param name="context">The context.</param>
     /// <returns>Tail content.</returns>
-    public virtual HandledType? RenderTail(IRendererContext context)
+    public virtual THandledType? RenderTail(IRendererContext context)
     {
         return default;
     }
@@ -71,7 +71,7 @@ public abstract class TextTreeRenderer<HandledType>
     /// <param name="tree">The root node of the text tree.</param>
     /// <param name="context">The renderer context.</param>
     /// <returns>Rendered output.</returns>
-    protected abstract HandledType? DoRender(TreeNode<ExportedSegment> tree,
+    protected abstract THandledType? DoRender(TreeNode<ExportedSegment> tree,
         IRendererContext context);
 
     /// <summary>
@@ -81,7 +81,7 @@ public abstract class TextTreeRenderer<HandledType>
     /// <param name="context">The renderer context.</param>
     /// <returns>Rendered output.</returns>
     /// <exception cref="ArgumentNullException">tree</exception>
-    public HandledType? Render(TreeNode<ExportedSegment> tree,
+    public THandledType? Render(TreeNode<ExportedSegment> tree,
         IRendererContext context)
     {
         ArgumentNullException.ThrowIfNull(tree);
