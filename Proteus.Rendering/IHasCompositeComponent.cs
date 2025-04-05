@@ -4,11 +4,10 @@
 /// Interface implemented by composite components which wrap an inner
 /// component of the same type.
 /// </summary>
-public interface IHasCompositeComponent
+public interface IHasCompositeComponent<T> where T : class
 {
     /// <summary>
-    /// Sets the inner component.
+    /// Gets or sets the inner component.
     /// </summary>
-    /// <param name="component">The inner component.</param>
-    void SetInnerComponent(object component);
+    T? Component { get; set; }
 }
