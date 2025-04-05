@@ -10,12 +10,15 @@ namespace Gve.Migration;
 /// <summary>
 /// A "Saba"-like TEI renderer for the GVE project. This renders a TEI structure
 /// like that used for the Saba 1919 Project, based on the hierarchy <c>app</c>,
-/// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup.
+/// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup. This
+/// renderer is limited to rendering the descendants of <c>app</c>, because
+/// each of them represents a text version. A somposite renderer is then used
+/// to compose the versions together.
 /// <para>Tag: <c>text-tree-renderer.gve-saba</c>.</para>
 /// </summary>
 /// <seealso cref="TextTreeRenderer{THandledType}" />
 [Tag("text-tree-renderer.gve-saba")]
-public sealed class GveSabaTextTreeRenderer : CompositeTextTreeRenderer<XElement>,
+public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
     IConfigurable<XmlTextTreeRendererOptions>
 {
     private XmlTextTreeRendererOptions _options = new()
