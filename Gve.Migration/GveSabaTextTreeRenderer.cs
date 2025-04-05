@@ -1,8 +1,11 @@
 ﻿using Fusi.Tools.Configuration;
 using Fusi.Tools.Data;
+using Gve.Text;
+using Proteus.Core.Text;
 using Proteus.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Gve.Migration;
@@ -41,6 +44,14 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
     public void Configure(XmlTextTreeRendererOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    private CharChainOperation GetSourceOperation(string traceValue)
+    {
+        // value is OPID TAGIN:TAGOUT NR, extract OPID
+        int i = traceValue.IndexOf(' ');
+        string opid = traceValue[..i];
+        return _context!.Operations!.Find(op => op.Id == opid)!;
     }
 
     /// <summary>
@@ -84,7 +95,80 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         XElement block = new(blockName);
         root.Add(block);
 
-        // TODO
+        TreeNode<ExportedSegment>? sourceNode = tree.FirstChild;
+        XElement current = block;
+
+        while (sourceNode != null)
+        {
+            // del-feature: subst/del or just del
+            if (sourceNode.Data?.HasFeature(OperationFeature.F_TRACE_DELETED)
+                == true)
+            {
+                // get the source operation
+                CharChainOperation operation = GetSourceOperation(
+                    sourceNode.Data.Features!.First(
+                        f => f.Name == OperationFeature.F_TRACE_DELETED).Value!);
+
+                // rep/swp is subst, else just del
+                if (operation.Type == OperationType.Replace ||
+                    operation.Type == OperationType.Swap)
+                {
+                    // subst/del/TEXT
+                    XElement subst = new(NamespaceOptions.TEI + "subst",
+                        new XAttribute("source", "o" + operation.Id),
+                        new XElement(NamespaceOptions.TEI + "del",
+                            sourceNode.Data.Text));
+                    current.Add(subst);
+
+                    // current XML element is now subst
+                    current = subst;
+                }
+                else
+                {
+                    // del/TEXT
+                    XElement del = new(NamespaceOptions.TEI + "del",
+                        new XAttribute("source", "o" + operation.Id),
+                        sourceNode.Data.Text);
+                    current.Add(del);
+                }
+            } //del
+            // seg-out/seg-out2 feature: ins/TEXT, then close subst if required
+            else if ((sourceNode.Data?.HasFeature(
+                         OperationFeature.F_TRACE_SEG_OUT) == true) ||
+                     (sourceNode.Data?.HasFeature(
+                         OperationFeature.F_TRACE_SEG2_OUT) == true))
+            {
+                // get the source operation
+                CharChainOperation operation = GetSourceOperation(
+                    sourceNode.Data.Features!.FirstOrDefault(
+                        f => f.Name == OperationFeature.F_TRACE_SEG_OUT)?.Value!
+                        ?? sourceNode.Data.Features!.First(f =>
+                            f.Name == OperationFeature.F_TRACE_SEG_OUT).Value!);
+
+                // ins/TEXT
+                string sourceValue = "o" + operation.Id;
+                XElement ins = new(NamespaceOptions.TEI + "ins",
+                    new XAttribute("source", sourceValue));
+                current.Add(ins);
+
+                // if current is child of subst, keep popping subst parents
+                // until we find the one whose source attribute is = o + OPID
+                // (i.e. the one we just created)
+                while (current.Parent != null &&
+                       current.Parent.Name == NamespaceOptions.TEI + "subst")
+                {
+                    XElement parent = current.Parent;
+                    if (parent.Attribute("source")?.Value == sourceValue)
+                        break;
+                    // pop the subst
+                    current = parent;
+                }
+            }
+            else
+            {
+                current.Add(sourceNode.Data?.Text);
+            }
+        }
 
         return root;
     }
