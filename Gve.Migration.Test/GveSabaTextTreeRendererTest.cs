@@ -50,12 +50,15 @@ public sealed class GveSabaTextTreeRendererTest
             ]
         });
 
-        // use just 2 versions for short
-        TreeNode<ExportedSegment> tree = new TreeNode<ExportedSegment>();
+        // use just the 2 last versions for short
+        TreeNode<ExportedSegment> tree = new();
         for (int n = 5; n <= 6; n++)
         {
-            TreeNode<ExportedSegment> sub = versionTrees[$"v{n}"];
+            string tag = $"v{n}";
+            TreeNode<ExportedSegment> sub = versionTrees[tag];
             sub = filter.Apply(sub);
+            sub.Data ??= new ExportedSegment();
+            sub.Data.AddFeature("v", tag);
             tree.AddChild(sub);
         }
 

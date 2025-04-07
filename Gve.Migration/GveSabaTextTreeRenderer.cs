@@ -15,7 +15,7 @@ namespace Gve.Migration;
 /// like that used for the Saba 1919 Project, based on the hierarchy <c>app</c>,
 /// <c>lem</c>/<c>rdg</c>, <c>mod</c>, and text with critical markup. This
 /// renderer is limited to rendering the descendants of <c>app</c>, because
-/// each of them represents a text version. A somposite renderer is then used
+/// each of them represents a text version. A composite renderer is then used
 /// to compose the versions together.
 /// <para>Tag: <c>text-tree-renderer.gve-saba</c>.</para>
 /// </summary>
@@ -30,7 +30,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         BlockElements = new Dictionary<string, string>
         {
             { "default", "tei:rdg" },
-            { "final", "tei:lem" }
+            { "preferred", "tei:lem" }
         },
     };
 

@@ -18,6 +18,18 @@ public abstract class CompositeTextTreeRenderer<THandledType> :
     public ITextTreeRenderer<THandledType>? Component { get; set; }
 
     /// <summary>
+    /// Called before rendering each sub-tree.
+    /// </summary>
+    /// <param name="tree">The multi-branches tree.</param>
+    /// <param name="context">The renderer context.</param>
+    /// <param name="index">The index of the sub-tree child of
+    /// <paramref name="tree"/> to be rendered.</param>
+    protected virtual void OnBeforeRendering(TreeNode<ExportedSegment> tree,
+        IRendererContext context, int index)
+    {
+    }
+
+    /// <summary>
     /// Composes the result for the specified sub-tree into <paramref name="target"/>.
     /// </summary>
     /// <param name="tree">The sub-tree being the source of the result.</param>
@@ -40,8 +52,10 @@ public abstract class CompositeTextTreeRenderer<THandledType> :
         if (!tree.HasChildren || Component == null) return default;
 
         THandledType? target = default;
+        int i = 0;
         foreach (TreeNode<ExportedSegment> sub in tree.Children)
         {
+            OnBeforeRendering(tree, context, i++);
             THandledType? result = Component.Render(sub, context);
             target = ComposeResult(sub, context, result, target);
         }
