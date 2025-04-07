@@ -18,6 +18,13 @@ namespace Proteus.Rendering;
 public sealed class MultiTextTreeFilter : CompositeTextTreeFilter, ITextTreeFilter
 {
     /// <summary>
+    /// The subtree ID feature used for "multi"-trees. This is typically used
+    /// with a value equal to the version tag corresponding to each subtree,
+    /// and gets assigned to its blank root node.
+    /// </summary>
+    public const string F_SUBTREE_ID = "sub-id";
+
+    /// <summary>
     /// Applies this filter to the specified tree, generating a new tree
     /// or just returning the received one.
     /// </summary>

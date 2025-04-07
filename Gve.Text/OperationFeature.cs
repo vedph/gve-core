@@ -13,7 +13,13 @@ namespace Gve.Text;
 /// <seealso cref="Feature" />
 public partial record OperationFeature : Feature
 {
-    #region Constants for trace features
+    #region Constants for features    
+    /// <summary>
+    /// The staged version feature. Its value is the staged version feature tag,
+    /// which is any human-friendly identifier conventionally used to design it.
+    /// </summary>
+    public const string F_VERSION = "version";
+
     /// <summary>
     /// The prefix assigned to all tracing features.
     /// </summary>
@@ -157,7 +163,7 @@ public partial record OperationFeature : Feature
     /// <returns>Feature.</returns>
     /// <exception cref="ArgumentNullException">text</exception>
     /// <exception cref="FormatException">Invalid feature</exception>
-    public static OperationFeature Parse(string text)
+    public static new OperationFeature Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
 

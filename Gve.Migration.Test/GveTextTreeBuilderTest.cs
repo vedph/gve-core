@@ -3,6 +3,7 @@ using Gve.Text;
 using Proteus.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Gve.Migration.Test;
 
@@ -91,43 +92,56 @@ public sealed class GveTextTreeBuilderTest
             IncludeDeleted = false
         };
 
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        Assert.Equal(7, versionTrees.Count);
+        Assert.Equal(7, multi.Children.Count);
 
         // v0 tree: a red pen
-        TreeNode<ExportedSegment> tree = versionTrees["v0"];
+        TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v0") == true);
+        Assert.NotNull(tree);
         string text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a red pen", text);
 
         // v1 tree: a pen
-        tree = versionTrees["v1"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v1") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a pen", text);
 
         // v2 tree: a hat
-        tree = versionTrees["v2"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v2") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a hat", text);
 
         // v3 tree: a cat
-        tree = versionTrees["v3"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v3") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat", text);
 
         // v4 tree: a nice cat
-        tree = versionTrees["v4"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v4") == true); ;
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a nice cat", text);
 
         // v5 tree: a cat nice
-        tree = versionTrees["v5"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v5") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat nice", text);
 
         // v6 tree: a cat is nice
-        tree = versionTrees["v6"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat is nice", text);
     }
@@ -153,43 +167,56 @@ public sealed class GveTextTreeBuilderTest
             IncludeDeleted = true
         };
 
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        Assert.Equal(7, versionTrees.Count);
+        Assert.Equal(7, multi.Children.Count);
 
         // v0 tree: a red pen
-        TreeNode<ExportedSegment> tree = versionTrees["v0"];
+        TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v0") == true);
+        Assert.NotNull(tree);
         string text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a red pen", text);
 
         // v1 tree (del): a {red }pen
-        tree = versionTrees["v1"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v1") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }pen", text);
 
         // v2 tree (rep): a {red }{pen}hat
-        tree = versionTrees["v2"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v2") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}hat", text);
 
         // v3 tree (rep): a {red }{pen}{hat}cat
-        tree = versionTrees["v3"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v3") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}{hat}cat", text);
 
         // v4 tree (ins): a nice {red }{pen}{hat}cat
-        tree = versionTrees["v4"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v4") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a nice {red }{pen}{hat}cat", text);
 
         // v5 tree (swp): a {nice}{red }{pen}{hat}cat {cat}nice
-        tree = versionTrees["v5"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v5") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat {cat}nice", text);
 
         // v6 tree: (ins) a {nice}{red }{pen}{hat}cat is {cat}nice
-        tree = versionTrees["v6"];
+        tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
+        Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
     }
@@ -265,16 +292,17 @@ public sealed class GveTextTreeBuilderTest
             IncludeDeleted = true
         };
 
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        Assert.Equal(8, versionTrees.Count);
+        Assert.Equal(8, multi.Children.Count);
 
         // v7 tree:
         // for sure, he had a green hat|and very long beard and moustache.
         // gggggggggg.........22222.........11111.....77777.....777777777.
         // g=4,5,6
-        TreeNode<ExportedSegment> tree = versionTrees["v7"];
+        TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v7") == true);
+        Assert.NotNull(tree);
         // TODO
     }
 }

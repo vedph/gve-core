@@ -1,7 +1,7 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Text;
 using Proteus.Rendering;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Gve.Migration.Test;
 
@@ -28,10 +28,10 @@ public sealed class LinearMergeTextTreeFilterTest
             IncludeDeleted = false
         };
 
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        TreeNode<ExportedSegment> tree = versionTrees["v6"];
+        TreeNode<ExportedSegment> tree = multi.Children.First(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
 
         LinearMergeTextTreeFilter filter = new();
         filter.Configure(new MergeTextTreeFilterOptions
@@ -108,10 +108,10 @@ public sealed class LinearMergeTextTreeFilterTest
             IncludeDeleted = true
         };
 
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        TreeNode<ExportedSegment> tree = versionTrees["v6"];
+        TreeNode<ExportedSegment> tree = multi.Children.First(
+            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
 
         LinearMergeTextTreeFilter filter = new();
         filter.Configure(new MergeTextTreeFilterOptions

@@ -53,6 +53,20 @@ public sealed class GveTextTreeBuilder
     public bool IncludeDeleted { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to build version trees only
+    /// for those versions which are staged, i.e. marked by a global
+    /// <see cref="OperationFeature.F_VERSION"/> feature.
+    /// </summary>
+    public bool StagedOnly { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of the text version tags to build trees for.
+    /// If null or empty, all the versions will be built. Note that this filter
+    /// might still be modified by <see cref="StagedOnly"/> when true.
+    /// </summary>
+    public HashSet<string>? VersionTags { get; set; }
+
+    /// <summary>
     /// Gets the text corresponding to the specified version tree.
     /// </summary>
     /// <param name="tree">The root node of the tree to get text from.</param>
@@ -562,8 +576,20 @@ public sealed class GveTextTreeBuilder
         }
     }
 
+    private static string? GetVersionFromTag(ChainOperationContext<char> context,
+        string tag)
+    {
+        // we allow for null for v0
+        ChainOperationContextStep? step = context.Steps.FirstOrDefault(
+            s => s.OutputTag == tag);
+
+        return step?.FeatureSet.Features.FirstOrDefault(
+            f => f.Name == OperationFeature.F_VERSION)?.Value;
+    }
+
     /// <summary>
-    /// Builds a version linear tree from the specified execution context.
+    /// Builds a "multi"-trees wrapper tree consisting of a blank root node
+    /// having one child linear tree per version.
     /// This method builds the tree for each version tag with the features
     /// selected in <see cref="FeatureNames"/>. If this is not set, all features
     /// will be included.
@@ -573,13 +599,13 @@ public sealed class GveTextTreeBuilder
     /// <returns>A dictionary where each version tag is the key and its value
     /// is the root blank node of the corresponding linear text tree.</returns>
     /// <exception cref="ArgumentNullException">chain or operations</exception>
-    public IDictionary<string, TreeNode<ExportedSegment>> Build(
+    public TreeNode<ExportedSegment> Build(
         ChainOperationContext<char> context, IList<CharChainOperation> operations)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(operations);
 
-        Dictionary<string, TreeNode<ExportedSegment>> versions = [];
+        TreeNode<ExportedSegment> multi = new();
 
         // setup a cache for trace features as we process each version
         Dictionary<int, List<StringPair>> traceFeats = [];
@@ -590,6 +616,14 @@ public sealed class GveTextTreeBuilder
         {
             string tag = tags[i];
 
+            // if staged-only version, skip if this is not staged
+            string? version = GetVersionFromTag(context, tag);
+            if (StagedOnly && version == null) continue;
+
+            // if version tags are set, skip if this is not in the list
+            if (VersionTags?.Count > 0 && !VersionTags.Contains(tag))
+                continue;
+
             // get nodes for tag
             IList<ChainNode<char>> sources = context.Chain.GetTagNodes(tag);
 
@@ -597,9 +631,19 @@ public sealed class GveTextTreeBuilder
             Dictionary<int, IList<Feature>> sourceTagFeats =
                 context.GetTagNodeFeatures(tag);
 
-            // create blank root
-            TreeNode<ExportedSegment> root = new();
-            versions[tag] = root;
+            // create blank root and add it to the multi-tree as a child
+            // with version tag as its subtree ID
+            TreeNode<ExportedSegment> root = new()
+            {
+                Data = new()
+            };
+            // add sub-id
+            root.Data.AddFeature(MultiTextTreeFilter.F_SUBTREE_ID, tag);
+            // add version if any
+            if (version != null)
+                root.Data.AddFeature(OperationFeature.F_VERSION, version);
+            // add sub-tree to multi-tree
+            multi.AddChild(root);
 
             // add branch
             TreeNode<ExportedSegment> current = root;
@@ -660,7 +704,7 @@ public sealed class GveTextTreeBuilder
                 RestoreDeletions(context, operations, tags, i, root);
         }
 
-        return versions;
+        return multi;
     }
 
     /// <summary>
@@ -672,8 +716,8 @@ public sealed class GveTextTreeBuilder
     /// <returns>A dictionary where each version tag is the key and its value
     /// is the root blank node of the corresponding linear text tree.</returns>
     /// <exception cref="ArgumentNullException">text or operations</exception>
-    public IDictionary<string, TreeNode<ExportedSegment>>
-        Build(string text, IList<CharChainOperation> operations)
+    public TreeNode<ExportedSegment> Build(string text,
+        IList<CharChainOperation> operations)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(nameof(text));
         ArgumentNullException.ThrowIfNullOrEmpty(nameof(operations));

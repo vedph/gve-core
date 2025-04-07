@@ -29,8 +29,7 @@ public sealed class GveSabaTextTreeRendererTest
         };
 
         // build version trees
-        IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
-            builder.Build(context, operations);
+        TreeNode<ExportedSegment> tree = builder.Build(context, operations);
 
         // configure a linear merge filter to build export segments
         LinearMergeTextTreeFilter filter = new();
@@ -54,20 +53,6 @@ public sealed class GveSabaTextTreeRendererTest
         });
 
         // use just 2 versions: v4 and v6
-        TreeNode<ExportedSegment> tree = new();
-        foreach (int n in new[] { 4, 6 })
-        {
-            // get the version tree and segment it
-            string tag = $"v{n}";
-            TreeNode<ExportedSegment> sub = versionTrees[tag];
-            sub = filter.Apply(sub);
-
-            // add the segment to the multi-tree as a child
-            // with a "v" feature equal to the version tag
-            sub.Data ??= new ExportedSegment();
-            sub.Data.AddFeature("v", tag);
-            tree.AddChild(sub);
-        }
 
         // create rendering context
         GveRendererContext rc = new()
