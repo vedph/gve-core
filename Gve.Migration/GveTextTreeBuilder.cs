@@ -638,7 +638,7 @@ public sealed class GveTextTreeBuilder
                 Data = new()
             };
             // add sub-id
-            root.Data.AddFeature(MultiTextTreeFilter.F_SUBTREE_ID, tag);
+            root.Data.AddFeature(CompositeTextTreeFilter.F_SUBTREE_ID, tag);
             // add version if any
             if (version != null)
                 root.Data.AddFeature(OperationFeature.F_VERSION, version);

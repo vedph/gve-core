@@ -1,7 +1,6 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Text;
 using Proteus.Rendering;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Gve.Migration.Test;
@@ -25,15 +24,16 @@ public sealed class GveSabaTextTreeRendererTest
                 OperationFeature.F_TRACE_DELETED
             ],
             TraceFeatureFlattening = true,
-            IncludeDeleted = true
+            IncludeDeleted = true,
+            StagedOnly = true
         };
 
         // build version trees
-        TreeNode<ExportedSegment> tree = builder.Build(context, operations);
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
         // configure a linear merge filter to build export segments
-        LinearMergeTextTreeFilter filter = new();
-        filter.Configure(new MergeTextTreeFilterOptions
+        LinearMergeTextTreeFilter mergeFilter = new();
+        mergeFilter.Configure(new MergeTextTreeFilterOptions
         {
             Features =
             [
@@ -52,7 +52,12 @@ public sealed class GveSabaTextTreeRendererTest
             ]
         });
 
-        // use just 2 versions: v4 and v6
+        // wrap the filter in a multi-text tree filter and apply it
+        CompositeTextTreeFilter filter = new()
+        {
+            Component = mergeFilter
+        };
+        multi = filter.Apply(multi, context);
 
         // create rendering context
         GveRendererContext rc = new()
@@ -61,7 +66,7 @@ public sealed class GveSabaTextTreeRendererTest
             Operations = operations
         };
 
-        return (tree, rc);
+        return (multi, rc);
     }
 
     [Fact]
@@ -78,11 +83,11 @@ public sealed class GveSabaTextTreeRendererTest
             PreferredTag = "$last"
         });
         // get the multi-tree
-        (TreeNode<ExportedSegment> tree, GveRendererContext context) =
+        (TreeNode<ExportedSegment> multi, GveRendererContext context) =
             GetMultiTree();
 
         // render the tree
-        XElement? result = composite.Render(tree, context);
+        XElement? result = composite.Render(multi, context);
 
         Assert.NotNull(result);
         // TODO

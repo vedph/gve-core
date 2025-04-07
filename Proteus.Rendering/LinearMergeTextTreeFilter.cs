@@ -69,7 +69,7 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
         if (tree.FirstChild == null) return tree;
 
         // create root of the new tree
-        TreeNode<ExportedSegment> root = new();
+        TreeNode<ExportedSegment> root = tree.Clone(false, false);
 
         // add to it a copy of first node as child
         TreeNode<ExportedSegment> target = root.AddChild(

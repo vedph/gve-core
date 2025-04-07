@@ -75,9 +75,6 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 $"Context must be of type {nameof(GveRendererContext)}.");
         }
 
-        // get the root element name (app)
-        XName rootName = _options.ResolvePrefixedName(_options.RootElement);
-
         // get the block name (lem/rdg)
         string blockType = "default";
         if (context.Data.TryGetValue(
@@ -86,17 +83,20 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         {
             blockType = value as string ?? "default";
         }
-
         XName blockName = _options.ResolvePrefixedName(
             _options.BlockElements[blockType]);
-
-        // create root element and add block as its child
-        XElement root = new(rootName);
         XElement block = new(blockName);
-        root.Add(block);
 
+        // add mod as child of lem/rdg
+        XElement mod = new(NamespaceOptions.TEI + "mod");
+        string? tag = tree.Data?.Features?.FirstOrDefault(
+                f => f.Name == CompositeTextTreeFilter.F_SUBTREE_ID)?.Value;
+        if (tag != null) mod.SetAttributeValue("n", tag);
+        block.Add(mod);
+
+        // add content inside mod
         TreeNode<ExportedSegment>? sourceNode = tree.FirstChild;
-        XElement current = block;
+        XElement current = mod;
 
         while (sourceNode != null)
         {
@@ -174,6 +174,6 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
             sourceNode = sourceNode.FirstChild;
         }
 
-        return root;
+        return block;
     }
 }

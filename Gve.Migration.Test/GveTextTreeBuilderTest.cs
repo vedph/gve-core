@@ -42,7 +42,7 @@ public sealed class GveTextTreeBuilderTest
             // a| |c |a |t
 
             // v3>v4: insert 'nice ' before 'cat'
-            "13+[\"nice \" [*log=\"insert 'nice ' before 'cat'\"]\n" +
+            "13+[\"nice \" [*log=\"insert 'nice ' before 'cat'\" *version^=\"alpha\"]\n" +
             // 1|2|16|17|18|19|20|13|14|15
             // a| |n |i |c |e |  |c |a |t
 
@@ -52,7 +52,7 @@ public sealed class GveTextTreeBuilderTest
             // a| |c |a |t |  |n |i |c |e
 
             // v5>v6: insert 'is ' before 'nice'
-            "16+[\"is \" [*log=\"insert 'is ' before 'nice'\"]";
+            "16+[\"is \" [*log=\"insert 'is ' before 'nice'\" *version^=\"beta\"]";
             // 1|2|13|14|15|20|21|22|23|16|17|18|19
             // a| |c |a |t |  |i |s |  |n |i |c |e
 
@@ -98,49 +98,49 @@ public sealed class GveTextTreeBuilderTest
 
         // v0 tree: a red pen
         TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v0") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v0") == true);
         Assert.NotNull(tree);
         string text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a red pen", text);
 
         // v1 tree: a pen
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v1") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v1") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a pen", text);
 
         // v2 tree: a hat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v2") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v2") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a hat", text);
 
         // v3 tree: a cat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v3") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v3") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat", text);
 
         // v4 tree: a nice cat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v4") == true); ;
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v4") == true); ;
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a nice cat", text);
 
         // v5 tree: a cat nice
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v5") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v5") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat nice", text);
 
         // v6 tree: a cat is nice
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v6") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree);
         Assert.Equal("a cat is nice", text);
@@ -173,49 +173,49 @@ public sealed class GveTextTreeBuilderTest
 
         // v0 tree: a red pen
         TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v0") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v0") == true);
         Assert.NotNull(tree);
         string text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a red pen", text);
 
         // v1 tree (del): a {red }pen
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v1") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v1") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }pen", text);
 
         // v2 tree (rep): a {red }{pen}hat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v2") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v2") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}hat", text);
 
         // v3 tree (rep): a {red }{pen}{hat}cat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v3") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v3") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {red }{pen}{hat}cat", text);
 
         // v4 tree (ins): a nice {red }{pen}{hat}cat
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v4") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v4") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a nice {red }{pen}{hat}cat", text);
 
         // v5 tree (swp): a {nice}{red }{pen}{hat}cat {cat}nice
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v5") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v5") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat {cat}nice", text);
 
         // v6 tree: (ins) a {nice}{red }{pen}{hat}cat is {cat}nice
         tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v6") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v6") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
@@ -301,7 +301,7 @@ public sealed class GveTextTreeBuilderTest
         // gggggggggg.........22222.........11111.....77777.....777777777.
         // g=4,5,6
         TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
-            n => n.Data?.HasFeature(MultiTextTreeFilter.F_SUBTREE_ID, "v7") == true);
+            n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v7") == true);
         Assert.NotNull(tree);
         // TODO
     }

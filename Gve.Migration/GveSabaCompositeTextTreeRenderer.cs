@@ -78,6 +78,7 @@ public sealed class GveSabaCompositeTextTreeRenderer :
         ArgumentNullException.ThrowIfNull(tree);
         ArgumentNullException.ThrowIfNull(context);
 
+        // root is app and each result is a child of it
         target ??= new XElement(NamespaceOptions.TEI + "app");
         if (result != null) target.Add(result);
 
