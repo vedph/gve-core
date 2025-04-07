@@ -1,6 +1,7 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Text;
 using Proteus.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -8,7 +9,7 @@ namespace Gve.Migration.Test;
 
 public sealed class GveSabaTextTreeRendererTest
 {
-    private static TreeNode<ExportedSegment> GetMultiTree()
+    private static (TreeNode<ExportedSegment>, GveRendererContext) GetMultiTree()
     {
         // get chain and its context
         var (context, operations) = GveTextTreeBuilderTest.GetPenContext();
@@ -53,9 +54,9 @@ public sealed class GveSabaTextTreeRendererTest
             ]
         });
 
-        // use just the 2 last versions for short
+        // use just 2 versions: v4 and v6
         TreeNode<ExportedSegment> tree = new();
-        for (int n = 5; n <= 6; n++)
+        foreach (int n in new[] { 4, 6 })
         {
             // get the version tree and segment it
             string tag = $"v{n}";
@@ -69,20 +70,34 @@ public sealed class GveSabaTextTreeRendererTest
             tree.AddChild(sub);
         }
 
-        return tree;
+        // create rendering context
+        GveRendererContext rc = new()
+        {
+            OpContext = context,
+            Operations = operations
+        };
+
+        return (tree, rc);
     }
 
     [Fact]
     public void Apply_Ok()
     {
+        // create a composite renderer
         GveSabaCompositeTextTreeRenderer composite = new()
         {
             Component = new GveSabaTextTreeRenderer()
         };
-        TreeNode<ExportedSegment> tree = GetMultiTree();
+        // configure it with a GVE tree renderer
+        composite.Configure(new GveSabaCompositeTextTreeRendererOptions
+        {
+            PreferredTag = "$last"
+        });
+        // get the multi-tree
+        (TreeNode<ExportedSegment> tree, GveRendererContext context) =
+            GetMultiTree();
 
-        GveRendererContext context = new();
-
+        // render the tree
         XElement? result = composite.Render(tree, context);
 
         Assert.NotNull(result);

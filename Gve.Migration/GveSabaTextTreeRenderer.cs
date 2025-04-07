@@ -148,7 +148,8 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 // ins/TEXT
                 string sourceValue = "o" + operation.Id;
                 XElement ins = new(NamespaceOptions.TEI + "ins",
-                    new XAttribute("source", sourceValue));
+                    new XAttribute("source", sourceValue),
+                    sourceNode.Data.Text);
                 current.Add(ins);
 
                 // if current is child of subst, keep popping subst parents
@@ -168,6 +169,9 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
             {
                 current.Add(sourceNode.Data?.Text);
             }
+
+            // move to next segment
+            sourceNode = sourceNode.FirstChild;
         }
 
         return root;

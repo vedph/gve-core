@@ -22,6 +22,16 @@ public sealed class GveSabaCompositeTextTreeRenderer :
     private GveSabaCompositeTextTreeRendererOptions _options = new();
 
     /// <summary>
+    /// Configures this renderer with the specified options.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <exception cref="ArgumentNullException">options</exception>
+    public void Configure(GveSabaCompositeTextTreeRendererOptions options)
+    {
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    /// <summary>
     /// Called before rendering each sub-tree, this defines the block type
     /// (default or preferred) according to the version being rendered.
     /// </summary>
@@ -72,16 +82,6 @@ public sealed class GveSabaCompositeTextTreeRenderer :
         if (result != null) target.Add(result);
 
         return target;
-    }
-
-    /// <summary>
-    /// Configures this renderer with the specified options.
-    /// </summary>
-    /// <param name="options">The options.</param>
-    /// <exception cref="ArgumentNullException">options</exception>
-    public void Configure(GveSabaCompositeTextTreeRendererOptions options)
-    {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 }
 
