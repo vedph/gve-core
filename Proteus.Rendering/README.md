@@ -24,7 +24,7 @@ This first stage is the only one which is specific to GVE. Once it has been exec
 A `GveTextTreeBuilder` is used to build a linear text tree, representing a text version derived from a GVE chain. The built tree has a blank root node and a single branch stemming from it, where each node represents a character and is parent of the next character node.
 
 - input: the execution context for GVE operations (`ChainOperationContext<char>`) and the operations themselves; or alternatively, a base text and the operations.
-- output: a dictionary where each version tag is the key and its value is the root blank node of the corresponding linear text tree.
+- output: a "multi"-tree, i.e. a blank root node having one child node per text version. Each child node is the blank root node of a linear tree and has features `sub-id`=version tag and, when present, `version`=staged version ID.
 
 The logic of this builder is modified by its parameters:
 

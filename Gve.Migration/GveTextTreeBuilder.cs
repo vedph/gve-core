@@ -73,7 +73,7 @@ public sealed class GveTextTreeBuilder
     /// <param name="wrapDeleted">if set to <c>true</c>, wrap deleted text
     /// in braces.</param>
     /// <returns>Text.</returns>
-    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentNullException">tree</exception>
     public static string GetTreeText(TreeNode<ExportedSegment> tree,
         bool wrapDeleted = false)
     {
