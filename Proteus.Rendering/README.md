@@ -32,6 +32,8 @@ The logic of this builder is modified by its parameters:
 - `IsFilterInverted`: when true, the filter is inverted, i.e. only features with names NOT in the list are included in the tree.
 - `TraceFeatureFlattening`: a value indicating whether to flatten trace features. When this is true, the trace features linked to nodes are not only drawn from the each processed version, but also from all the previous versions.
 - `IncludeDeleted`: a value indicating whether to include deleted nodes in the tree. When this is true, for each generated version the builder will backtrack to the previous versions one after another, and insert nodes deleted by delete, replace, move, or swap operations at their place, with a delete feature. This relies on trace features: each operation injects segment-in trace features in the input version nodes, representing the nodes selected by it; and segment-out trace features in the output version nodes, representing the nodes produced or affected by it. So, when going backwards, we can find the nodes to insert by selecting nodes with segment-in features produced by operations which delete these segments, e.g. delete, replace, move, swap.
+- `StagedOnly`: true to include only staged operations in the tree, i.e. the versions marked by a global `version`feature.
+- `VersionTags`: the list of version tags to build trees for. If not set, all the versions will be built. Note that this filter might still be modified by `StagedOnly` when set.
 
 The task of this builder is essentially adapting the input data to the generic rendition pipeline which follows. This is based on a linear tree, which can be variously filtered before being rendered.
 
