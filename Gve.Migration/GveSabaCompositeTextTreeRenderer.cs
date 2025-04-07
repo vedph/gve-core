@@ -19,7 +19,7 @@ public sealed class GveSabaCompositeTextTreeRenderer :
     CompositeTextTreeRenderer<XElement>,
     IConfigurable<GveSabaCompositeTextTreeRendererOptions>
 {
-    private GveSabaCompositeTextTreeRendererOptions _options;
+    private GveSabaCompositeTextTreeRendererOptions _options = new();
 
     /// <summary>
     /// Called before rendering each sub-tree, this defines the block type

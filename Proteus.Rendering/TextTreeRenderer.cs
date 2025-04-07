@@ -7,7 +7,8 @@ namespace Proteus.Rendering;
 /// <summary>
 /// Base class for <see cref="ITextTreeRenderer{THandledType}"/> implementations.
 /// </summary>
-public abstract class TextTreeRenderer<THandledType>
+public abstract class TextTreeRenderer<THandledType> :
+    ITextTreeRenderer<THandledType>
 {
     /// <summary>
     /// Gets the type of the text object handled by this filter.

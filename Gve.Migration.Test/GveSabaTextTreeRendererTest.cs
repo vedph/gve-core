@@ -2,6 +2,7 @@
 using Gve.Text;
 using Proteus.Rendering;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Gve.Migration.Test;
 
@@ -27,9 +28,11 @@ public sealed class GveSabaTextTreeRendererTest
             IncludeDeleted = true
         };
 
+        // build version trees
         IDictionary<string, TreeNode<ExportedSegment>> versionTrees =
             builder.Build(context, operations);
 
+        // configure a linear merge filter to build export segments
         LinearMergeTextTreeFilter filter = new();
         filter.Configure(new MergeTextTreeFilterOptions
         {
@@ -54,9 +57,13 @@ public sealed class GveSabaTextTreeRendererTest
         TreeNode<ExportedSegment> tree = new();
         for (int n = 5; n <= 6; n++)
         {
+            // get the version tree and segment it
             string tag = $"v{n}";
             TreeNode<ExportedSegment> sub = versionTrees[tag];
             sub = filter.Apply(sub);
+
+            // add the segment to the multi-tree as a child
+            // with a "v" feature equal to the version tag
             sub.Data ??= new ExportedSegment();
             sub.Data.AddFeature("v", tag);
             tree.AddChild(sub);
@@ -65,5 +72,20 @@ public sealed class GveSabaTextTreeRendererTest
         return tree;
     }
 
-    // TODO
+    [Fact]
+    public void Apply_Ok()
+    {
+        GveSabaCompositeTextTreeRenderer composite = new()
+        {
+            Component = new GveSabaTextTreeRenderer()
+        };
+        TreeNode<ExportedSegment> tree = GetMultiTree();
+
+        GveRendererContext context = new();
+
+        XElement? result = composite.Render(tree, context);
+
+        Assert.NotNull(result);
+        // TODO
+    }
 }
