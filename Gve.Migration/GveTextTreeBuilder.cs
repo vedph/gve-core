@@ -214,6 +214,7 @@ public sealed class GveTextTreeBuilder
         {
             TreeNode<ExportedSegment> newNode = new()
             {
+                Label = source.Data.ToString(),
                 Data = new ExportedSegment
                 {
                     SourceId = source.Id,
@@ -626,6 +627,7 @@ public sealed class GveTextTreeBuilder
                 // add child with text, version tag and features
                 current = current.AddChild(new TreeNode<ExportedSegment>
                 {
+                    Label = source.Data.ToString(),
                     Data = new ExportedSegment
                     {
                         SourceId = source.Id,

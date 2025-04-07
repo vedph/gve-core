@@ -92,6 +92,11 @@ public sealed class LinearMergeTextTreeFilter : ITextTreeFilter,
                 (_options.NoBreakAtLF || current.Data?.Text?.EndsWith('\n') != true))
             {
                 // merge into current and move to next child
+                if (current.Label != null)
+                {
+                    target.Label = target.Label != null
+                        ? target.Label + current.Label : current.Label;
+                }
                 target.Data = ExportedSegment.MergeSegments(current.Data,
                     target.Data);
                 current = current.FirstChild;
