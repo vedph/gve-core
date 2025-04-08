@@ -143,7 +143,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                     sourceNode.Data.Features!.FirstOrDefault(
                         f => f.Name == OperationFeature.F_TRACE_SEG_OUT)?.Value!
                         ?? sourceNode.Data.Features!.First(f =>
-                            f.Name == OperationFeature.F_TRACE_SEG_OUT).Value!);
+                            f.Name == OperationFeature.F_TRACE_SEG2_OUT).Value!);
 
                 // ins/TEXT
                 string sourceValue = "o" + operation.Id;

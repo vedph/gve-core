@@ -221,7 +221,7 @@ public sealed class GveTextTreeBuilderTest
         Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
     }
 
-    private static (
+    internal static (
         ChainOperationContext<char> Context,
         List<CharChainOperation> Operations) GetHatContext()
     {
@@ -289,12 +289,13 @@ public sealed class GveTextTreeBuilderTest
                 OperationFeature.F_TRACE_DELETED
             ],
             TraceFeatureFlattening = true,
-            IncludeDeleted = true
+            IncludeDeleted = true,
+            StagedOnly = true
         };
 
         TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        Assert.Equal(8, multi.Children.Count);
+        Assert.Equal(2, multi.Children.Count);
 
         // v7 tree:
         // for sure, he had a green hat|and very long beard and moustache.
