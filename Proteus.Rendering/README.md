@@ -41,7 +41,7 @@ Note that given the multi-dimensional nature of a GVE chain, the builder produce
 
 ### 2. Text Tree Filters
 
-Once we have a representation of the GVE text versions and their metadata into trees, for each tree we can apply a series of filters to adapt it to the desired output format. The filters are applied in a chain, where each filter can modify the tree and pass it to the next one.
+Once we have a representation of the GVE text versions and their metadata into trees, for each tree we can apply filters to adapt it to the desired output format. Filters are applied in a chain, where each filter can modify the tree and pass it to the next one.
 
 - input: a text tree.
 - output: a text tree (the same instance, or a new one if modified).
