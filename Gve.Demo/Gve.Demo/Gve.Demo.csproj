@@ -11,8 +11,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.3" />
-		<PackageReference Include="Radzen.Blazor" Version="6.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
+		<PackageReference Include="Radzen.Blazor" Version="6.6.3" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
 	</ItemGroup>
 

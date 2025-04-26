@@ -22,8 +22,8 @@
 	<ItemGroup>
 		<PackageReference Include="Fusi.Tools" Version="7.0.5" />
 		<PackageReference Include="Fusi.Tools.Configuration" Version="7.0.5" />
-		<PackageReference Include="Proteus.Core" Version="7.0.0" />
-		<PackageReference Include="Proteus.Text.Xml" Version="7.0.0" />
+		<PackageReference Include="Proteus.Core" Version="7.0.3" />
+		<PackageReference Include="Proteus.Text.Xml" Version="7.0.3" />
 	</ItemGroup>
 
 </Project>
