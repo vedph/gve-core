@@ -12,7 +12,7 @@ public sealed class GveSabaTextTreeRendererTest
         // get chain and its context
         var (context, operations) = GveTextTreeBuilderTest.GetPenContext();
 
-        // get tree for final version (v7)
+        // configure the builder
         GveTextTreeBuilder builder = new()
         {
             FeatureNames =

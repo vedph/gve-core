@@ -10,7 +10,7 @@ namespace Proteus.Rendering;
 /// A multiple trees text tree filter. This assumes that the received tree
 /// has a blank root node whose children are each a separate tree. So, all the
 /// children of the root will be blank nodes, each representing the sub-tree
-/// root. The inner filter of this composite filte will be applied to each
+/// root. The inner filter of this composite filter will be applied to each
 /// such sub-tree.
 /// <para>Tag: <c>text-tree-filter.composite</c>.</para>
 /// </summary>
