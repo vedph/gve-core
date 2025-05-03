@@ -97,6 +97,7 @@ and long moustache and grey beard.
 - 2025-05-03:
   - updated packages.
   - updated Cadmus GVE preview config for migration V3.
+  - removed `Proteus.Rendering` from this solution and added a dependency to this same project once refactored for Cadmus migration V3.
 - 2025-04-26: updated packages.
 
 ### 3.0.0

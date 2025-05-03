@@ -22,11 +22,11 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Fusi.Tools.Configuration" Version="7.0.5" />
+	  <PackageReference Include="Proteus.Rendering" Version="0.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
-	  <ProjectReference Include="..\Proteus.Rendering\Proteus.Rendering.csproj" />
 	</ItemGroup>
 
 </Project>
