@@ -122,7 +122,7 @@ public partial class Snapshot
         {
             Operations.Clear();
 
-            foreach (string line in OperationText.Split('\n',
+            foreach (string line in OperationText.Replace("\r", "").Split('\n',
                 StringSplitOptions.RemoveEmptyEntries))
             {
                 CharChainOperation op = CharChainOperation
