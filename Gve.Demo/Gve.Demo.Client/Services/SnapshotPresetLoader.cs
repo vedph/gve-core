@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace Gve.Demo.Services;
+namespace Gve.Demo.Client.Services;
 
 public static class SnapshotPresetLoader
 {
@@ -14,7 +14,7 @@ public static class SnapshotPresetLoader
     {
         using StreamReader streamReader = new(
             Assembly.GetAssembly(typeof(SnapshotPresetLoader))!
-            .GetManifestResourceStream("Gve.Demo.Assets.Presets.txt")!,
+            .GetManifestResourceStream("Gve.Demo.Client.Assets.Presets.txt")!,
             Encoding.UTF8);
 
         HeaderedTextReader reader = new();

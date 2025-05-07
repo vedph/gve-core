@@ -1,7 +1,7 @@
 ﻿using Fusi.Tools.Text;
 using System.Text;
 
-namespace Gve.Demo.Services;
+namespace Gve.Demo.Client.Services;
 
 /// <summary>
 /// Headered texts reader.

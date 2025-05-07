@@ -1,4 +1,4 @@
-﻿namespace Gve.Demo.Services;
+﻿namespace Gve.Demo.Client.Services;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="SnapshotPreset"/> class.

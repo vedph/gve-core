@@ -1,4 +1,4 @@
-﻿namespace Gve.Demo.Services;
+﻿namespace Gve.Demo.Client.Services;
 
 public interface IStateService
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Gve.Demo.Services;
+namespace Gve.Demo.Client.Services;
 
 public class RamStateService : IStateService
 {
@@ -10,7 +10,7 @@ public class RamStateService : IStateService
     {
         if (_storage.TryGetValue(key, out var value) && value is T typedValue)
         {
-            return Task.FromResult<T?>(typedValue);
+            return Task.FromResult(typedValue);
         }
 
         return Task.FromResult<T?>(default);
