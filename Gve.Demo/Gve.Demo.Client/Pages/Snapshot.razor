@@ -12,24 +12,24 @@
     <RadzenStack Orientation="Orientation.Vertical">
         <RadzenRow>
             <!-- input -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
                 <RadzenTextArea @bind-Value="@Text" Placeholder="text" Rows="8"
                                 class="rz-w-100" />
             </RadzenColumn>
             <!-- text characters -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
                 <StringView Chars="@TextChars" />
             </RadzenColumn>
         </RadzenRow>
 
         <RadzenRow>
             <!-- operations -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
                 <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
                                 class="rz-w-100" Rows="8" />
             </RadzenColumn>
             <!-- presets -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
                 <SnapshotPresetPicker OnPresetSelected="OnPresetSelected" />
             </RadzenColumn>
         </RadzenRow>
