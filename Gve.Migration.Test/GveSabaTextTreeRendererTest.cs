@@ -98,7 +98,7 @@ public sealed class GveSabaTextTreeRendererTest
                 "reason=\"metrical\" x=\"35\" y=\"260\" " +
                 "style=\"font-size:28px;fill:red\"]\n" +
             // v3 -> v4
-            "72x23<>95x21  [*log=\"swap verses\"]\n" +
+            "72x23<>95x21 [*log=\"swap verses\"]\n" +
             // v4 -> v5
             "155x5=\"owls\" [*log=\"owls for crows\" *version^=\"beta\" " +
                 "x=\"195\" y=\"195\" style=\"font-size:28px;fill:red\"]";
