@@ -10,14 +10,13 @@
 <h1>Snapshot</h1>
 <RadzenCard>
     <!-- input -->
-    <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="rz-w-100" />
-    <div style="margin:8px 0">
+    <RadzenStack Orientation="Orientation.Vertical" Gap="8px">
+        <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="rz-w-100" />
         <StringView Chars="@TextChars" />
-    </div>
 
-    <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-                    class="rz-w-100" Rows="8" />
-
+        <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
+                        class="rz-w-100" Rows="8" />
+    </RadzenStack>
     <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
         <RadzenButton Text="Parse" Click="ParseOperationText"
                       ButtonStyle="ButtonStyle.Primary" />

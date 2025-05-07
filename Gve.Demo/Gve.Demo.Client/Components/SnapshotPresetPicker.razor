@@ -1,2 +1,20 @@
-﻿
-@* <RadzenDropDown @bind-Value=@SelectedPreset /> *@
+﻿@using Gve.Demo.Client.Services
+
+<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+    <!-- selector -->
+    <RadzenDropDown Data="@Presets" @bind-Value=@SelectedPreset
+                    TextProperty="@nameof(SnapshotPreset.Name)" />
+    <!-- pick button -->
+    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="check_circke"
+                  Click="@(() => PickPreset())"
+                  Disabled="@(SelectedPreset == null)" />
+</RadzenStack>
+@if (SelectedPreset != null)
+{
+    <RadzenCard>
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenText TextStyle="TextStyle.H6">@SelectedPreset.Name</RadzenText>
+            <RadzenMarkdown Text="@SelectedPreset.Description" />
+        </RadzenStack>
+    </RadzenCard>
+}

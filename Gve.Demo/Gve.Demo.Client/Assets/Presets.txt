@@ -16,7 +16,7 @@ all built their nests in my beard!"
 155x5="owls" [*log="owls for crows" *version^="beta" x="195" y="195" style="font-size:28px;fill:red"]
 
 :dsc
-The first limerick of Edward Lear with a mock autograph.
+The first limerick of Edward Lear (1875 p.7) with a mock autograph. This is the example you can find in [this GVE documentation page](https://vedph.github.io/gve-doc/model/sample-limerick.html).
 
 :title
 a red pen
