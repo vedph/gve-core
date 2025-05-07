@@ -18,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Gve.Migration\Gve.Migration.csproj" />
 	  <ProjectReference Include="..\..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 

@@ -1,8 +1,13 @@
-﻿using Gve.Demo.Client.Components;
+﻿using Fusi.Tools.Data;
+using Gve.Demo.Client.Components;
+using Gve.Migration;
 using Gve.Text;
+using Microsoft.CodeAnalysis;
+using Proteus.Rendering;
 using Radzen;
 using Radzen.Blazor;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Gve.Demo.Client.Pages;
 
@@ -125,61 +130,159 @@ public partial class Snapshot
 
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
-        return text.Select((c, _) =>
-            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
-            .ToList();
+        return [.. text.Select((c, _) =>
+            new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))];
     }
 
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
-        new(nodes.Select(n => n.Data).ToArray());
+        new([.. nodes.Select(n => n.Data)]);
 
-    public void RunOperations()
+    private ChainOperationContext<char> RunOperations()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
+        context.LastTag = "v0";
+
+        foreach (CharChainOperation op in Operations)
+        {
+            op.NoTraceFeatures = NoTraceFeatures;
+            op.Execute(context);
+        }
+
+        ChainTags = context.Chain.GetDistinctTags();
+        TaggedTexts = [.. ChainTags.Select((t, i) => new Tuple<string, string>(
+            t, GetVersionString(context.Chain.GetTagNodes(t))))];
+
+        Steps.Clear();
+        foreach (ChainOperationContextStep step in context.Steps)
+        {
+            Steps.Add(step);
+        }
+
+        ChainStats.Clear();
+        ChainStats.Add(Tuple.Create("nodes", context.Chain.Nodes.Count));
+        // get the counts of links grouped by their Tag
+        var linkCounts = context.Chain.Links.GroupBy(l => l.Tag)
+            .Select(g => Tuple.Create(g.Key, g.Count()));
+        foreach (var linkCount in linkCounts)
+        {
+            ChainStats.Add(linkCount);
+        }
+
+        SelectedChainTags = ChainTags.Count > 1
+            ? [ChainTags[0], ChainTags[^1]]
+            : ChainTags;
+        Chain = context.Chain;
+        ChainDump = context.Chain.Dump();
+
+        SelectedChainTag = ChainTags[0];
+
+        StateHasChanged();
+        StepsGrid?.Reload();
+
+        return context;
+    }
+
+    public void Run()
     {
         if (Operations.Count == 0) return;
 
         try
         {
             IsBusy = true;
-            ChainOperationContext<char> context = new();
-            context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
-            context.LastTag = "v0";
+            RunOperations();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Error",
+                ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
-            foreach (CharChainOperation op in Operations)
+    public void Export()
+    {
+        if (Operations.Count == 0) return;
+
+        try
+        {
+            IsBusy = true;
+
+            // run operations
+            ChainOperationContext<char> opContext = RunOperations();
+
+            // create tree builder
+            GveTextTreeBuilder builder = new()
             {
-                op.NoTraceFeatures = NoTraceFeatures;
-                op.Execute(context);
-            }
+                FeatureNames =
+                [
+                    OperationFeature.F_TRACE_SEG_IN,
+                    OperationFeature.F_TRACE_SEG2_IN,
+                    OperationFeature.F_TRACE_SEG_OUT,
+                    OperationFeature.F_TRACE_SEG2_OUT,
+                    OperationFeature.F_TRACE_DELETED
+                ],
+                TraceFeatureFlattening = true,
+                IncludeDeleted = true,
+                StagedOnly = true
+            };
 
-            ChainTags = context.Chain.GetDistinctTags();
-            TaggedTexts = ChainTags.Select((t, i) => new Tuple<string, string>(
-                t, GetVersionString(context.Chain.GetTagNodes(t)))).ToList();
+            // build version trees
+            TreeNode<ExportedSegment> multi = builder.Build(opContext, Operations);
 
-            Steps.Clear();
-            foreach (ChainOperationContextStep step in context.Steps)
+            // configure a linear merge filter to build export segments
+            LinearMergeTextTreeFilter mergeFilter = new();
+            mergeFilter.Configure(new MergeTextTreeFilterOptions
             {
-                Steps.Add(step);
-            }
+                Features =
+                [
+                    OperationFeature.F_TRACE_SEG_OUT,
+                    OperationFeature.F_TRACE_SEG2_OUT,
+                    OperationFeature.F_TRACE_DELETED
+                ],
+                ValueFilters =
+                [
+                    new MergeTextTreeFilterRepOption
+                    {
+                        IsRegex = true,
+                        Find = "^([^ ]+).*$",
+                        Replace = "$1",
+                    }
+                ]
+            });
 
-            ChainStats.Clear();
-            ChainStats.Add(Tuple.Create("nodes", context.Chain.Nodes.Count));
-            // get the counts of links grouped by their Tag
-            var linkCounts = context.Chain.Links.GroupBy(l => l.Tag)
-                .Select(g => Tuple.Create(g.Key, g.Count()));
-            foreach (var linkCount in linkCounts)
+            // wrap the filter in a multi-text tree filter and apply it
+            CompositeTextTreeFilter filter = new()
             {
-                ChainStats.Add(linkCount);
-            }
+                Component = mergeFilter
+            };
+            multi = filter.Apply(multi, opContext);
 
-            SelectedChainTags = ChainTags.Count > 1
-                ? [ChainTags[0], ChainTags[^1]]
-                : ChainTags;
-            Chain = context.Chain;
-            ChainDump = context.Chain.Dump();
+            GveRendererContext rendContext = new()
+            {
+                OpContext = opContext,
+                Operations = Operations.ToList()
+            };
 
-            SelectedChainTag = ChainTags[0];
+            // create tree renderer
+            GveSabaCompositeTextTreeRenderer composite = new()
+            {
+                Component = new GveSabaTextTreeRenderer()
+            };
+            composite.Configure(new GveSabaCompositeTextTreeRendererOptions
+            {
+                PreferredTag = "$last"
+            });
 
-            StateHasChanged();
-            StepsGrid?.Reload();
+            // render the tree
+            XElement? result = composite.Render(multi, rendContext);
+
+            // TODO
         }
         catch (Exception ex)
         {

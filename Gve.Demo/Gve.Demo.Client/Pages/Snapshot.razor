@@ -35,6 +35,7 @@
         </HeaderTemplate>
         <ChildContent>
             <RadzenDataGrid AllowAlternatingRows="true" AllowSorting="true"
+                            AllowColumnResize="true"
                             AllowFiltering="true" Data="@Operations"
                             TItem="CharChainOperation" @ref="OperationsGrid"
                             SelectionMode="DataGridSelectionMode.Single"
@@ -61,16 +62,24 @@
 </RadzenCard>
 
 <RadzenCard>
-    <!-- run -->
-    <RadzenButton Text="Run" Click="RunOperations">
-        run
-        <RadzenBadge Text="@Operations.Count.ToString()" />
-    </RadzenButton>
+    <RadzenStack Orientation="Orientation.Horizontal">
+        <!-- run -->
+        <RadzenButton Text="Run" Click="Run">
+            run
+            <RadzenBadge Text="@Operations.Count.ToString()" />
+        </RadzenButton>
 
-    <div>
-        <RadzenCheckBox @bind-Value="@NoTraceFeatures" Name="ckNoTrace"/>
-        <RadzenLabel Text="no trace features" Component="ckNoTrace"/>
-    </div>
+        <!-- no trace features -->
+        <div>
+            <RadzenCheckBox @bind-Value="@NoTraceFeatures" Name="ckNoTrace" />
+            <RadzenLabel Text="no trace features" Component="ckNoTrace" />
+        </div>
+
+        <!-- export -->
+        <RadzenButton Text="Export" Click="Export">
+            export
+        </RadzenButton>
+    </RadzenStack>
 
     <div class="rz-w-100">
         <RadzenProgressBar Value="100" Visible="IsBusy"
