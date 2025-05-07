@@ -79,9 +79,9 @@ public class HeaderedText(string header, string text)
     public string Header { get; } = header;
 
     /// <summary>
-    /// Text.
+    /// Text value.
     /// </summary>
-    public string Text { get; } = text;
+    public string Value { get; } = text;
 
     /// <summary>
     /// Converts the headered text to a string.
@@ -89,6 +89,6 @@ public class HeaderedText(string header, string text)
     /// <returns>String.</returns>
     public override string ToString()
     {
-        return $"{Header}: {TextCutter.Cut(Text)}";
+        return $"{Header}: {TextCutter.Cut(Value)}";
     }
 }

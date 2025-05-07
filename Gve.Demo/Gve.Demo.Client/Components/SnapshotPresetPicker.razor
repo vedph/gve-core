@@ -5,7 +5,7 @@
     <RadzenDropDown Data="@Presets" @bind-Value=@SelectedPreset
                     TextProperty="@nameof(SnapshotPreset.Name)" />
     <!-- pick button -->
-    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="check_circke"
+    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="check_circle"
                   Click="@(() => PickPreset())"
                   Disabled="@(SelectedPreset == null)" />
 </RadzenStack>

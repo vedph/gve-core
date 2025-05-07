@@ -9,22 +9,41 @@
 
 <h1>Snapshot</h1>
 <RadzenCard>
-    <!-- input -->
-    <RadzenStack Orientation="Orientation.Vertical" Gap="8px">
-        <RadzenTextArea @bind-Value="@Text" Placeholder="text" class="rz-w-100" />
-        <StringView Chars="@TextChars" />
+    <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenRow>
+            <!-- input -->
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+                <RadzenTextArea @bind-Value="@Text" Placeholder="text" Rows="8"
+                                class="rz-w-100" />
+            </RadzenColumn>
+            <!-- text characters -->
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+                <StringView Chars="@TextChars" />
+            </RadzenColumn>
+        </RadzenRow>
 
-        <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-                        class="rz-w-100" Rows="8" />
-    </RadzenStack>
-    <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
-        <RadzenButton Text="Parse" Click="ParseOperationText"
-                      ButtonStyle="ButtonStyle.Primary" />
+        <RadzenRow>
+            <!-- operations -->
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+                <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
+                                class="rz-w-100" Rows="8" />
+            </RadzenColumn>
+            <!-- presets -->
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="6">
+                <SnapshotPresetPicker OnPresetSelected="OnPresetSelected" />
+            </RadzenColumn>
+        </RadzenRow>
 
-        @if (ChainTags.Count > 0)
-        {
-            <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
-        }
+        <!-- buttons -->
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+            <RadzenButton Text="Parse" Click="ParseOperationText"
+                          ButtonStyle="ButtonStyle.Primary" />
+
+            @if (ChainTags.Count > 0)
+            {
+                <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
+            }
+        </RadzenStack>
     </RadzenStack>
 
     <!-- parsed operations -->
@@ -47,15 +66,15 @@
                     <RadzenDataGridColumn TItem="CharChainOperation"
                                           Property="Type" Title="type" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                                          Property="InputTag" Title="tag-in" />
-                    <RadzenDataGridColumn TItem="CharChainOperation"
-                                          Property="OutputTag" Title="tag-out" />
-                    <RadzenDataGridColumn TItem="CharChainOperation"
                                           Property="At" Title="at" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
                                           Property="Run" Title="run" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
                                           Property="Value" Title="value" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="InputTag" Title="tag-in" />
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="OutputTag" Title="tag-out" />
                 </Columns>
             </RadzenDataGrid>
         </ChildContent>

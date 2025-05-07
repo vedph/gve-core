@@ -1,5 +1,6 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Demo.Client.Components;
+using Gve.Demo.Client.Services;
 using Gve.Migration;
 using Gve.Text;
 using Microsoft.CodeAnalysis;
@@ -71,6 +72,15 @@ public partial class Snapshot
             // v6 = ABCD (gamma)
             "(v3:) 4<>5 [*log=\"swap D with C\" *version^:=gamma]";
         OnTextChanged(_text);
+    }
+
+    public void OnPresetSelected(SnapshotPreset preset)
+    {
+        Text = preset.BaseText.Replace("\r\n", "\n");
+        OperationText = preset.OperationText;
+
+        OnTextChanged(Text);
+        ParseOperationText();
     }
 
     private void OnTextChanged(string value)

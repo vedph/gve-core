@@ -27,22 +27,22 @@ public static class SnapshotPresetLoader
             {
                 case "title":
                     if (preset != null) presets.Add(preset);
-                    preset = new(text.Header);
+                    preset = new(text.Value);
                     break;
                 case "base":
                     if (preset == null)
                         throw new InvalidOperationException("base without title");
-                    preset.BaseText = text.Text;
+                    preset.BaseText = text.Value;
                     break;
                 case "operations":
                     if (preset == null)
                         throw new InvalidOperationException("operations without title");
-                    preset.OperationText = text.Text;
+                    preset.OperationText = text.Value;
                     break;
                 case "dsc":
                     if (preset == null)
                         throw new InvalidOperationException("dsc without title");
-                    preset.Description = text.Text;
+                    preset.Description = text.Value;
                     break;
             }
         }
