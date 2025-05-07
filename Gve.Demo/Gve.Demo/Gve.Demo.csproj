@@ -10,6 +10,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Assets\Presets.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />
 		<PackageReference Include="bClipboard" Version="1.0.1" />
 		<PackageReference Include="HighlightBlazor" Version="0.1.10" />

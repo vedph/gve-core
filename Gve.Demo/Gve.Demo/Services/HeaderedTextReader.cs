@@ -15,6 +15,11 @@ public sealed class HeaderedTextReader
     public string HeaderPrefix { get; set; } = ":";
 
     /// <summary>
+    /// True to trim the headered text. Default is <c>true</c>.
+    /// </summary>
+    public bool IsTrimEnabled { get; set; } = true;
+
+    /// <summary>
     /// Reads the headered text from the specified <see cref="StreamReader"/>.
     /// </summary>
     /// <param name="reader">The reader.</param>
@@ -23,8 +28,7 @@ public sealed class HeaderedTextReader
     {
         ArgumentNullException.ThrowIfNull(reader);
 
-        string? header = null;
-        string? line;
+        string? header = null, line;
         StringBuilder text = new();
 
         while ((line = reader.ReadLine()) != null)
@@ -37,13 +41,16 @@ public sealed class HeaderedTextReader
             {
                 // return the previous headered text if any
                 if (header != null)
-                    yield return new HeaderedText(header, text.ToString());
+                {
+                    yield return new HeaderedText(header, IsTrimEnabled
+                        ? text.ToString().Trim() : text.ToString());
+                }
 
                 // extract the header and reset text
                 header = line[HeaderPrefix.Length..];
                 text.Clear();
             }
-            else
+            else if (header != null)
             {
                 // append the line to the text
                 text.AppendLine(line);
@@ -52,7 +59,10 @@ public sealed class HeaderedTextReader
 
         // return the last headered text if any
         if (header != null)
-            yield return new HeaderedText(header, text.ToString());
+        {
+            yield return new HeaderedText(header, IsTrimEnabled
+                ? text.ToString().Trim() : text.ToString());
+        }
     }
 }
 

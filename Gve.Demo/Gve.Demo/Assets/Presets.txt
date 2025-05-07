@@ -1,0 +1,36 @@
+﻿:title
+limerick 1
+
+:base
+there was an old man with a beard,
+who cried: "It is just as I feared!
+four larks and a wren,
+two swans and a hen,
+all built their nests in my beard!"
+
+:operations
+40x5="said" [*log="said for cried" x="150" y="80" style="font-size:28px;fill:red"]
+99x5="crows" [*log="crows for swans" x="120" y="200" style="font-size:28px;fill:red"]
+116+["have " [*log="insert have" *version^="alpha" reason="metrical" x="35" y="260" style="font-size:28px;fill:red"]
+72x23<>95x21  [*log="swap verses"]
+155x5="owls" [*log="owls for crows" *version^="beta" x="195" y="195" style="font-size:28px;fill:red"]
+
+:dsc
+The first limerick of Edward Lear with a mock autograph.
+
+:title
+a red pen
+
+:base
+a red pen
+
+:operations
+3x4- [*log="delete 'red '"]
+7x3="hat" [*log="replace 'pen' with 'hat'"]
+10x3="cat" [*log="replace 'hat' with 'cat'"]
+13+["nice " [*log="insert 'nice ' before 'cat'" *version^="alpha"]
+16x4<>13x3 [*log="swap 'nice' with 'cat'"]
+16+["is " [*log="insert 'is ' before 'nice'" *version^="beta"]
+
+:dsc
+A 3-words text with many types of operations.
