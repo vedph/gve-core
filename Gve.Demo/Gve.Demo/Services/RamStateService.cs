@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Gve.Demo.Client.Services;
+namespace Gve.Demo.Services;
 
 public class RamStateService : IStateService
 {
