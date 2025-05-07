@@ -1,3 +1,4 @@
+using bClipboard.Extensions;
 using HighlightBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
@@ -16,6 +17,9 @@ internal class Program
 
         // HighlightBlazor
         builder.Services.AddHighlight();
+
+        // bClipboard
+        builder.Services.AddBClipboardService();
 
         await builder.Build().RunAsync();
     }

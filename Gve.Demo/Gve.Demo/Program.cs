@@ -1,3 +1,4 @@
+using bClipboard.Extensions;
 using Gve.Demo.Components;
 using HighlightBlazor;
 using Radzen;
@@ -20,6 +21,9 @@ public class Program
 
         // HighlightBlazor
         builder.Services.AddHighlight();
+
+        // bClipboard
+        builder.Services.AddBClipboardService();
 
         WebApplication app = builder.Build();
 

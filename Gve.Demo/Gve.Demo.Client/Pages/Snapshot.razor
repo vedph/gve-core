@@ -1,7 +1,9 @@
 ﻿@page "/snapshot"
 @rendermode InteractiveServer
 @inject NotificationService NotificationService
+@inject IClipboardService ClipboardService
 @using Gve.Text
+@using bClipboard
 
 <PageTitle>Snapshot</PageTitle>
 
@@ -14,11 +16,11 @@
     </div>
 
     <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-    class="rz-w-100" Rows="8" />
+                    class="rz-w-100" Rows="8" />
 
     <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
         <RadzenButton Text="Parse" Click="ParseOperationText"
-        ButtonStyle="ButtonStyle.Primary" />
+                      ButtonStyle="ButtonStyle.Primary" />
 
         @if (ChainTags.Count > 0)
         {
@@ -35,26 +37,26 @@
         </HeaderTemplate>
         <ChildContent>
             <RadzenDataGrid AllowAlternatingRows="true" AllowSorting="true"
-            AllowColumnResize="true"
-            AllowFiltering="true" Data="@Operations"
-            TItem="CharChainOperation" @ref="OperationsGrid"
-            SelectionMode="DataGridSelectionMode.Single"
-            FilterMode="FilterMode.Advanced"
-            LogicalFilterOperator="LogicalFilterOperator.Or"
-            Title="operations">
+                            AllowColumnResize="true"
+                            AllowFiltering="true" Data="@Operations"
+                            TItem="CharChainOperation" @ref="OperationsGrid"
+                            SelectionMode="DataGridSelectionMode.Single"
+                            FilterMode="FilterMode.Advanced"
+                            LogicalFilterOperator="LogicalFilterOperator.Or"
+                            Title="operations">
                 <Columns>
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="Type" Title="type" />
+                                          Property="Type" Title="type" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="InputTag" Title="tag-in" />
+                                          Property="InputTag" Title="tag-in" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="OutputTag" Title="tag-out" />
+                                          Property="OutputTag" Title="tag-out" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="At" Title="at" />
+                                          Property="At" Title="at" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="Run" Title="run" />
+                                          Property="Run" Title="run" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
-                    Property="Value" Title="value" />
+                                          Property="Value" Title="value" />
                 </Columns>
             </RadzenDataGrid>
         </ChildContent>
@@ -83,7 +85,7 @@
 
     <div class="rz-w-100">
         <RadzenProgressBar Value="100" Visible="IsBusy"
-        Mode="ProgressBarMode.Indeterminate" />
+                           Mode="ProgressBarMode.Indeterminate" />
     </div>
 
     <!-- results -->
@@ -91,39 +93,39 @@
         <Tabs>
             <RadzenTabsItem Text="texts">
                 <RadzenDataGrid AllowAlternatingRows="true" Data="@TaggedTexts"
-                AllowSorting="true" AllowFiltering="true"
-                TItem="Tuple<string,string>"
-                SelectionMode="DataGridSelectionMode.Single"
-                FilterMode="FilterMode.Advanced"
-                Title="texts">
+                                AllowSorting="true" AllowFiltering="true"
+                                TItem="Tuple<string,string>"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="texts">
                     <Columns>
                         <RadzenDataGridColumn TItem="Tuple<string,string>"
-                        Property="Item1" Title="tag" />
+                                              Property="Item1" Title="tag" />
                         <RadzenDataGridColumn TItem="Tuple<string,string>"
-                        Property="Item2" Title="text" />
+                                              Property="Item2" Title="text" />
                     </Columns>
                 </RadzenDataGrid>
             </RadzenTabsItem>
             <RadzenTabsItem Text="steps">
                 <RadzenDataGrid AllowAlternatingRows="true" Data="@Steps"
-                AllowSorting="true" AllowFiltering="true"
-                @ref="StepsGrid"
-                TItem="ChainOperationContextStep"
-                SelectionMode="DataGridSelectionMode.Single"
-                FilterMode="FilterMode.Advanced"
-                Title="steps">
+                                AllowSorting="true" AllowFiltering="true"
+                                @ref="StepsGrid"
+                                TItem="ChainOperationContextStep"
+                                SelectionMode="DataGridSelectionMode.Single"
+                                FilterMode="FilterMode.Advanced"
+                                Title="steps">
                     <Columns>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="InputTag" Title="tin" />
+                                              Property="InputTag" Title="tin" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="OutputTag" Title="tout" />
+                                              Property="OutputTag" Title="tout" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="Operation" Title="operation" />
+                                              Property="Operation" Title="operation" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="Result" Title="text" />
+                                              Property="Result" Title="text" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="FeatureSet.Features"
-                        Title="c-features">
+                                              Property="FeatureSet.Features"
+                                              Title="c-features">
                             <Template>
                                 <ul>
                                     @foreach (var f in context.FeatureSet.Features)
@@ -136,8 +138,8 @@
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                        Property="FeatureSet.NodeFeatures"
-                        Title="n-features">
+                                              Property="FeatureSet.NodeFeatures"
+                                              Title="n-features">
                             <Template>
                                 @foreach (var kvp in context.FeatureSet.NodeFeatures)
                                 {
@@ -161,14 +163,21 @@
                     </div>
                     <RadzenChart>
                         <RadzenPieSeries Data="@ChainStats" Title="chain"
-                        CategoryProperty="Item1" ValueProperty="Item2">
+                                         CategoryProperty="Item1" ValueProperty="Item2">
                             <RadzenSeriesDataLabels Visible="true" />
                         </RadzenPieSeries>
                     </RadzenChart>
                 </div>
             </RadzenTabsItem>
             <RadzenTabsItem Text="export">
-                <CodeHighlight Indent="false" Code="@RenderedXml" CodeLanguage="xml" />
+                <div style="margin-bottom: 10px">
+                    <RadzenButton Text="Copy"
+                                  Click="CopyRenderedTextAsync"
+                                  Disabled="@(RenderedXml == null)" />
+                </div>
+                <div>
+                    <CodeHighlight Indent="false" Code="@RenderedXml" CodeLanguage="xml" />
+                </div>
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

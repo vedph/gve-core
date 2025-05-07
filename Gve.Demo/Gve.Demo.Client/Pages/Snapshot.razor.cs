@@ -16,6 +16,7 @@ public partial class Snapshot
 {
     private string _text = "ARZDC";
     private string? _selectedChainTag;
+    private string? _orRenderedText;
 
     public string Text
     {
@@ -284,8 +285,32 @@ public partial class Snapshot
 
             // render the tree
             XElement? result = composite.Render(multi, rendContext);
+            _orRenderedText = result?.ToString();
             // https://github.com/Guyiming/Highlight.Blazor
-            RenderedXml = WebUtility.HtmlEncode(result?.ToString());
+            RenderedXml = WebUtility.HtmlEncode(_orRenderedText);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Error",
+                ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async Task CopyRenderedTextAsync()
+    {
+        if (string.IsNullOrEmpty(_orRenderedText)) return;
+        try
+        {
+            IsBusy = true;
+            await ClipboardService.CopyToClipboardAsync(_orRenderedText);
+            NotificationService.Notify(NotificationSeverity.Info, "Info",
+                "Rendered text copied");
         }
         catch (Exception ex)
         {
