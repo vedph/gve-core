@@ -1,5 +1,5 @@
-using Gve.Demo.Client.Pages;
 using Gve.Demo.Components;
+using HighlightBlazor;
 using Radzen;
 
 namespace Gve.Demo;
@@ -17,6 +17,9 @@ public class Program
 
         // Radzen services
         builder.Services.AddRadzenComponents();
+
+        // HighlightBlazor
+        builder.Services.AddHighlight();
 
         WebApplication app = builder.Build();
 

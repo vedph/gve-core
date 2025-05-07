@@ -7,6 +7,7 @@ using Proteus.Rendering;
 using Radzen;
 using Radzen.Blazor;
 using System.Diagnostics;
+using System.Net;
 using System.Xml.Linq;
 
 namespace Gve.Demo.Client.Pages;
@@ -50,6 +51,8 @@ public partial class Snapshot
     public IList<string> SelectedChainTags { get; set; } = [];
     public IList<CharModel> TextChars { get; set; } = [];
     public bool NoTraceFeatures { get; set; }
+
+    public string? RenderedXml { get; set; }
 
     public Snapshot()
     {
@@ -281,8 +284,8 @@ public partial class Snapshot
 
             // render the tree
             XElement? result = composite.Render(multi, rendContext);
-
-            // TODO
+            // https://github.com/Guyiming/Highlight.Blazor
+            RenderedXml = WebUtility.HtmlEncode(result?.ToString());
         }
         catch (Exception ex)
         {

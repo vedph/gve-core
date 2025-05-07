@@ -14,6 +14,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.4" />
 		<PackageReference Include="Radzen.Blazor" Version="6.6.4" />
+		<PackageReference Include="HighlightBlazor" Version="0.1.10" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
 	</ItemGroup>
 

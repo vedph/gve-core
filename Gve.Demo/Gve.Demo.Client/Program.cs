@@ -1,3 +1,4 @@
+using HighlightBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 
@@ -12,6 +13,9 @@ internal class Program
 
         // Radzen services
         builder.Services.AddRadzenComponents();
+
+        // HighlightBlazor
+        builder.Services.AddHighlight();
 
         await builder.Build().RunAsync();
     }
