@@ -120,7 +120,11 @@
                         <RadzenDataGridColumn TItem="Tuple<string,string>"
                                               Property="Item1" Title="tag" />
                         <RadzenDataGridColumn TItem="Tuple<string,string>"
-                                              Property="Item2" Title="text" />
+                                              Title="text">
+                            <Template>
+                                <div class="rz-text-wrap">@context.Item2</div>
+                            </Template>
+                        </RadzenDataGridColumn>
                     </Columns>
                 </RadzenDataGrid>
             </RadzenTabsItem>
@@ -138,9 +142,19 @@
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="OutputTag" Title="tout" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="Operation" Title="operation" />
+                                              Title="operation">
+                            <Template>
+                                <div class="rz-text-wrap">@context.Operation</div>
+                            </Template>
+                        </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="Result" Title="text" />
+                                              Title="text">
+                            <Template>
+                                <div class="rz-text-wrap">@context.Result</div>
+                            </Template>
+
+                        </RadzenDataGridColumn>
+
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="FeatureSet.Features"
                                               Title="c-features">
