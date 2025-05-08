@@ -173,16 +173,18 @@
                                               Property="FeatureSet.NodeFeatures"
                                               Title="n-features">
                             <Template>
-                                @foreach (var kvp in context.FeatureSet.NodeFeatures)
-                                {
-                                    <strong>@kvp.Key</strong>
-                                    <ul>
-                                        @foreach (var f in kvp.Value)
-                                        {
-                                            <li>@f</li>
-                                        }
-                                    </ul>
-                                }
+                                <div class="feats rz-text-wrap">
+                                    @foreach (var kvp in context.FeatureSet.NodeFeatures)
+                                    {
+                                        <strong>@kvp.Key</strong>
+                                        <ul>
+                                            @foreach (var f in kvp.Value)
+                                            {
+                                                <li>&#x25cf; @f</li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
                             </Template>
                         </RadzenDataGridColumn>
                     </Columns>
