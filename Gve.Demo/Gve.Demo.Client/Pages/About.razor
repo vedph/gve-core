@@ -5,41 +5,61 @@
 <h1>About GVE Demo</h1>
 
 <article style="column-width: 800px">
-    <p>
-        This demo allows playing with the chain model. As a quick start, just
-        click <b>Parse</b>, and then <b>Run</b>, and inspect generated data.
-        The chain diagram at the bottom is interactive: select one or more
-        versions, and drag nodes at will.
-    </p>
+    <section>
+        <h2>Model</h2>
+        <p>
+            This demo allows playing with the chain model by directly consuming
+            its backend components logic. As a quick start, just
+            click <b>Parse</b>, and then <b>Run</b>, and inspect generated data.
+            The chain diagram at the bottom is interactive: select one or more
+            versions, and drag nodes at will.
+        </p>
+        <p>
+            A chain data structure consists of a linear sequence of nodes, each
+            connected to the previous and the next node by a link.
+            Additionally, each link has a version tag, which adds the dimension of time
+            to this structure.
+        </p>
+        <p>
+            Internally, this structure collects nodes and links,
+            and once they are added, they cannot be removed (unless we are using a
+            single version). Any modification is done by adding new nodes and links,
+            which connect or disconnect or reorder the existing nodes.
+        </p>
+        <p>
+            When the chain is empty, there are no nodes or links. When there is at
+            least one node, there always are links for the head and the tail of the
+            chain. So, the structure, when not empty, always alternates links and nodes,
+            starting and ending with links.
+        </p>
+        <p>
+            This structure allows to represent different states of a text
+            in time, after operations change it. Each operation introduces a new version
+            (unless you are overwriting the previous version), so that building the
+            text for a version is done by just following the path defined by links
+            among nodes. At any time, you can build the text for any version, while
+            still using a single object to represent all of the versions.
+            Operations usually add new links, and optionally add new nodes; anyway,
+            both nodes and links are immutable items of an unordered set.
+        </p>
+        <p>
+            For more information, please see the <a href="https://vedph.github.io/gve-doc/"
+                                                    target="_blank">VEdition documentation</a>.
+        </p>
+    </section>
 
-    <p>
-        A chain data structure consists of a linear sequence of nodes, each
-        connected to the previous and the next node by a link.
-        Additionally, each link has a version tag, which adds the dimension of time
-        to this structure.
-    </p>
-    <p>
-        Internally, this structure collects nodes and links,
-        and once they are added, they cannot be removed (unless we are using a
-        single version). Any modification is done by adding new nodes and links,
-        which connect or disconnect or reorder the existing nodes.
-    </p>
-    <p>
-        When the chain is empty, there are no nodes or links. When there is at
-        least one node, there always are links for the head and the tail of the
-        chain. So, the structure, when not empty, always alternates links and nodes,
-        starting and ending with links.
-    </p>
-    <p>
-        This structure allows to represent different states of a text
-        in time, after operations change it. Each operation introduces a new version
-        (unless you are overwriting the previous version), so that building the
-        text for a version is done by just following the path defined by links
-        among nodes. At any time, you can build the text for any version, while
-        still using a single object to represent all of the versions.
-        Operations usually add new links, and optionally add new nodes; anyway,
-        both nodes and links are immutable items of an unordered set.
-    </p>
-    <p>For more information, please see the <a href="https://vedph.github.io/gve-doc/"
-        target="_blank">VEdition documentation</a>.</p>
+    <section>
+        <h2>Demo</h2>
+        <p>To use the demo, you can either enter your own base text and operations
+            using their domain specific language, or just pick a preset text/operations
+            pair from the list.
+        </p>
+        <p>Once you have entered these data, click <code>Parse</code> to parse
+            operations, and then <code>Run</code> to run them and inspect the
+            results.
+        </p>
+        <p>To get a sample TEI rendition of the result, click <code>Export</code>.
+            This currently just uses one specific TEI output, inspired by the
+            Saba 1919 edition, with minimal data to keep it simple.</p>
+    </section>
 </article>
