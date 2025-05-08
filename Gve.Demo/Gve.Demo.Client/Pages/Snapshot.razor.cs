@@ -251,8 +251,8 @@ public partial class Snapshot
             TreeNode<ExportedSegment> multi = builder.Build(opContext, Operations);
 
             // configure a linear merge filter to build export segments
-            LinearMergeTextTreeFilter mergeFilter = new();
-            mergeFilter.Configure(new MergeTextTreeFilterOptions
+            MergeLinearTextTreeFilter mergeFilter = new();
+            mergeFilter.Configure(new MergeLinearTextTreeFilterOptions
             {
                 Features =
                 [

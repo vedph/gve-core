@@ -10,6 +10,18 @@ namespace Gve.Migration.Test;
 
 public sealed class GveSabaTextTreeRendererTest
 {
+    private static TreeNode<ExportedSegment> WrapAndApply(
+        TreeNode<ExportedSegment> tree,
+        ChainOperationContext<char> context,
+        ITextTreeFilter filter)
+    {
+        CompositeTextTreeFilter composite = new()
+        {
+            Component = filter
+        };
+        return composite.Apply(tree, context);
+    }
+
     private static (TreeNode<ExportedSegment>, GveRendererContext)
         GetMultiTree(ChainOperationContext<char> context,
         List<CharChainOperation> operations)
@@ -33,9 +45,9 @@ public sealed class GveSabaTextTreeRendererTest
         // build version trees
         TreeNode<ExportedSegment> multi = builder.Build(context, operations);
 
-        // configure a linear merge filter to build export segments
-        LinearMergeTextTreeFilter mergeFilter = new();
-        mergeFilter.Configure(new MergeTextTreeFilterOptions
+        // apply a linear merge filter to build export segments
+        MergeLinearTextTreeFilter mergeFilter = new();
+        mergeFilter.Configure(new MergeLinearTextTreeFilterOptions
         {
             Features =
             [
@@ -53,13 +65,10 @@ public sealed class GveSabaTextTreeRendererTest
                 }
             ]
         });
+        multi = WrapAndApply(multi, context, mergeFilter);
 
-        // wrap the filter in a multi-text tree filter and apply it
-        CompositeTextTreeFilter filter = new()
-        {
-            Component = mergeFilter
-        };
-        multi = filter.Apply(multi, context);
+        // apply a block filter
+        multi = WrapAndApply(multi, context, new BlockLinearTextTreeFilter());
 
         return (multi, new()
         {

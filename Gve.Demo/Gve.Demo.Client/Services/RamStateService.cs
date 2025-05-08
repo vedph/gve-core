@@ -10,7 +10,7 @@ public class RamStateService : IStateService
     {
         if (_storage.TryGetValue(key, out var value) && value is T typedValue)
         {
-            return Task.FromResult(typedValue);
+            return Task.FromResult<T?>(typedValue);
         }
 
         return Task.FromResult<T?>(default);

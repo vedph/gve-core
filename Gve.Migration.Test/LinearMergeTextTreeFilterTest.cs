@@ -34,8 +34,8 @@ public sealed class LinearMergeTextTreeFilterTest
         TreeNode<ExportedSegment> tree = multi.Children.First(
             n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v6") == true);
 
-        LinearMergeTextTreeFilter filter = new();
-        filter.Configure(new MergeTextTreeFilterOptions
+        MergeLinearTextTreeFilter filter = new();
+        filter.Configure(new MergeLinearTextTreeFilterOptions
         {
             Features =
             [
@@ -114,8 +114,8 @@ public sealed class LinearMergeTextTreeFilterTest
         TreeNode<ExportedSegment> tree = multi.Children.First(
             n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v6") == true);
 
-        LinearMergeTextTreeFilter filter = new();
-        filter.Configure(new MergeTextTreeFilterOptions
+        MergeLinearTextTreeFilter filter = new();
+        filter.Configure(new MergeLinearTextTreeFilterOptions
         {
             Features =
             [
