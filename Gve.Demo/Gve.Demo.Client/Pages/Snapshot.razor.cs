@@ -55,6 +55,7 @@ public partial class Snapshot
     public bool NoTraceFeatures { get; set; }
 
     public string? RenderedXml { get; set; }
+    public int ResultIndex { get; set; }
 
     public Snapshot()
     {
@@ -298,6 +299,8 @@ public partial class Snapshot
             _orRenderedText = result?.ToString();
             // https://github.com/Guyiming/Highlight.Blazor
             RenderedXml = WebUtility.HtmlEncode(_orRenderedText);
+
+            ResultIndex = 3;
         }
         catch (Exception ex)
         {
