@@ -3,6 +3,7 @@ using Fusi.Tools.Configuration;
 using Fusi.Tools.Data;
 using Proteus.Core.Text;
 using Proteus.Rendering;
+using Proteus.Rendering.Renderers;
 using System;
 using System.Linq;
 using System.Xml.Linq;

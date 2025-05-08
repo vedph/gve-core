@@ -1,6 +1,7 @@
 ﻿using Fusi.Tools.Data;
 using Gve.Text;
 using Proteus.Rendering;
+using Proteus.Rendering.Filters;
 using System.Linq;
 
 namespace Gve.Migration.Test;

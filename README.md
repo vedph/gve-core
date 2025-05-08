@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-05-08: updated packages.
 - 2025-05-03:
   - updated packages.
   - updated Cadmus GVE preview config for migration V3.

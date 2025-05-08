@@ -3,6 +3,7 @@ using Fusi.Tools.Data;
 using Gve.Text;
 using Proteus.Core.Text;
 using Proteus.Rendering;
+using Proteus.Rendering.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

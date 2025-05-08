@@ -4,6 +4,7 @@ using Proteus.Rendering;
 using System.Collections.Generic;
 using System;
 using System.Xml.Linq;
+using Proteus.Rendering.Filters;
 
 namespace Gve.Migration.Test;
 
