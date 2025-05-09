@@ -23,9 +23,9 @@ namespace Gve.Migration;
 /// <seealso cref="TextTreeRenderer{THandledType}" />
 [Tag("text-tree-renderer.gve-saba")]
 public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
-    IConfigurable<XmlTextTreeRendererOptions>
+    IConfigurable<GveSabaTextTreeRendererOptions>
 {
-    private XmlTextTreeRendererOptions _options = new()
+    private GveSabaTextTreeRendererOptions _options = new()
     {
         RootElement = "tei:app",
         BlockElements = new Dictionary<string, string>
@@ -42,7 +42,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
     /// </summary>
     /// <param name="options">The options.</param>
     /// <exception cref="ArgumentNullException">options</exception>
-    public void Configure(XmlTextTreeRendererOptions options)
+    public void Configure(GveSabaTextTreeRendererOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
@@ -53,6 +53,20 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         int i = traceValue.IndexOf(' ');
         string opid = traceValue[..i];
         return _context!.Operations!.Find(op => op.Id == opid)!;
+    }
+
+    private static XElement? GetAscendantOrSelf(XElement? element, XName name)
+    {
+        if (element == null) return null;
+        if (element.Name ==  name) return element;
+
+        XElement? parent = element.Parent;
+        while (parent != null)
+        {
+            if (parent.Name == name) return parent;
+            parent = parent.Parent;
+        }
+        return null;
     }
 
     /// <summary>
@@ -98,6 +112,14 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         // add content inside mod
         TreeNode<ExportedSegment>? sourceNode = tree.FirstChild;
         XElement current = mod;
+
+        // add line element if requested
+        if (_options.LineElement != null)
+        {
+            XElement line = new(_options.ResolvePrefixedName(_options.LineElement));
+            current.Add(line);
+            current = line;
+        }
 
         while (sourceNode != null)
         {
@@ -171,10 +193,52 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 current.Add(sourceNode.Data?.Text);
             }
 
+            // handle end-of-line after processed node
+            if (sourceNode.Data?.HasFeature(ExportedSegment.F_EOL_TAIL) == true)
+            {
+                if (_options.LineElement != null)
+                {
+                    // get the line element name
+                    XName lineElementName = _options.ResolvePrefixedName(
+                        _options.LineElement);
+
+                    // get the nearest enclosing line element starting from current
+                    XElement? currentLine = GetAscendantOrSelf(current, lineElementName);
+
+                    // if found (this should always happen), add a new sibling
+                    // line element and make it the current target element
+                    // TODO: consider subst?
+                    if (currentLine?.Parent != null)
+                    {
+                        XElement line = new(lineElementName);
+                        currentLine.Parent.Add(line);
+                        current = line;
+                    }
+                }
+                else
+                {
+                    // if no line element, just add a new line
+                    current.Add(Environment.NewLine);
+                }
+            }
+
             // move to next segment
             sourceNode = sourceNode.FirstChild;
         }
 
         return block;
     }
+}
+
+/// <summary>
+/// Options for <see cref="GveSabaTextTreeRenderer"/>.
+/// </summary>
+public class GveSabaTextTreeRendererOptions : XmlTextTreeRendererOptions
+{
+    /// <summary>
+    /// The name of the element representing each line of the source text
+    /// (e.g. <c>tei:l</c>, <c>tei:p</c>), or null to avoid emitting such
+    /// elements. When set, line elements are children of <c>mod</c>.
+    /// </summary>
+    public string? LineElement { get; set; }
 }
