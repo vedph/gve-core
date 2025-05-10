@@ -604,6 +604,24 @@ public sealed class GveTextTreeBuilder
             f => f.Name == OperationFeature.F_VERSION)?.Value;
     }
 
+    private static TreeNode<ExportedSegment> CreateSubTree(
+        string tag, string? version)
+    {
+        TreeNode<ExportedSegment> root = new()
+        {
+            Data = new()
+        };
+
+        // add sub-id
+        root.Data.AddFeature(CompositeTextTreeFilter.F_SUBTREE_ID, tag);
+
+        // add version if any
+        if (version != null)
+            root.Data.AddFeature(OperationFeature.F_VERSION, version);
+
+        return root;
+    }
+
     /// <summary>
     /// Builds a "multi"-trees wrapper tree consisting of a blank root node
     /// having one child linear tree per version.
@@ -642,37 +660,32 @@ public sealed class GveTextTreeBuilder
                 continue;
 
             // get nodes for tag
-            IList<ChainNode<char>> sources = context.Chain.GetTagNodes(tag);
+            IList<ChainNode<char>> tagNodes = context.Chain.GetTagNodes(tag);
 
             // get nodes features for tag
-            Dictionary<int, IList<Feature>> sourceTagFeats =
+            Dictionary<int, IList<Feature>> tagFeats =
                 context.GetTagNodeFeatures(tag);
 
             // create blank root and add it to the multi-tree as a child
             // with version tag as its subtree ID
-            TreeNode<ExportedSegment> root = new()
-            {
-                Data = new()
-            };
-            // add sub-id
-            root.Data.AddFeature(CompositeTextTreeFilter.F_SUBTREE_ID, tag);
-            // add version if any
-            if (version != null)
-                root.Data.AddFeature(OperationFeature.F_VERSION, version);
+            TreeNode<ExportedSegment> sub = CreateSubTree(tag, version);
+
             // add sub-tree to multi-tree
-            multi.AddChild(root);
+            multi.AddChild(sub);
 
-            // add branch
-            TreeNode<ExportedSegment> current = root;
-            foreach (ChainNode<char> source in sources)
+            // add sub-tree descendants
+            TreeNode<ExportedSegment> current = sub;
+
+            // for each node in current version tag nodes
+            foreach (ChainNode<char> tagNode in tagNodes)
             {
-                // get selected node features
-                IList<Feature> sourceFeats = sourceTagFeats.TryGetValue(
-                    source.Id, out IList<Feature>? value) ? value : [];
+                // get node features
+                IList<Feature> nodeFeats = tagFeats.TryGetValue(
+                    tagNode.Id, out IList<Feature>? value) ? value : [];
 
-                // inject only the selected features
+                // collect only the selected features for the target node
                 List<StringPair> targetFeats = [];
-                foreach (Feature feature in sourceFeats
+                foreach (Feature feature in nodeFeats
                     .Where(f => IsFeatureIncluded(f.Name)))
                 {
                     targetFeats.Add(new StringPair(feature.Name, feature.Value));
@@ -680,19 +693,19 @@ public sealed class GveTextTreeBuilder
 
                 // flatten trace features from previous versions if requested
                 if (TraceFeatureFlattening && traceFeats.TryGetValue(
-                    source.Id, out List<StringPair>? nodeTraceFeats))
+                    tagNode.Id, out List<StringPair>? nodeTraceFeats))
                 {
                     FlattenTraceFeatures(nodeTraceFeats, targetFeats);
                 }
 
-                // add child with text, version tag and features
+                // add child target node with text, version tag and features
                 current = current.AddChild(new TreeNode<ExportedSegment>
                 {
-                    Label = source.Data.ToString(),
+                    Label = tagNode.Data.ToString(),
                     Data = new ExportedSegment
                     {
-                        SourceId = source.Id,
-                        Text = source.Data.ToString(),
+                        SourceId = tagNode.Id,
+                        Text = tagNode.Data.ToString(),
                         //Tags = [tag],
                         Features = targetFeats.Count == 0 ? null : targetFeats
                     }
@@ -700,17 +713,17 @@ public sealed class GveTextTreeBuilder
 
                 // cache all the trace features from node for next version
                 // flattening
-                if (TraceFeatureFlattening && sourceFeats.Any(f =>
+                if (TraceFeatureFlattening && nodeFeats.Any(f =>
                     f.Name.StartsWith(OperationFeature.F_TRACE_PREFIX)))
                 {
-                    if (!traceFeats.ContainsKey(source.Id))
-                        traceFeats[source.Id] = [];
+                    if (!traceFeats.ContainsKey(tagNode.Id))
+                        traceFeats[tagNode.Id] = [];
 
-                    foreach (Feature feature in sourceFeats
+                    foreach (Feature feature in nodeFeats
                         .Where(f => f.Name.StartsWith(
                             OperationFeature.F_TRACE_PREFIX)))
                     {
-                        traceFeats[source.Id].Add(
+                        traceFeats[tagNode.Id].Add(
                             new StringPair(feature.Name, feature.Value));
                     }
                 }
@@ -718,7 +731,7 @@ public sealed class GveTextTreeBuilder
 
             // restore deletions if requested
             if (IncludeDeleted)
-                RestoreDeletions(context, operations, tags, i, root);
+                RestoreDeletions(context, operations, tags, i, sub);
         }
 
         return multi;
