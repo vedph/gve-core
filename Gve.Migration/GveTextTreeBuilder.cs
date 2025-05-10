@@ -68,6 +68,20 @@ public sealed class GveTextTreeBuilder
     public HashSet<string>? VersionTags { get; set; }
 
     /// <summary>
+    /// Get the operation ID from the specified trace feature value.
+    /// The operation ID starts at the beginning of the value and ends at the first
+    /// space character.
+    /// </summary>
+    /// <param name="value">Value or null.</param>
+    /// <returns>Operation ID or null.</returns>
+    private static string? GetOpid(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return null;
+        int i = value.IndexOf(' ');
+        return i < 0 ? value : value[..i];
+    }
+
+    /// <summary>
     /// Gets the text corresponding to the specified version tree.
     /// </summary>
     /// <param name="tree">The root node of the tree to get text from.</param>
@@ -92,41 +106,43 @@ public sealed class GveTextTreeBuilder
             return sb.ToString();
         }
 
-        string? currentValue = null;
+        // traverse all nodes wrapping deleted text in braces
+        string? currentOpid = null;
         tree.Traverse(node =>
         {
             if (node.Data == null) return true;
 
+            // get $del feature and its operation ID from it if any
             StringPair? deletedFeature = node.Data.Features?.FirstOrDefault(f =>
                 f.Name == OperationFeature.F_TRACE_DELETED);
-            string? deletedValue = deletedFeature?.Value;
+            string? opid = GetOpid(deletedFeature?.Value);
 
-            // check for transition between non-deleted and deleted text
-            if (deletedValue != null)
+            // if there is a $del feature:
+            if (opid != null)
             {
-                // extract OPID from value (up to first space excluded)
-                int i = deletedValue.IndexOf(' ');
-                deletedValue = i < 0 ? deletedValue : deletedValue[..i];
-
-                if (currentValue == null)
+                // if not inside a deleted segment, we need to start one
+                if (currentOpid == null)
                 {
-                    // start of deleted segment
-                    currentValue = deletedValue;
+                    currentOpid = opid;
                     sb.Append('{');
                 }
-                else if (currentValue != deletedValue)
+                // else if we are inside a deleted segment and the ID is the same,
+                // we end it and start a new one
+                else if (currentOpid != opid)
                 {
                     // end of deleted segment
                     sb.Append('}');
                     // start of new deleted segment
-                    currentValue = deletedValue;
+                    currentOpid = opid;
                     sb.Append('{');
                 }
             }
-            else if (currentValue != null)
+            // else if we were inside a deleted segment but this node has no
+            // $del, end the segment
+            else if (currentOpid != null)
             {
                 // end of deleted segment
-                currentValue = null;
+                currentOpid = null;
                 sb.Append('}');
             }
 
@@ -137,7 +153,7 @@ public sealed class GveTextTreeBuilder
         });
 
         // close any open deletion segment at the end
-        if (currentValue != null) sb.Append('}');
+        if (currentOpid != null) sb.Append('}');
 
         return sb.ToString();
     }
