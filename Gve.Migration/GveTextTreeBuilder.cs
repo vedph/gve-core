@@ -580,10 +580,10 @@ public sealed class GveTextTreeBuilder
         }
     }
 
-    private static void FlattenTraceFeatures(List<StringPair> nodeTraceFeats,
+    private static void MergeTraceFeatures(List<StringPair> sourceFeats,
         List<StringPair> targetFeats)
     {
-        foreach (StringPair traceFeat in nodeTraceFeats)
+        foreach (StringPair traceFeat in sourceFeats)
         {
             if (targetFeats.All(f => f.Name != traceFeat.Name &&
                 f.Value != traceFeat.Value))
@@ -695,7 +695,7 @@ public sealed class GveTextTreeBuilder
                 if (TraceFeatureFlattening && traceFeats.TryGetValue(
                     tagNode.Id, out List<StringPair>? nodeTraceFeats))
                 {
-                    FlattenTraceFeatures(nodeTraceFeats, targetFeats);
+                    MergeTraceFeatures(nodeTraceFeats, targetFeats);
                 }
 
                 // add child target node with text, version tag and features
