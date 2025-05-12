@@ -49,6 +49,27 @@ public sealed class CharChainSwapOperationTest
     }
 
     [Fact]
+    public void ParseOperation_At1Run2To3Run3Indexes()
+    {
+        CharChainSwapOperation op = CharChainOperation
+            .Parse<CharChainSwapOperation>("@1x2<>3x3");
+
+        Assert.Equal(OperationType.Swap, op.Type);
+        Assert.Null(op.InputTag);
+        Assert.Null(op.OutputTag);
+        Assert.True(op.AtAsIndex);
+        Assert.Equal(1, op.At);
+        Assert.Equal(2, op.Run);
+        Assert.Equal(3, op.To);
+        Assert.Equal(3, op.ToRun);
+        Assert.Null(op.Value);
+
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
     public void Execute_At1Run1To3Run1()
     {
         ChainOperationContext<char> context = new();
