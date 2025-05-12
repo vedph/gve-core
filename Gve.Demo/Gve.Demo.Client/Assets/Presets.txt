@@ -28,10 +28,10 @@ one FIVE six ten three four zero
 5+["two "
 5x4="Five"
 37x4="five"
-14x4-
+14x4- [*version^:=alpha]
 @8x8<>17x10
 29x4>[1@zero
-1+[" "@zero
+1+[" "@zero [*version^:=beta]
 
 :dsc
 A single line with a few words with counting from 0 to 6 with dense operations of all types.

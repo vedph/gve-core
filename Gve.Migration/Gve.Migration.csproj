@@ -21,8 +21,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Fusi.Tools.Configuration" Version="7.0.5" />
-	  <PackageReference Include="Proteus.Rendering" Version="0.0.4" />
+	  <PackageReference Include="Fusi.Tools.Configuration" Version="7.0.6" />
+	  <PackageReference Include="Proteus.Rendering" Version="0.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>

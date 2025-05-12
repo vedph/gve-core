@@ -200,6 +200,19 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
             }
             else
             {
+                // move outside subst if any
+                if (current.Ancestors().Any(a => a.Name ==
+                    NamespaceOptions.TEI + "subst"))
+                {
+                    XElement parent = current.Parent!;
+                    while (parent != null && parent.Name ==
+                        NamespaceOptions.TEI + "subst")
+                    {
+                        current = parent;
+                        parent = parent.Parent!;
+                    }
+                }
+
                 current.Add(sourceNode.Data?.Text);
             }
 

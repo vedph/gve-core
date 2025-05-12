@@ -128,6 +128,51 @@ public sealed class GveSabaTextTreeRendererTest
         return (context, operations);
     }
 
+    private static (ChainOperationContext<char> Context,
+        List<CharChainOperation> Operations) GetDigitsContext()
+    {
+        // https://vedph.github.io/gve-doc/model/sample-limerick.html
+        const string text = "one FIVE six ten three four zero";
+
+        // setup text
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom(text));
+        context.LastTag = "v0";
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // setup operations
+        const string operationsText =
+            // v0 -> v1
+            "5+[\"two \"\n" +
+            // v1 -> v2
+            "5x4=\"Five\"\n" +
+            // v2 -> v3
+            "37x4=\"five\"\n" +
+            // v3 -> v4
+            "14x4- [*version^:=alpha]\n" +
+            // v4 -> v5
+            "@8x8<>17x10\n" +
+            // v5 -> v6
+            "29x4>[1@zero\n" +
+            // v6 -> v7
+            "1+[\" \"@zero [*version^:=beta]";
+
+        List<CharChainOperation> operations = [];
+        foreach (string line in operationsText.Split('\n',
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            CharChainOperation op = CharChainOperation
+                .Parse<CharChainOperation>(line);
+            operations.Add(op);
+        }
+
+        // execute operations
+        foreach (CharChainOperation op in operations) op.Execute(context);
+
+        return (context, operations);
+    }
+
     private static (TreeNode<ExportedSegment>, GveRendererContext) GetPenMultiTree()
     {
         // get chain and its context
@@ -192,8 +237,8 @@ public sealed class GveSabaTextTreeRendererTest
         // TODO
     }
 
-    private static (
-        TreeNode<ExportedSegment>, GveRendererContext) GetLimerickMultiTree()
+    private static (TreeNode<ExportedSegment>, GveRendererContext)
+        GetLimerickMultiTree()
     {
         // get chain and its context
         var (context, operations) = GetLimerickContext();
@@ -216,6 +261,38 @@ public sealed class GveSabaTextTreeRendererTest
         // get the multi-tree
         (TreeNode<ExportedSegment> multi, GveRendererContext context) =
             GetLimerickMultiTree();
+
+        // render the tree
+        XElement? result = composite.Render(multi, context);
+
+        Assert.NotNull(result);
+        // TODO
+    }
+
+    private static (TreeNode<ExportedSegment>, GveRendererContext)
+        GetDigitsMultiTree()
+    {
+        // get chain and its context
+        var (context, operations) = GetDigitsContext();
+        return GetMultiTree(context, operations);
+    }
+
+    [Fact]
+    public void Apply_Digits_Ok()
+    {
+        // create a composite renderer
+        GveSabaCompositeTextTreeRenderer composite = new()
+        {
+            Component = new GveSabaTextTreeRenderer()
+        };
+        // configure it with a GVE tree renderer
+        composite.Configure(new GveSabaCompositeTextTreeRendererOptions
+        {
+            PreferredTag = "$last"
+        });
+        // get the multi-tree
+        (TreeNode<ExportedSegment> multi, GveRendererContext context) =
+            GetDigitsMultiTree();
 
         // render the tree
         XElement? result = composite.Render(multi, context);
