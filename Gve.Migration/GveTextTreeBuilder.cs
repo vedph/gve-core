@@ -19,6 +19,25 @@ namespace Gve.Migration;
 /// </summary>
 public sealed class GveTextTreeBuilder
 {
+    private sealed record TaggedId
+    {
+        public string Version { get; }
+        public int Id { get; }
+        public int Ordinal { get; }
+
+        public TaggedId(string version, int id, int ordinal)
+        {
+            Version = version;
+            Id = id;
+            Ordinal = ordinal;
+        }
+
+        public override string ToString()
+        {
+            return $"{Version}_{Id}@{Ordinal}";
+        }
+    }
+
     /// <summary>
     /// Gets or sets the filter features names. When set, only features with
     /// names equal to the names in this list are included in the tree.
@@ -174,45 +193,57 @@ public sealed class GveTextTreeBuilder
 
     /// <summary>
     /// Gets the IDs of all nodes with a segment/segment-2 feature in the
-    /// specified version.
+    /// specified versions range.
     /// </summary>
     /// <param name="context">The execution context.</param>
-    /// <param name="tag">The version tag.</param>
+    /// <param name="tags">The version tags.</param>
+    /// <param name="minTagIndex">The index to the first version in
+    /// <paramref name="tags"/>.</param>
+    /// <param name="maxTagIndex">The index to the last version in
+    /// <paramref name="tags"/>. IDs are collected from this version backwards,
+    /// up to <paramref name="minTagIndex"/>.</param>
     /// <param name="secondary">if set to <c>true</c>, look for segment-2 features.
     /// </param>
-    /// <returns>List of IDs, sorted by their segment ordinal.</returns>
-    private static List<int> GetIdsOfNodesWithFeature(
-        ChainOperationContext<char> context, string tag, bool secondary)
+    /// <returns>List of IDs, sorted by their version and then by their segment
+    /// ordinal.</returns>
+    private static List<TaggedId> GetIdsOfNodesWithFeature(
+        ChainOperationContext<char> context, IList<string> tags,
+        int minTagIndex, int maxTagIndex, bool secondary)
     {
-        // the key prefix in node features for the specified version
-        string prefix = tag + "_";
+        HashSet<TaggedId> ids = [];
 
-        // collect IDs and their ordinals
-        Dictionary<int, int> idAndNr = [];
-
-        foreach (string key in context.NodeFeatures.Keys
-            .Where(k => k.StartsWith(prefix)))
+        for (int i = maxTagIndex; i >= minTagIndex; i--)
         {
-            // get the requested feature if present
-            OperationFeature? f = context.NodeFeatures[key].FirstOrDefault(
-                f => secondary
-                    ? f.Name == OperationFeature.F_TRACE_SEG2_IN
-                    : f.Name == OperationFeature.F_TRACE_SEG_IN);
+            // the key prefix in node features for the specified version
+            string prefix = tags[i] + "_";
 
-            // if found, add the ID with its ordinal
-            if (f != null)
+            // collect IDs and their ordinals
+            foreach (string key in context.NodeFeatures.Keys
+                .Where(k => k.StartsWith(prefix)))
             {
-                // parse ID from key (e.g. "v1_123" => 123)
-                int id = int.Parse(key.AsSpan(prefix.Length));
+                // get the requested feature if present
+                OperationFeature? f = context.NodeFeatures[key].FirstOrDefault(
+                    f => secondary
+                        ? f.Name == OperationFeature.F_TRACE_SEG2_IN
+                        : f.Name == OperationFeature.F_TRACE_SEG_IN);
 
-                // parse NR from f.Value (OPID TAGIN:TAGOUT NR)
-                int i = f.Value!.LastIndexOf(' ') + 1;
-                idAndNr[id] = int.Parse(f.Value.AsSpan(i));
+                // if found, add the ID with its ordinal
+                if (f != null)
+                {
+                    // parse ID from key (e.g. "v1_123" => 123)
+                    int id = int.Parse(key.AsSpan(prefix.Length));
+
+                    // parse NR from f.Value (OPID TAGIN:TAGOUT NR)
+                    int nr = int.Parse(f.Value!.AsSpan(
+                        f.Value!.LastIndexOf(' ') + 1));
+
+                    ids.Add(new TaggedId(tags[i], id, nr));
+                }
             }
         }
 
-        // return IDs sorted by nr
-        return [.. idAndNr.OrderBy(kv => kv.Value).Select(kv => kv.Key)];
+        // return IDs sorted by version and ordinal
+        return [.. ids.OrderBy(id => id.Version).ThenBy(id => id.Ordinal)];
     }
 
     /// <summary>
@@ -455,7 +486,7 @@ public sealed class GveTextTreeBuilder
     }
 
     private static List<ChainNode<char>> CollectNodes(
-        ChainOperationContext<char> context, string tag, List<int> ids)
+        ChainOperationContext<char> context, string tag, IEnumerable<int> ids)
     {
         IList<ChainNode<char>> tagNodes = context.Chain.GetTagNodes(tag);
         List<ChainNode<char>> nodes = [];
@@ -519,11 +550,15 @@ public sealed class GveTextTreeBuilder
         int i = tagStartIndex - 1;
         while (i > -1)
         {
+            //int minTagIndex = TraceFeatureFlattening? 0 : i;
+
             // collect IDs of all the nodes with seg-in feature in this version
-            List<int> inIds = GetIdsOfNodesWithFeature(context, tags[i], false);
+            List<TaggedId> inIds = GetIdsOfNodesWithFeature(
+                context, tags, i, i, false);
 
             // collect IDs of all the nodes with seg2-in feature in this version
-            List<int> in2Ids = GetIdsOfNodesWithFeature(context, tags[i], true);
+            List<TaggedId> in2Ids = GetIdsOfNodesWithFeature(
+                context, tags, i, i, true);
 
             // nothing to do if no seg-in
             if (inIds.Count == 0)
@@ -534,7 +569,7 @@ public sealed class GveTextTreeBuilder
 
             // extract OPID from feature: all the collected nodes have the same,
             // so we just use the first one as source
-            string value = context.NodeFeatures[$"{tags[i]}_{inIds[0]}"]
+            string value = context.NodeFeatures[$"{inIds[0].Version}_{inIds[0].Id}"]
                 .First(f => f.Name == OperationFeature.F_TRACE_SEG_IN).Value!;
             string opId = value[..value.IndexOf(' ')];
 
@@ -543,7 +578,7 @@ public sealed class GveTextTreeBuilder
 
             // get the reference node ID(s) for inserting restored nodes
             var (id1, id2) = GetRefNodeId(context, tags, i, op,
-                inIds[0], inIds[^1], in2Ids.Count > 0 ? in2Ids[0] : 0,
+                inIds[0].Id, inIds[^1].Id, in2Ids.Count > 0 ? in2Ids[0].Id : 0,
                 root);
 
             // we care only about operations which imply deletions
@@ -557,7 +592,7 @@ public sealed class GveTextTreeBuilder
                 // insert seg-in nodes before reference node:
                 // collect source nodes in the order specified by inIds
                 List<ChainNode<char>> inNodes =
-                    CollectNodes(context, tags[i], inIds);
+                    CollectNodes(context, tags[i], inIds.Select(id => id.Id));
 
                 // insert the collected nodes
                 InsertNodesBefore(inNodes, root, featPrefix, id1);
@@ -567,7 +602,7 @@ public sealed class GveTextTreeBuilder
                     // insert seg2-in nodes before reference node:
                     // collect source nodes in the order specified by in2Ids
                     List<ChainNode<char>> in2Nodes =
-                        CollectNodes(context, tags[i], in2Ids);
+                        CollectNodes(context, tags[i], in2Ids.Select(id => id.Id));
 
                     // insert the collected nodes
                     InsertNodesBefore(in2Nodes, root, featPrefix, id2);
@@ -577,19 +612,6 @@ public sealed class GveTextTreeBuilder
             // move to previous version
             Debug.WriteLine($"i={i} tag={tags[i]}: \"{GetTreeText(root, true)}\"");//@@
             i--;
-        }
-    }
-
-    private static void MergeTraceFeatures(List<StringPair> sourceFeats,
-        List<StringPair> targetFeats)
-    {
-        foreach (StringPair traceFeat in sourceFeats)
-        {
-            if (targetFeats.All(f => f.Name != traceFeat.Name &&
-                f.Value != traceFeat.Value))
-            {
-                targetFeats.Add(traceFeat);
-            }
         }
     }
 
@@ -631,8 +653,8 @@ public sealed class GveTextTreeBuilder
     /// </summary>
     /// <param name="context">The execution context.</param>
     /// <param name="operations">The operations executed on the context.</param>
-    /// <returns>A dictionary where each version tag is the key and its value
-    /// is the root blank node of the corresponding linear text tree.</returns>
+    /// <returns>The blank root of a tree having one child blank node per version,
+    /// representing the root of a linear tree for that version.</returns>
     /// <exception cref="ArgumentNullException">chain or operations</exception>
     public TreeNode<ExportedSegment> Build(
         ChainOperationContext<char> context, IList<CharChainOperation> operations)
@@ -642,39 +664,42 @@ public sealed class GveTextTreeBuilder
 
         TreeNode<ExportedSegment> multi = new();
 
-        // setup a cache for trace features as we process each version
-        Dictionary<int, List<StringPair>> traceFeats = [];
+        // setup a cache for trace features as we process each version:
+        // key = node ID, value = set of unique node features
+        Dictionary<int, HashSet<StringPair>> cachedTraceFeats = [];
 
         // for each version tag
         IList<string> tags = context.Chain.GetDistinctTags();
         for (int i = 0; i < tags.Count; i++)
         {
             string tag = tags[i];
+            bool addSub = true;
 
             // if staged-only version, skip if this is not staged
             string? version = GetVersionFromTag(context, tag);
-            if (StagedOnly && version == null) continue;
+            if (StagedOnly && version == null) addSub = false;
 
             // if version tags are set, skip if this is not in the list
-            if (VersionTags?.Count > 0 && !VersionTags.Contains(tag))
-                continue;
+            else if (VersionTags?.Count > 0 && !VersionTags.Contains(tag))
+                addSub = false;
 
-            // get nodes for tag
+            // get the nodes for this tag
             IList<ChainNode<char>> tagNodes = context.Chain.GetTagNodes(tag);
 
-            // get nodes features for tag
+            // get the features for these nodes
             Dictionary<int, IList<Feature>> tagFeats =
                 context.GetTagNodeFeatures(tag);
 
             // create blank root and add it to the multi-tree as a child
             // with version tag as its subtree ID
-            TreeNode<ExportedSegment> sub = CreateSubTree(tag, version);
+            TreeNode<ExportedSegment>? sub =
+                addSub ? CreateSubTree(tag, version) : null;
 
             // add sub-tree to multi-tree
-            multi.AddChild(sub);
+            if (sub != null) multi.AddChild(sub);
 
             // add sub-tree descendants
-            TreeNode<ExportedSegment> current = sub;
+            TreeNode<ExportedSegment>? current = sub;
 
             // for each node in current version tag nodes
             foreach (ChainNode<char> tagNode in tagNodes)
@@ -684,53 +709,57 @@ public sealed class GveTextTreeBuilder
                     tagNode.Id, out IList<Feature>? value) ? value : [];
 
                 // collect only the selected features for the target node
-                List<StringPair> targetFeats = [];
+                HashSet<StringPair> targetFeats = [];
                 foreach (Feature feature in nodeFeats
                     .Where(f => IsFeatureIncluded(f.Name)))
                 {
                     targetFeats.Add(new StringPair(feature.Name, feature.Value));
                 }
 
-                // flatten trace features from previous versions if requested
-                if (TraceFeatureFlattening && traceFeats.TryGetValue(
-                    tagNode.Id, out List<StringPair>? nodeTraceFeats))
+                // merge trace features from previous versions if requested
+                if (TraceFeatureFlattening && cachedTraceFeats.TryGetValue(
+                    tagNode.Id, out HashSet<StringPair>? nodeTraceFeats))
                 {
-                    MergeTraceFeatures(nodeTraceFeats, targetFeats);
+                    targetFeats.UnionWith(nodeTraceFeats);
                 }
 
                 // add child target node with text, version tag and features
-                current = current.AddChild(new TreeNode<ExportedSegment>
+                if (sub != null)
                 {
-                    Label = tagNode.Data.ToString(),
-                    Data = new ExportedSegment
+                    current = current!.AddChild(new TreeNode<ExportedSegment>
                     {
-                        SourceId = tagNode.Id,
-                        Text = tagNode.Data.ToString(),
-                        //Tags = [tag],
-                        Features = targetFeats.Count == 0 ? null : targetFeats
-                    }
-                });
+                        Label = tagNode.Data.ToString(),
+                        Data = new ExportedSegment
+                        {
+                            SourceId = tagNode.Id,
+                            Text = tagNode.Data.ToString(),
+                            //Tags = [tag],
+                            Features = targetFeats.Count == 0
+                                ? null : [.. targetFeats]
+                        }
+                    });
+                }
 
-                // cache all the trace features from node for next version
-                // flattening
+                // if required by flattening, cache all the trace features
+                // from the target node for the next iteration
                 if (TraceFeatureFlattening && nodeFeats.Any(f =>
                     f.Name.StartsWith(OperationFeature.F_TRACE_PREFIX)))
                 {
-                    if (!traceFeats.ContainsKey(tagNode.Id))
-                        traceFeats[tagNode.Id] = [];
+                    if (!cachedTraceFeats.ContainsKey(tagNode.Id))
+                        cachedTraceFeats[tagNode.Id] = [];
 
                     foreach (Feature feature in nodeFeats
                         .Where(f => f.Name.StartsWith(
                             OperationFeature.F_TRACE_PREFIX)))
                     {
-                        traceFeats[tagNode.Id].Add(
+                        cachedTraceFeats[tagNode.Id].Add(
                             new StringPair(feature.Name, feature.Value));
                     }
                 }
             }
 
             // restore deletions if requested
-            if (IncludeDeleted)
+            if (IncludeDeleted && sub != null)
                 RestoreDeletions(context, operations, tags, i, sub);
         }
 

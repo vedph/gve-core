@@ -25,7 +25,7 @@ public partial class Snapshot
         set
         {
             _text = value;
-            OnTextChanged(value);
+            UpdateTextChars(value);
         }
     }
 
@@ -52,6 +52,7 @@ public partial class Snapshot
     }
     public IList<string> SelectedChainTags { get; set; } = [];
     public IList<CharModel> TextChars { get; set; } = [];
+    public IList<CharModel> DeletedChars { get; set; } = [];
     public bool NoTraceFeatures { get; set; }
 
     public string? RenderedXml { get; set; }
@@ -72,7 +73,7 @@ public partial class Snapshot
             "4<>5\n" +
             // v6 = ABCD (gamma)
             "(v3:) 4<>5 [*log=\"swap D with C\" *version^:=gamma]";
-        OnTextChanged(_text);
+        UpdateTextChars(_text);
     }
 
     public void OnPresetSelected(SnapshotPreset preset)
@@ -80,11 +81,11 @@ public partial class Snapshot
         Text = preset.BaseText.Replace("\r\n", "\n");
         OperationText = preset.OperationText;
 
-        OnTextChanged(Text);
+        UpdateTextChars(Text);
         ParseOperationText();
     }
 
-    private void OnTextChanged(string value)
+    private void UpdateTextChars(string value)
     {
         List<CharModel> chars = [];
 
@@ -94,25 +95,39 @@ public partial class Snapshot
             {
                 Id = i + 1,
                 Index = i,
-                Label = value[i] == ' ' ? "_" : value[i].ToString(),
+                Label = value[i] == ' '
+                    ? "_" : DumpHelper.MapNonPrintables(value[i].ToString())!,
                 Value = value[i],
             });
         }
         TextChars = chars;
     }
 
+    private static CharModel GetCharModel(ChainNode<char> source, int index)
+    {
+        return new CharModel
+        {
+            Id = source.Id,
+            Index = index,
+            Label = source.Data == ' '
+                ? "_" : DumpHelper.MapNonPrintables(source.Data.ToString())!,
+            Value = source.Data,
+        };
+    }
+
     private void OnSelectedChainTagChanged(string? value)
     {
         if (Chain == null || string.IsNullOrEmpty(value)) return;
 
-        TextChars = Chain.GetTagNodes(value).Select((n, i) =>
+        TextChars = [.. Chain.GetTagNodes(value).Select((n, i) =>
             new CharModel
             {
                 Id = n.Id,
                 Index = i,
-                Label = n.Data == ' ' ? "_" : n.Data.ToString(),
+                Label = n.Data == ' '
+                    ? "_" : DumpHelper.MapNonPrintables(n.Data.ToString())!,
                 Value = n.Data,
-            }).ToList();
+            })];
     }
 
     public void ParseOperationText()
@@ -152,6 +167,14 @@ public partial class Snapshot
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
         new([.. nodes.Select(n => n.Data)]);
 
+    private void UpdateDeletedChars(ChainOperationContext<char> context)
+    {
+        List<ChainNode<char>> nodes = [];
+        foreach (string tag in ChainTags)
+            nodes.AddRange(context.GetDeletedNodes(tag));
+        DeletedChars = [..nodes.Select(n => GetCharModel(n, 0))];
+    }
+
     private ChainOperationContext<char> RunOperations()
     {
         ChainOperationContext<char> context = new();
@@ -179,10 +202,7 @@ public partial class Snapshot
         // get the counts of links grouped by their Tag
         var linkCounts = context.Chain.Links.GroupBy(l => l.Tag)
             .Select(g => Tuple.Create(g.Key, g.Count()));
-        foreach (var linkCount in linkCounts)
-        {
-            ChainStats.Add(linkCount);
-        }
+        foreach (var linkCount in linkCounts) ChainStats.Add(linkCount);
 
         SelectedChainTags = ChainTags.Count > 1
             ? [ChainTags[0], ChainTags[^1]]
@@ -191,6 +211,8 @@ public partial class Snapshot
         ChainDump = context.Chain.Dump();
 
         SelectedChainTag = ChainTags[0];
+
+        UpdateDeletedChars(context);
 
         StateHasChanged();
         StepsGrid?.Reload();
@@ -337,4 +359,6 @@ public partial class Snapshot
             IsBusy = false;
         }
     }
+
+    public string GetNodeLabel(int id) => Chain?.FindNode(id)?.Label ?? "";
 }

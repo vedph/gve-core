@@ -1,0 +1,25 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+    <RadzenDropDown Style="width: 6em" Data="@Tags" @bind-Value="@SelectedTag" TValue="string" />
+    @if (SelectedTag != null)
+    {
+        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="clear" Click="@(() => ClearFeatures())" />
+    }
+</RadzenStack>
+@if (TagFeatures.Count > 0)
+{
+    <ul>
+        @foreach (var kvp in TagFeatures)
+        {
+            <li>
+                <strong>@kvp.Key</strong>
+                <span style="color:darkgreen;font-weight:bold">@GetNodeLabel(kvp.Key)</span>
+                <ul>
+                    @foreach (var f in kvp.Value)
+                    {
+                        <li><span style="@(f.Name.StartsWith('$')? "color:orange" : "")">@f.Name</span> : @f.Value</li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+}

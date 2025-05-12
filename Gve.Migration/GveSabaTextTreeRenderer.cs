@@ -140,6 +140,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                     XElement subst = new(NamespaceOptions.TEI + "subst",
                         new XAttribute("source", "o" + operation.Id),
                         new XElement(NamespaceOptions.TEI + "del",
+                            new XAttribute("source", "o" + operation.Id),
                             sourceNode.Data.Text));
                     current.Add(subst);
 
@@ -175,17 +176,26 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                     sourceNode.Data.Text);
                 current.Add(ins);
 
-                // if current is child of subst, keep popping subst parents
-                // until we find the one whose source attribute is = o + OPID
-                // (i.e. the one we just created)
-                while (current.Parent != null &&
-                       current.Parent.Name == NamespaceOptions.TEI + "subst")
+                // if current is subst with same opid, close it
+                if (current.Name.LocalName == "subst" &&
+                    current.Attribute("source")?.Value == sourceValue)
                 {
-                    XElement parent = current.Parent;
-                    if (parent.Attribute("source")?.Value == sourceValue)
-                        break;
-                    // pop the subst
-                    current = parent;
+                    current = current.Parent!;
+                }
+                else
+                {
+                    // if current is child of subst, keep popping subst parents
+                    // until we find the one whose source attribute is = o + OPID
+                    // (i.e. the one we just created)
+                    while (current.Parent != null &&
+                           current.Parent.Name == NamespaceOptions.TEI + "subst")
+                    {
+                        XElement parent = current.Parent;
+                        if (parent.Attribute("source")?.Value == sourceValue)
+                            break;
+                        // pop the subst
+                        current = parent;
+                    }
                 }
             }
             else

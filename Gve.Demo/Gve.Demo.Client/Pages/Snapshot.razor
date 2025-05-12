@@ -18,7 +18,17 @@
             </RadzenColumn>
             <!-- text characters -->
             <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
-                <StringView Chars="@TextChars" />
+                <RadzenStack Orientation="Orientation.Vertical">
+                    @if (SelectedChainTag != null)
+                    {
+                        <RadzenText Text="@SelectedChainTag" TextStyle="TextStyle.Button" />
+                    }
+                    <StringView Chars="@TextChars" />
+                </RadzenStack>
+            </RadzenColumn>
+            <!-- deleted characters -->
+            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
+                <StringView Chars="@DeletedChars" />
             </RadzenColumn>
         </RadzenRow>
 
@@ -35,10 +45,12 @@
         </RadzenRow>
 
         <!-- buttons -->
+        <!-- parse -->
         <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
             <RadzenButton Text="Parse" Click="ParseOperationText"
                           ButtonStyle="ButtonStyle.Primary" />
 
+            <!-- selected tag -->
             @if (ChainTags.Count > 0)
             {
                 <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
@@ -63,6 +75,8 @@
                             LogicalFilterOperator="LogicalFilterOperator.Or"
                             Title="operations">
                 <Columns>
+                    <RadzenDataGridColumn TItem="CharChainOperation"
+                                          Property="Id" Title="ID" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
                                           Property="Type" Title="type" />
                     <RadzenDataGridColumn TItem="CharChainOperation"
@@ -140,7 +154,11 @@
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="InputTag" Title="tin" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="OutputTag" Title="tout" />
+                                              Title="tout">
+                            <Template>
+                                <strong>@context.OutputTag</strong>
+                            </Template>
+                        </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Title="operation">
                             <Template>
@@ -171,19 +189,12 @@
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Property="FeatureSet.NodeFeatures"
-                                              Title="n-features">
+                                              Title="n-features"
+                                              Filterable="false">
                             <Template>
                                 <div class="feats rz-text-wrap">
-                                    @foreach (var kvp in context.FeatureSet.NodeFeatures)
-                                    {
-                                        <strong>@kvp.Key</strong>
-                                        <ul>
-                                            @foreach (var f in kvp.Value)
-                                            {
-                                                <li>&#x25cf; @f</li>
-                                            }
-                                        </ul>
-                                    }
+                                    <OpFeatureDictionaryView Features="context.FeatureSet.NodeFeatures"
+                                                             NodeGetter="@GetNodeLabel" />
                                 </div>
                             </Template>
                         </RadzenDataGridColumn>
