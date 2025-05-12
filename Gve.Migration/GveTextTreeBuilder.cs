@@ -430,10 +430,25 @@ public sealed class GveTextTreeBuilder
         return refNode?.Data?.SourceId ?? refId;
     }
 
-    private (int id1, int id2) GetRefNodeId(ChainOperationContext<char> context,
+    /// <summary>
+    /// Gets the reference node ID(s) for inserting restored nodes.
+    /// </summary>
+    /// <param name="context">Chain operation context.</param>
+    /// <param name="tags">Version tags.</param>
+    /// <param name="tagIndex">Index to the current version tag in
+    /// <paramref name="tags"/>.</param>
+    /// <param name="op">The operation which caused the deletion.</param>
+    /// <param name="headId">The ID of the head node to be restored.</param>
+    /// <param name="tailId">The ID of the tail node to be restored.</param>
+    /// <param name="head2Id">The ID of the 2nd head node to be restored (for
+    /// swap operations).</param>
+    /// <param name="root">The root of the tree node being built.</param>
+    /// <returns>Node ID(s) (the second one is used for swap only), or -1,0
+    /// if there is nothing to restore because the operation did not cause any
+    /// deletion.</returns>
+    private (int id1, int id2) GetRefNodeIds(ChainOperationContext<char> context,
         IList<string> tags, int tagIndex, CharChainOperation op,
-        int headId, int tailId, int head2Id,
-        TreeNode<ExportedSegment> root)
+        int headId, int tailId, int head2Id, TreeNode<ExportedSegment> root)
     {
         // first find the head(s) of the deleted segment(s)
         int id1;
@@ -546,12 +561,10 @@ public sealed class GveTextTreeBuilder
         IList<CharChainOperation> operations,
         IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
     {
-        Debug.WriteLine($"--RESTORE from {tagStartIndex}");//@@
+        //Debug.WriteLine($"--RESTORE from {tagStartIndex}");//@@
         int i = tagStartIndex - 1;
         while (i > -1)
         {
-            //int minTagIndex = TraceFeatureFlattening? 0 : i;
-
             // collect IDs of all the nodes with seg-in feature in this version
             List<TaggedId> inIds = GetIdsOfNodesWithFeature(
                 context, tags, i, i, false);
@@ -567,8 +580,8 @@ public sealed class GveTextTreeBuilder
                 continue;
             }
 
-            // extract OPID from feature: all the collected nodes have the same,
-            // so we just use the first one as source
+            // extract OPID from feature: all the collected nodes have the same
+            // OPID, so we get it from the first one
             string value = context.NodeFeatures[$"{inIds[0].Version}_{inIds[0].Id}"]
                 .First(f => f.Name == OperationFeature.F_TRACE_SEG_IN).Value!;
             string opId = value[..value.IndexOf(' ')];
@@ -577,7 +590,7 @@ public sealed class GveTextTreeBuilder
             CharChainOperation op = operations.First(o => o.Id == opId);
 
             // get the reference node ID(s) for inserting restored nodes
-            var (id1, id2) = GetRefNodeId(context, tags, i, op,
+            var (id1, id2) = GetRefNodeIds(context, tags, i, op,
                 inIds[0].Id, inIds[^1].Id, in2Ids.Count > 0 ? in2Ids[0].Id : 0,
                 root);
 
@@ -610,7 +623,7 @@ public sealed class GveTextTreeBuilder
             }
 
             // move to previous version
-            Debug.WriteLine($"i={i} tag={tags[i]}: \"{GetTreeText(root, true)}\"");//@@
+            //Debug.WriteLine($"i={i} tag={tags[i]}: \"{GetTreeText(root, true)}\"");//@@
             i--;
         }
     }
