@@ -7,6 +7,12 @@ public partial class StringView
 {
     [Parameter]
     public IList<CharModel> Chars { get; set; } = [];
+
+    [Parameter]
+    public bool NoIndex { get; set; }
+
+    [Parameter]
+    public string BackgroundColor { get; set; } = "transparent";
 }
 
 public class CharModel

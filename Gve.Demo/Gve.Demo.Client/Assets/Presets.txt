@@ -19,6 +19,24 @@ all built their nests in my beard!"
 The first limerick of Edward Lear (1875 p.7) with a mock autograph. This is the example you can find in [this GVE documentation page](https://vedph.github.io/gve-doc/model/sample-limerick.html).
 
 :title
+digits
+
+:base
+one FIVE six ten three four zero
+
+:operations
+5+["two "
+5x4="Five"
+37x4="five"
+14x4-
+@8x8<>17x10
+29x4>[1@zero
+1+[" "@zero
+
+:dsc
+A single line with a few words with counting from 0 to 6 with dense operations of all types.
+
+:title
 a red pen
 
 :base

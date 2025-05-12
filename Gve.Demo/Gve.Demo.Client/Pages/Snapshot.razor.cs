@@ -171,7 +171,13 @@ public partial class Snapshot
     {
         List<ChainNode<char>> nodes = [];
         foreach (string tag in ChainTags)
-            nodes.AddRange(context.GetDeletedNodes(tag));
+        {
+            foreach (ChainNode<char> node in context.GetDeletedNodes(tag))
+            {
+                if (nodes.All(n => n.Id != node.Id))
+                    nodes.Add(node);
+            }
+        }
         DeletedChars = [..nodes.Select(n => GetCharModel(n, 0))];
     }
 
