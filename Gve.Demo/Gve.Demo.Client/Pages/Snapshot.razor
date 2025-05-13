@@ -131,6 +131,7 @@
         <Tabs>
             <RadzenTabsItem Text="texts">
                 <RadzenDataGrid AllowAlternatingRows="true" Data="@TaggedTexts"
+                                AllowColumnResize="true"
                                 AllowSorting="true" AllowFiltering="true"
                                 TItem="Tuple<string,string>"
                                 SelectionMode="DataGridSelectionMode.Single"
@@ -150,6 +151,7 @@
             </RadzenTabsItem>
             <RadzenTabsItem Text="steps">
                 <RadzenDataGrid AllowAlternatingRows="true" Data="@Steps"
+                                AllowColumnResize="true"
                                 AllowSorting="true" AllowFiltering="true"
                                 @ref="StepsGrid"
                                 TItem="ChainOperationContextStep"
