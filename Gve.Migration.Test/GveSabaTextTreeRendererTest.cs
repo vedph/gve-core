@@ -288,7 +288,16 @@ public sealed class GveSabaTextTreeRendererTest
         // configure it with a GVE tree renderer
         composite.Configure(new GveSabaCompositeTextTreeRendererOptions
         {
-            PreferredTag = "$last"
+            PreferredTag = "$last",
+            InnerOptions = new GveSabaTextTreeRendererOptions
+            {
+                BlockElements =
+                {
+                    ["default"] = "tei:rdg",
+                    ["preferred"] = "tei:lem"
+                },
+                UseTraceComments = true
+            }
         });
         // get the multi-tree
         (TreeNode<ExportedSegment> multi, GveRendererContext context) =

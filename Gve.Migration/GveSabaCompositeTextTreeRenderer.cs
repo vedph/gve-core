@@ -30,6 +30,14 @@ public sealed class GveSabaCompositeTextTreeRenderer :
     public void Configure(GveSabaCompositeTextTreeRendererOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
+
+        if (_options.InnerOptions != null)
+        {
+            IConfigurable<GveSabaTextTreeRendererOptions> inner =
+               (IConfigurable<GveSabaTextTreeRendererOptions>)Component!;
+
+            inner.Configure(_options.InnerOptions);
+        }
     }
 
     /// <summary>
@@ -100,4 +108,9 @@ public class GveSabaCompositeTextTreeRendererOptions
     /// as the preferred version.
     /// </summary>
     public string? PreferredTag { get; set; }
+
+    /// <summary>
+    /// Gets or sets the inner renderer options.
+    /// </summary>
+    public GveSabaTextTreeRendererOptions? InnerOptions { get; set; }
 }

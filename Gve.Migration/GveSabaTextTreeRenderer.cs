@@ -7,6 +7,7 @@ using Proteus.Rendering.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Gve.Migration;
@@ -69,6 +70,25 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         return null;
     }
 
+    private static string BuildComment(TreeNode<ExportedSegment> node)
+    {
+        (int y, int x) = node.GetYX();
+
+        StringBuilder sb = new();
+        if (node.IsExpanded) sb.Append("\u2bc6 ");
+        else if (node.HasChildren) sb.Append("\u2bc8 ");
+        else sb.Append("\u25a0 ");
+
+        sb.Append('[').Append(y).Append('.').Append(x).Append(']');
+
+        if (!string.IsNullOrEmpty(node.Label))
+            sb.Append(' ').Append(DumpHelper.MapNonPrintables(node.Label));
+
+        if (!string.IsNullOrEmpty(node.Id)) sb.Append(" #").Append(node.Id);
+
+        return sb.ToString();
+    }
+
     /// <summary>
     /// Renders the specified text linear tree.
     /// </summary>
@@ -123,6 +143,10 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
 
         while (sourceNode != null)
         {
+            // add trace comment if requested
+            if (_options.UseTraceComments)
+                current.Add(new XComment(BuildComment(sourceNode)));
+
             // del-feature: subst/del or just del
             if (sourceNode.Data?.HasFeature(OperationFeature.F_TRACE_DELETED)
                 == true)
@@ -136,27 +160,31 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 if (operation.Type == OperationType.Replace ||
                     operation.Type == OperationType.Swap)
                 {
-                    // subst/del/TEXT
+                    // replacement: subst/del/TEXT
+                    string opId = "o" + operation.Id;
                     XElement subst = new(NamespaceOptions.TEI + "subst",
-                        new XAttribute("source", "o" + operation.Id),
+                        new XAttribute("source", opId),
                         new XElement(NamespaceOptions.TEI + "del",
-                            new XAttribute("source", "o" + operation.Id),
+                            new XAttribute("source", opId),
                             sourceNode.Data.Text));
                     current.Add(subst);
 
-                    // current XML element is now subst
-                    current = subst;
+                    // place next node under subst/ins
+                    XElement ins = new(NamespaceOptions.TEI + "ins",
+                        new XAttribute("source", opId));
+                    subst.Add(ins);
+                    current = ins;
                 }
                 else
                 {
-                    // del/TEXT
+                    // deletion: del/TEXT
                     XElement del = new(NamespaceOptions.TEI + "del",
                         new XAttribute("source", "o" + operation.Id),
                         sourceNode.Data.Text);
                     current.Add(del);
                 }
             } //del
-            // seg-out/seg-out2 feature: ins/TEXT, then close subst if required
+            // seg-out/seg-out2 feature: TEXT, then close subst if required
             else if ((sourceNode.Data?.HasFeature(
                          OperationFeature.F_TRACE_SEG_OUT) == true) ||
                      (sourceNode.Data?.HasFeature(
@@ -169,51 +197,49 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                         ?? sourceNode.Data.Features!.First(f =>
                             f.Name == OperationFeature.F_TRACE_SEG2_OUT).Value!);
 
-                // ins/TEXT
-                string sourceValue = "o" + operation.Id;
-                XElement ins = new(NamespaceOptions.TEI + "ins",
-                    new XAttribute("source", sourceValue),
-                    sourceNode.Data.Text);
-                current.Add(ins);
+                // ensure we are inside ins
+                if (current.Name != NamespaceOptions.TEI + "ins")
+                {
+                    XElement ins = new(NamespaceOptions.TEI + "ins",
+                        new XAttribute("source", "o" + operation.Id));
+                    current.Add(ins);
+                    current = ins;
+                }
+                // add ins/TEXT
+                current.Add(sourceNode.Data.Text);
 
-                // if current is subst with same opid, close it
-                if (current.Name.LocalName == "subst" &&
-                    current.Attribute("source")?.Value == sourceValue)
+                // if we're inside a subst, keep popping up to it, included
+                if (current.Parent?.Name == NamespaceOptions.TEI + "subst")
                 {
-                    current = current.Parent!;
-                }
-                else
-                {
-                    // if current is child of subst, keep popping subst parents
-                    // until we find the one whose source attribute is = o + OPID
-                    // (i.e. the one we just created)
-                    while (current.Parent != null &&
-                           current.Parent.Name == NamespaceOptions.TEI + "subst")
+                    // pop until the subst with the same operation ID
+                    string opId = "o" + operation.Id;
+                    do
                     {
-                        XElement parent = current.Parent;
-                        if (parent.Attribute("source")?.Value == sourceValue)
-                            break;
-                        // pop the subst
-                        current = parent;
-                    }
+                        // subst
+                        XElement subst = current.Parent!;
+                        if (subst.Attribute("source")?.Value == opId) break;
+                        current = subst;
+                    } while (current.Name == NamespaceOptions.TEI + "ins");
                 }
+                // move up (from subst or ins)
+                current = current.Parent!;
             }
+            // simple text
             else
             {
                 // move outside subst if any
-                if (current.Ancestors().Any(a => a.Name ==
+                if (current.AncestorsAndSelf().Any(a => a.Name ==
                     NamespaceOptions.TEI + "subst"))
                 {
-                    XElement parent = current.Parent!;
-                    while (parent != null && parent.Name ==
-                        NamespaceOptions.TEI + "subst")
+                    current = current.Parent!;
+                    while (current?.Name == NamespaceOptions.TEI + "ins" ||
+                        current?.Name == NamespaceOptions.TEI + "subst")
                     {
-                        current = parent;
-                        parent = parent.Parent!;
+                        current = current.Parent!;
                     }
                 }
 
-                current.Add(sourceNode.Data?.Text);
+                current!.Add(sourceNode.Data?.Text);
             }
 
             // handle end-of-line after processed node
@@ -226,11 +252,11 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                         _options.LineElement);
 
                     // get the nearest enclosing line element starting from current
-                    XElement? currentLine = GetAscendantOrSelf(current, lineElementName);
+                    XElement? currentLine = GetAscendantOrSelf(current,
+                        lineElementName);
 
                     // if found (this should always happen), add a new sibling
                     // line element and make it the current target element
-                    // TODO: consider subst?
                     if (currentLine?.Parent != null)
                     {
                         XElement line = new(lineElementName);
@@ -264,4 +290,11 @@ public class GveSabaTextTreeRendererOptions : XmlTextTreeRendererOptions
     /// elements. When set, line elements are children of <c>mod</c>.
     /// </summary>
     public string? LineElement { get; set; }
+
+    /// <summary>
+    /// True to add trace comments to the output. This adds a comment
+    /// with information about each node processed in the tree during
+    /// its rendering.
+    /// </summary>
+    public bool UseTraceComments { get; set; }
 }
