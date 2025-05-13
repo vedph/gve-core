@@ -251,7 +251,7 @@ public sealed class GveTextTreeBuilder
     /// </summary>
     /// <param name="root">The root node of the branch.</param>
     /// <returns>The last (=leaf) node.</returns>
-    private static TreeNode<ExportedSegment> GetLastBranchNode(
+    private static TreeNode<ExportedSegment> GetBranchLastNode(
         TreeNode<ExportedSegment> root)
     {
         TreeNode<ExportedSegment>? current = root;
@@ -369,7 +369,7 @@ public sealed class GveTextTreeBuilder
             parent?.Children.Remove(refNode);
 
             // attach refNode as the child of the last node in the branch
-            TreeNode<ExportedSegment> last = GetLastBranchNode(branch);
+            TreeNode<ExportedSegment> last = GetBranchLastNode(branch);
             last.AddChild(refNode);
 
             // attach the branch to the original parent of refNode
@@ -379,7 +379,7 @@ public sealed class GveTextTreeBuilder
         else
         {
             // insert at the end of the tree
-            TreeNode<ExportedSegment>? last = GetLastBranchNode(root);
+            TreeNode<ExportedSegment>? last = GetBranchLastNode(root);
 
             if (last != null) last.AddChild(branch);
             else root.AddChild(branch);
