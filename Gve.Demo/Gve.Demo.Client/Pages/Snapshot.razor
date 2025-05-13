@@ -13,22 +13,25 @@
         <RadzenRow>
             <!-- input -->
             <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
-                <RadzenTextArea @bind-Value="@Text" Placeholder="text" Rows="8"
+                <RadzenTextArea @bind-Value="@Text" Placeholder="text" Rows="10"
                                 class="rz-w-100" />
             </RadzenColumn>
             <!-- text characters -->
             <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
                 <RadzenStack Orientation="Orientation.Vertical">
+                    <!-- tag -->
                     @if (SelectedChainTag != null)
                     {
                         <RadzenText Text="@SelectedChainTag" TextStyle="TextStyle.Button" />
                     }
+                    <!-- characters -->
                     <StringView Chars="@TextChars" />
+                    <!-- deleted characters -->
+                    <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
+                        <StringView Chars="@DeletedChars"
+                                    BackgroundColor="#ffd1c2" NoIndex="true" />
+                    </RadzenColumn>
                 </RadzenStack>
-            </RadzenColumn>
-            <!-- deleted characters -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
-                <StringView Chars="@DeletedChars" BackgroundColor="#FFC2AD" NoIndex="true" />
             </RadzenColumn>
         </RadzenRow>
 
@@ -36,7 +39,8 @@
             <!-- operations -->
             <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
                 <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-                                class="rz-w-100" Rows="8" />
+                                class="rz-w-100" Rows="8"
+                                Style="font-family: Courier New, Courier, monospace" />
             </RadzenColumn>
             <!-- presets -->
             <RadzenColumn Size="12" SizeSM="12" SizeMD="8">

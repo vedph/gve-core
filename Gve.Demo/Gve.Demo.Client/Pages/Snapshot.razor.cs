@@ -18,6 +18,7 @@ public partial class Snapshot
     private string _text = "ARZDC";
     private string? _selectedChainTag;
     private string? _orRenderedText;
+    private ChainOperationContext<char>? _context;
 
     public string Text
     {
@@ -128,6 +129,8 @@ public partial class Snapshot
                     ? "_" : DumpHelper.MapNonPrintables(n.Data.ToString())!,
                 Value = n.Data,
             })];
+
+        UpdateDeletedChars();
     }
 
     public void ParseOperationText()
@@ -167,12 +170,13 @@ public partial class Snapshot
     private static string GetVersionString(IList<ChainNode<char>> nodes) =>
         new([.. nodes.Select(n => n.Data)]);
 
-    private void UpdateDeletedChars(ChainOperationContext<char> context)
+    private void UpdateDeletedChars()
     {
         List<ChainNode<char>> nodes = [];
-        foreach (string tag in ChainTags)
+        if (SelectedChainTag != null && _context != null)
         {
-            foreach (ChainNode<char> node in context.GetDeletedNodes(tag))
+            foreach (ChainNode<char> node in
+                _context.GetDeletedNodes(SelectedChainTag))
             {
                 if (nodes.All(n => n.Id != node.Id))
                     nodes.Add(node);
@@ -181,49 +185,45 @@ public partial class Snapshot
         DeletedChars = [..nodes.Select(n => GetCharModel(n, 0))];
     }
 
-    private ChainOperationContext<char> RunOperations()
+    private void RunOperations()
     {
-        ChainOperationContext<char> context = new();
-        context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
-        context.LastTag = "v0";
+        _context = new();
+        _context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
+        _context.LastTag = "v0";
 
         foreach (CharChainOperation op in Operations)
         {
             op.NoTraceFeatures = NoTraceFeatures;
-            op.Execute(context);
+            op.Execute(_context);
         }
 
-        ChainTags = context.Chain.GetDistinctTags();
+        ChainTags = _context.Chain.GetDistinctTags();
         TaggedTexts = [.. ChainTags.Select((t, i) => new Tuple<string, string>(
-            t, GetVersionString(context.Chain.GetTagNodes(t))))];
+            t, GetVersionString(_context.Chain.GetTagNodes(t))))];
 
         Steps.Clear();
-        foreach (ChainOperationContextStep step in context.Steps)
+        foreach (ChainOperationContextStep step in _context.Steps)
         {
             Steps.Add(step);
         }
 
         ChainStats.Clear();
-        ChainStats.Add(Tuple.Create("nodes", context.Chain.Nodes.Count));
+        ChainStats.Add(Tuple.Create("nodes", _context.Chain.Nodes.Count));
         // get the counts of links grouped by their Tag
-        var linkCounts = context.Chain.Links.GroupBy(l => l.Tag)
+        var linkCounts = _context.Chain.Links.GroupBy(l => l.Tag)
             .Select(g => Tuple.Create(g.Key, g.Count()));
         foreach (var linkCount in linkCounts) ChainStats.Add(linkCount);
 
         SelectedChainTags = ChainTags.Count > 1
             ? [ChainTags[0], ChainTags[^1]]
             : ChainTags;
-        Chain = context.Chain;
-        ChainDump = context.Chain.Dump();
+        Chain = _context.Chain;
+        ChainDump = _context.Chain.Dump();
 
         SelectedChainTag = ChainTags[0];
 
-        UpdateDeletedChars(context);
-
         StateHasChanged();
         StepsGrid?.Reload();
-
-        return context;
     }
 
     public void Run()
@@ -250,14 +250,14 @@ public partial class Snapshot
 
     public void Export()
     {
-        if (Operations.Count == 0) return;
+        if (Operations.Count == 0 || _context == null) return;
 
         try
         {
             IsBusy = true;
 
             // run operations
-            ChainOperationContext<char> opContext = RunOperations();
+            RunOperations();
 
             // create tree builder
             GveTextTreeBuilder builder = new()
@@ -276,7 +276,7 @@ public partial class Snapshot
             };
 
             // build version trees
-            TreeNode<ExportedSegment> multi = builder.Build(opContext, Operations);
+            TreeNode<ExportedSegment> multi = builder.Build(_context, Operations);
 
             // configure a linear merge filter to build export segments
             MergeLinearTextTreeFilter mergeFilter = new();
@@ -304,11 +304,11 @@ public partial class Snapshot
             {
                 Component = mergeFilter
             };
-            multi = filter.Apply(multi, opContext);
+            multi = filter.Apply(multi, _context);
 
             GveRendererContext rendContext = new()
             {
-                OpContext = opContext,
+                OpContext = _context,
                 Operations = Operations.ToList()
             };
 
