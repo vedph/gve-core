@@ -7,6 +7,7 @@ using Proteus.Rendering.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
 
@@ -70,6 +71,12 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         return null;
     }
 
+    /// <summary>
+    /// Build the comment for the specified node. This is used to add a comment
+    /// to the output with information about the node being processed.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <returns>The comment.</returns>
     private static string BuildComment(TreeNode<ExportedSegment> node)
     {
         (int y, int x) = node.GetYX();
@@ -87,6 +94,19 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
         if (!string.IsNullOrEmpty(node.Id)) sb.Append(" #").Append(node.Id);
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Build the value of the source attribute for the specified operation ID.
+    /// </summary>
+    /// <param name="opId">The operation ID.</param>
+    /// <returns>The value, equal to prefix <c>o</c> + operation ID,
+    /// followed by space and operation formula (unless the operation is not
+    /// found in the current context).</returns>
+    private string BuildSourceValue(string opId)
+    {
+        CharChainOperation? op = _context?.Operations?.Find(o => o.Id == opId);
+        return op == null ? "o" + opId : $"{opId} {op}";
     }
 
     /// <summary>
@@ -161,17 +181,17 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                     operation.Type == OperationType.Swap)
                 {
                     // replacement: subst/del/TEXT
-                    string opId = "o" + operation.Id;
+                    string source = BuildSourceValue(operation.Id);
                     XElement subst = new(NamespaceOptions.TEI + "subst",
-                        new XAttribute("source", opId),
+                        new XAttribute("source", source),
                         new XElement(NamespaceOptions.TEI + "del",
-                            new XAttribute("source", opId),
+                            new XAttribute("source", source),
                             sourceNode.Data.Text));
                     current.Add(subst);
 
                     // place next node under subst/ins
                     XElement ins = new(NamespaceOptions.TEI + "ins",
-                        new XAttribute("source", opId));
+                        new XAttribute("source", source));
                     subst.Add(ins);
                     current = ins;
                 }
@@ -179,7 +199,7 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 {
                     // deletion: del/TEXT
                     XElement del = new(NamespaceOptions.TEI + "del",
-                        new XAttribute("source", "o" + operation.Id),
+                        new XAttribute("source", BuildSourceValue(operation.Id)),
                         sourceNode.Data.Text);
                     current.Add(del);
                 }
@@ -201,7 +221,8 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 if (current.Name != NamespaceOptions.TEI + "ins")
                 {
                     XElement ins = new(NamespaceOptions.TEI + "ins",
-                        new XAttribute("source", "o" + operation.Id));
+                        new XAttribute("source",
+                            BuildSourceValue(operation.Id)));
                     current.Add(ins);
                     current = ins;
                 }
@@ -212,12 +233,16 @@ public sealed class GveSabaTextTreeRenderer : TextTreeRenderer<XElement>,
                 if (current.Parent?.Name == NamespaceOptions.TEI + "subst")
                 {
                     // pop until the subst with the same operation ID
-                    string opId = "o" + operation.Id;
+                    string sourcePrefix = $"o{operation.Id}";
                     do
                     {
                         // subst
                         XElement subst = current.Parent!;
-                        if (subst.Attribute("source")?.Value == opId) break;
+                        if (subst.Attribute("source")?.Value?
+                            .StartsWith(sourcePrefix) == true)
+                        {
+                            break;
+                        }
                         current = subst;
                     } while (current.Name == NamespaceOptions.TEI + "ins");
                 }

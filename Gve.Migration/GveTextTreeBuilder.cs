@@ -13,8 +13,8 @@ namespace Gve.Migration;
 
 /// <summary>
 /// A class that builds a linear tree representing a text version derived from
-/// a GVE chain. The built tree has a blank root node and a single branch
-/// stemming from it, where each node represents a character and is parent of
+/// a GVE chain. The built tree has a blank root node, and a single branch
+/// stemming from it, where each node represents one character and is parent of
 /// the next character node.
 /// </summary>
 public sealed class GveTextTreeBuilder
@@ -40,7 +40,7 @@ public sealed class GveTextTreeBuilder
 
     /// <summary>
     /// Gets or sets the filter features names. When set, only features with
-    /// names equal to the names in this list are included in the tree.
+    /// names equal to any of the names in this list are included in the tree.
     /// </summary>
     public HashSet<string>? FeatureNames { get; set; }
 
@@ -88,8 +88,8 @@ public sealed class GveTextTreeBuilder
 
     /// <summary>
     /// Get the operation ID from the specified trace feature value.
-    /// The operation ID starts at the beginning of the value and ends at the first
-    /// space character.
+    /// The operation ID starts at the beginning of the value and ends at the
+    /// first space character.
     /// </summary>
     /// <param name="value">Value or null.</param>
     /// <returns>Operation ID or null.</returns>
@@ -168,6 +168,13 @@ public sealed class GveTextTreeBuilder
             // always append the text
             sb.Append(node.Data.Text);
 
+            // append newline if this is the end of a line
+            if (node.Data?.Features?.Any(
+                f => f.Name == ExportedSegment.F_EOL_TAIL) == true)
+            {
+                sb.AppendLine();
+            }
+
             return true;
         });
 
@@ -177,6 +184,11 @@ public sealed class GveTextTreeBuilder
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Get one node from each character in the specified text.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>A list of nodes.</returns>
     private static List<ChainNode<char>> GetNodesFrom(string text)
     {
         List<ChainNode<char>> nodes = new(text.Length);
@@ -185,6 +197,11 @@ public sealed class GveTextTreeBuilder
         return nodes;
     }
 
+    /// <summary>
+    /// Test whether the specified feature name is included by the filter set.
+    /// </summary>
+    /// <param name="name">Feature name.</param>
+    /// <returns>True if included.</returns>
     private bool IsFeatureIncluded(string name)
     {
         if (FeatureNames == null) return true;
@@ -202,8 +219,8 @@ public sealed class GveTextTreeBuilder
     /// <param name="maxTagIndex">The index to the last version in
     /// <paramref name="tags"/>. IDs are collected from this version backwards,
     /// up to <paramref name="minTagIndex"/>.</param>
-    /// <param name="secondary">if set to <c>true</c>, look for segment-2 features.
-    /// </param>
+    /// <param name="secondary">if set to <c>true</c>, look for segment-2
+    /// features.</param>
     /// <returns>List of IDs, sorted by their version and then by their segment
     /// ordinal.</returns>
     private static List<TaggedId> GetIdsOfNodesWithFeature(
@@ -302,40 +319,63 @@ public sealed class GveTextTreeBuilder
     }
 
     /// <summary>
-    /// Gets the reference node from its node ID. Note that the ID might be
-    /// duplicated because of restored nodes. So, if there is 1 ID only, use
-    /// it; if there are many, pick the one which is not deleted; else pick
-    /// the first (and only) deleted one.
+    /// Gets the reference node from its node source ID. Note that the source
+    /// ID might be duplicated because of restored nodes. So, if there is 1 ID
+    /// only, use it; if there are many, pick the one which is not deleted;
+    /// else pick the first (and only) deleted one.
+    /// If there are no nodes found after this, find the closest node (the one
+    /// that would come after the insertion point).
     /// </summary>
     /// <param name="root">The root.</param>
-    /// <param name="id">The node ID. When 0, null will be always returned.
-    /// </param>
+    /// <param name="id">The node ID.</param>
     /// <returns>The node or null.</returns>
     private static TreeNode<ExportedSegment>? GetRefNodeFromId(
         TreeNode<ExportedSegment> root, int id)
     {
         TreeNode<ExportedSegment>? refNode = null;
-        if (id != 0)
+        List<TreeNode<ExportedSegment>> nodes = [];
+        root.Traverse(n =>
         {
-            List<TreeNode<ExportedSegment>> nodes = [];
+            if (n.Data?.SourceId == id) nodes.Add(n);
+            return true;
+        });
+
+        switch (nodes.Count)
+        {
+            case 0: break;
+            case 1:
+                refNode = nodes[0];
+                break;
+            default:
+                refNode = nodes.FirstOrDefault(n =>
+                    n.Data?.Features?.All(f =>
+                        f.Name != OperationFeature.F_TRACE_DELETED) == true)
+                    ?? nodes[0];
+                break;
+        }
+
+        // if we couldn't find the exact node, we need to find the closest match
+        // (the node that would come right after our insertion point)
+        if (refNode == null)
+        {
+            // find a node with a SourceId greater than refId
+            TreeNode<ExportedSegment>? nextNode = null;
+            int minGreaterId = int.MaxValue;
+
             root.Traverse(n =>
             {
-                if (n.Data?.SourceId == id) nodes.Add(n);
+                if (n.Data?.SourceId > id && n.Data.SourceId < minGreaterId)
+                {
+                    nextNode = n;
+                    minGreaterId = n.Data.SourceId;
+                }
                 return true;
             });
 
-            switch (nodes.Count)
+            if (nextNode != null)
             {
-                case 0: break;
-                case 1:
-                    refNode = nodes[0];
-                    break;
-                default:
-                    refNode = nodes.FirstOrDefault(n =>
-                        n.Data?.Features?.All(f =>
-                            f.Name != OperationFeature.F_TRACE_DELETED) == true)
-                        ?? nodes[0];
-                    break;
+                // find the parent of this node (which is our insertion point)
+                refNode = nextNode.Parent;
             }
         }
 
@@ -350,16 +390,15 @@ public sealed class GveTextTreeBuilder
     /// <param name="sources">The sources.</param>
     /// <param name="root">The root.</param>
     /// <param name="featPrefix">The feature prefix.</param>
-    /// <param name="refId">The reference identifier, or 0 for appending nodes
+    /// <param name="refNode">The reference node, or null for appending nodes
     /// at the end.</param>
     private static void InsertNodesBefore(List<ChainNode<char>> sources,
-        TreeNode<ExportedSegment> root, string featPrefix, int refId)
+        TreeNode<ExportedSegment> root, string featPrefix,
+        TreeNode<ExportedSegment>? refNode)
     {
         // create the branch of new nodes
         TreeNode<ExportedSegment>? branch = BuildBranch(sources, featPrefix);
         if (branch == null) return;
-
-        TreeNode<ExportedSegment>? refNode = GetRefNodeFromId(root, refId);
 
         // insert the branch before the reference node
         if (refNode != null)
@@ -387,51 +426,95 @@ public sealed class GveTextTreeBuilder
     }
 
     /// <summary>
-    /// Adjusts the reference node ID to account for deleted nodes that have
-    /// already been restored in the tree.
+    /// Check whether the node with the specified ID is the child of a node
+    /// having any trace <c>$del</c> feature, and has any trace <c>$seg-out</c>
+    /// or <c>$seg2-out</c> feature, both belonging to the same ID.
+    /// This means that the parent of the specified node and the specified node
+    /// are the end and the start of two segments paired under a replacement.
     /// </summary>
-    /// <param name="root">The root node of the tree.</param>
-    /// <param name="refId">The original reference ID from the chain.</param>
-    /// <returns>The ID of the node before which deleted nodes should be inserted.
-    /// </returns>
-    private static int AdjustReferenceId(TreeNode<ExportedSegment> root, int refId)
+    /// <param name="node">The node to test.</param>
+    /// <returns>A paired feature of the child segment or null when it's not
+    /// between paired segments.</returns>
+    private static StringPair? GetSecondPairedSegmentFeature(
+        TreeNode<ExportedSegment> node)
     {
-        if (refId == 0) return 0; // beginning of tree, no adjustment needed
-
-        // find the node in the tree with SourceId == refId
-        TreeNode<ExportedSegment>? refNode = GetRefNodeFromId(root, refId);
-
-        // if we couldn't find the exact node, we need to find the closest match
-        // (the node that would come right after our insertion point)
-        if (refNode == null)
+        // find node
+        // false if not found or no parent with features or no features
+        if (node.Data?.Features == null ||
+            node.Parent?.Data?.Features == null)
         {
-            // find a node with a SourceId greater than refId
-            TreeNode<ExportedSegment>? nextNode = null;
-            int minGreaterId = int.MaxValue;
-
-            root.Traverse(n =>
-            {
-                if (n.Data?.SourceId > refId && n.Data.SourceId < minGreaterId)
-                {
-                    nextNode = n;
-                    minGreaterId = n.Data.SourceId;
-                }
-                return true;
-            });
-
-            if (nextNode != null)
-            {
-                // find the parent of this node (which is our insertion point)
-                refNode = nextNode.Parent;
-            }
+            return null;
         }
 
-        // if we still couldn't find a reference point, use the original ID
-        return refNode?.Data?.SourceId ?? refId;
+        // check parent for $del
+        List<StringPair> parentFeats = [..node.Parent.Data.Features
+            .Where(f => f.Name == OperationFeature.F_TRACE_DELETED)];
+        if (parentFeats.Count == 0) return null;
+
+        // check child for $seg-out/$seg2-out (assuming that we have a single
+        // child, as this is a linear tree)
+        //List<StringPair> childFeats = [..node.Data.Features
+        //    .Where(f => f.Name == OperationFeature.F_TRACE_SEG_OUT ||
+        //        f.Name == OperationFeature.F_TRACE_SEG2_OUT)];
+        List<StringPair> childFeats = [..node.Data.Features
+            .Where(f => f.Name == OperationFeature.F_TRACE_SEG_OUT)];
+        if (childFeats.Count == 0) return null;
+
+        foreach (StringPair del in parentFeats)
+        {
+            // if there is a corresponding feature in childFeats with the same
+            // operation ID, we have a pair
+            string prefix = del.Value![..del.Value!.IndexOf(' ')];
+
+            StringPair? pairedFeat = childFeats.Find(seg => seg.Value!.StartsWith(
+                prefix, StringComparison.Ordinal));
+            if (pairedFeat != null) return pairedFeat;
+        }
+
+        return null;
     }
 
     /// <summary>
-    /// Gets the reference node ID(s) for inserting restored nodes.
+    /// Adjusts the reference node to account for deleted nodes that have
+    /// already been restored in the tree.
+    /// </summary>
+    /// <param name="refNode">The reference node to possibly adjust.</param>
+    /// <returns>The adjusted node, before which deleted nodes should be inserted,
+    /// or null to insert at the end of the tree.
+    /// </returns>
+    private static TreeNode<ExportedSegment>? AdjustReferenceNode(
+        TreeNode<ExportedSegment> refNode)
+    {
+        // if the reference node is between two paired segments (subst),
+        // move it past the second segment
+        StringPair? refFeat = GetSecondPairedSegmentFeature(refNode);
+        if (refFeat == null) return refNode;
+
+        Debug.WriteLine($"Found paired segment feature: {refFeat}");
+
+        // keep going down until we find a node with any feature having
+        // the same value prefix (=same operation) and name, or a space
+        string prefix = refFeat.Value![..refFeat.Value!.IndexOf(' ')];
+        TreeNode<ExportedSegment>? node = refNode;
+
+        while ((node?.Data?.Features?.Any(f =>
+            f.Name == refFeat.Name &&
+            f.Value?.StartsWith(prefix, StringComparison.Ordinal) == true)
+            == true) || node?.Data?.Text == " ")
+        {
+            node = node!.FirstChild;
+        }
+
+        // the new reference ID is the node past the segment or just the end
+        // if there are no more nodes
+        return node;
+    }
+
+    /// <summary>
+    /// Gets the reference node(s) for inserting restored nodes according to
+    /// the type of the operation which caused the deletion.
+    /// The reference node is the one before which the restored nodes should be
+    /// inserted in the branch.
     /// </summary>
     /// <param name="context">Chain operation context.</param>
     /// <param name="tags">Version tags.</param>
@@ -443,33 +526,41 @@ public sealed class GveTextTreeBuilder
     /// <param name="head2Id">The ID of the 2nd head node to be restored (for
     /// swap operations).</param>
     /// <param name="root">The root of the tree node being built.</param>
-    /// <returns>Node ID(s) (the second one is used for swap only), or -1,0
-    /// if there is nothing to restore because the operation did not cause any
-    /// deletion.</returns>
-    private (int id1, int id2) GetRefNodeIds(ChainOperationContext<char> context,
-        IList<string> tags, int tagIndex, CharChainOperation op,
-        int headId, int tailId, int head2Id, TreeNode<ExportedSegment> root)
+    /// <returns>Tuple with node(s) (the second one is used for swap only, else
+    /// it's null), null if there is nothing to restore because the operation
+    /// did not cause any deletion, or a tuple with null,null to restore at end.
+    /// </returns>
+    private Tuple<TreeNode<ExportedSegment>?, TreeNode<ExportedSegment>?>?
+        GetRefNodes(ChainOperationContext<char> context,
+            IList<string> tags, int tagIndex, CharChainOperation op,
+            int headId, int tailId, int head2Id, TreeNode<ExportedSegment> root)
     {
-        // first find the head(s) of the deleted segment(s)
+        // find the head(s) of the deleted segment(s)
         int id1;
         int id2 = 0;
+        TreeNode<ExportedSegment>? node1 = null, node2 = null;
 
         switch (op.Type)
         {
             case OperationType.Delete:
             case OperationType.MoveBefore:
             case OperationType.MoveAfter:
-                // insert before 1st seg-in (deleted) node, but the problem
-                // is that this node won't be present in the output version:
-                // so we need to use the node past the last deleted node
-                // (which can be null when the last node(s) get deleted)
+                // insert before 1st seg-in (deleted) node: this node won't be
+                // present in the output version (as it was deleted), so we need
+                // to use the node past the last deleted node (which can be null
+                // when the last node(s) get deleted)
                 ChainNode<char>? next = context.Chain.GetNextNode(
                     tags[tagIndex], context.Chain.FindNode(tailId)!);
 
-                // if not found, restore at end
-                if (next == null) return (0, 0);
-                // else restore before it
-                return (next.Id, 0);
+                // if not found, restore at branch end
+                if (next == null)
+                {
+                    return Tuple.Create<TreeNode<ExportedSegment>?,
+                        TreeNode<ExportedSegment>?>(null, null);
+                }
+                // else restore before the node with that ID
+                id1 = next.Id;
+                break;
 
             case OperationType.Replace:
                 // insert before the 1st segout of the next version
@@ -483,21 +574,30 @@ public sealed class GveTextTreeBuilder
                 break;
 
             default:
+                // nothing to restore, there was no deletion
                 id1 = -1;
                 break;
         }
 
         // nothing to restore
-        if (id1 == -1) return (-1, 0);
+        if (id1 == -1) return null;
+
+        // get the reference node from the ID, keeping into account that the
+        // ID might be duplicated because of previous restorations
+        node1 ??= GetRefNodeFromId(root, id1)!;
 
         // adjust IDs based on the target tree structure
         if (IncludeDeleted)
         {
-            id1 = AdjustReferenceId(root, id1);
-            if (id2 > 0) id2 = AdjustReferenceId(root, id2);
+            node1 = AdjustReferenceNode(node1);
+            if (id2 > 0)
+            {
+                node2 = GetRefNodeFromId(root, id2);
+                if (node2 != null) node2 = AdjustReferenceNode(node2);
+            }
         }
 
-        return (id1, id2);
+        return Tuple.Create(node1, node2);
     }
 
     private static List<ChainNode<char>> CollectNodes(
@@ -561,7 +661,7 @@ public sealed class GveTextTreeBuilder
         IList<CharChainOperation> operations,
         IList<string> tags, int tagStartIndex, TreeNode<ExportedSegment> root)
     {
-        //Debug.WriteLine($"--RESTORE from {tagStartIndex}");//@@
+        // process previous versions backwards
         int i = tagStartIndex - 1;
         while (i > -1)
         {
@@ -590,12 +690,12 @@ public sealed class GveTextTreeBuilder
             CharChainOperation op = operations.First(o => o.Id == opId);
 
             // get the reference node ID(s) for inserting restored nodes
-            var (id1, id2) = GetRefNodeIds(context, tags, i, op,
+            var t = GetRefNodes(context, tags, i, op,
                 inIds[0].Id, inIds[^1].Id, in2Ids.Count > 0 ? in2Ids[0].Id : 0,
                 root);
 
             // we care only about operations which imply deletions
-            if (id1 > -1)
+            if (t != null)
             {
                 // feature prefix to be used when creating the new nodes
                 // for their seg-in features (OPID TAGIN:TAGOUT + space)
@@ -608,7 +708,7 @@ public sealed class GveTextTreeBuilder
                     CollectNodes(context, tags[i], inIds.Select(id => id.Id));
 
                 // insert the collected nodes
-                InsertNodesBefore(inNodes, root, featPrefix, id1);
+                InsertNodesBefore(inNodes, root, featPrefix, t.Item1);
 
                 if (in2Ids.Count > 0)
                 {
@@ -618,12 +718,10 @@ public sealed class GveTextTreeBuilder
                         CollectNodes(context, tags[i], in2Ids.Select(id => id.Id));
 
                     // insert the collected nodes
-                    InsertNodesBefore(in2Nodes, root, featPrefix, id2);
+                    InsertNodesBefore(in2Nodes, root, featPrefix, t.Item2);
                 }
             }
 
-            // move to previous version
-            //Debug.WriteLine($"i={i} tag={tags[i]}: \"{GetTreeText(root, true)}\"");//@@
             i--;
         }
     }
