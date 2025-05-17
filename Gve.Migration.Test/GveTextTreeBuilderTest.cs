@@ -207,19 +207,19 @@ public sealed class GveTextTreeBuilderTest
         text = GveTextTreeBuilder.GetTreeText(tree, true);
         Assert.Equal("a nice {red }{pen}{hat}cat", text);
 
-        // v5 tree (swp): a {nice}{red }{pen}{hat}cat {cat}nice
+        // v5 tree (swp): a {nice}cat {red }{pen}{hat}{cat}nice
         tree = multi.Children.FirstOrDefault(
             n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v5") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
-        Assert.Equal("a {nice}{red }{pen}{hat}cat {cat}nice", text);
+        Assert.Equal("a {nice}cat {red }{pen}{hat}{cat}nice", text);
 
         // v6 tree: (ins) a {nice}{red }{pen}{hat}cat is {cat}nice
         tree = multi.Children.FirstOrDefault(
             n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v6") == true);
         Assert.NotNull(tree);
         text = GveTextTreeBuilder.GetTreeText(tree, true);
-        Assert.Equal("a {nice}{red }{pen}{hat}cat is {cat}nice", text);
+        Assert.Equal("a {nice}cat {red }{pen}{hat}is {cat}nice", text);
     }
 
     internal static (

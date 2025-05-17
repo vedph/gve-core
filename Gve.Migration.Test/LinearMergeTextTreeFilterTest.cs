@@ -154,6 +154,18 @@ public sealed class LinearMergeTextTreeFilterTest
         Assert.Contains(seg.Data.Features,
             f => f.Name == OperationFeature.F_TRACE_DELETED);
 
+        // cat
+        seg = seg.FirstChild;
+        Assert.NotNull(seg);
+        Assert.Equal("cat", seg.Data?.Text);
+        Assert.Equal(seg.Data!.Text, seg.Label);
+
+        // space
+        seg = seg.FirstChild;
+        Assert.NotNull(seg);
+        Assert.Equal(" ", seg.Data?.Text);
+        Assert.Equal(seg.Data!.Text, seg.Label);
+
         // red+space (del)
         seg = seg.FirstChild;
         Assert.NotNull(seg);
@@ -180,18 +192,6 @@ public sealed class LinearMergeTextTreeFilterTest
         Assert.NotNull(seg.Data?.Features);
         Assert.Contains(seg.Data.Features,
             f => f.Name == OperationFeature.F_TRACE_DELETED);
-
-        // cat
-        seg = seg.FirstChild;
-        Assert.NotNull(seg);
-        Assert.Equal("cat", seg.Data?.Text);
-        Assert.Equal(seg.Data!.Text, seg.Label);
-
-        // space
-        seg = seg.FirstChild;
-        Assert.NotNull(seg);
-        Assert.Equal(" ", seg.Data?.Text);
-        Assert.Equal(seg.Data!.Text, seg.Label);
 
         // is+space
         seg = seg.FirstChild;
