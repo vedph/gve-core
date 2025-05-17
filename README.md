@@ -29,7 +29,7 @@ docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,wi
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:2.0.4 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:3.0.0 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
@@ -94,6 +94,10 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-05-17:
+  - updated packages.
+  - fixed some tests after export refactoring.
+  - refactored Dockerfile and built Docker image for demo 3.0.0.
 - 2025-05-08: updated packages.
 - 2025-05-03:
   - updated packages.
