@@ -98,7 +98,8 @@ public sealed class GveSabaCompositeTextTreeRenderer :
 /// <summary>
 /// Options for <see cref="GveSabaCompositeTextTreeRenderer"/>.
 /// </summary>
-public class GveSabaCompositeTextTreeRendererOptions
+public class GveSabaCompositeTextTreeRendererOptions :
+    CompositeOptions<GveSabaTextTreeRendererOptions>
 {
     /// <summary>
     /// Gets or sets the version tag for the preferred text version. If not
@@ -108,9 +109,4 @@ public class GveSabaCompositeTextTreeRendererOptions
     /// as the preferred version.
     /// </summary>
     public string? PreferredTag { get; set; }
-
-    /// <summary>
-    /// Gets or sets the inner renderer options.
-    /// </summary>
-    public GveSabaTextTreeRendererOptions? InnerOptions { get; set; }
 }
