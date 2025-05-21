@@ -94,7 +94,9 @@ and long moustache and grey beard.
 
 ## History
 
-- 2025-05-21: updated packages.
+- 2025-05-21:
+  - updated packages.
+  - refactored Docfx.
 - 2025-05-17:
   - updated packages.
   - fixed some tests after export refactoring.

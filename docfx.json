@@ -5,7 +5,16 @@
         {
           "src": ".",
           "files": ["**/*.csproj"],
-          "exclude": ["**/*.Test.csproj", "**/bin/**", "**/obj/**"]
+          "exclude": [
+            "**/*.Test.csproj",
+            "**/bin/**",
+            "**/obj/**",
+            "**/Gve.Demo/**/*.csproj",
+            "**/Gve.Demo.Client/**/*.csproj",
+            "**/CadmusGveApi/**/*.csproj",
+            "**/Gve.Api/**/*.csproj",
+            "**/gve/**/*.csproj"
+          ]
         }
       ],
       "dest": "api"
