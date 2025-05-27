@@ -17,7 +17,7 @@ docker buildx create --use
 - 👉 GVE API:
 
 ```sh
-docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-api:2.0.3 -t vedph2020/gve-api:latest --push
+docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-api:3.0.1 -t vedph2020/gve-api:latest --push
 ```
 
 - 👉 GVE CADMUS API:
@@ -94,6 +94,9 @@ and long moustache and grey beard.
 
 ## History
 
+### 3.0.1
+
+- 2025-05-27: Docker image.
 - 2025-05-21:
   - updated packages.
   - refactored Docfx.
