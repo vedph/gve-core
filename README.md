@@ -94,6 +94,8 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-07-02: updated packages.
+
 ### 3.0.1
 
 - 2025-05-27: Docker image.
