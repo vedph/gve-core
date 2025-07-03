@@ -94,7 +94,9 @@ and long moustache and grey beard.
 
 ## History
 
-- 2025-07-02: updated packages.
+- 2025-07-02:
+  - updated packages.
+  - added export controller to Cadmus API. 
 
 ### 3.0.1
 
