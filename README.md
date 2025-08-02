@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-08-02: updated packages.
 - 2025-07-12: updated packages.
 - 2025-07-02:
   - updated packages.
