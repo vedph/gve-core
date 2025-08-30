@@ -5,8 +5,8 @@ using Cadmus.Seed.Philology.Parts;
 using Cadmus.Seed.Gve.Parts;
 using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Reflection;
+using Cadmus.Seed.Codicology.Parts;
 
 namespace Cadmus.Gve.Services;
 
@@ -26,6 +26,8 @@ public sealed class GvePartSeederFactoryProvider :
             typeof(NotePartSeeder).Assembly,
             // Cadmus.Seed.Philology.Parts
             typeof(ApparatusLayerFragmentSeeder).Assembly,
+            // Cadmus.Seed.Codicology.Parts
+            typeof(CodShelfmarksPartSeeder).Assembly,
             // Cadmus.Seed.Gve.Parts
             typeof(GveSnapshotPartSeeder).GetTypeInfo().Assembly,
         ];

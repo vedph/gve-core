@@ -6,6 +6,7 @@ using Cadmus.Mongo;
 using Cadmus.General.Parts;
 using Cadmus.Philology.Parts;
 using Cadmus.Gve.Parts;
+using Cadmus.Codicology.Parts;
 
 namespace Cadmus.Gve.Services;
 
@@ -36,6 +37,8 @@ public sealed class GveRepositoryProvider : IRepositoryProvider
             typeof(NotePart).GetTypeInfo().Assembly,
             // Cadmus.Philology.Parts
             typeof(ApparatusLayerFragment).GetTypeInfo().Assembly,
+            // Cadmus.Codicology.Parts
+            typeof(CodShelfmarksPart).GetTypeInfo().Assembly,
             // Cadmus.Gve.Parts
             typeof(GveSnapshotPart).GetTypeInfo().Assembly,
         ]);
