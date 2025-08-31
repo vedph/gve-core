@@ -19,7 +19,7 @@
 		<PackageReference Include="Cadmus.Graph" Version="8.0.9" />
 		<PackageReference Include="Cadmus.Graph.Ef.PgSql" Version="9.0.2" />
 		<PackageReference Include="Cadmus.Graph.Extras" Version="8.0.9" />
-		<PackageReference Include="Cadmus.Seed.General.Parts" Version="7.0.5" />
+		<PackageReference Include="Cadmus.Seed.General.Parts" Version="7.0.6" />
 		<PackageReference Include="Cadmus.Seed.Philology.Parts" Version="9.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.8" />

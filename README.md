@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-08-31: fixes to profile.
 - 2025-08-30:
   - updated packages.
   - refactored Cadmus API profiles.

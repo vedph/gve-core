@@ -4,14 +4,14 @@
       "id": "snapshot",
       "label": "snapshot",
       "description": "The snapshot facet",
-      "colorKey": "86ACEB",
+      "colorKey": "9AD0EC",
       "partDefinitions": [
         {
           "typeId": "it.vedph.metadata",
           "name": "metadata",
           "description": "Generic metadata.",
           "isRequired": true,
-          "colorKey": "F8C0C0",
+          "colorKey": "A8D5BA",
           "groupKey": "identity",
           "sortKey": "01"
         },
@@ -19,7 +19,7 @@
           "typeId": "it.vedph.external-ids",
           "name": "external IDs",
           "description": "External identifiers.",
-          "colorKey": "BEE0CA",
+          "colorKey": "8ED1E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -27,7 +27,7 @@
           "typeId": "it.vedph.pin-links",
           "name": "links",
           "description": "Pin-based links.",
-          "colorKey": "A0C0F8",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "03"
         },
@@ -35,7 +35,7 @@
           "typeId": "it.vedph.asserted-historical-dates",
           "name": "date",
           "description": "Datation(s).",
-          "colorKey": "F898F8",
+          "colorKey": "D1B3E0",
           "groupKey": "identity",
           "sortKey": "04"
         },
@@ -44,7 +44,7 @@
           "roleId": "topic",
           "name": "categories",
           "description": "Snapshot categories.",
-          "colorKey": "98F8F8",
+          "colorKey": "9DE0D6",
           "groupKey": "content",
           "sortKey": "05"
         },
@@ -52,7 +52,7 @@
           "typeId": "it.vedph.gve.snapshot",
           "name": "snapshot",
           "description": "Autograph snapshot.",
-          "colorKey": "F090F8",
+          "colorKey": "F7A8B8",
           "groupKey": "content",
           "sortKey": "06"
         },
@@ -60,7 +60,7 @@
           "typeId": "it.vedph.comment",
           "name": "comment",
           "description": "Comment.",
-          "colorKey": "B2E0AA",
+          "colorKey": "F9E79F",
           "groupKey": "content",
           "sortKey": "07"
         },
@@ -68,7 +68,7 @@
           "typeId": "it.vedph.doc-references",
           "name": "references",
           "description": "Documental references.",
-          "colorKey": "BEF0AA",
+          "colorKey": "F7DC6F",
           "groupKey": "editorial",
           "sortKey": "08"
         },
@@ -76,7 +76,7 @@
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
-          "colorKey": "9285A6",
+          "colorKey": "F9E79F",
           "groupKey": "editorial",
           "sortKey": "09"
         }
@@ -86,14 +86,14 @@
       "id": "carrier",
       "label": "carrier",
       "description": "The text carrier.",
-      "colorKey": "98BCEB",
+      "colorKey": "B6D7A8",
       "partDefinitions": [
         {
           "typeId": "it.vedph.metadata",
           "name": "metadata",
           "description": "Generic metadata.",
           "isRequired": true,
-          "colorKey": "F8C0C0",
+          "colorKey": "A8D5BA",
           "groupKey": "identity",
           "sortKey": "01"
         },
@@ -102,7 +102,7 @@
           "name": "shelfmarks",
           "description": "Current and historical shelfmarks.",
           "isRequired": true,
-          "colorKey": "85C1FF",
+          "colorKey": "C3B6E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -110,7 +110,7 @@
           "typeId": "it.vedph.external-ids",
           "name": "external IDs",
           "description": "External identifiers.",
-          "colorKey": "BEE0CA",
+          "colorKey": "8ED1E6",
           "groupKey": "identity",
           "sortKey": "03"
         },
@@ -119,7 +119,7 @@
           "roleId": "carrier",
           "name": "categories",
           "description": "Carrier type.",
-          "colorKey": "98F8F8",
+          "colorKey": "9DE0D6",
           "groupKey": "identity",
           "sortKey": "04"
         },
@@ -127,7 +127,7 @@
           "typeId": "it.vedph.asserted-historical-dates",
           "name": "date",
           "description": "Historical date(s).",
-          "colorKey": "F898F8",
+          "colorKey": "D1B3E0",
           "groupKey": "identity",
           "sortKey": "05"
         },
@@ -135,7 +135,7 @@
           "typeId": "it.vedph.physical-measurements",
           "name": "measurements",
           "description": "Physical measurements.",
-          "colorKey": "C180EA",
+          "colorKey": "C3B6E6",
           "groupKey": "material",
           "sortKey": "06"
         },
@@ -143,7 +143,7 @@
           "typeId": "it.vedph.physical-states",
           "name": "states",
           "description": "Physical preservation states.",
-          "colorKey": "C880E4",
+          "colorKey": "D6B6E6",
           "groupKey": "material",
           "sortKey": "07"
         },
@@ -151,7 +151,7 @@
           "typeId": "it.vedph.comment",
           "name": "comment",
           "description": "Comment.",
-          "colorKey": "B2E0AA",
+          "colorKey": "F9E79F",
           "groupKey": "content",
           "sortKey": "08"
         },
@@ -159,7 +159,7 @@
           "typeId": "it.vedph.historical-events",
           "name": "events",
           "description": "Historical events.",
-          "colorKey": "BE85FF",
+          "colorKey": "F5B7B1",
           "groupKey": "content",
           "sortKey": "09"
         },
@@ -167,7 +167,7 @@
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
-          "colorKey": "9285A6",
+          "colorKey": "F9E79F",
           "groupKey": "editorial",
           "sortKey": "10"
         }
@@ -177,14 +177,14 @@
       "id": "version",
       "label": "version",
       "description": "An epigram's' version.",
-      "colorKey": "77B0EB",
+      "colorKey": "F9D6A5",
       "partDefinitions": [
         {
           "typeId": "it.vedph.metadata",
           "name": "metadata",
           "description": "Generic metadata.",
           "isRequired": true,
-          "colorKey": "F8C0C0",
+          "colorKey": "A8D5BA",
           "groupKey": "identity",
           "sortKey": "01"
         },
@@ -192,7 +192,7 @@
           "typeId": "it.vedph.pin-links",
           "name": "links",
           "description": "Generic links.",
-          "colorKey": "5CA8FF",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -200,7 +200,7 @@
           "typeId": "it.vedph.pin-links",
           "name": "author",
           "description": "Link(s) to author(s).",
-          "colorKey": "5CA8FF",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "03"
         },
@@ -208,7 +208,7 @@
           "typeId": "it.vedph.asserted-historical-dates",
           "name": "date",
           "description": "Historical date(s).",
-          "colorKey": "F898F8",
+          "colorKey": "D1B3E0",
           "groupKey": "identity",
           "sortKey": "04"
         },
@@ -216,7 +216,7 @@
           "typeId": "it.vedph.physical-measurements",
           "name": "measurements",
           "description": "Physical measurements.",
-          "colorKey": "C180EA",
+          "colorKey": "C3B6E6",
           "groupKey": "material",
           "sortKey": "05"
         },
@@ -224,7 +224,7 @@
           "typeId": "it.vedph.physical-states",
           "name": "states",
           "description": "Physical preservation states.",
-          "colorKey": "C880E4",
+          "colorKey": "D6B6E6",
           "groupKey": "material",
           "sortKey": "06"
         },
@@ -232,7 +232,7 @@
           "typeId": "it.vedph.flags",
           "name": "features",
           "description": "Epigram's version features.",
-          "colorKey": "87F0F0",
+          "colorKey": "76D7C4",
           "groupKey": "content",
           "sortKey": "07"
         },
@@ -241,7 +241,7 @@
           "roleId": "topic",
           "name": "categories",
           "description": "Topic(s).",
-          "colorKey": "98F8F8",
+          "colorKey": "9DE0D6",
           "groupKey": "content",
           "sortKey": "08"
         },
@@ -250,7 +250,7 @@
           "roleId": "base-text",
           "name": "text",
           "description": "Item's token-based text.",
-          "colorKey": "31AB54",
+          "colorKey": "7ED6A8",
           "groupKey": "content",
           "sortKey": "09"
         },
@@ -259,7 +259,7 @@
           "roleId": "fr.it.vedph.apparatus",
           "name": "apparatus",
           "description": "Critical apparatus.",
-          "colorKey": "D4E0A4",
+          "colorKey": "F7DC6F",
           "groupKey": "content",
           "sortKey": "10"
         },
@@ -268,7 +268,7 @@
           "roleId": "fr.it.vedph.comment",
           "name": "comments",
           "description": "Comments on the epigram's version'.",
-          "colorKey": "F8D040",
+          "colorKey": "F9E79F",
           "groupKey": "content",
           "sortKey": "11"
         },
@@ -276,7 +276,7 @@
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
-          "colorKey": "9285A6",
+          "colorKey": "F9E79F",
           "groupKey": "editorial",
           "sortKey": "12"
         }
@@ -286,14 +286,14 @@
       "id": "epigram",
       "label": "epigram",
       "description": "An epigram.",
-      "colorKey": "77C0FA",
+      "colorKey": "F7A8B8",
       "partDefinitions": [
         {
           "typeId": "it.vedph.metadata",
           "name": "metadata",
           "description": "Generic metadata.",
           "isRequired": true,
-          "colorKey": "F8C0C0",
+          "colorKey": "A8D5BA",
           "groupKey": "identity",
           "sortKey": "01"
         },
@@ -301,7 +301,7 @@
           "typeId": "it.vedph.external-ids",
           "name": "external IDs",
           "description": "External identifiers.",
-          "colorKey": "BEE0CA",
+          "colorKey": "8ED1E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -310,16 +310,15 @@
           "roleId": "topic",
           "name": "categories",
           "description": "Topic(s).",
-          "colorKey": "98F8F8",
+          "colorKey": "9DE0D6",
           "groupKey": "content",
           "sortKey": "03"
         },
         {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.comment",
-          "name": "comments",
-          "description": "Comments on the epigram.",
-          "colorKey": "F8D040",
+          "typeId": "it.vedph.comment",
+          "name": "comment",
+          "description": "Comment.",
+          "colorKey": "F9E79F",
           "groupKey": "content",
           "sortKey": "04"
         },
@@ -327,7 +326,7 @@
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
-          "colorKey": "9285A6",
+          "colorKey": "F9E79F",
           "groupKey": "editorial",
           "sortKey": "05"
         }
@@ -337,14 +336,14 @@
       "id": "collection",
       "label": "sequence",
       "description": "A collection of epigram versions.",
-      "colorKey": "C0A0AA",
+      "colorKey": "D1B3E0",
       "partDefinitions": [
         {
           "typeId": "it.vedph.metadata",
           "name": "metadata",
           "description": "Generic metadata.",
           "isRequired": true,
-          "colorKey": "F8C0C0",
+          "colorKey": "A8D5BA",
           "groupKey": "identity",
           "sortKey": "01"
         },
@@ -352,7 +351,7 @@
           "typeId": "it.vedph.external-ids",
           "name": "external IDs",
           "description": "External identifiers.",
-          "colorKey": "BEE0CA",
+          "colorKey": "8ED1E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -361,7 +360,7 @@
           "roleId": "seq",
           "name": "sequence",
           "description": "Types of epigram versions sequence.",
-          "colorKey": "98F8F8",
+          "colorKey": "9DE0D6",
           "groupKey": "content",
           "sortKey": "03"
         },
@@ -370,7 +369,7 @@
           "roleId": "seq",
           "name": "sequence",
           "description": "The sequence of epigram versions in the collection.",
-          "colorKey": "5CA8FF",
+          "colorKey": "8CB7E6",
           "groupKey": "content",
           "sortKey": "04"
         },
@@ -379,7 +378,7 @@
           "roleId": "fr.it.vedph.comment",
           "name": "comments",
           "description": "Comments on the sequence.",
-          "colorKey": "F8D040",
+          "colorKey": "F9E79F",
           "groupKey": "content",
           "sortKey": "05"
         },
@@ -387,7 +386,7 @@
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
-          "colorKey": "9285A6",
+          "colorKey": "F9E79F",
           "groupKey": "editorial",
           "sortKey": "06"
         }
@@ -399,19 +398,19 @@
       "id": 1,
       "label": "complete",
       "description": "The item is complete.",
-      "colorKey": "F0B880"
+      "colorKey": "F7C873"
     },
     {
       "id": 2,
       "label": "revised",
       "description": "The item has been revised.",
-      "colorKey": "60CF60"
+      "colorKey": "7ED6A8"
     },
     {
       "id": 4,
       "label": "undisclosed",
       "description": "The item is undisclosed.",
-      "colorKey": "CF6069"
+      "colorKey": "F1948A"
     }
   ],
   "index": {
@@ -433,6 +432,10 @@
       "id": "model-types@en",
       "entries": [
         {
+          "id": "it.vedph.asserted-historical-dates",
+          "value": "date(s)"
+        },
+        {
           "id": "it.vedph.bibliography",
           "value": "bibliography"
         },
@@ -447,6 +450,10 @@
         {
           "id": "it.vedph.categories:topic",
           "value": "topics"
+        },
+        {
+          "id": "it.vedph.codicology.shelfmarks",
+          "value": "shelfmarks"
         },
         {
           "id": "it.vedph.comment",
@@ -473,12 +480,24 @@
           "value": "date"
         },
         {
+          "id": "it.vedph.historical-events",
+          "value": "events"
+        },
+        {
           "id": "it.vedph.metadata",
           "value": "metadata"
         },
         {
           "id": "it.vedph.note",
           "value": "note"
+        },
+        {
+          "id": "it.vedph.physical-measurements",
+          "value": "measurements"
+        },
+        {
+          "id": "it.vedph.physical-states",
+          "value": "states"
         },
         {
           "id": "it.vedph.pin-links",
@@ -491,6 +510,18 @@
         {
           "id": "it.vedph.pin-links:seq",
           "value": "sequence"
+        },
+        {
+          "id": "it.vedph.token-text",
+          "value": "base text"
+        },
+        {
+          "id": "it.vedph.token-text-layer:fr.it.vedph.apparatus",
+          "value": "critical apparatus"
+        },
+        {
+          "id": "it.vedph.token-text-layer:fr.it.vedph.comment",
+          "value": "comments"
         }
       ]
     },
@@ -657,7 +688,7 @@
   "seed": {
     "options": {
       "seed": 1,
-      "users": ["zeus"],
+      "users": [ "zeus" ],
       "partRoles": [],
       "fragmentRoles": []
     },
