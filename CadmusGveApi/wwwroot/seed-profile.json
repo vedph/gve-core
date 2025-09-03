@@ -198,6 +198,7 @@
         },
         {
           "typeId": "it.vedph.pin-links",
+          "roleId": "auth",
           "name": "author",
           "description": "Link(s) to author(s).",
           "colorKey": "8CB7E6",
