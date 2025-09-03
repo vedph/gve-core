@@ -273,12 +273,20 @@
           "sortKey": "11"
         },
         {
+          "typeId": "it.vedph.gve.hands",
+          "name": "hands",
+          "description": "Description of hand(s) in the epigram's version.",
+          "colorKey": "F9F79F",
+          "groupKey": "content",
+          "sortKey": "12"
+        },
+        {
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "12"
+          "sortKey": "13"
         }
       ]
     },
@@ -472,6 +480,10 @@
           "value": "external IDs"
         },
         {
+          "id": "it.vedph.gve.hands",
+          "value": "hands"
+        },
+        {
           "id": "it.vedph.gve.snapshot",
           "value": "snapshot"
         },
@@ -646,6 +658,36 @@
       ]
     },
     {
+      "id": "gve-hand-colors@en",
+      "entries": [
+        {
+          "id": "black",
+          "value": "black"
+        },
+        {
+          "id": "blue",
+          "value": "blue"
+        },
+        {
+          "id": "red",
+          "value": "red"
+        }
+      ]
+    },
+    {
+      "id": "gve-hand-tools@en",
+      "entries": [
+        {
+          "id": "pen",
+          "value": "pen"
+        },
+        {
+          "id": "pencil",
+          "value": "pencil"
+        }
+      ]
+    },
+    {
       "id": "physical-size-units@en",
       "entries": [
         {
@@ -727,6 +769,9 @@
       },
       {
         "id": "seed.it.vedph.flags"
+      },
+      {
+        "id": "seed.it.vedph.gve.hands"
       },
       {
         "id": "seed.it.vedph.gve.snapshot"
