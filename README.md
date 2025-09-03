@@ -23,7 +23,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.1 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.2 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
@@ -97,6 +97,7 @@ and long moustache and grey beard.
 - 2025-09-03:
   - updated packages.
   - added `GveHandsPart`.
+  - generated and published image for Cadmus GVE API 3.0.2.
 - 2025-08-31: fixes to profile.
 - 2025-08-30:
   - updated packages.
