@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-09-04: added doc references to all facets.
 - 2025-09-03:
   - updated packages.
   - added `GveHandsPart`.

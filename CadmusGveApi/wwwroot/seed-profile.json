@@ -164,12 +164,20 @@
           "sortKey": "09"
         },
         {
+          "typeId": "it.vedph.doc-references",
+          "name": "references",
+          "description": "Documental references.",
+          "colorKey": "F7DC6F",
+          "groupKey": "editorial",
+          "sortKey": "10"
+        },
+        {
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "10"
+          "sortKey": "11"
         }
       ]
     },
@@ -282,12 +290,20 @@
           "sortKey": "12"
         },
         {
+          "typeId": "it.vedph.doc-references",
+          "name": "references",
+          "description": "Documental references.",
+          "colorKey": "F7DC6F",
+          "groupKey": "editorial",
+          "sortKey": "13"
+        },
+        {
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "13"
+          "sortKey": "14"
         }
       ]
     },
@@ -332,12 +348,20 @@
           "sortKey": "04"
         },
         {
+          "typeId": "it.vedph.doc-references",
+          "name": "references",
+          "description": "Documental references.",
+          "colorKey": "F7DC6F",
+          "groupKey": "editorial",
+          "sortKey": "05"
+        },
+        {
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "05"
+          "sortKey": "06"
         }
       ]
     },
@@ -392,12 +416,20 @@
           "sortKey": "05"
         },
         {
+          "typeId": "it.vedph.doc-references",
+          "name": "references",
+          "description": "Documental references.",
+          "colorKey": "F7DC6F",
+          "groupKey": "editorial",
+          "sortKey": "06"
+        },
+        {
           "typeId": "it.vedph.note",
           "name": "note",
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "06"
+          "sortKey": "07"
         }
       ]
     }
@@ -469,16 +501,16 @@
           "value": "comment"
         },
         {
-          "id": "it.vedph.flags",
-          "value": "features"
-        },
-        {
           "id": "it.vedph.doc-references",
           "value": "references"
         },
         {
           "id": "it.vedph.external-ids",
           "value": "external IDs"
+        },
+        {
+          "id": "it.vedph.flags",
+          "value": "features"
         },
         {
           "id": "it.vedph.gve.hands",
