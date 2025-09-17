@@ -94,6 +94,8 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-09-17: updated packages.
+
 ### 3.0.3
 
 - 2025-09-04: added doc references to all facets.
