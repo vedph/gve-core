@@ -308,6 +308,132 @@
       ]
     },
     {
+      "id": "lines",
+      "label": "lines",
+      "description": "Sparse lines.",
+      "colorKey": "F9E0A5",
+      "partDefinitions": [
+        {
+          "typeId": "it.vedph.metadata",
+          "name": "metadata",
+          "description": "Generic metadata.",
+          "isRequired": true,
+          "colorKey": "A8D5BA",
+          "groupKey": "identity",
+          "sortKey": "01"
+        },
+        {
+          "typeId": "it.vedph.pin-links",
+          "name": "links",
+          "description": "Generic links.",
+          "colorKey": "8CB7E6",
+          "groupKey": "identity",
+          "sortKey": "02"
+        },
+        {
+          "typeId": "it.vedph.pin-links",
+          "roleId": "auth",
+          "name": "author",
+          "description": "Link(s) to author(s).",
+          "colorKey": "8CB7E6",
+          "groupKey": "identity",
+          "sortKey": "03"
+        },
+        {
+          "typeId": "it.vedph.asserted-historical-dates",
+          "name": "date",
+          "description": "Historical date(s).",
+          "colorKey": "D1B3E0",
+          "groupKey": "identity",
+          "sortKey": "04"
+        },
+        {
+          "typeId": "it.vedph.physical-measurements",
+          "name": "measurements",
+          "description": "Physical measurements.",
+          "colorKey": "C3B6E6",
+          "groupKey": "material",
+          "sortKey": "05"
+        },
+        {
+          "typeId": "it.vedph.physical-states",
+          "name": "states",
+          "description": "Physical preservation states.",
+          "colorKey": "D6B6E6",
+          "groupKey": "material",
+          "sortKey": "06"
+        },
+        {
+          "typeId": "it.vedph.flags",
+          "name": "features",
+          "description": "Epigram's version features.",
+          "colorKey": "76D7C4",
+          "groupKey": "content",
+          "sortKey": "07"
+        },
+        {
+          "typeId": "it.vedph.categories",
+          "roleId": "topic",
+          "name": "categories",
+          "description": "Topic(s).",
+          "colorKey": "9DE0D6",
+          "groupKey": "content",
+          "sortKey": "08"
+        },
+        {
+          "typeId": "it.vedph.token-text",
+          "roleId": "base-text",
+          "name": "text",
+          "description": "Item's token-based text.",
+          "colorKey": "7ED6A8",
+          "groupKey": "content",
+          "sortKey": "09"
+        },
+        {
+          "typeId": "it.vedph.token-text-layer",
+          "roleId": "fr.it.vedph.apparatus",
+          "name": "apparatus",
+          "description": "Critical apparatus.",
+          "colorKey": "F7DC6F",
+          "groupKey": "content",
+          "sortKey": "10"
+        },
+        {
+          "typeId": "it.vedph.token-text-layer",
+          "roleId": "fr.it.vedph.comment",
+          "name": "comments",
+          "description": "Comments on the epigram's version'.",
+          "colorKey": "F9E79F",
+          "groupKey": "content",
+          "sortKey": "11"
+        },
+        {
+          "typeId": "it.vedph.gve.hands",
+          "name": "hands",
+          "description": "Description of hand(s) in the epigram's version.",
+          "colorKey": "F9F79F",
+          "groupKey": "content",
+          "sortKey": "12"
+        },
+        {
+          "typeId": "it.vedph.doc-references",
+          "name": "references",
+          "description": "Documental references.",
+          "colorKey": "F7DC6F",
+          "groupKey": "editorial",
+          "sortKey": "13"
+        },
+        {
+          "typeId": "it.vedph.note",
+          "name": "note",
+          "description": "A free text note.",
+          "colorKey": "F9E79F",
+          "groupKey": "editorial",
+          "sortKey": "14"
+        }
+      ]
+    },
+    {
       "id": "epigram",
       "label": "epigram",
       "description": "An epigram.",

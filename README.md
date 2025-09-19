@@ -94,6 +94,7 @@ and long moustache and grey beard.
 
 ## History
 
+- 2025-09-19: added sparse lines (with facet equal to epigram version) to profile.
 - 2025-09-17: updated packages.
 
 ### 3.0.3
