@@ -23,7 +23,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.3 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.4 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
@@ -94,6 +94,9 @@ and long moustache and grey beard.
 
 ## History
 
+### 3.0.4
+
+- 2025-09-22: updated packages.
 - 2025-09-19: added sparse lines (with facet equal to epigram version) to profile.
 - 2025-09-17: updated packages.
 
