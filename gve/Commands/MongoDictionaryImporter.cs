@@ -17,7 +17,6 @@ public sealed class MongoDictionaryImporter
     private readonly MongoCadmusRepository _repository;
     private readonly MongoDictionaryImporterOptions _options;
     private readonly StandardItemSortKeyBuilder _sortKeyBuilder;
-    private bool _disposedValue;
 
     public MongoDictionaryImporter(MongoCadmusRepository repository,
         MongoDictionaryImporterOptions options)
@@ -35,7 +34,7 @@ public sealed class MongoDictionaryImporter
             (IDictionary<string,object>)data, "{{", "}}");
     }
 
-    public void Import(Dictionary<string, string> data)
+    public IItem Import(Dictionary<string, string> data)
     {
         ArgumentNullException.ThrowIfNull(data);
 
@@ -79,5 +78,7 @@ public sealed class MongoDictionaryImporter
         }
 
         _repository.AddItem(item, true);
+
+        return item;
     }
 }

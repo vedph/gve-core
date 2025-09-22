@@ -12,6 +12,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="appsettings.json">
+	    <CopyToOutputDirectory>{
+  "ConnectionStrings": {
+    "Default": "mongodb://localhost:27017/cadmus-vela"
+  }
+}
+</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Cadmus.General.Parts" Version="7.0.5" />
 		<PackageReference Include="Cadmus.Mongo" Version="8.0.10" />
 		<PackageReference Include="DiffPlex" Version="1.9.0" />

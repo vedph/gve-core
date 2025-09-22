@@ -59,6 +59,8 @@ public static class Program
             {
                  config.AddCommand<DiffCommand>("diff")
                     .WithDescription("Diff two text files.");
+                config.AddCommand<ImportListCommand>("import-list")
+                    .WithDescription("Import a list of items from Excel.");
             });
 
             int result = await app.RunAsync(args);
