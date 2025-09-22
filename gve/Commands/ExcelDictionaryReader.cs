@@ -71,13 +71,13 @@ public sealed class ExcelDictionaryReader : IDisposable
     /// is not supported.</exception>
     /// <exception cref="IOException">Thrown when file cannot be opened or read.
     /// </exception>
-    private IWorkbook CreateWorkbook(string filePath)
+    private static IWorkbook CreateWorkbook(string filePath)
     {
         string extension = Path.GetExtension(filePath).ToLowerInvariant();
 
         try
         {
-            FileStream fileStream = new FileStream(filePath, FileMode.Open,
+            FileStream fileStream = new(filePath, FileMode.Open,
                 FileAccess.Read, FileShare.Read);
 
             switch (extension)
@@ -130,7 +130,7 @@ public sealed class ExcelDictionaryReader : IDisposable
     /// properties are null.</exception>
     /// <exception cref="ArgumentException">Thrown when options contain invalid
     /// values.</exception>
-    private void ValidateOptions(ExcelDictionaryReaderOptions options)
+    private static void ValidateOptions(ExcelDictionaryReaderOptions options)
     {
         if (options == null)
         {
@@ -201,7 +201,7 @@ public sealed class ExcelDictionaryReader : IDisposable
     /// <param name="cell">The cell to read from</param>
     /// <returns>The cell value as a string, or empty string if cell is
     /// null</returns>
-    private string GetCellValueAsString(ICell cell)
+    private static string GetCellValueAsString(ICell cell)
     {
         if (cell == null) return "";
 
@@ -237,7 +237,7 @@ public sealed class ExcelDictionaryReader : IDisposable
     /// <param name="row">The row to check</param>
     /// <param name="options">The reader options containing end conditions</param>
     /// <returns>True if this row marks the end of data, false otherwise</returns>
-    private bool IsEndOfData(IRow row, ExcelDictionaryReaderOptions options)
+    private static bool IsEndOfData(IRow row, ExcelDictionaryReaderOptions options)
     {
         if (options.EndColumns == null || options.EndColumns.Count == 0)
             return false;
