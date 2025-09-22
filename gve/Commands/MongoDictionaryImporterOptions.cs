@@ -8,9 +8,29 @@ namespace Gve.Cli.Commands;
 public class MongoDictionaryImporterOptions
 {
     /// <summary>
+    /// The MongoDB connection string.
+    /// </summary>
+    public string ConnectionString { get; set; } = "mongodb://localhost:27017";
+
+    /// <summary>
+    /// The MongoDB database name.
+    /// </summary>
+    public string DatabaseName { get; set; } = "cadmus-gve";
+
+    /// <summary>
     /// The reader options.
     /// </summary>
     public required ExcelDictionaryReaderOptions Reader { get; set; }
+
+    /// <summary>
+    /// The ID of the facet to which the items will belong.
+    /// </summary>
+    public string FacetId { get; set; } = "default";
+
+    /// <summary>
+    /// The group ID template. Variable names are enclosed in <c>{{}}</c>.
+    /// </summary>
+    public string? GroupId { get; set; }
 
     /// <summary>
     /// The item title template. Variable names are enclosed in <c>{{}}</c>.

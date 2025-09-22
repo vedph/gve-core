@@ -12,6 +12,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Cadmus.General.Parts" Version="7.0.5" />
+		<PackageReference Include="Cadmus.Mongo" Version="8.0.10" />
 		<PackageReference Include="DiffPlex" Version="1.9.0" />
 		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="4.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
