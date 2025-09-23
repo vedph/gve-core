@@ -13,11 +13,6 @@ public class MongoDictionaryImporterOptions
     public string ConnectionString { get; set; } = "mongodb://localhost:27017";
 
     /// <summary>
-    /// The MongoDB database name.
-    /// </summary>
-    public string DatabaseName { get; set; } = "cadmus-gve";
-
-    /// <summary>
     /// The reader options.
     /// </summary>
     public required ExcelDictionaryReaderOptions Reader { get; set; }

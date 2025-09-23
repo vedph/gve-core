@@ -15,6 +15,8 @@ namespace Gve.Cli.Commands;
 /// </summary>
 public sealed class ExcelDictionaryReader : IDisposable
 {
+    public const string DATA_ROW_NUMBER = "_row-number";
+
     private readonly string _filePath;
     private readonly ExcelDictionaryReaderOptions _options;
     private IWorkbook _workbook;
@@ -363,6 +365,7 @@ public sealed class ExcelDictionaryReader : IDisposable
             string cellValue = GetCellValueAsString(cell);
             result[mapping.Value] = cellValue;
         }
+        result[DATA_ROW_NUMBER] = CurrentRowNumber.ToString();
 
         _rowsRead++;
         return result;

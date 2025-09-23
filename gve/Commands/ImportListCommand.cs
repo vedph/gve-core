@@ -41,6 +41,11 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
             MongoDictionaryImporterOptions options =
                 LoadOptions(settings.ConfigPath);
 
+            string cs = ConfigurationService.Configuration
+                    .GetConnectionString("default") ??
+                    "mongodb://localhost:27017/cadmus-gve";
+            options.ConnectionString = cs;
+
             using ExcelDictionaryReader reader = new(
                 settings.ConfigPath, options.Reader);
 
@@ -51,9 +56,7 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
                 new StandardItemSortKeyBuilder());
             repository.Configure(new MongoCadmusRepositoryOptions
             {
-                ConnectionString = ConfigurationService.Configuration
-                    .GetConnectionString("default") ??
-                    "mongodb://localhost:27017/cadmus-gve"
+                ConnectionString = cs
             });
 
             // create importer
