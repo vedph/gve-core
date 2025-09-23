@@ -30,8 +30,9 @@ public sealed class MongoDictionaryImporter
     private static string ResolveTemplate(string template,
         Dictionary<string, string> data)
     {
-        return TextTemplate.FillTemplate(template,
-            (IDictionary<string,object>)data, "{{", "}}");
+        Dictionary<string, object> objData = data.ToDictionary(
+            p => p.Key, p => (object)p.Value);
+        return TextTemplate.FillTemplate(template, objData, "{{", "}}");
     }
 
     public IItem Import(Dictionary<string, string> data)
@@ -42,6 +43,9 @@ public sealed class MongoDictionaryImporter
         int flags = string.IsNullOrEmpty(_options.Flags)
             ? 0
             : int.Parse(_options.Flags, NumberStyles.HexNumber);
+        string userId = string.IsNullOrEmpty(_options.UserId)
+            ? "zeus"
+            : _options.UserId;
 
         // create the item
         Item item = new()
@@ -52,8 +56,8 @@ public sealed class MongoDictionaryImporter
             Title = ResolveTemplate(_options.Title, data),
             Description = ResolveTemplate(_options.Description, data),
             Flags = flags,
-            CreatorId = _options.UserId ?? "zeus",
-            UserId = _options.UserId ?? "zeus",
+            CreatorId = userId,
+            UserId = userId,
             TimeCreated = now,
             TimeModified = now,
         };

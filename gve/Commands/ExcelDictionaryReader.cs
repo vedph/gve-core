@@ -179,7 +179,7 @@ public sealed class ExcelDictionaryReader : IDisposable
         }
 
         // validate column letters in EndColumns if provided
-        if (options.EndColumns?.Count > 0l)
+        if (options.EndColumns?.Count > 0)
         {
             foreach (string columnLetter in options.EndColumns)
             {
