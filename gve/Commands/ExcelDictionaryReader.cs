@@ -248,11 +248,15 @@ public sealed class ExcelDictionaryReader : IDisposable
         {
             int columnIndex = ConvertColumnLetterToIndex(columnLetter);
             ICell? cell = row?.GetCell(columnIndex);
-            if (cell == null) continue;
+            if (cell == null)
+            {
+                if (string.IsNullOrEmpty(options.EndMarker)) return true;
+                continue;
+            }
 
             string cellValue = GetCellValueAsString(cell);
 
-            if (string.IsNullOrWhiteSpace(options.EndMarker))
+            if (string.IsNullOrEmpty(options.EndMarker))
             {
                 // if EndMarker is not specified, check for empty cells
                 if (string.IsNullOrWhiteSpace(cellValue)) return true;
