@@ -47,7 +47,7 @@ public class ExcelDictionaryReaderOptions
     /// <returns>A formatted string containing all option values.</returns>
     public override string ToString()
     {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new();
         sb.AppendLine($"SheetName: {SheetName ?? "null"}");
         sb.AppendLine($"StartRow: {StartRow}");
         sb.AppendLine($"Limit: {Limit}");

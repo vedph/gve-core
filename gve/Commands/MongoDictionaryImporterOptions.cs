@@ -30,7 +30,8 @@ public class MongoDictionaryImporterOptions
     /// <summary>
     /// The item title template. Variable names are enclosed in <c>{{}}</c>.
     /// </summary>
-    public string Title { get; set; } = "Item {{row_number}}";
+    public string Title { get; set; } =
+        "Item {{" + ExcelDictionaryReader.DATA_ROW_NUMBER + "}}";
 
     /// <summary>
     /// The item description template. Variable names are enclosed in <c>{{}}</c>.

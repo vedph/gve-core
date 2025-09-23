@@ -371,42 +371,21 @@ public sealed class ExcelDictionaryReader : IDisposable
         return result;
     }
 
-    /// <summary>
-    /// Releases all resources used by the ExcelDictionaryReader.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases the unmanaged resources used by the ExcelDictionaryReader and
-    /// optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing">true to release both managed and unmanaged
-    /// resources; false to release only unmanaged resources.</param>
-    protected void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposed)
         {
             if (disposing)
             {
-                // dispose managed resources
                 _workbook?.Close();
-                _workbook = null;
-                _worksheet = null;
             }
-
             _disposed = true;
         }
     }
 
-    /// <summary>
-    /// Finalizer for ExcelDictionaryReader.
-    /// </summary>
-    ~ExcelDictionaryReader()
+    public void Dispose()
     {
-        Dispose(false);
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

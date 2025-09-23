@@ -19,7 +19,7 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
     private static void ShowSettings(ImportListCommandSettings settings)
     {
         AnsiConsole.MarkupLine("[green underline]IMPORT LIST[/]");
-        AnsiConsole.MarkupLine("Data path: [cyan]{0}[/]", settings.Path);
+        AnsiConsole.MarkupLine("Data path: [cyan]{0}[/]", settings.DataPath);
         AnsiConsole.MarkupLine("Config path: [cyan]{0}[/]", settings.ConfigPath);
         AnsiConsole.MarkupLine("Preflight: [cyan]{0}[/]", settings.Preflight);
     }
@@ -27,7 +27,11 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
     private static MongoDictionaryImporterOptions LoadOptions(string path)
     {
         return JsonSerializer.Deserialize<MongoDictionaryImporterOptions>(
-            File.ReadAllText(path))!;
+            File.ReadAllText(path), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                AllowTrailingCommas = true
+            })!;
     }
 
     public override Task<int> ExecuteAsync(CommandContext context,
@@ -47,7 +51,7 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
             options.ConnectionString = cs;
 
             using ExcelDictionaryReader reader = new(
-                settings.ConfigPath, options.Reader);
+                settings.DataPath, options.Reader);
 
             // create Mongo repository
             MongoCadmusRepository repository = new(
@@ -88,7 +92,7 @@ public class ImportListCommandSettings : CommandSettings
 {
     [CommandArgument(0, "<DataPath>")]
     [Description("Path to the Excel data file to import")]
-    public string Path { get; set; } = "";
+    public string DataPath { get; set; } = "";
 
     [CommandArgument(1, "<ConfigPath>")]
     [Description("Path to the configuration file")]
