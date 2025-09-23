@@ -187,6 +187,8 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-09-23: refactored profile.
+
 ### 3.0.4
 
 - 2025-09-22: updated packages.
