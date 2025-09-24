@@ -236,7 +236,7 @@
         },
         {
           "typeId": "it.vedph.flags",
-          "roleId": "version",
+          "roleId": "txt",
           "name": "features",
           "description": "Epigram's version features.",
           "colorKey": "76D7C4",
@@ -379,7 +379,7 @@
         },
         {
           "typeId": "it.vedph.flags",
-          "roleId": "version",
+          "roleId": "txt",
           "name": "features",
           "description": "Line's version features.",
           "colorKey": "76D7C4",
