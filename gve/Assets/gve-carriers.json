@@ -1,0 +1,14 @@
+{
+  "reader": {
+    "sheetName": "lists",
+    "columnMappings": {
+      "A": "eid"
+    },
+    "endColumns": [ "A" ],
+    "startRow": 3
+  },
+  "facetId": "carrier",
+  "title": "{{eid}}",
+  "description": "Carrier {{eid}}.",
+  "metadataKeys": [ "eid" ]
+}

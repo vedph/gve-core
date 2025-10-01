@@ -13,6 +13,10 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Assets\gve-carriers.json" />
+	  <None Remove="Assets\gve-collections.json" />
+	  <None Remove="Assets\gve-epigrams.json" />
+	  <None Remove="Assets\gve-versions.json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -23,6 +27,18 @@
   }
 }
 </CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\gve-carriers.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\gve-collections.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\gve-epigrams.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Assets\gve-versions.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
 

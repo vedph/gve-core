@@ -1,0 +1,14 @@
+{
+  "reader": {
+    "sheetName": "lists",
+    "columnMappings": {
+      "E": "eid"
+    },
+    "endColumns": [ "H" ],
+    "startRow": 3
+  },
+  "facetId": "collection",
+  "title": "{{eid}}",
+  "description": "Collection {{eid}}.",
+  "metadataKeys": [ "eid" ]
+}

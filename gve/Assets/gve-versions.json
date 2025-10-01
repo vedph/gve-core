@@ -1,0 +1,14 @@
+{
+  "reader": {
+    "sheetName": "lists",
+    "columnMappings": {
+      "E": "eid"
+    },
+    "endColumns": [ "E" ],
+    "startRow": 3
+  },
+  "facetId": "version",
+  "title": "{{eid}}",
+  "description": "Epigram version {{eid}}.",
+  "metadataKeys": [ "eid" ]
+}
