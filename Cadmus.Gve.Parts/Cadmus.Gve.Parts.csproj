@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Cadmus.Refs.Bricks" Version="6.0.2" />
+	  <PackageReference Include="Cadmus.Refs.Bricks" Version="6.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
