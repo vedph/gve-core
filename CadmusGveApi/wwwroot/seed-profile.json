@@ -705,41 +705,231 @@
       ]
     },
     {
-      "id": "categories_carrier@en",
+      "id": "categories_content@en",
       "entries": [
         {
-          "id": "letter",
-          "value": "lettera"
+          "id": "copy-type",
+          "value": "copy type"
         },
         {
-          "id": "illustrated",
-          "value": "lettera illustrata"
+          "id": "copy-type.rough",
+          "value": "copy type: rough"
         },
         {
-          "id": "postcard",
-          "value": "cartolina"
+          "id": "copy-type.clean",
+          "value": "copy type: clean"
         },
         {
-          "id": "card",
-          "value": "biglietto"
+          "id": "copy-type.print",
+          "value": "copy type: print"
         },
         {
-          "id": "telegram",
-          "value": "telegramma"
+          "id": "lang",
+          "value": "language"
         },
         {
-          "id": "inscription",
-          "value": "dedica"
+          "id": "lang.de",
+          "value": "language: German"
+        },
+        {
+          "id": "lang.it",
+          "value": "language: Italian"
+        },
+        {
+          "id": "lang.la",
+          "value": "language: Latin"
+        },
+        {
+          "id": "language.grc",
+          "value": "language: Ancient Greek"
+        },
+        {
+          "id": "auth",
+          "value": "authorship"
+        },
+        {
+          "id": "auth.autograph",
+          "value": "authorship: autograph"
+        },
+        {
+          "id": "auth.allograph",
+          "value": "authorship: allograph"
+        },
+        {
+          "id": "nr",
+          "value": "numbering"
+        },
+        {
+          "id": "nr.pagination",
+          "value": "numbering: pagination"
+        },
+        {
+          "id": "nr.foliation",
+          "value": "numbering: foliation"
+        },
+        {
+          "id": "margin",
+          "value": "margin"
+        },
+        {
+          "id": "margin.cropped",
+          "value": "margin: cropped"
+        },
+        {
+          "id": "margin.torn",
+          "value": "margin: torn"
+        },
+        {
+          "id": "writing-mat",
+          "value": "writing material"
+        },
+        {
+          "id": "writing-mat.ink1",
+          "value": "writing material: ink 1"
+        },
+        {
+          "id": "writing-mat.ink2",
+          "value": "writing material: ink 2"
+        },
+        {
+          "id": "writing-mat.pencil",
+          "value": "writing material: pencil"
+        },
+        {
+          "id": "writing-mat.chalk-red",
+          "value": "writing material: red chalk"
         }
       ]
     },
     {
-      "id": "categories_content@en",
-      "entries": []
+      "id": "categories_support@en",
+      "entries": [
+        {
+          "id": "fmt",
+          "value": "format"
+        },
+        {
+          "id": "fmt.4",
+          "value": "format: quarto"
+        },
+        {
+          "id": "mat-loose",
+          "value": "loose materials"
+        },
+        {
+          "id": "mat-loose.sheet",
+          "value": "loose materials: sheet"
+        },
+        {
+          "id": "mat-loose.cut-out",
+          "value": "loose materials: cut-out/clipping"
+        },
+        {
+          "id": "mat-folded",
+          "value": "folded materials"
+        },
+        {
+          "id": "mat-bound",
+          "value": "bound materials"
+        },
+        {
+          "id": "mat-bound.notebook-cover",
+          "value": "bound materials: notebook cover"
+        },
+        {
+          "id": "mat-bound.notebook-bound",
+          "value": "bound materials: notebook bound"
+        },
+        {
+          "id": "mat-bound.book-page",
+          "value": "bound materials: book page"
+        },
+        {
+          "id": "rotation",
+          "value": "rotation"
+        },
+        {
+          "id": "rotation.right",
+          "value": "rotation: right"
+        },
+        {
+          "id": "rotation.left",
+          "value": "rotation: left"
+        }
+      ]
     },
     {
-      "id": "categories_support@en",
-      "entries": []
+      "id": "categories_text@en",
+      "entries": [
+        {
+          "id": "epigram",
+          "value": "epigram"
+        },
+        {
+          "id": "epigram-collection",
+          "value": "epigram collection"
+        },
+        {
+          "id": "letter",
+          "value": "letter"
+        },
+        {
+          "id": "travel-journal",
+          "value": "travel journal"
+        },
+        {
+          "id": "working-notebook",
+          "value": "working notebook"
+        },
+        {
+          "id": "index",
+          "value": "index"
+        },
+        {
+          "id": "note",
+          "value": "note"
+        },
+        {
+          "id": "letter-recipient-list",
+          "value": "letter recipients list"
+        },
+        {
+          "id": "calculations",
+          "value": "calculations"
+        },
+        {
+          "id": "sketches",
+          "value": "sketches"
+        },
+        {
+          "id": "itinerary",
+          "value": "itinerary"
+        },
+        {
+          "id": "scientific-dsc",
+          "value": "scientific descriptions"
+        },
+        {
+          "id": "word-list",
+          "value": "list of words"
+        },
+        {
+          "id": "remarks-meter",
+          "value": "remarks on epigram meter"
+        },
+        {
+          "id": "print",
+          "value": "print"
+        },
+        {
+          "id": "print.lit-magazine",
+          "value": "print: literary magazine"
+        },
+        {
+          "id": "print.ed-volume",
+          "value": "print: edition volume"
+        }
+      ]
     },
     {
       "id": "comment-categories@en",
@@ -813,6 +1003,31 @@
         {
           "id": "red",
           "value": "red"
+        }
+      ]
+    },
+    {
+      "id": "gve-hand-eids@en",
+      "entries": [
+        {
+          "id": "schlegel",
+          "value": "Schlegel"
+        },
+        {
+          "id": "schiller",
+          "value": "Schiller"
+        },
+        {
+          "id": "geist",
+          "value": "Geist"
+        },
+        {
+          "id": "riemer",
+          "value": "Riemer"
+        },
+        {
+          "id": "unknown",
+          "value": "unknown"
         }
       ]
     },
