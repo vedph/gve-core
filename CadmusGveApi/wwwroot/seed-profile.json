@@ -1082,6 +1082,200 @@
           "value": "true"
         }
       ]
+    },
+    {
+      "id": "snapshot-feat-names@en",
+      "entries": [
+        {
+          "id": "epigram-nr",
+          "value": "epigram number"
+        },
+        {
+          "id": "page-nr",
+          "value": "page number"
+        },
+        {
+          "id": "position",
+          "value": "position"
+        },
+        {
+          "id": "shape",
+          "value": "shape"
+        },
+        {
+          "id": "scope",
+          "value": "scope"
+        },
+        {
+          "id": "color",
+          "value": "color"
+        }
+      ]
+    },
+    {
+      "id": "snapshot-feat-values@en",
+      "entries": [
+        {
+          "id": "position:baseline",
+          "value": "baseline"
+        },
+        {
+          "id": "position:above",
+          "value": "interlinear above"
+        },
+        {
+          "id": "position:below",
+          "value": "interlinear below"
+        },
+        {
+          "id": "position:outer-top",
+          "value": "outside at top"
+        },
+        {
+          "id": "position:outer-bottom",
+          "value": "outside at bottom"
+        },
+        {
+          "id": "position:outer-left",
+          "value": "outside at left"
+        },
+        {
+          "id": "position:outer-right",
+          "value": "outside at right"
+        },
+        {
+          "id": "shape:line-hrz",
+          "value": "horizontal straight line"
+        },
+        {
+          "id": "shape:line-ne",
+          "value": "diagonal up line"
+        },
+        {
+          "id": "shape:line-se",
+          "value": "dialong down line"
+        },
+        {
+          "id": "shape:line-vrt",
+          "value": "vertical straight line"
+        },
+        {
+          "id": "shape:line-hrz-2",
+          "value": "horizontal double straight line"
+        },
+        {
+          "id": "shape:scrape",
+          "value": "scraped off"
+        },
+        {
+          "id": "shape:erasure",
+          "value": "erased"
+        },
+        {
+          "id": "shape:underline",
+          "value": "underline"
+        },
+        {
+          "id": "shape:underline-dot",
+          "value": "dotted underline"
+        },
+        {
+          "id": "shape:underline-2",
+          "value": "double underline"
+        },
+        {
+          "id": "shape:scribble",
+          "value": "scribble"
+        },
+        {
+          "id": "shape:dot",
+          "value": "dot"
+        },
+        {
+          "id": "shape:check",
+          "value": "check mark"
+        },
+        {
+          "id": "shape:circle-dot",
+          "value": "circle with dot"
+        },
+        {
+          "id": "shape:curve",
+          "value": "curved line"
+        },
+        {
+          "id": "shape:curly-90",
+          "value": "curly brace rotated down"
+        },
+        {
+          "id": "shape:nb",
+          "value": "notabene"
+        },
+        {
+          "id": "shape:cross",
+          "value": "cross"
+        },
+        {
+          "id": "scope:comma",
+          "value": "comma"
+        },
+        {
+          "id": "scope:question-upper",
+          "value": "upper part question mark"
+        },
+        {
+          "id": "scope:exclam-upper",
+          "value": "upper part exclamation mark"
+        },
+        {
+          "id": "scope:period",
+          "value": "period"
+        },
+        {
+          "id": "scope:letter",
+          "value": "letter"
+        },
+        {
+          "id": "scope:word",
+          "value": "word"
+        },
+        {
+          "id": "scope:line",
+          "value": "line"
+        },
+        {
+          "id": "scope:line-2",
+          "value": "two lines"
+        },
+        {
+          "id": "scope:line-3",
+          "value": "three lines"
+        },
+        {
+          "id": "scope:epigram",
+          "value": "entire epigram"
+        },
+        {
+          "id": "color:black",
+          "value": "black"
+        },
+        {
+          "id": "color:dark-brown",
+          "value": "dark brown"
+        },
+        {
+          "id": "color:orange",
+          "value": "orange"
+        },
+        {
+          "id": "color:light-orange",
+          "value": "light orange"
+        },
+        {
+          "id": "color:red",
+          "value": "red"
+        }
+      ]
     }
   ],
   "seed": {
