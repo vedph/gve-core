@@ -631,8 +631,20 @@
           "value": "carrier type"
         },
         {
+          "id": "it.vedph.categories:lang",
+          "value": "languages"
+        },
+        {
           "id": "it.vedph.categories:seq",
           "value": "sequence type"
+        },
+        {
+          "id": "it.vedph.categories:support",
+          "value": "support types"
+        },
+        {
+          "id": "it.vedph.categories:content",
+          "value": "content types"
         },
         {
           "id": "it.vedph.chronotopes",
