@@ -13,7 +13,7 @@
 		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />
 		<PackageReference Include="bClipboard" Version="1.0.1" />
 		<PackageReference Include="HighlightBlazor" Version="0.1.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.10" />
 		<PackageReference Include="Radzen.Blazor" Version="8.0.4" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
 	</ItemGroup>
