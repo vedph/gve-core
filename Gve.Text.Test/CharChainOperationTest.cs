@@ -112,7 +112,7 @@ public sealed class CharChainOperationTest
 
         // v1_2 (R)
         features = context.NodeFeatures["v1_2"];
-        Assert.Equal(2, features.Count);
+        Assert.Equal(3, features.Count);
 
         // as we have branching, R is the input of two different ops
         // $seg-in for v2
@@ -123,6 +123,10 @@ public sealed class CharChainOperationTest
         Assert.Contains(features, f =>
             f.Name == OperationFeature.F_TRACE_SEG_IN &&
             f.Value == $"{operations[3].Id} v1:v4 1");
+        // $left-anchor (R)
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_LEFT_ANCHOR &&
+            f.Value == $"{operations[0].Id} v0:v1 3");
 
         // v2_3 (Z): inherited
         features = context.NodeFeatures["v1_3"];

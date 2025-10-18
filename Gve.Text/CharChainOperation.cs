@@ -471,6 +471,31 @@ public abstract partial class CharChainOperation(OperationType type) :
     }
 
     /// <summary>
+    /// Creates a new trace feature for this operation, with the specified
+    /// name and optional ordinal number.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="inputTag">The input tag.</param>
+    /// <param name="outputTag">The output tag.</param>
+    /// <param name="tail">The tail string.</param>
+    /// <returns>New feature.</returns>
+    /// <exception cref="ArgumentNullException">name or inputTag or outputTag
+    /// </exception>
+    public OperationFeature NewTraceFeature(string name, string inputTag,
+        string outputTag, string tail)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(inputTag);
+        ArgumentNullException.ThrowIfNull(outputTag);
+        ArgumentNullException.ThrowIfNull(tail);
+
+        return new(name,
+            tail == null
+                ? $"{Id} {inputTag}:{outputTag}"
+                : $"{Id} {inputTag}:{outputTag} {tail}");
+    }
+
+    /// <summary>
     /// Adds segment in or out trace features to the specified nodes unless
     /// <see cref="NoTraceFeatures"/> is true. Additional features can be
     /// added at the end of this method by overriding

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Gve.Text;
@@ -17,6 +18,14 @@ public sealed class CharChainDeleteOperation : CharChainOperation
     {
     }
 
+    private void AddAdjacentNodeTraceFeature(string inputTag, string outputTag,
+        string name, string tail,
+        ChainNode<char> node, ChainOperationContext<char> context)
+    {
+        OperationFeature f = NewTraceFeature(name, inputTag, outputTag, tail);
+        context.UpdateNodeFeatures<char>(f, outputTag, node);
+    }
+
     /// <summary>
     /// Executes this operation on the specified context.
     /// </summary>
@@ -31,6 +40,11 @@ public sealed class CharChainDeleteOperation : CharChainOperation
 
         // get target nodes
         IList<ChainNode<char>> nodes = GetReferenceNodes(context.Chain, inputTag);
+        ChainNode<char>? leftNode = context.Chain.GetPreviousNode(
+            inputTag, nodes[0]);
+        ChainNode<char>? rightNode = context.Chain.GetNextNode(
+            inputTag, nodes[^1]);
+        string tail = string.Join(",", nodes.Select(n => n.Id.ToString()));
 
         // add trace features to nodes before executing the operation
         AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
@@ -45,6 +59,20 @@ public sealed class CharChainDeleteOperation : CharChainOperation
             context.Chain.Delete(inputTag, outputTag, nodes[0]);
         }
 
+        // trace features for nodes after executing the operation
+        if (leftNode is not null)
+        {
+            AddAdjacentNodeTraceFeature(inputTag, outputTag,
+                OperationFeature.F_TRACE_LEFT_ANCHOR, tail,
+                leftNode, context);
+        }
+        if (rightNode is not null)
+        {
+            AddAdjacentNodeTraceFeature(inputTag, outputTag,
+                OperationFeature.F_TRACE_RIGHT_ANCHOR, tail,
+                rightNode, context);
+        }
+
         // update context metadata
         UpdateContext(context, inputTag, outputTag, nodes,
             GetReferenceNodes(context.Chain, inputTag));
@@ -56,8 +84,6 @@ public sealed class CharChainDeleteOperation : CharChainOperation
                 NewTraceFeature(DEL_KEY, inputTag, outputTag, i + 1),
                 outputTag, nodes[i]);
         }
-
-        // no trace features for nodes after executing the operation
     }
 
     /// <summary>

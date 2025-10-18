@@ -88,6 +88,30 @@ public partial record OperationFeature : Feature
     public const string F_TRACE_ANCHOR = "$anchor";
 
     /// <summary>
+    /// The name for the left anchor tracing feature. This is added to the node
+    /// immediately before the first node of a deleted segment.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT IDLIST</c> where <c>OPID</c>
+    /// =operation ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag,
+    /// <c>IDLIST</c>=comma-delimited list of the IDs of the deleted nodes.
+    /// For instance, <c>9499e8e0c6 v2:v3 2,3</c>=version tag v3, derived from
+    /// version tag v2 by operation ID 9499e8e0c6, deleting nodes with IDs
+    /// 2 and 3.</para>
+    /// </summary>
+    public const string F_TRACE_LEFT_ANCHOR = "$left-anchor";
+
+    /// <summary>
+    /// The name for the right anchor tracing feature. This is added to the node
+    /// immediately after the last node of a deleted segment.
+    /// <para>The value is <c>OPID TAGIN:TAGOUT IDLIST</c> where <c>OPID</c>
+    /// =operation ID, <c>TAGIN</c>=input tag, <c>TAGOUT</c>=output tag,
+    /// <c>IDLIST</c>=comma-delimited list of the IDs of the deleted nodes.
+    /// For instance, <c>9499e8e0c6 v2:v3 2,3</c>=version tag v3, derived from
+    /// version tag v2 by operation ID 9499e8e0c6, deleting nodes with IDs
+    /// 2 and 3.</para>
+    /// </summary>
+    public const string F_TRACE_RIGHT_ANCHOR = "$right-anchor";
+
+    /// <summary>
     /// The name for the deleted tracing feature. This is added to all the nodes
     /// removed by a delete operation.
     /// </summary>

@@ -164,7 +164,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
+        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
@@ -213,7 +213,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
@@ -247,7 +247,7 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("deleted BC from ABC", context.Features[0].Value);
 
         // node features
-        Assert.Equal(4, context.NodeFeatures.Count);
+        Assert.Equal(5, context.NodeFeatures.Count);
 
         // input nodes:
         // v0_2
@@ -267,6 +267,13 @@ public sealed class CharChainDeleteOperationTest
             f.Value == $"{op.Id} v0:v1 2");
 
         // output nodes:
+        // v1_1
+        features = context.NodeFeatures["v1_1"];
+        Assert.Single(features);
+        // left anchor
+        Assert.Contains(features, f =>
+            f.Name == OperationFeature.F_TRACE_LEFT_ANCHOR &&
+            f.Value == $"{op.Id} v0:v1 2,3");
         // v1_2
         features = context.NodeFeatures["v1_2"];
         Assert.Equal(2, features.Count);
@@ -295,6 +302,6 @@ public sealed class CharChainDeleteOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
         Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
+        Assert.Equal(5, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }

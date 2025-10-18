@@ -187,6 +187,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-10-18: added left/right anchor trace features for delete operations.
 - 2025-10-15: updated packages and facets.
 - 2025-10-08: updated packages.
 - 2025-10-01: added import configurations to CLI tool.
