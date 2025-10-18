@@ -39,8 +39,15 @@ public class ChainOperationContextFeats
         ArgumentNullException.ThrowIfNull(feats);
 
         Features = [.. feats.Features];
-        NodeFeatures = new Dictionary<string, List<OperationFeature>>(
-            feats.NodeFeatures);
+        //NodeFeatures = new Dictionary<string, List<OperationFeature>>(
+        //    feats.NodeFeatures);
+        // DEEP COPY node features dictionary:
+        // create a new dictionary and clone each list so the snapshot is
+        // isolated from later mutations to the original context lists.
+        NodeFeatures = feats.NodeFeatures.ToDictionary(
+            kvp => kvp.Key,
+            kvp => new List<OperationFeature>(kvp.Value)
+        );
     }
 
     /// <summary>

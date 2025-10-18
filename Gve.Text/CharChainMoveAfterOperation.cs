@@ -79,11 +79,11 @@ public sealed class CharChainMoveAfterOperation : CharChainOperation,
         }
 
         // update context metadata
-        UpdateContext(context, inputTag, outputTag, nodes,
-            GetReferenceNodes(context.Chain, inputTag));
+        UpdateContext(context, inputTag, outputTag, nodes, nodes);
 
         // add segment features to added nodes
-        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context,
+            synchStep: true);
     }
 
     /// <summary>

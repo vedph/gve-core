@@ -73,8 +73,10 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         UpdateContext(context, inputTag, outputTag, nodes, targetNodes);
 
         // add trace features to segments after execution
-        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context, true);
-        AddNodeTraceFeatures(inputTag, outputTag, true, toNodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context, true,
+            synchStep: true);
+        AddNodeTraceFeatures(inputTag, outputTag, true, toNodes, context,
+            synchStep: true);
     }
 
     /// <summary>
