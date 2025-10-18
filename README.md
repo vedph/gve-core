@@ -49,7 +49,7 @@ docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,wi
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:3.0.0 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:3.0.2 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
@@ -187,7 +187,10 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
-- 2025-10-18: added left/right anchor trace features for delete operations.
+- 2025-10-18:
+  - added left/right anchor trace features for delete operations.
+  - fixes to trace features for the output version.
+  - increased all patch version numbers.
 - 2025-10-15: updated packages and facets.
 - 2025-10-08: updated packages.
 - 2025-10-01: added import configurations to CLI tool.
