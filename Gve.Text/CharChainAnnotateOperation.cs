@@ -41,7 +41,8 @@ public sealed class CharChainAnnotateOperation : CharChainOperation
 
         UpdateContext(context, inputTag, outputTag, nodes, nodes);
 
-        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context,
+            synchStep: true);
     }
 
     /// <summary>

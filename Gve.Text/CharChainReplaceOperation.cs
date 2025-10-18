@@ -75,7 +75,8 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         UpdateContext(context, inputTag, outputTag, nodes, addedNodes);
 
         // add trace features to nodes after executing the operation
-        AddNodeTraceFeatures(inputTag, outputTag, true, addedNodes, context);
+        AddNodeTraceFeatures(inputTag, outputTag, true, addedNodes, context,
+            synchStep: true);
     }
 
     /// <summary>
