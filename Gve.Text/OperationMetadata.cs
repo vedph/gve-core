@@ -79,6 +79,11 @@ public class OperationMetadata
     ];
 
     /// <summary>
+    /// Gets or sets the operation type.
+    /// </summary>
+    public OperationType Type { get; private init; }
+
+    /// <summary>
     /// Gets or sets the operation identifier. This can be used to reference
     /// a specific operation in a transformation, and is automatically
     /// generated using <see cref="Nanoid.Generate(string, int)"/> unless
@@ -119,9 +124,10 @@ public class OperationMetadata
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationMetadata"/> class.
     /// </summary>
-    public OperationMetadata()
+    public OperationMetadata(OperationType type)
     {
         Id = GenerateId();
+        Type = type;
 
         Features = [];
         Sources = [];

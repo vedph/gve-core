@@ -187,6 +187,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-10-20: moved `Type` to `OperationMetadata` so that it is returned with run operations result by API.
 - 2025-10-18:
   - added left/right anchor trace features for delete operations.
   - fixes to trace features for the output version.

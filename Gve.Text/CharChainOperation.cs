@@ -17,13 +17,8 @@ namespace Gve.Text;
 /// </remarks>
 /// <param name="type">The operation type.</param>
 public abstract partial class CharChainOperation(OperationType type) :
-    OperationMetadata
+    OperationMetadata(type)
 {
-    /// <summary>
-    /// Gets or sets the operation type.
-    /// </summary>
-    public OperationType Type { get; protected init; } = type;
-
     /// <summary>
     /// Gets or sets the input version tag for this operation. If null,
     /// the default tag (=the tag of the last operation executed on the context)
