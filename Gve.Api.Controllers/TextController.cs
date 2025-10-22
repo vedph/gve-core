@@ -49,9 +49,8 @@ public sealed class TextController : ControllerBase
 
     private static List<ChainNode<char>> GetNodesFrom(CharChainNode[] models)
     {
-        return models.Select(m => new ChainNode<char>(
-                m.Data, m.Label, m.Id))
-            .ToList();
+        return [.. models.Select(m => new ChainNode<char>(
+                m.Data, m.Label, m.Id))];
     }
 
     /// <summary>
@@ -66,8 +65,8 @@ public sealed class TextController : ControllerBase
     {
         try
         {
-            List<CharChainOperation> operations = model.Operations.Select(
-                s => s.ToOperation()).ToList();
+            List<CharChainOperation> operations = [.. model.Operations.Select(
+                s => s.ToOperation())];
 
             ChainOperationContext<char> context = new();
             context.Chain.Reset(
@@ -96,7 +95,7 @@ public sealed class TextController : ControllerBase
                 context.LastTag = outputTag;
             }
 
-            return new ResultWrapperModel<OperationTagsModel[]>(tags.ToArray());
+            return new ResultWrapperModel<OperationTagsModel[]>([.. tags]);
         }
         catch (Exception e)
         {
@@ -118,8 +117,8 @@ public sealed class TextController : ControllerBase
         try
         {
             // get operations
-            List<CharChainOperation> operations = model.Operations.Select(
-                s => s.ToOperation()).ToList();
+            List<CharChainOperation> operations = [.. model.Operations.Select(
+                s => s.ToOperation())];
 
             // init chain with base text (v0)
             ChainOperationContext<char> context = new();
@@ -137,14 +136,15 @@ public sealed class TextController : ControllerBase
             // build result
             CharChainResultModel result = new()
             {
-                Steps = context.Steps,
+                Steps = [..context.Steps
+                    .Select(s => new ChainOperationContextStepDto(s))],
                 ChainDump = context.Chain.Dump(),
                 ChainTags = context.Chain.GetDistinctTags(),
             };
 
             // for each version in build order (distinct ensures that we
             // have no duplicates, even if this is not expected here)
-            tags = tags.Distinct().ToList();
+            tags = [.. tags.Distinct()];
             foreach (string tag in tags)
             {
                 // get its nodes
@@ -192,8 +192,8 @@ public sealed class TextController : ControllerBase
         try
         {
             // get operations
-            List<CharChainOperation> operations = model.Operations.Select(
-                s => s.ToOperation()).ToList();
+            List<CharChainOperation> operations = [.. model.Operations.Select(
+                s => s.ToOperation())];
 
             // init chain with base text (v0)
             ChainOperationContext<char> context = new();

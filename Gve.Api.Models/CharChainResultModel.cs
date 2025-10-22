@@ -12,7 +12,7 @@ public class CharChainResultModel
     /// <summary>
     /// The execution steps.
     /// </summary>
-    public IList<ChainOperationContextStep> Steps { get; set; } = [];
+    public IList<ChainOperationContextStepDto> Steps { get; set; } = [];
 
     /// <summary>
     /// The chain dump text.

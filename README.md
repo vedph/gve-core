@@ -187,6 +187,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-10-22: updated API model for returned result in run operations so that now the full operation metadata are returned, and not just a subset of them. Also all the operations receive a `dsl` property with their text representation.
 - 2025-10-20: moved `Type` to `OperationMetadata` so that it is returned with run operations result by API.
 - 2025-10-18:
   - added left/right anchor trace features for delete operations.
