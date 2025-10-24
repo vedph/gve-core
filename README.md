@@ -187,6 +187,8 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-10-24: added features to thesauri.
+
 ### 3.0.5
 
 - 2025-10-24: updated packages and generated Docker image for Cadmus API.

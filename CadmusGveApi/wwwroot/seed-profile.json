@@ -1121,6 +1121,22 @@
         {
           "id": "color",
           "value": "color"
+        },
+        {
+          "id": "x",
+          "value": "X coordinate"
+        },
+        {
+          "id": "y",
+          "value": "Y coordinate"
+        },
+        {
+          "id": "version",
+          "value": "stage name"
+        },
+        {
+          "id": "style",
+          "value": "CSS style"
         }
       ]
     },
