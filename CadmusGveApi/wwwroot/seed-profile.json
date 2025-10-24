@@ -1172,6 +1172,10 @@
           "value": "outside at right"
         },
         {
+          "id": "indent",
+          "value": "indent"
+        },
+        {
           "id": "shape:line-hrz",
           "value": "horizontal straight line"
         },
