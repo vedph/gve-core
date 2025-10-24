@@ -43,7 +43,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.4 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.5 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
@@ -187,6 +187,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+### 3.0.5
+
+- 2025-10-24: updated packages and generated Docker image for Cadmus API.
 - 2025-10-22: updated API model for returned result in run operations so that now the full operation metadata are returned, and not just a subset of them. Also all the operations receive a `dsl` property with their text representation.
 - 2025-10-20: moved `Type` to `OperationMetadata` so that it is returned with run operations result by API.
 - 2025-10-18:
