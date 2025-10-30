@@ -190,6 +190,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 - 2025-10-30:
   - updated packages.
   - refactored profile removing epigram version.
+  - changed some thesauri entries.
   - replaced dead service `via.placeholder.com/800x600` with https://placehold.co/800x600.
 - 2025-10-24: added features to thesauri.
 

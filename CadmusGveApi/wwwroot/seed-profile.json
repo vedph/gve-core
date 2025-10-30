@@ -1013,6 +1013,10 @@
           "value": "indent"
         },
         {
+          "id": "partial",
+          "value": "partial"
+        },
+        {
           "id": "x",
           "value": "X coordinate"
         },
@@ -1038,32 +1042,60 @@
           "value": "1"
         },
         {
-          "id": "position:baseline",
-          "value": "baseline"
+          "id": "position:baseline-above",
+          "value": "baseline above"
         },
         {
-          "id": "position:above",
+          "id": "position:baseline-below",
+          "value": "baseline below"
+        },
+        {
+          "id": "position:baseline-right",
+          "value": "baseline right"
+        },
+        {
+          "id": "position:baseline-left",
+          "value": "baseline left"
+        },
+        {
+          "id": "position:inter-above",
           "value": "interlinear above"
         },
         {
-          "id": "position:below",
+          "id": "position:inter-below",
           "value": "interlinear below"
         },
         {
-          "id": "position:outer-top",
-          "value": "outside at top"
+          "id": "position:outer-n",
+          "value": "outside north"
         },
         {
-          "id": "position:outer-bottom",
-          "value": "outside at bottom"
+          "id": "position:outer-nw",
+          "value": "outside north-west"
         },
         {
-          "id": "position:outer-left",
-          "value": "outside at left"
+          "id": "position:outer-w",
+          "value": "outside at west"
         },
         {
-          "id": "position:outer-right",
-          "value": "outside at right"
+          "id": "position:outer-sw",
+          "value": "outside at south-west"
+        },
+        {
+          "id": "position:outer-s",
+          "value": "outside at south"
+        },
+        {
+          "id": "position:outer-se",
+          "value": "outside at south-east"
+        },
+        {
+          "id": "position:outer-e",
+          "value": "outside at east"
+        },
+        {
+          "id": "position:outer-ne",
+          "value": "outside at north-east"
         },
         {
           "id": "shape:line-hrz",
@@ -1196,6 +1228,10 @@
         {
           "id": "color:red",
           "value": "red"
+        },
+        {
+          "id": "partial:1",
+          "value": "1"
         }
       ]
     }
