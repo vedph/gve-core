@@ -55,7 +55,7 @@ public sealed class GveSnapshotPartSeeder : PartSeederBase
                Size = new Size(800, 600),
                Image = new()
                {
-                   Url = "https://via.placeholder.com/800x600",
+                   Url = "https://placehold.co/800x600",
                    Opacity = 0.8
                },
                Text = GetNodes(f.Lorem.Sentence(5)),
