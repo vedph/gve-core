@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gve.Cli.Commands;
@@ -35,7 +36,7 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
     }
 
     public override Task<int> ExecuteAsync(CommandContext context,
-        ImportListCommandSettings settings)
+        ImportListCommandSettings settings, CancellationToken cancel)
     {
         ShowSettings(settings);
 

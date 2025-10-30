@@ -82,11 +82,11 @@
           "sortKey": "09"
         },
         {
-          "typeId": "it.vedph.asserted-historical-dates",
-          "name": "date",
-          "description": "Datation(s).",
-          "colorKey": "D1B3E0",
-          "groupKey": "history",
+          "typeId": "it.vedph.gve.hands",
+          "name": "hands",
+          "description": "Description of hand(s) in the epigram's version.",
+          "colorKey": "F9F79F",
+          "groupKey": "content",
           "sortKey": "10"
         },
         {
@@ -185,124 +185,6 @@
           "name": "comment",
           "description": "Comment.",
           "colorKey": "F9E79F",
-          "groupKey": "content",
-          "sortKey": "09"
-        },
-        {
-          "typeId": "it.vedph.chronotopes",
-          "name": "chronotopes",
-          "description": "Date/place indications.",
-          "colorKey": "F887C8",
-          "groupKey": "history",
-          "sortKey": "10"
-        },
-        {
-          "typeId": "it.vedph.note",
-          "roleId": "hist",
-          "name": "history",
-          "description": "History.",
-          "colorKey": "F5B7B1",
-          "groupKey": "history",
-          "sortKey": "11"
-        },
-        {
-          "typeId": "it.vedph.doc-references",
-          "name": "references",
-          "description": "Documental references.",
-          "colorKey": "F7DC6F",
-          "groupKey": "editorial",
-          "sortKey": "12"
-        },
-        {
-          "typeId": "it.vedph.note",
-          "name": "note",
-          "description": "A free text note.",
-          "colorKey": "F9E79F",
-          "groupKey": "editorial",
-          "sortKey": "13"
-        }
-      ]
-    },
-    {
-      "id": "version",
-      "label": "version",
-      "description": "An epigram's' version.",
-      "colorKey": "F9D6A5",
-      "partDefinitions": [
-        {
-          "typeId": "it.vedph.metadata",
-          "name": "metadata",
-          "description": "Generic metadata.",
-          "colorKey": "A8D5BA",
-          "groupKey": "identity",
-          "sortKey": "01"
-        },
-        {
-          "typeId": "it.vedph.pin-links",
-          "name": "links",
-          "description": "Generic links.",
-          "colorKey": "8CB7E6",
-          "groupKey": "identity",
-          "sortKey": "02"
-        },
-        {
-          "typeId": "it.vedph.pin-links",
-          "roleId": "auth",
-          "name": "author",
-          "description": "Link(s) to author(s).",
-          "colorKey": "8CB7E6",
-          "groupKey": "identity",
-          "sortKey": "03"
-        },
-        {
-          "typeId": "it.vedph.physical-states",
-          "name": "states",
-          "description": "Physical preservation states.",
-          "colorKey": "D6B6E6",
-          "groupKey": "material",
-          "sortKey": "04"
-        },
-        {
-          "typeId": "it.vedph.categories",
-          "roleId": "text",
-          "name": "text types",
-          "description": "Text type categories.",
-          "colorKey": "9DE0D6",
-          "groupKey": "content",
-          "sortKey": "05"
-        },
-        {
-          "typeId": "it.vedph.token-text",
-          "roleId": "base-text",
-          "name": "text",
-          "description": "Item's token-based text.",
-          "colorKey": "7ED6A8",
-          "groupKey": "content",
-          "sortKey": "06"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.apparatus",
-          "name": "apparatus",
-          "description": "Critical apparatus.",
-          "colorKey": "F7DC6F",
-          "groupKey": "content",
-          "sortKey": "07"
-        },
-        {
-          "typeId": "it.vedph.token-text-layer",
-          "roleId": "fr.it.vedph.comment",
-          "name": "comments",
-          "description": "Comments on the epigram's version'.",
-          "colorKey": "F9E79F",
-          "groupKey": "content",
-          "sortKey": "08"
-        },
-        {
-          "typeId": "it.vedph.gve.hands",
-          "name": "hands",
-          "description": "Description of hand(s) in the epigram's version.",
-          "colorKey": "F9F79F",
           "groupKey": "content",
           "sortKey": "09"
         },
@@ -462,7 +344,7 @@
     {
       "id": "epigram",
       "label": "epigram",
-      "description": "An epigram.",
+      "description": "Abstract epigram.",
       "colorKey": "F7A8B8",
       "partDefinitions": [
         {
@@ -1107,6 +989,10 @@
           "value": "page number"
         },
         {
+          "id": "page-beg",
+          "value": "page beginning"
+        },
+        {
           "id": "position",
           "value": "position"
         },
@@ -1143,6 +1029,10 @@
     {
       "id": "snapshot-feat-values@en",
       "entries": [
+        {
+          "id": "page-beg:1",
+          "value": "1"
+        },
         {
           "id": "position:baseline",
           "value": "baseline"

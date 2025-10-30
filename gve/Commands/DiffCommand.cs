@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using DiffPlex.Chunkers;
 using System.Text;
+using System.Threading;
 
 namespace Gve.Cli.Commands;
 
@@ -116,7 +117,7 @@ internal sealed class DiffCommand : AsyncCommand<DiffCommandSettings>
     }
 
     public override Task<int> ExecuteAsync(CommandContext context,
-        DiffCommandSettings settings)
+        DiffCommandSettings settings, CancellationToken cancel)
     {
         ShowSettings(settings);
 

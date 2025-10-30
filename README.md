@@ -187,6 +187,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-10-30:
+  - updated packages.
+  - refactored profile removing epigram version.
 - 2025-10-24: added features to thesauri.
 
 ### 3.0.5
