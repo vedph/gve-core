@@ -43,7 +43,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.5 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.6 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
@@ -187,6 +187,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+### 3.0.6
+
+- 2025-10-31: updated packages.
 - 2025-10-30:
   - updated packages.
   - refactored profile removing epigram version.
