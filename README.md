@@ -187,6 +187,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-11-06: more thesauri entries.
 - 2025-11-05: updated packages.
 
 ### 3.0.6

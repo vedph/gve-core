@@ -1017,6 +1017,18 @@
           "value": "partial"
         },
         {
+          "id": "reason",
+          "value": "reason"
+        },
+        {
+          "id": "annotation-text",
+          "value": "annotation text"
+        },
+        {
+          "id": "note",
+          "value": "note"
+        },
+        {
           "id": "x",
           "value": "X coordinate"
         },
@@ -1138,6 +1150,10 @@
           "value": "double underline"
         },
         {
+          "id": "shape:callout",
+          "value": "callout"
+        },
+        {
           "id": "shape:scribble",
           "value": "scribble"
         },
@@ -1232,6 +1248,18 @@
         {
           "id": "partial:1",
           "value": "1"
+        },
+        {
+          "id": "reason:confirmation",
+          "value": "confirmation"
+        },
+        {
+          "id": "reason:revert",
+          "value": "revert change"
+        },
+        {
+          "id": "reason:metrical",
+          "value": "metrical"
         }
       ]
     }
