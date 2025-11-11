@@ -6,6 +6,8 @@
   - [CLI Tool](#cli-tool)
     - [Import List](#import-list)
   - [History](#history)
+    - [3.0.6](#306)
+    - [3.0.5](#305)
     - [3.0.4](#304)
     - [3.0.3](#303)
     - [3.0.1](#301)
@@ -187,6 +189,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-11-11: thesauri entries.
 - 2025-11-06: more thesauri entries.
 - 2025-11-05: updated packages.
 
