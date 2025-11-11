@@ -1001,6 +1001,18 @@
           "value": "shape"
         },
         {
+          "id": "line-type",
+          "value": "line type"
+        },
+        {
+          "id": "line-count",
+          "value": "line count"
+        },
+        {
+          "id": "line-offset",
+          "value": "line offset"
+        },
+        {
           "id": "scope",
           "value": "scope"
         },
@@ -1035,6 +1047,10 @@
         {
           "id": "y",
           "value": "Y coordinate"
+        },
+        {
+          "id": "parallel",
+          "value": "parallel version"
         },
         {
           "id": "version",
@@ -1119,15 +1135,11 @@
         },
         {
           "id": "shape:line-se",
-          "value": "dialong down line"
+          "value": "diagonal down line"
         },
         {
           "id": "shape:line-vrt",
           "value": "vertical straight line"
-        },
-        {
-          "id": "shape:line-hrz-2",
-          "value": "horizontal double straight line"
         },
         {
           "id": "shape:scrape",
@@ -1144,10 +1156,6 @@
         {
           "id": "shape:underline-dot",
           "value": "dotted underline"
-        },
-        {
-          "id": "shape:underline-2",
-          "value": "double underline"
         },
         {
           "id": "shape:callout",
@@ -1184,6 +1192,42 @@
         {
           "id": "shape:cross",
           "value": "cross"
+        },
+        {
+          "id": "line-type:continuous",
+          "value": "continuous line"
+        },
+        {
+          "id": "line-type:dotted",
+          "value": "dotted line"
+        },
+        {
+          "id": "line-type:dashed",
+          "value": "dashed line"
+        },
+        {
+          "id": "line-count:1",
+          "value": "single line"
+        },
+        {
+          "id": "line-count:2",
+          "value": "double line"
+        },
+        {
+          "id": "line-count:3",
+          "value": "triple line"
+        },
+        {
+          "id": "line-count:4",
+          "value": "quadruple line"
+        },
+        {
+          "id": "line-offset:left",
+          "value": "left line offset"
+        },
+        {
+          "id": "line-offset:right",
+          "value": "right line offset"
         },
         {
           "id": "scope:comma",
@@ -1260,6 +1304,10 @@
         {
           "id": "reason:metrical",
           "value": "metrical"
+        },
+        {
+          "id": "parallel:1",
+          "value": "1"
         }
       ]
     }
