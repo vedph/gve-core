@@ -1021,6 +1021,10 @@
           "value": "color"
         },
         {
+          "id": "rotation",
+          "value": "rotation"
+        },
+        {
           "id": "indent",
           "value": "indent"
         },
@@ -1308,6 +1312,18 @@
         {
           "id": "parallel:1",
           "value": "1"
+        },
+        {
+          "id": "rotation:90",
+          "value": "90"
+        },
+        {
+          "id": "rotation:180",
+          "value": "180"
+        },
+        {
+          "id": "rotation:270",
+          "value": "270"
         }
       ]
     }
