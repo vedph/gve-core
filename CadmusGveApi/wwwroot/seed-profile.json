@@ -1001,6 +1001,14 @@
           "value": "shape"
         },
         {
+          "id": "boxed",
+          "value": "boxed"
+        },
+        {
+          "id": "word-order-nr",
+          "value": "word order number"
+        },
+        {
           "id": "line-type",
           "value": "line type"
         },
@@ -1021,6 +1029,10 @@
           "value": "color"
         },
         {
+          "id": "font-size",
+          "value": "font size"
+        },
+        {
           "id": "rotation",
           "value": "rotation"
         },
@@ -1037,6 +1049,10 @@
           "value": "reason"
         },
         {
+          "id": "immediate",
+          "value": "immediate"
+        },
+        {
           "id": "annotation-text",
           "value": "annotation text"
         },
@@ -1045,20 +1061,20 @@
           "value": "note"
         },
         {
-          "id": "x",
-          "value": "X coordinate"
-        },
-        {
-          "id": "y",
-          "value": "Y coordinate"
-        },
-        {
           "id": "parallel",
           "value": "parallel version"
         },
         {
           "id": "version",
           "value": "stage name"
+        },
+        {
+          "id": "x",
+          "value": "X coordinate"
+        },
+        {
+          "id": "y",
+          "value": "Y coordinate"
         },
         {
           "id": "style",
@@ -1198,6 +1214,10 @@
           "value": "cross"
         },
         {
+          "id": "boxed:1",
+          "value": "1"
+        },
+        {
           "id": "line-type:continuous",
           "value": "continuous line"
         },
@@ -1294,6 +1314,22 @@
           "value": "red"
         },
         {
+          "id": "font-size:smaller",
+          "value": "smaller font size"
+        },
+        {
+          "id": "font-size:smallest",
+          "value": "smallest font size"
+        },
+        {
+          "id": "font-size:larger",
+          "value": "larger font size"
+        },
+        {
+          "id": "font-size:largest",
+          "value": "largest font size"
+        },
+        {
           "id": "partial:1",
           "value": "1"
         },
@@ -1308,6 +1344,10 @@
         {
           "id": "reason:metrical",
           "value": "metrical"
+        },
+        {
+          "id": "immediate:1",
+          "value": "1"
         },
         {
           "id": "parallel:1",
