@@ -189,6 +189,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-11-20:
+  - thesauri entries.
+  - removed sparse lines as items from profile and added sparse flag.
 - 2025-11-18: thesauri entries.
 - 2025-11-11: thesauri entries.
 - 2025-11-06: more thesauri entries.
