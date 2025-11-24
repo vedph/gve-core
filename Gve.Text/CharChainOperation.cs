@@ -505,6 +505,10 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// <param name="context">The context.</param>
     /// <param name="second">True to add features referring to the second of
     /// two segments. This is used only for swap.</param>
+    /// <param name="synchStep">if set to <c>true</c>, synchronize the step's
+    /// feature set with the added features. This is required when this method
+    /// is called after the step has been created in executing the operation.
+    /// </param>
     protected void AddNodeTraceFeatures(string inputTag, string outputTag,
         bool afterExecution, IList<ChainNode<char>> nodes,
         ChainOperationContext<char> context, bool second = false,
