@@ -15,9 +15,9 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>GVE</PackageTags>
-		<Version>3.0.3</Version>
-		<FileVersion>3.0.3</FileVersion>
-		<AssemblyVersion>3.0.3</AssemblyVersion>
+		<Version>4.0.0</Version>
+		<FileVersion>4.0.0</FileVersion>
+		<AssemblyVersion>4.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

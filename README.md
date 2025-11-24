@@ -189,6 +189,8 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+### 4.0.0
+
 - 2025-11-24: ⚠️ upgraded to NET 10.
 - 2025-11-20:
   - thesauri entries.
