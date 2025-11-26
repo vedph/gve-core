@@ -6,21 +6,6 @@
   - [CLI Tool](#cli-tool)
     - [Import List](#import-list)
   - [History](#history)
-    - [3.0.6](#306)
-    - [3.0.5](#305)
-    - [3.0.4](#304)
-    - [3.0.3](#303)
-    - [3.0.1](#301)
-    - [3.0.0](#300)
-    - [2.0.4](#204)
-    - [2.0.3](#203)
-    - [2.0.2](#202)
-    - [2.0.1](#201)
-    - [2.0.0](#200)
-    - [1.0.5](#105)
-    - [1.0.4](#104)
-    - [1.0.3](#103)
-    - [1.0.1](#101)
 
 [VEdition](https://vedph.github.io/gve-doc) backend (code-named `GVE` = Goethe Venetian Epigrams). This solution contains 3 main projects:
 
@@ -45,7 +30,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:3.0.6 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:4.0.0 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:

@@ -1,10 +1,10 @@
 # Stage 1: base
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
 # Stage 2: build
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY ["Gve.Demo/Gve.Demo/Gve.Demo.csproj", "Gve.Demo/Gve.Demo/"]
 COPY ["Gve.Demo/Gve.Demo.Client/Gve.Demo.Client.csproj", "Gve.Demo/Gve.Demo.Client/"]
