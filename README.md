@@ -174,8 +174,11 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-11-26: thesauri entries.
+
 ### 4.0.0
 
+- 2025-11-26: Docker image.
 - 2025-11-24: ⚠️ upgraded to NET 10.
 - 2025-11-20:
   - thesauri entries.
