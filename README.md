@@ -174,6 +174,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-11-28: adjusted thesauri entries.
 - 2025-11-26: thesauri entries.
 
 ### 4.0.0

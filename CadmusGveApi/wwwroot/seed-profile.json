@@ -1010,32 +1010,32 @@
           "value": "outside north"
         },
         {
-          "id": "position:outer-nw",
-          "value": "outside north-west"
-        },
-        {
-          "id": "position:outer-w",
-          "value": "outside at west"
-        },
-        {
-          "id": "position:outer-sw",
-          "value": "outside at south-west"
-        },
-        {
-          "id": "position:outer-s",
-          "value": "outside at south"
-        },
-        {
-          "id": "position:outer-se",
-          "value": "outside at south-east"
+          "id": "position:outer-ne",
+          "value": "outside at north-east"
         },
         {
           "id": "position:outer-e",
           "value": "outside at east"
         },
         {
-          "id": "position:outer-ne",
-          "value": "outside at north-east"
+          "id": "position:outer-se",
+          "value": "outside at south-east"
+        },
+        {
+          "id": "position:outer-s",
+          "value": "outside at south"
+        },
+        {
+          "id": "position:outer-sw",
+          "value": "outside at south-west"
+        },
+        {
+          "id": "position:outer-w",
+          "value": "outside at west"
+        },
+        {
+          "id": "position:outer-nw",
+          "value": "outside north-west"
         },
         {
           "id": "shape:line-hrz",
@@ -1064,10 +1064,6 @@
         {
           "id": "shape:underline",
           "value": "underline"
-        },
-        {
-          "id": "shape:underline-dot",
-          "value": "dotted underline"
         },
         {
           "id": "shape:callout",
