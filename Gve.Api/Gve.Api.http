@@ -264,503 +264,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "text": [
-    {
-      "id": 1,
-      "label": "A",
-      "index": 0,
-      "data": "A"
-    },
-    {
-      "id": 2,
-      "label": "R",
-      "index": 1,
-      "data": "R"
-    },
-    {
-      "id": 3,
-      "label": "Z",
-      "index": 2,
-      "data": "Z"
-    },
-    {
-      "id": 4,
-      "label": "D",
-      "index": 3,
-      "data": "D"
-    },
-    {
-      "id": 5,
-      "label": "C",
-      "index": 4,
-      "data": "C"
-    }
-  ],
-  "operations": [
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "delete Z",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": false,
-          "isShortLived": false,
-          "name": "reason",
-          "value": "don't like Z",
-          "setPolicy": 0
-        }
-      ],
-      "sources": [],
-      "id": "c705f7c65a",
-      "type": 1,
-      "atAsIndex": false,
-      "at": 3,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "diplomatics": {
-        "g": "<g id=\"del-z\"><line x1=\"64\" y1=\"170\" x2=\"88\" y2=\"100\" stroke=\"red\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace R with V",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "alpha",
-          "setPolicy": 1
-        },
-        {
-          "name": "x",
-          "value": "48",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "65",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:gray",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "66aed192fc",
-      "type": 0,
-      "atAsIndex": false,
-      "at": 2,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "V",
-      "diplomatics": {
-        "g": "<g id=\"rep-RV\"><line x1=\"44\" y1=\"170\" x2=\"56\" y2=\"96\" stroke=\"gray\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace V with B",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": false,
-          "isShortLived": false,
-          "name": "reason",
-          "value": "like B",
-          "setPolicy": 0
-        },
-        {
-          "name": "x",
-          "value": "74",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "70",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:orange",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "e5610844bd",
-      "type": 0,
-      "atAsIndex": false,
-      "at": 6,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "B",
-      "diplomatics": {
-        "g": "<g id=\"rep-VB\"><line x1=\"44\" y1=\"64\" x2=\"72\" y2=\"80\" stroke=\"orange\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace R with P",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "beta",
-          "setPolicy": 1
-        },
-        {
-          "name": "x",
-          "value": "24",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "18",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:blue",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "503c1e3a94",
-      "type": 0,
-      "inputTag": "v1",
-      "atAsIndex": false,
-      "at": 2,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "P",
-      "diplomatics": {
-        "g": "<g id=\"rep-RP\"><line x1=\"56\" y1=\"96\" x2=\"32\" y2=\"52\" stroke=\"blue\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "gamma",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "ea8ffab3d4",
-      "type": 6,
-      "inputTag": "v3",
-      "atAsIndex": false,
-      "at": 4,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 5,
-      "toRun": 1,
-      "diplomatics": {
-        "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 140,160 A 24,8 0 0 2 130,166 24,8 0 0 2 106,156\" /><text x=\"84\" y=\"180\" style=\"font-size:36px\" fill=\"green\">C</text><line x1=\"120\" y1=\"170\" x2=\"160\" y2=\"120\" stroke=\"green\" stroke-width=\"6\"/></g>"
-      }
-    }
-  ]
-}
-
-### Get Chain
-POST {{GveApi_HostAddress}}/text/operations/run/chain
-Accept: application/json
-Content-Type: application/json
-
-{
-  "text": [
-    {
-      "id": 1,
-      "label": "A",
-      "index": 0,
-      "data": "A"
-    },
-    {
-      "id": 2,
-      "label": "R",
-      "index": 1,
-      "data": "R"
-    },
-    {
-      "id": 3,
-      "label": "Z",
-      "index": 2,
-      "data": "Z"
-    },
-    {
-      "id": 4,
-      "label": "D",
-      "index": 3,
-      "data": "D"
-    },
-    {
-      "id": 5,
-      "label": "C",
-      "index": 4,
-      "data": "C"
-    }
-  ],
-  "operations": [
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "delete Z",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": false,
-          "isShortLived": false,
-          "name": "reason",
-          "value": "don't like Z",
-          "setPolicy": 0
-        }
-      ],
-      "sources": [],
-      "id": "c705f7c65a",
-      "type": 1,
-      "atAsIndex": false,
-      "at": 3,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "diplomatics": {
-        "g": "<g id=\"del-z\"><line x1=\"64\" y1=\"170\" x2=\"88\" y2=\"100\" stroke=\"red\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace R with V",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "alpha",
-          "setPolicy": 1
-        },
-        {
-          "name": "x",
-          "value": "48",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "65",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:gray",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "66aed192fc",
-      "type": 0,
-      "atAsIndex": false,
-      "at": 2,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "V",
-      "diplomatics": {
-        "g": "<g id=\"rep-RV\"><line x1=\"44\" y1=\"170\" x2=\"56\" y2=\"96\" stroke=\"gray\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace V with B",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": false,
-          "isShortLived": false,
-          "name": "reason",
-          "value": "like B",
-          "setPolicy": 0
-        },
-        {
-          "name": "x",
-          "value": "74",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "70",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:orange",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "e5610844bd",
-      "type": 0,
-      "atAsIndex": false,
-      "at": 6,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "B",
-      "diplomatics": {
-        "g": "<g id=\"rep-VB\"><line x1=\"44\" y1=\"64\" x2=\"72\" y2=\"80\" stroke=\"orange\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": false,
-          "name": "log",
-          "value": "replace R with P",
-          "setPolicy": 0
-        },
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "beta",
-          "setPolicy": 1
-        },
-        {
-          "name": "x",
-          "value": "24",
-          "setPolicy": 1
-        },
-        {
-          "name": "y",
-          "value": "18",
-          "setPolicy": 1
-        },
-        {
-          "name": "style",
-          "value": "font-size:36px;fill:blue",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "503c1e3a94",
-      "type": 0,
-      "inputTag": "v1",
-      "atAsIndex": false,
-      "at": 2,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 0,
-      "toRun": 0,
-      "value": "P",
-      "diplomatics": {
-        "g": "<g id=\"rep-RP\"><line x1=\"56\" y1=\"96\" x2=\"32\" y2=\"52\" stroke=\"blue\" stroke-width=\"6\"/></g>"
-      }
-    },
-    {
-      "rank": 0,
-      "features": [
-        {
-          "isNegated": false,
-          "isGlobal": true,
-          "isShortLived": true,
-          "name": "version",
-          "value": "gamma",
-          "setPolicy": 1
-        }
-      ],
-      "sources": [],
-      "id": "ea8ffab3d4",
-      "type": 6,
-      "inputTag": "v3",
-      "atAsIndex": false,
-      "at": 4,
-      "run": 1,
-      "toAsIndex": false,
-      "to": 5,
-      "toRun": 1,
-      "diplomatics": {
-        "g": "<g id=\"swap\"><path style=\"fill:none;stroke:green;stroke-width:3\" d=\"M 140,160 A 24,8 0 0 2 130,166 24,8 0 0 2 106,156\" /><text x=\"84\" y=\"180\" style=\"font-size:36px\" fill=\"green\">C</text><line x1=\"120\" y1=\"170\" x2=\"160\" y2=\"120\" stroke=\"green\" stroke-width=\"6\"/></g>"
-      }
-    }
-  ]
-}
-
-### Run Operations
-POST {{GveApi_HostAddress}}/text/operations/run
-Accept: application/json
-Content-Type: application/json
-{
   "operations": [
     {
       "features": [
@@ -771,7 +274,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "c92ca3ab2a",
+      "id": "0bd8764d2a",
       "type": 7,
       "at": 35,
       "run": 1
@@ -790,7 +293,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "9ab0e20f4b",
+      "id": "b9e46f6b27",
       "type": 1,
       "at": 1,
       "run": 3
@@ -814,7 +317,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "e7f61e25bc",
+      "id": "3b58922026",
       "at": 4,
       "run": 1,
       "value": "T"
@@ -833,7 +336,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "1e903f5494",
+      "id": "ebd852736c",
       "type": 1,
       "at": 14,
       "run": 2
@@ -852,7 +355,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "7ab2dae08e",
+      "id": "e6f8903bd3",
       "type": 3,
       "at": 19,
       "value": "s"
@@ -869,10 +372,15 @@ Content-Type: application/json
           "isShortLived": true,
           "name": "r_hints",
           "value": "note"
+        },
+        {
+          "isShortLived": true,
+          "name": "r_fore-color",
+          "value": "red"
         }
       ],
       "sources": [],
-      "id": "dde223adb5",
+      "id": "6d583db5f2",
       "type": 7,
       "at": 64,
       "run": 4
@@ -889,10 +397,15 @@ Content-Type: application/json
           "isShortLived": true,
           "name": "r_hints",
           "value": "note"
+        },
+        {
+          "isShortLived": true,
+          "name": "r_fore-color",
+          "value": "red"
         }
       ],
       "sources": [],
-      "id": "bdd8bb99cc",
+      "id": "ab90524fe5",
       "type": 7,
       "at": 60,
       "run": 3
@@ -909,10 +422,15 @@ Content-Type: application/json
           "isShortLived": true,
           "name": "r_hints",
           "value": "note"
+        },
+        {
+          "isShortLived": true,
+          "name": "r_fore-color",
+          "value": "red"
         }
       ],
       "sources": [],
-      "id": "d0455cefac",
+      "id": "4b23460ba0",
       "type": 7,
       "at": 52,
       "run": 7
@@ -926,7 +444,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "e142af8416",
+      "id": "52b2412e34",
       "type": 6,
       "at": 52,
       "run": 7,
@@ -937,7 +455,7 @@ Content-Type: application/json
       "groupId": "mov-too",
       "features": [],
       "sources": [],
-      "id": "aac0a675ed",
+      "id": "cfb6282eda",
       "type": 1,
       "at": 75,
       "run": 5
@@ -958,12 +476,13 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "df57346711",
+      "id": "04c8e2da8d",
       "type": 3,
       "at": 94,
       "value": " TOO."
     },
     {
+      "groupId": "add-stuff",
       "features": [
         {
           "isShortLived": true,
@@ -977,12 +496,13 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "c1e4748c29",
+      "id": "a7382e5ebb",
       "type": 1,
       "at": 40,
       "run": 1
     },
     {
+      "groupId": "add-stuff",
       "features": [
         {
           "isShortLived": true,
@@ -991,7 +511,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "95feda6324",
+      "id": "07adc18774",
       "type": 3,
       "at": 39,
       "value": " AND SOME STUFF."
@@ -1034,7 +554,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "30cbffc1c2",
+      "id": "a6a3a62628",
       "at": 107,
       "run": 6,
       "value": "HINTS."
@@ -1061,7 +581,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "c1311880a3",
+      "id": "bbe5c744fa",
       "type": 7,
       "at": 1,
       "run": 1

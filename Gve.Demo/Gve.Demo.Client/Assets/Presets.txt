@@ -19,6 +19,35 @@ all built their nests in my beard!"
 The first limerick of Edward Lear (1875 p.7) with a mock autograph. This is the example you can find in [this GVE documentation page](https://vedph.github.io/gve-doc/model/sample-limerick.html).
 
 :title
+rendition-features
+
+:base
+In this test I show all operation
+types.
+It is not complex nor long.
+This too, is another line
+
+:operations
+35: [r_char-offsets^="35:x=100 70:x=100"]
+1x3- [r_hints^=diagonal-stroke r_fore-color^=red]
+4=T [r_text_position^=n r_fore-color^=red r_font-size^=14]
+14x2- [r_hints^=diagonal-stroke r_fore-color^=red]
+19+]s [r_fore-color^=red r_font-size^=14]
+64x4: @swap-complex-long [note^=1 r_hints^=note r_fore-color^=red]
+60x3: @swap-complex-long [note^=2 r_hints^=note r_fore-color^=red]
+52x7: @swap-complex-long [note^=3 r_hints^=note r_fore-color^=red]
+52x7<>64x4 [r_fore-color^=red]
+75x5- @mov-too
+94+]" TOO."@mov-too [r_fore-color^=red *version^=alpha]
+40- @add-stuff [r_hints^=diagonal-stroke r_fore-color^=green]
+39+]" AND SOME STUFF." @add-stuff [r_fore-color^=green]
+112x6=HINTS. [r_fore-color^=green r_position^=n r_text-displaced-span^=21x7 r_text-offset-y=20 r_hints=box r_border^="tlbr 1 solid green" *version^=beta]
+1: [note=12 r_color^=blue r_hint-vars^="rotation=-45" r_hints="note-underline"]
+
+:dsc
+A text with all operation types illustrated and many rendition features.
+
+:title
 digits
 
 :base
