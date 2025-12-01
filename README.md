@@ -174,7 +174,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
-- 2025-12-01: added "build request" command to demo.
+- 2025-12-01:
+  - added "build request" command to demo.
+  - fixed ordering of tags in `Chain`.`GetDistinctTags`.
 - 2025-12-01:
   - updated packages. Docker image for demo.
 - 2025-11-28: adjusted thesauri entries.

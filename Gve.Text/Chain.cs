@@ -118,15 +118,47 @@ public class Chain<T>
         return tag == null ? _links.Count : _links.Count(l => l.Tag == tag);
     }
 
+    private static string GetTagPrefix(string tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return tag ?? "";
+        int i = 0;
+        while (i < tag.Length && !char.IsDigit(tag[i])) i++;
+        return i == 0 ? "" : tag[..i];
+    }
+
+    private static int GetTagNumber(string tag)
+    {
+        if (string.IsNullOrEmpty(tag)) return int.MinValue;
+        int i = 0;
+        while (i < tag.Length && !char.IsDigit(tag[i])) i++;
+        if (i >= tag.Length) return int.MinValue;
+
+        int j = i;
+        while (j < tag.Length && char.IsDigit(tag[j])) j++;
+
+        string numeric = tag[i..j];
+        if (int.TryParse(numeric, out int n)) return n;
+
+        return int.MinValue;
+    }
+
     /// <summary>
     /// Gets the a list of unique tags from this chain.
     /// </summary>
     /// <returns>List, sorted alphabetically.</returns>
     public IList<string> GetDistinctTags()
     {
-        HashSet<string> tags = [.. _nodes.Select(n => n.SourceTag)];
+        HashSet<string> tags = [.. _nodes.Select(n => n.SourceTag)
+            // exclude empty tags
+            .Where(t => t.Length > 0)];
+
         foreach (ChainLink<T> link in _links) tags.Add(link.Tag);
-        return [.. tags.Order()];
+
+        // Sort by prefix (alphabetic part) then by the numeric suffix.
+        // Example: v1, v2, v10, v11 -> ordered by numeric value 1,2,10,11
+        return [.. tags
+            .OrderBy(t => GetTagPrefix(t), StringComparer.OrdinalIgnoreCase)
+            .ThenBy(t => GetTagNumber(t))];
     }
 
     /// <summary>
