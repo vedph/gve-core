@@ -180,10 +180,12 @@ public partial class Snapshot
 
         // operations
         sb.AppendLine("\"operations\": [");
+        int i = 0;
         foreach (CharChainOperation op in Operations)
         {
             CharChainOperationSource source = new(op);
-            sb.AppendLine(JsonSerializer.Serialize(source, options));
+            sb.Append(JsonSerializer.Serialize(source, options));
+            if (++i < Operations.Count) sb.AppendLine(",");
         }
         sb.AppendLine("],");
 
@@ -192,6 +194,7 @@ public partial class Snapshot
         int n = 0;
         foreach (char c in Text)
         {
+            if (n > 0) sb.AppendLine(",");
             sb.AppendLine(JsonSerializer.Serialize(new CharChainNode
             {
                 Id = ++n,
