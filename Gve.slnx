@@ -1,0 +1,32 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docfx.json" />
+    <File Path="docker-compose.yml" />
+    <File Path="Dockerfile" />
+    <File Path="Dockerfile-cadmus" />
+    <File Path="Dockerfile-gve" />
+    <File Path="Pack.bat" />
+    <File Path="Push.bat" />
+    <File Path="PushLocal.bat" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Cadmus.Gve.Parts.Test/Cadmus.Gve.Parts.Test.csproj" />
+  <Project Path="Cadmus.Gve.Parts/Cadmus.Gve.Parts.csproj" />
+  <Project Path="Cadmus.Gve.Services/Cadmus.Gve.Services.csproj" />
+  <Project Path="Cadmus.Seed.Gve.Parts.Test/Cadmus.Seed.Gve.Parts.Test.csproj" />
+  <Project Path="Cadmus.Seed.Gve.Parts/Cadmus.Seed.Gve.Parts.csproj" />
+  <Project Path="CadmusGveApi/CadmusGveApi.csproj" />
+  <Project Path="Gve.Api.Controllers/Gve.Api.Controllers.csproj" />
+  <Project Path="Gve.Api.Models/Gve.Api.Models.csproj" />
+  <Project Path="Gve.Api.Services/Gve.Api.Services.csproj" />
+  <Project Path="Gve.Api/Gve.Api.csproj" />
+  <Project Path="Gve.Cadmus.Test/Gve.Cadmus.Test.csproj" />
+  <Project Path="Gve.Cadmus/Gve.Cadmus.csproj" />
+  <Project Path="Gve.Demo/Gve.Demo.Client/Gve.Demo.Client.csproj" />
+  <Project Path="Gve.Demo/Gve.Demo/Gve.Demo.csproj" />
+  <Project Path="Gve.Migration.Test/Gve.Migration.Test.csproj" />
+  <Project Path="Gve.Migration/Gve.Migration.csproj" />
+  <Project Path="Gve.Text.Test/Gve.Text.Test.csproj" />
+  <Project Path="Gve.Text/Gve.Text.csproj" />
+  <Project Path="gve/gve.csproj" />
+</Solution>
