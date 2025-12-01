@@ -3,12 +3,16 @@ using Gve.Demo.Client.Components;
 using Gve.Demo.Client.Services;
 using Gve.Migration;
 using Gve.Text;
+using Gve.Text.DTO;
 using Proteus.Rendering;
 using Proteus.Rendering.Filters;
 using Radzen;
 using Radzen.Blazor;
 using System.Diagnostics;
 using System.Net;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 namespace Gve.Demo.Client.Pages;
@@ -159,6 +163,53 @@ public partial class Snapshot
             NotificationService.Notify(NotificationSeverity.Error, "Error",
                 ex.Message);
         }
+    }
+
+    public async Task BuildRequest()
+    {
+        ParseOperationText();
+        StringBuilder sb = new();
+        sb.AppendLine("{");
+
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+        };
+
+        // operations
+        sb.AppendLine("\"operations\": [");
+        foreach (CharChainOperation op in Operations)
+        {
+            CharChainOperationSource source = new(op);
+            sb.AppendLine(JsonSerializer.Serialize(source, options));
+        }
+        sb.AppendLine("],");
+
+        // text
+        sb.AppendLine("\"text\": [");
+        int n = 0;
+        foreach (char c in Text)
+        {
+            sb.AppendLine(JsonSerializer.Serialize(new CharChainNode
+            {
+                Id = ++n,
+                Index = n - 1,
+                Label = c == ' '
+                    ? "_" : DumpHelper.MapNonPrintables(c.ToString())!,
+                Data = c,
+                SourceTag = "v0"
+            }, options));
+        }
+        sb.AppendLine("]").AppendLine("}");
+
+        // copy to clipboard
+        await ClipboardService.CopyToClipboardAsync(sb.ToString());
+
+        // notify
+        NotificationService.Notify(NotificationSeverity.Info, "Info",
+            "Request built and copied to clipboard");
     }
 
     private static List<ChainNode<char>> GetNodesFrom(string text)

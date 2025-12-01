@@ -49,10 +49,13 @@
         </RadzenRow>
 
         <!-- buttons -->
-        <!-- parse -->
         <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
+            <!-- parse -->
             <RadzenButton Text="Parse" Click="ParseOperationText"
                           ButtonStyle="ButtonStyle.Primary" />
+
+            <!-- build request -->
+            <RadzenButton Text="Build Request" Click="BuildRequest" />
 
             <!-- selected tag -->
             @if (ChainTags.Count > 0)
