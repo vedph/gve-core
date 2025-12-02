@@ -19,7 +19,7 @@ all built their nests in my beard!"
 The first limerick of Edward Lear (1875 p.7) with a mock autograph. This is the example you can find in [this GVE documentation page](https://vedph.github.io/gve-doc/model/sample-limerick.html).
 
 :title
-rendition-features
+rendition features
 
 :base
 In this test I show all operation

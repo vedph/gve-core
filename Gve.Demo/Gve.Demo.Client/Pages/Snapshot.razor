@@ -5,6 +5,20 @@
 @using Gve.Text
 @using bClipboard
 
+<style>
+    .multiline-text {
+    /* Override the default Radzen DataGrid cell styles */
+    white-space: pre-wrap !important; 
+    /* Allows text to wrap when it hits the container boundary, 
+       but respects line breaks from the source. */
+    word-break: break-word; /* Prevents overflow for long words/lines */
+    margin: 0; /* Remove default margin from pre element */
+    padding: 0; /* Adjust padding if necessary */
+    background: transparent; /* Ensure it looks like a normal cell */
+    border: none; /* Remove any border */
+}
+</style>
+
 <PageTitle>Snapshot</PageTitle>
 
 <h1>Snapshot</h1>
@@ -179,7 +193,7 @@
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Title="text">
                             <Template>
-                                <div class="rz-text-wrap">@context.Result</div>
+                                <pre class="multiline-text">@context.Result</pre>
                             </Template>
 
                         </RadzenDataGridColumn>
