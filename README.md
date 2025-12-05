@@ -174,6 +174,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-12-05: fixed preset.
 - 2025-12-02: multiline text in demo grid.
 - 2025-12-01:
   - added "build request" command to demo.
