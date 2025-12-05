@@ -14,7 +14,7 @@
 		<PackageReference Include="bClipboard" Version="1.0.1" />
 		<PackageReference Include="HighlightBlazor" Version="0.1.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0" />
-		<PackageReference Include="Radzen.Blazor" Version="8.3.5" />
+		<PackageReference Include="Radzen.Blazor" Version="8.3.8" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.3" />
 	</ItemGroup>
 
