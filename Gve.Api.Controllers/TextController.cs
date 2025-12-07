@@ -162,7 +162,8 @@ public sealed class TextController : ControllerBase
                         Index = i++,
                         Label = node.Label,
                         Data = node.Data,
-                        SourceTag = node.SourceTag,
+                        SourceTag = node.SourceTag.Length == 0
+                            ? "v0" : node.SourceTag,
                         Features = feats.Count == 0? null : feats
                     };
                     result.TaggedNodes[tag].Add(m);

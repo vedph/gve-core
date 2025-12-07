@@ -258,6 +258,166 @@ Content-Type: application/json
   ]
 }
 
+### Run Operations (short)
+POST {{GveApi_HostAddress}}/text/operations/run
+Accept: application/json
+Content-Type: application/json
+
+{
+  "operations": [
+    {
+      "features": [
+        {
+          "isGlobal": true,
+          "name": "log",
+          "value": "delete Z"
+        },
+        {
+          "name": "reason",
+          "value": "don\u0027t like Z"
+        }
+      ],
+      "sources": [],
+      "id": "2662668f20",
+      "type": 1,
+      "at": 3,
+      "run": 1
+    },
+    {
+      "features": [
+        {
+          "isGlobal": true,
+          "name": "log",
+          "value": "replace R with V"
+        },
+        {
+          "isGlobal": true,
+          "isShortLived": true,
+          "setPolicy": 1,
+          "name": "version",
+          "value": "alpha"
+        },
+        {
+          "name": "color",
+          "value": "blue"
+        }
+      ],
+      "sources": [],
+      "id": "53a8f4cad5",
+      "at": 2,
+      "run": 1,
+      "value": "V"
+    },
+    {
+      "features": [
+        {
+          "isGlobal": true,
+          "name": "log",
+          "value": "replace V with B"
+        }
+      ],
+      "sources": [],
+      "id": "84c40fedda",
+      "at": 6,
+      "run": 1,
+      "value": "B"
+    },
+    {
+      "features": [
+        {
+          "isGlobal": true,
+          "name": "log",
+          "value": "replace R with P"
+        },
+        {
+          "isGlobal": true,
+          "isShortLived": true,
+          "setPolicy": 1,
+          "name": "version",
+          "value": "beta"
+        }
+      ],
+      "sources": [],
+      "id": "8dac2d4eea",
+      "inputTag": "v1",
+      "at": 2,
+      "run": 1,
+      "value": "P"
+    },
+    {
+      "features": [],
+      "sources": [],
+      "id": "3063b504c9",
+      "type": 6,
+      "at": 4,
+      "run": 1,
+      "to": 5,
+      "toRun": 1
+    },
+    {
+      "features": [
+        {
+          "isGlobal": true,
+          "name": "log",
+          "value": "swap D with C"
+        },
+        {
+          "isGlobal": true,
+          "isShortLived": true,
+          "setPolicy": 1,
+          "name": "version",
+          "value": "gamma"
+        }
+      ],
+      "sources": [],
+      "id": "979a90e6b8",
+      "type": 6,
+      "inputTag": "v3",
+      "at": 4,
+      "run": 1,
+      "to": 5,
+      "toRun": 1
+    }
+  ],
+  "text": [
+    {
+      "id": 1,
+      "label": "A",
+      "data": "A",
+      "sourceTag": "v0"
+    },
+    {
+      "id": 2,
+      "index": 1,
+      "label": "R",
+      "data": "R",
+      "sourceTag": "v0"
+    },
+    {
+      "id": 3,
+      "index": 2,
+      "label": "Z",
+      "data": "Z",
+      "sourceTag": "v0"
+    },
+    {
+      "id": 4,
+      "index": 3,
+      "label": "D",
+      "data": "D",
+      "sourceTag": "v0"
+    },
+    {
+      "id": 5,
+      "index": 4,
+      "label": "C",
+      "data": "C",
+      "sourceTag": "v0"
+    }
+  ]
+}
+
+
 ### Run Operations
 POST {{GveApi_HostAddress}}/text/operations/run
 Accept: application/json

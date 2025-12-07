@@ -174,6 +174,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2025-12-07: in text controller supply `sourceTag` for `TaggedNodes` in result when it is empty because it corresponds to the base text. In this case supply `v0`.
 - 2025-12-05:
   - fixed preset.
   - updated packages.
