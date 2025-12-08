@@ -23,7 +23,7 @@ This too, is another line
 107x6=HINTS.@stuff-hints [r_t-position=n r_fore-color=green r_position=n r_t-displaced-span=21x7 r_t-offset-y=-30 r_hints=box]
 75x5- @mov-too
 94+]" TOO."@mov-too [r_t-position=e r_t-offset-x=20 r_t-offset-y=0.4th r_fore-color=green *version=beta]
-1: [note=12 r_color=blue r_hint-vars="rotation=-45" r_hints="note-underline"]
+1: [note=12 r_t-fore-color=blue r_fore-color=blue r_hints=note-underline r_h-scale-x=2 r_h-rotation=-45]
 
 :dsc
 A text with all operation types illustrated and many rendition features.
