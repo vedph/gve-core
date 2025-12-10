@@ -433,7 +433,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "01fc14dfd3",
+      "id": "3caab8e0a7",
       "type": 7,
       "at": 35,
       "run": 1
@@ -450,7 +450,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "56488e39cf",
+      "id": "e36569ee4f",
       "type": 1,
       "at": 1,
       "run": 3
@@ -471,7 +471,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "eba5b98501",
+      "id": "5de9cd453f",
       "at": 4,
       "run": 1,
       "value": "T"
@@ -488,7 +488,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "5b40ef3621",
+      "id": "53a55d1b3c",
       "type": 1,
       "at": 14,
       "run": 2
@@ -509,7 +509,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "987ef5c123",
+      "id": "6963e2d418",
       "type": 3,
       "at": 19,
       "value": "s"
@@ -523,7 +523,7 @@ Content-Type: application/json
         },
         {
           "name": "r_hints",
-          "value": "note"
+          "value": "note-interlinear-above"
         },
         {
           "name": "r_fore-color",
@@ -531,7 +531,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "0fdd7d1c79",
+      "id": "f45097aeac",
       "type": 7,
       "at": 64,
       "run": 4
@@ -545,7 +545,7 @@ Content-Type: application/json
         },
         {
           "name": "r_hints",
-          "value": "note"
+          "value": "note-interlinear-above"
         },
         {
           "name": "r_fore-color",
@@ -553,7 +553,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "f47ad3f151",
+      "id": "d2bf771ba0",
       "type": 7,
       "at": 60,
       "run": 3
@@ -567,7 +567,7 @@ Content-Type: application/json
         },
         {
           "name": "r_hints",
-          "value": "note"
+          "value": "note-interlinear-above"
         },
         {
           "name": "r_fore-color",
@@ -575,7 +575,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "f0275a5bd1",
+      "id": "9f57e9d454",
       "type": 7,
       "at": 52,
       "run": 7
@@ -588,12 +588,13 @@ Content-Type: application/json
         },
         {
           "isGlobal": true,
+          "isShortLived": true,
           "name": "version",
           "value": "alpha"
         }
       ],
       "sources": [],
-      "id": "0656caac8c",
+      "id": "271c352504",
       "type": 6,
       "at": 52,
       "run": 7,
@@ -613,7 +614,7 @@ Content-Type: application/json
         }
       ],
       "sources": [],
-      "id": "3bfffaa357",
+      "id": "9c11216bcd",
       "type": 1,
       "at": 40,
       "run": 1
@@ -626,17 +627,40 @@ Content-Type: application/json
           "value": "e"
         },
         {
+          "name": "r_t-offset-y",
+          "value": "0.4th"
+        },
+        {
           "name": "r_fore-color",
           "value": "green"
         }
       ],
       "sources": [],
-      "id": "45392c6db8",
+      "id": "8b9fe0c240",
       "type": 3,
       "at": 39,
       "value": " AND SOME STUFF."
     },
     {
+      "groupId": "stuff-hints",
+      "features": [
+        {
+          "name": "r_hints",
+          "value": "box"
+        },
+        {
+          "name": "r_fore-color",
+          "value": "green"
+        }
+      ],
+      "sources": [],
+      "id": "538941956d",
+      "type": 7,
+      "at": 107,
+      "run": 6
+    },
+    {
+      "groupId": "stuff-hints",
       "features": [
         {
           "name": "r_t-position",
@@ -656,28 +680,42 @@ Content-Type: application/json
         },
         {
           "name": "r_t-offset-y",
-          "value": "20"
+          "value": "-30"
         },
+        {
+          "name": "r_hints",
+          "value": "box"
+        }
+      ],
+      "sources": [],
+      "id": "08fcb5056f",
+      "at": 107,
+      "run": 6,
+      "value": "HINTS."
+    },
+    {
+      "groupId": "stuff-hints",
+      "features": [
         {
           "name": "r_hints",
           "value": "box"
         },
         {
-          "name": "r_border",
-          "value": "tlbr 1 solid green"
+          "name": "r_fore-color",
+          "value": "green"
         }
       ],
       "sources": [],
-      "id": "ee4e237700",
-      "at": 112,
-      "run": 6,
-      "value": "HINTS."
+      "id": "afe5e778b8",
+      "type": 7,
+      "at": 113,
+      "run": 6
     },
     {
       "groupId": "mov-too",
       "features": [],
       "sources": [],
-      "id": "d3dd2b1d36",
+      "id": "fb5cdef30f",
       "type": 1,
       "at": 75,
       "run": 5
@@ -690,17 +728,26 @@ Content-Type: application/json
           "value": "e"
         },
         {
+          "name": "r_t-offset-x",
+          "value": "20"
+        },
+        {
+          "name": "r_t-offset-y",
+          "value": "0.4th"
+        },
+        {
           "name": "r_fore-color",
-          "value": "red"
+          "value": "green"
         },
         {
           "isGlobal": true,
+          "isShortLived": true,
           "name": "version",
           "value": "beta"
         }
       ],
       "sources": [],
-      "id": "d4fec627c8",
+      "id": "73387b1abd",
       "type": 3,
       "at": 94,
       "value": " TOO."
@@ -712,20 +759,28 @@ Content-Type: application/json
           "value": "12"
         },
         {
-          "name": "r_color",
+          "name": "r_t-fore-color",
           "value": "blue"
         },
         {
-          "name": "r_hint-vars",
-          "value": "rotation=-45"
+          "name": "r_fore-color",
+          "value": "blue"
         },
         {
           "name": "r_hints",
           "value": "note-underline"
+        },
+        {
+          "name": "r_h-scale-x",
+          "value": "2"
+        },
+        {
+          "name": "r_h-rotation",
+          "value": "-45"
         }
       ],
       "sources": [],
-      "id": "1c0d82c5a0",
+      "id": "ca7f642246",
       "type": 7,
       "at": 1,
       "run": 1

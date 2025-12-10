@@ -36,7 +36,7 @@ docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,wi
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:4.0.1 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:4.0.2 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
@@ -174,6 +174,12 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+### 4.0.2
+
+- 2025-12-10:
+  - updated packages.
+  - completed preset for demo.
+  - Docker image for demo.
 - 2025-12-07:
   - in text controller supply `sourceTag` for `TaggedNodes` in result when it is empty because it corresponds to the base text. In this case supply `v0`.
   - in demo updated presets.

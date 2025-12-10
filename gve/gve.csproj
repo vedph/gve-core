@@ -6,9 +6,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Gve.Cli</RootNamespace>
-		<Version>4.0.1</Version>
-		<FileVersion>4.0.1</FileVersion>
-		<AssemblyVersion>4.0.1</AssemblyVersion>
+		<Version>4.0.2</Version>
+		<FileVersion>4.0.2</FileVersion>
+		<AssemblyVersion>4.0.2</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -47,11 +47,11 @@
 		<PackageReference Include="Cadmus.Mongo" Version="10.0.0" />
 		<PackageReference Include="DiffPlex" Version="1.9.0" />
 		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.1" />
 		<PackageReference Include="MongoDB.Bson" Version="3.5.2" />
 		<PackageReference Include="MongoDB.Driver" Version="3.5.2" />
 		<PackageReference Include="NPOI" Version="2.7.5" />
