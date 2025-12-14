@@ -30,7 +30,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:4.0.2 -t vedph2020/cadmus-gve-api:latest --push
+docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-gve-api:4.0.3 -t vedph2020/cadmus-gve-api:latest --push
 ```
 
 - 👉 DEMO:
@@ -173,6 +173,10 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 ```
 
 ## History
+
+- 2025-12-14:
+  - refactored rendition features thesauri.
+  - updated packages.
 
 ### 4.0.2
 

@@ -873,6 +873,122 @@
       "id": "snapshot-feat-names@en",
       "entries": [
         {
+          "id": "r_char-offsets",
+          "value": "char offsets"
+        },
+        {
+          "id": "r_char-offset",
+          "value": "char offset"
+        },
+        {
+          "id": "r_font-family",
+          "value": "font family"
+        },
+        {
+          "id": "r_font-size",
+          "value": "font size"
+        },
+        {
+          "id": "r_fore-color",
+          "value": "foreground color"
+        },
+        {
+          "id": "r_back-color",
+          "value": "background color"
+        },
+        {
+          "id": "r_italic",
+          "value": "italic"
+        },
+        {
+          "id": "r_bold",
+          "value": "bold"
+        },
+        {
+          "id": "r_underline",
+          "value": "underline"
+        },
+        {
+          "id": "r_overline",
+          "value": "overline"
+        },
+        {
+          "id": "r_strike",
+          "value": "strikethrough"
+        },
+        {
+          "id": "r_text-line-style",
+          "value": "text line style"
+        },
+        {
+          "id": "r_text-line-color",
+          "value": "text line color"
+        },
+        {
+          "id": "r_rotate",
+          "value": "rotation"
+        },
+        {
+          "id": "r_hints",
+          "value": "hints"
+        },
+        {
+          "id": "r_hint-vars",
+          "value": "hint variables"
+        },
+        {
+          "id": "r_t-position",
+          "value": "position"
+        },
+        {
+          "id": "r_t-offset-x",
+          "value": "X offset"
+        },
+        {
+          "id": "r_t-offset-y",
+          "value": "Y offset"
+        },
+        {
+          "id": "r_t-solid",
+          "value": "solid"
+        },
+        {
+          "id": "r_t-displaced-span",
+          "value": "displaced text span"
+        },
+        {
+          "id": "r_h-position",
+          "value": "hint position"
+        },
+        {
+          "id": "r_h-offset-x",
+          "value": "hint X offset"
+        },
+        {
+          "id": "r_h-offset-y",
+          "value": "hint Y offset"
+        },
+        {
+          "id": "r_h-scale-x",
+          "value": "hint X scale"
+        },
+        {
+          "id": "r_h-scale-y",
+          "value": "hint Y scale"
+        },
+        {
+          "id": "r_h-rotation",
+          "value": "hint rotation"
+        },
+        {
+          "id": "r_h-solid",
+          "value": "solid hint"
+        },
+        {
+          "id": "r_h-displaced-span",
+          "value": "displaced hint span"
+        },
+        {
           "id": "epigram-nr",
           "value": "epigram number"
         },
@@ -883,54 +999,6 @@
         {
           "id": "page-beg",
           "value": "page beginning"
-        },
-        {
-          "id": "position",
-          "value": "position"
-        },
-        {
-          "id": "shape",
-          "value": "shape"
-        },
-        {
-          "id": "boxed",
-          "value": "boxed"
-        },
-        {
-          "id": "word-order-nr",
-          "value": "word order number"
-        },
-        {
-          "id": "line-type",
-          "value": "line type"
-        },
-        {
-          "id": "line-count",
-          "value": "line count"
-        },
-        {
-          "id": "line-offset",
-          "value": "line offset"
-        },
-        {
-          "id": "scope",
-          "value": "scope"
-        },
-        {
-          "id": "color",
-          "value": "color"
-        },
-        {
-          "id": "font-size",
-          "value": "font size"
-        },
-        {
-          "id": "rotation",
-          "value": "rotation"
-        },
-        {
-          "id": "indent",
-          "value": "indent"
         },
         {
           "id": "partial",
@@ -945,8 +1013,8 @@
           "value": "immediate"
         },
         {
-          "id": "annotation-text",
-          "value": "annotation text"
+          "id": "comment",
+          "value": "comment"
         },
         {
           "id": "note",
@@ -959,18 +1027,6 @@
         {
           "id": "version",
           "value": "stage name"
-        },
-        {
-          "id": "x",
-          "value": "X coordinate"
-        },
-        {
-          "id": "y",
-          "value": "Y coordinate"
-        },
-        {
-          "id": "style",
-          "value": "CSS style"
         }
       ]
     },
@@ -982,240 +1038,208 @@
           "value": "1"
         },
         {
-          "id": "position:baseline-above",
-          "value": "baseline above"
-        },
-        {
-          "id": "position:baseline-below",
-          "value": "baseline below"
-        },
-        {
-          "id": "position:baseline-right",
-          "value": "baseline right"
-        },
-        {
-          "id": "position:baseline-left",
-          "value": "baseline left"
-        },
-        {
-          "id": "position:inter-above",
-          "value": "interlinear above"
-        },
-        {
-          "id": "position:inter-below",
-          "value": "interlinear below"
-        },
-        {
-          "id": "position:outer-n",
-          "value": "outside north"
-        },
-        {
-          "id": "position:outer-ne",
-          "value": "outside at north-east"
-        },
-        {
-          "id": "position:outer-e",
-          "value": "outside at east"
-        },
-        {
-          "id": "position:outer-se",
-          "value": "outside at south-east"
-        },
-        {
-          "id": "position:outer-s",
-          "value": "outside at south"
-        },
-        {
-          "id": "position:outer-sw",
-          "value": "outside at south-west"
-        },
-        {
-          "id": "position:outer-w",
-          "value": "outside at west"
-        },
-        {
-          "id": "position:outer-nw",
-          "value": "outside north-west"
-        },
-        {
-          "id": "shape:line-hrz",
-          "value": "horizontal straight line"
-        },
-        {
-          "id": "shape:line-ne",
-          "value": "diagonal up line"
-        },
-        {
-          "id": "shape:line-se",
-          "value": "diagonal down line"
-        },
-        {
-          "id": "shape:line-vrt",
-          "value": "vertical straight line"
-        },
-        {
-          "id": "shape:scrape",
-          "value": "scraped off"
-        },
-        {
-          "id": "shape:erasure",
-          "value": "erased"
-        },
-        {
-          "id": "shape:underline",
-          "value": "underline"
-        },
-        {
-          "id": "shape:callout",
-          "value": "callout"
-        },
-        {
-          "id": "shape:scribble",
-          "value": "scribble"
-        },
-        {
-          "id": "shape:dot",
-          "value": "dot"
-        },
-        {
-          "id": "shape:check",
-          "value": "check mark"
-        },
-        {
-          "id": "shape:circle-dot",
-          "value": "circle with dot"
-        },
-        {
-          "id": "shape:curve",
-          "value": "curved line"
-        },
-        {
-          "id": "shape:curly-90",
-          "value": "curly brace rotated down"
-        },
-        {
-          "id": "shape:nb",
-          "value": "notabene"
-        },
-        {
-          "id": "shape:cross",
-          "value": "cross"
-        },
-        {
-          "id": "boxed:1",
-          "value": "1"
-        },
-        {
-          "id": "line-type:continuous",
-          "value": "continuous line"
-        },
-        {
-          "id": "line-type:dotted",
-          "value": "dotted line"
-        },
-        {
-          "id": "line-type:dashed",
-          "value": "dashed line"
-        },
-        {
-          "id": "line-count:1",
-          "value": "single line"
-        },
-        {
-          "id": "line-count:2",
-          "value": "double line"
-        },
-        {
-          "id": "line-count:3",
-          "value": "triple line"
-        },
-        {
-          "id": "line-count:4",
-          "value": "quadruple line"
-        },
-        {
-          "id": "line-offset:left",
-          "value": "left line offset"
-        },
-        {
-          "id": "line-offset:right",
-          "value": "right line offset"
-        },
-        {
-          "id": "scope:comma",
-          "value": "comma"
-        },
-        {
-          "id": "scope:question-upper",
-          "value": "upper part question mark"
-        },
-        {
-          "id": "scope:exclam-upper",
-          "value": "upper part exclamation mark"
-        },
-        {
-          "id": "scope:period",
-          "value": "period"
-        },
-        {
-          "id": "scope:letter",
-          "value": "letter"
-        },
-        {
-          "id": "scope:word",
-          "value": "word"
-        },
-        {
-          "id": "scope:line",
-          "value": "line"
-        },
-        {
-          "id": "scope:line-2",
-          "value": "two lines"
-        },
-        {
-          "id": "scope:line-3",
-          "value": "three lines"
-        },
-        {
-          "id": "scope:epigram",
-          "value": "entire epigram"
-        },
-        {
-          "id": "color:black",
+          "id": "r_fore-color:black",
           "value": "black"
         },
         {
-          "id": "color:dark-brown",
+          "id": "r_fore-color:dark-brown",
           "value": "dark brown"
         },
         {
-          "id": "color:orange",
+          "id": "r_fore-color:orange",
           "value": "orange"
         },
         {
-          "id": "color:light-orange",
+          "id": "r_fore-color:light-orange",
           "value": "light orange"
         },
         {
-          "id": "color:red",
+          "id": "r_fore-color:red",
           "value": "red"
         },
         {
-          "id": "font-size:smaller",
-          "value": "smaller font size"
+          "id": "r_back-color:black",
+          "value": "black"
         },
         {
-          "id": "font-size:smallest",
-          "value": "smallest font size"
+          "id": "r_back-color:dark-brown",
+          "value": "dark brown"
         },
         {
-          "id": "font-size:larger",
-          "value": "larger font size"
+          "id": "r_back-color:orange",
+          "value": "orange"
         },
         {
-          "id": "font-size:largest",
-          "value": "largest font size"
+          "id": "r_back-color:light-orange",
+          "value": "light orange"
+        },
+        {
+          "id": "r_back-color:red",
+          "value": "red"
+        },
+        {
+          "id": "r_italic:1",
+          "value": "italic on"
+        },
+        {
+          "id": "r_italic:0",
+          "value": "italic off"
+        },
+        {
+          "id": "r_bold:1",
+          "value": "bold on"
+        },
+        {
+          "id": "r_bold:0",
+          "value": "bold off"
+        },
+        {
+          "id": "r_text-line-style:solid",
+          "value": "solid"
+        },
+        {
+          "id": "r_text-line-style:dotted",
+          "value": "dotted"
+        },
+        {
+          "id": "r_text-line-style:dashed",
+          "value": "dashed"
+        },
+        {
+          "id": "r_text-line-style:wavy",
+          "value": "wavy"
+        },
+        {
+          "id": "r_text-line-color:black",
+          "value": "black"
+        },
+        {
+          "id": "r_text-line-color:dark-brown",
+          "value": "dark brown"
+        },
+        {
+          "id": "r_text-line-color:orange",
+          "value": "orange"
+        },
+        {
+          "id": "r_text-line-color:light-orange",
+          "value": "light orange"
+        },
+        {
+          "id": "r_text-line-color:red",
+          "value": "red"
+        },
+        {
+          "id": "r_t-position:nw",
+          "value": "north-west"
+        },
+        {
+          "id": "r_t-position:n",
+          "value": "north"
+        },
+        {
+          "id": "r_t-position:ne",
+          "value": "north-east"
+        },
+        {
+          "id": "r_t-position:e",
+          "value": "east"
+        },
+        {
+          "id": "r_t-position:se",
+          "value": "south-east"
+        },
+        {
+          "id": "r_t-position:s",
+          "value": "south"
+        },
+        {
+          "id": "r_t-position:sw",
+          "value": "south-west"
+        },
+        {
+          "id": "r_t-position:w",
+          "value": "west"
+        },
+        {
+          "id": "r_t-position:inw",
+          "value": "inner north-west"
+        },
+        {
+          "id": "r_t-position:ine",
+          "value": "inner north-east"
+        },
+        {
+          "id": "r_t-position:ise",
+          "value": "inner south-east"
+        },
+        {
+          "id": "r_t-position:isw",
+          "value": "inner south-west"
+        },
+        {
+          "id": "r_t-position:o",
+          "value": "origin"
+        },
+        {
+          "id": "r_t-solid:1",
+          "value": "solid on"
+        },
+        {
+          "id": "r_h-position:nw",
+          "value": "north-west"
+        },
+        {
+          "id": "r_h-position:n",
+          "value": "north"
+        },
+        {
+          "id": "r_h-position:ne",
+          "value": "north-east"
+        },
+        {
+          "id": "r_h-position:e",
+          "value": "east"
+        },
+        {
+          "id": "r_h-position:se",
+          "value": "south-east"
+        },
+        {
+          "id": "r_h-position:s",
+          "value": "south"
+        },
+        {
+          "id": "r_h-position:sw",
+          "value": "south-west"
+        },
+        {
+          "id": "r_h-position:w",
+          "value": "west"
+        },
+        {
+          "id": "r_h-position:inw",
+          "value": "inner north-west"
+        },
+        {
+          "id": "r_h-position:ine",
+          "value": "inner north-east"
+        },
+        {
+          "id": "r_h-position:ise",
+          "value": "inner south-east"
+        },
+        {
+          "id": "r_h-position:isw",
+          "value": "inner south-west"
+        },
+        {
+          "id": "r_h-position:o",
+          "value": "origin"
+        },
+        {
+          "id": "r_h-solid:1",
+          "value": "solid on"
         },
         {
           "id": "partial:1",
@@ -1240,18 +1264,6 @@
         {
           "id": "parallel:1",
           "value": "1"
-        },
-        {
-          "id": "rotation:90",
-          "value": "90"
-        },
-        {
-          "id": "rotation:180",
-          "value": "180"
-        },
-        {
-          "id": "rotation:270",
-          "value": "270"
         }
       ]
     }
