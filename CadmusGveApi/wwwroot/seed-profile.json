@@ -1271,7 +1271,7 @@
   "seed": {
     "options": {
       "seed": 1,
-      "users": ["zeus"],
+      "users": [ "zeus" ],
       "partRoles": [],
       "fragmentRoles": []
     },
@@ -1286,7 +1286,7 @@
         "id": "seed.it.vedph.categories",
         "options": {
           "maxCategoriesPerItem": 3,
-          "categories": ["letter", "postcard"]
+          "categories": [ "letter", "postcard" ]
         }
       },
       {
@@ -1298,8 +1298,8 @@
       {
         "id": "seed.it.vedph.comment",
         "options": {
-          "languages": ["en", "it"],
-          "categories": ["letter", "postcard"]
+          "languages": [ "en", "it" ],
+          "categories": [ "letter", "postcard" ]
         }
       },
       {
@@ -1331,5 +1331,84 @@
       }
     ],
     "fragmentSeeders": []
+  },
+  "settings": {
+    "gve-hint-designer-data": {
+      "hints": {
+        "diagonal-stroke-down": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#wipe-right"
+        },
+        "diagonal-stroke-up": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#wipe-right"
+        },
+        "cross-stroke": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n  <line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#wipe-right"
+        },
+        "box": {
+          "svg": "<g>\n  <rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1.1,
+          "scaleY": 1.1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#scale-in"
+        },
+        "note": {
+          "svg": "<g>\n  <text id=\"placeholder\" x=\"150\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" fill=\"{{r_fore-color}}\" font-size=\"24\">{{note}}</text>\n</g>",
+          "position": "n",
+          "offsetX": 0,
+          "offsetY": -10,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#fade-in"
+        }
+      },
+      "animations": {
+        "fade-in": "// Fade in using GSAP\nreturn new Promise(resolve => {\n  gsap.fromTo(targetEl,\n    { opacity: 0 },\n    { opacity: 1, duration: 2, onComplete: resolve }\n  );\n});",
+        "scale-in": "// Scale in using GSAP\nreturn new Promise(resolve => {\n  gsap.fromTo(targetEl,\n    { opacity: 0, scale: 0.5 },\n    { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)', onComplete: resolve }\n  );\n});",
+        "wipe-left": "// Wipe from right to left using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100% 100%' },\n    {\n      drawSVG: '0% 100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
+        "wipe-right": "// Wipe from left to right using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
+        "wipe-up": "// Wipe from bottom to top using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100%' },\n    {\n      drawSVG: '0%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
+        "wipe-down": "// Wipe from top to bottom using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});"
+      },
+      "variables": [
+        {
+          "name": "note",
+          "value": "abc"
+        },
+        {
+          "name": "r_fore-color",
+          "value": "red"
+        }
+      ]
+    }
   }
 }
