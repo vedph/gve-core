@@ -51,7 +51,7 @@ Dann du biſt alles zugleich und biſt ein Engel dazu .
 263x7: @reorder [note=4 r_hints=note-interlinear-above r_fore-color=orange *log:="Add number 4 above `gekannt`."]
 244x3: @reorder [note=5 r_hints=note-interlinear-above r_fore-color=orange *log:="Add number 5 above `und` before `Thiere`."]
 248x6: @reorder [note=6 r_hints=note-interlinear-above r_fore-color=orange *log:="Add number 6 above `Thiere`."]
-256x16>[244 @reorder [*log:="Move `hab ich gekannt ` before `und Thiere`."]
+255x16>[244 @reorder [*log:="Move `hab ich gekannt ` before `und Thiere`."]
 1: [r_hints=note note=|ſten r_fore-color=orange r_t-position=w r_t-offset-x=-20 *log:="Add annotation `|ſten` before the first line."]
 22+[=ſt [r_t-position=n r_fore-color=red r_t-font-size=14 *version^=alteration2 *log:="Add `ſt` before `en` in `künstlichen` whence `künſtlichſten`."]
 21x2: [r_hints=half-psi r_fore-color=red *log:="Draw callout sign between `ch` of `künstlichen."]
