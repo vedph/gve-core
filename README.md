@@ -174,6 +174,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-01-05: added more hints to Cadmus API profile for GVE.
 - 2026-01-02:
   - added settings to Cadmus API profile for GVE hints.
   - updated packages.
