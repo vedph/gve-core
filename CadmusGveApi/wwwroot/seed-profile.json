@@ -957,6 +957,10 @@
           "value": "displaced text span"
         },
         {
+          "id": "r_t-value",
+          "value": "overridden text value"
+        },
+        {
           "id": "r_h-position",
           "value": "hint position"
         },
@@ -1421,7 +1425,7 @@
           "scaleY": 1.5,
           "rotation": 0,
           "solid": false,
-          "animation": "#wipe-up"
+          "animation": "#wipe-right"
         },
         "i-dot": {
           "svg": "<g>\n  <circle\n     style=\"fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n     cx=\"150\"\n     cy=\"9\"\n     r=\"9\" />\n</g>",
@@ -1430,6 +1434,17 @@
           "offsetY": 0,
           "scaleX": 1,
           "scaleY": 1,
+          "rotation": 0,
+          "solid": false,
+          "animation": "#fade-in"
+        },
+        "umlaut": {
+          "svg": "<g>\n<circle\n  style=\"fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"170\"\n  cy=\"9\"\n  r=\"9\" />\n<circle\n  style=\"fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"129\"\n  cy=\"9\"\n  r=\"9\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": -16,
+          "scaleX": 1,
+          "scaleY": 0.3,
           "rotation": 0,
           "solid": false,
           "animation": "#fade-in"
