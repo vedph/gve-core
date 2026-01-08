@@ -1021,6 +1021,10 @@
           "value": "comment"
         },
         {
+          "id": "log",
+          "value": "log"
+        },
+        {
           "id": "note",
           "value": "note"
         },
