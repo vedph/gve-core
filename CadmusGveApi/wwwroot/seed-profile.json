@@ -1005,10 +1005,6 @@
           "value": "page beginning"
         },
         {
-          "id": "partial",
-          "value": "partial"
-        },
-        {
           "id": "reason",
           "value": "reason"
         },
@@ -1248,10 +1244,6 @@
         {
           "id": "r_h-solid:1",
           "value": "solid on"
-        },
-        {
-          "id": "partial:1",
-          "value": "1"
         },
         {
           "id": "reason:confirmation",
