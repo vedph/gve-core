@@ -4,17 +4,17 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Version>4.0.4</Version>
-		<FileVersion>4.0.4</FileVersion>
-		<AssemblyVersion>4.0.4</AssemblyVersion>
+		<Version>4.0.5</Version>
+		<FileVersion>4.0.5</FileVersion>
+		<AssemblyVersion>4.0.5</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />
 		<PackageReference Include="bClipboard" Version="1.0.1" />
 		<PackageReference Include="HighlightBlazor" Version="0.1.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.1" />
-		<PackageReference Include="Radzen.Blazor" Version="8.5.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
+		<PackageReference Include="Radzen.Blazor" Version="8.6.3" />
 		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.4" />
 	</ItemGroup>
 

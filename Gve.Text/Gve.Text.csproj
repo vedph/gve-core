@@ -15,14 +15,14 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>GVE</PackageTags>
-		<Version>4.0.2</Version>
-		<FileVersion>4.0.2</FileVersion>
-		<AssemblyVersion>4.0.2</AssemblyVersion>
+		<Version>4.0.3</Version>
+		<FileVersion>4.0.3</FileVersion>
+		<AssemblyVersion>4.0.3</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Fusi.Tools" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
 		<PackageReference Include="Nanoid" Version="3.1.0" />
 	</ItemGroup>
 

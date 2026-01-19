@@ -23,20 +23,12 @@
           "sortKey": "02"
         },
         {
-          "typeId": "it.vedph.external-ids",
-          "name": "external IDs",
-          "description": "External identifiers.",
-          "colorKey": "8ED1E6",
-          "groupKey": "identity",
-          "sortKey": "03"
-        },
-        {
           "typeId": "it.vedph.pin-links",
           "name": "links",
-          "description": "Pin-based links.",
+          "description": "Links to external/internal resources.",
           "colorKey": "8CB7E6",
           "groupKey": "identity",
-          "sortKey": "04"
+          "sortKey": "03"
         },
         {
           "typeId": "it.vedph.categories",
@@ -45,7 +37,7 @@
           "description": "Material support categories.",
           "colorKey": "9DE0D6",
           "groupKey": "material",
-          "sortKey": "05"
+          "sortKey": "04"
         },
         {
           "typeId": "it.vedph.categories",
@@ -54,7 +46,7 @@
           "description": "Content categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "06"
+          "sortKey": "05"
         },
         {
           "typeId": "it.vedph.categories",
@@ -63,15 +55,15 @@
           "description": "Language(s) used in text.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "07"
+          "sortKey": "06"
         },
         {
           "typeId": "it.vedph.gve.snapshot",
           "name": "snapshot",
-          "description": "Autograph snapshot.",
+          "description": "The carrier's snapshot.",
           "colorKey": "F7A8B8",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "07"
         },
         {
           "typeId": "it.vedph.comment",
@@ -79,7 +71,7 @@
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "09"
+          "sortKey": "08"
         },
         {
           "typeId": "it.vedph.gve.hands",
@@ -87,7 +79,7 @@
           "description": "Description of hand(s) in the epigram's version.",
           "colorKey": "F9F79F",
           "groupKey": "content",
-          "sortKey": "10"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.doc-references",
@@ -95,7 +87,7 @@
           "description": "Documental references.",
           "colorKey": "F7DC6F",
           "groupKey": "editorial",
-          "sortKey": "11"
+          "sortKey": "10"
         },
         {
           "typeId": "it.vedph.note",
@@ -103,7 +95,7 @@
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "12"
+          "sortKey": "11"
         }
       ]
     },
@@ -130,10 +122,10 @@
           "sortKey": "02"
         },
         {
-          "typeId": "it.vedph.external-ids",
-          "name": "external IDs",
-          "description": "External identifiers.",
-          "colorKey": "8ED1E6",
+          "typeId": "it.vedph.pin-links",
+          "name": "links",
+          "description": "Links to external/internal resources.",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "03"
         },
@@ -238,10 +230,10 @@
           "sortKey": "01"
         },
         {
-          "typeId": "it.vedph.external-ids",
-          "name": "external IDs",
-          "description": "External identifiers.",
-          "colorKey": "8ED1E6",
+          "typeId": "it.vedph.pin-links",
+          "name": "links",
+          "description": "Links to external/internal resources.",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -286,10 +278,10 @@
           "sortKey": "01"
         },
         {
-          "typeId": "it.vedph.external-ids",
-          "name": "external IDs",
-          "description": "External identifiers.",
-          "colorKey": "8ED1E6",
+          "typeId": "it.vedph.pin-links",
+          "name": "links",
+          "description": "Links to external/internal resources.",
+          "colorKey": "8CB7E6",
           "groupKey": "identity",
           "sortKey": "02"
         },
@@ -435,10 +427,6 @@
         {
           "id": "it.vedph.doc-references",
           "value": "references"
-        },
-        {
-          "id": "it.vedph.external-ids",
-          "value": "external IDs"
         },
         {
           "id": "it.vedph.gve.hands",
@@ -1304,9 +1292,6 @@
       },
       {
         "id": "seed.it.vedph.doc-references"
-      },
-      {
-        "id": "seed.it.vedph.external-ids"
       },
       {
         "id": "seed.it.vedph.gve.hands"
