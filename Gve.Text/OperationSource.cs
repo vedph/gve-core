@@ -3,7 +3,8 @@
 namespace Gve.Text;
 
 /// <summary>
-/// The source for a variant.
+/// The source for an operation. This is specialized metadata about the source
+/// of an operation, such as a manuscript, an author, etc.
 /// </summary>
 public class OperationSource
 {
@@ -18,7 +19,8 @@ public class OperationSource
     public string? Type { get; set; }
 
     /// <summary>
-    /// Gets or sets the probability rank for the source attribution.
+    /// Gets or sets the probability rank for the source attribution (0=not
+    /// specified, 1=most probable, 2=less probable, etc.).
     /// </summary>
     public short Rank { get; set; }
 

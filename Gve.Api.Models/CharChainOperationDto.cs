@@ -25,7 +25,6 @@ public class CharChainOperationDto : CharChainOperation
         GroupId = source.GroupId;
         Features = source.Features;
         Sources = source.Sources;
-        Diplomatics = source.Diplomatics;
 
         InputTag = source.InputTag;
         OutputTag = source.OutputTag;

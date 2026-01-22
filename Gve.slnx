@@ -18,7 +18,6 @@
   <Project Path="CadmusGveApi/CadmusGveApi.csproj" />
   <Project Path="Gve.Api.Controllers/Gve.Api.Controllers.csproj" />
   <Project Path="Gve.Api.Models/Gve.Api.Models.csproj" />
-  <Project Path="Gve.Api.Services/Gve.Api.Services.csproj" />
   <Project Path="Gve.Api/Gve.Api.csproj" />
   <Project Path="Gve.Cadmus.Test/Gve.Cadmus.Test.csproj" />
   <Project Path="Gve.Cadmus/Gve.Cadmus.csproj" />

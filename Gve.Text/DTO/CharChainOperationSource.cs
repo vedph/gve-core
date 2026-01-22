@@ -32,12 +32,6 @@ public class CharChainOperationSource
     public IList<OperationSource>? Sources { get; set; }
 
     /// <summary>
-    /// The diplomatic description of this operation, representing
-    /// its graphical representation in the original document.
-    /// </summary>
-    public OperationDiplomatics? Diplomatics { get; set; }
-
-    /// <summary>
     /// The operation identifier. This can be used to reference
     /// a specific operation in a transformation.
     /// </summary>
@@ -123,7 +117,6 @@ public class CharChainOperationSource
         GroupId = operation.GroupId;
         Features = operation.Features;
         Sources = operation.Sources;
-        Diplomatics = operation.Diplomatics;
         Id = operation.Id;
         Type = operation.Type;
         InputTag = operation.InputTag;
@@ -166,7 +159,6 @@ public class CharChainOperationSource
         op.GroupId = GroupId;
         if (Features?.Count > 0) op.Features = Features;
         if (Sources?.Count > 0) op.Sources = Sources;
-        op.Diplomatics = Diplomatics;
         op.Id = Id;
         op.InputTag = InputTag;
         op.OutputTag = OutputTag;

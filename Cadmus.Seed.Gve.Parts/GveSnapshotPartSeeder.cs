@@ -52,19 +52,7 @@ public sealed class GveSnapshotPartSeeder : PartSeederBase
         GveSnapshotPart part = new Faker<GveSnapshotPart>()
            .RuleFor(p => p.Value, f => new Snapshot
            {
-               Size = new Size(800, 600),
-               Image = new()
-               {
-                   Url = "https://placehold.co/800x600",
-                   Opacity = 0.8
-               },
                Text = GetNodes(f.Lorem.Sentence(5)),
-               TextStyle = "font-size: 24px",
-               TextOptions = new()
-               {
-                   Offset = new Point(0, 100),
-                   LineHeightOffset = 8,
-               },
                Operations =
                [
                    new()
@@ -72,10 +60,6 @@ public sealed class GveSnapshotPartSeeder : PartSeederBase
                        Type = OperationType.Delete,
                        At = 1,
                        Run = 1,
-                       Diplomatics = new()
-                       {
-                           G = "<g id=\"del\"><line x1=\"12\" y1=\"150\" x2=\"24\" y2=\"100\" stroke=\"red\" stroke-width=\"6\"/></g>"
-                       }
                    }
                ]
            })

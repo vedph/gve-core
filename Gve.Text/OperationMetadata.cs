@@ -8,6 +8,7 @@ namespace Gve.Text;
 /// </summary>
 public class OperationMetadata
 {
+    #region Constants
     /// <summary>
     /// The key for the rank feature. This is automatically projected from
     /// <see cref="Rank"/>.
@@ -77,6 +78,7 @@ public class OperationMetadata
         "<>",
          ":",
     ];
+    #endregion
 
     /// <summary>
     /// Gets or sets the operation type.
@@ -114,12 +116,6 @@ public class OperationMetadata
     /// of source for it, such as a manuscript, an author, etc.
     /// </summary>
     public IList<OperationSource> Sources { get; set; }
-
-    /// <summary>
-    /// Gets or sets the diplomatic description of this operation, representing
-    /// its graphical representation in the original document.
-    /// </summary>
-    public OperationDiplomatics? Diplomatics { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationMetadata"/> class.
