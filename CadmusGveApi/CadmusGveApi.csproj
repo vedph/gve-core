@@ -4,43 +4,45 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>4.0.5</Version>
-		<FileVersion>4.0.5</FileVersion>
-		<AssemblyVersion>4.0.5</AssemblyVersion>
 		<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Api.Config" Version="11.0.1" />
-		<PackageReference Include="Cadmus.Api.Controllers" Version="13.0.1" />
-		<PackageReference Include="Cadmus.Api.Controllers.Export" Version="1.0.1" />
-		<PackageReference Include="Cadmus.Api.Controllers.Import" Version="12.0.1" />
-		<PackageReference Include="Cadmus.Api.Models" Version="11.0.1" />
-		<PackageReference Include="Cadmus.Api.Services" Version="13.0.1" />
-		<PackageReference Include="Cadmus.Graph" Version="10.0.1" />
-		<PackageReference Include="Cadmus.Graph.Ef.PgSql" Version="10.0.1" />
-		<PackageReference Include="Cadmus.Graph.Extras" Version="10.0.1" />
-		<PackageReference Include="Cadmus.Seed.General.Parts" Version="8.0.1" />
-		<PackageReference Include="Cadmus.Seed.Philology.Parts" Version="12.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.2" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="Polly" Version="8.6.5" />
-		<PackageReference Include="Scalar.AspNetCore" Version="2.12.11" />
-		<PackageReference Include="Serilog" Version="4.3.0" />
-		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
-		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-		<PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-		<PackageReference Include="Serilog.Sinks.MongoDB" Version="7.2.0" />
-		<PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.2.0" />
+		<PackageReference Include="Cadmus.Api.Config" />
+		<PackageReference Include="Cadmus.Api.Controllers" />
+		<PackageReference Include="Cadmus.Api.Controllers.Export" />
+		<PackageReference Include="Cadmus.Api.Controllers.Import" />
+		<PackageReference Include="Cadmus.Api.Models" />
+		<PackageReference Include="Cadmus.Api.Services" />
+		<PackageReference Include="Cadmus.Graph" />
+		<PackageReference Include="Cadmus.Graph.Ef.PgSql" />
+		<PackageReference Include="Cadmus.Graph.Extras" />
+		<PackageReference Include="Cadmus.Seed.General.Parts" />
+		<PackageReference Include="Cadmus.Seed.Philology.Parts" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="Polly" />
+		<PackageReference Include="Scalar.AspNetCore" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog.Exceptions" />
+		<PackageReference Include="Serilog.Extensions.Hosting" />
+		<PackageReference Include="Serilog.Sinks.Console" />
+		<PackageReference Include="Serilog.Sinks.File" />
+		<PackageReference Include="Serilog.Sinks.MongoDB" />
+		<PackageReference Include="Serilog.Sinks.Postgresql.Alternative" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
 		<ProjectReference Include="..\Cadmus.Gve.Services\Cadmus.Gve.Services.csproj" />
 		<ProjectReference Include="..\Gve.Api.Controllers\Gve.Api.Controllers.csproj" />
 		<ProjectReference Include="..\Gve.Api.Models\Gve.Api.Models.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<ProjectReference Include="Cadmus.Gve.Services" />
+		<ProjectReference Include="Gve.Api.Controllers" />
+		<ProjectReference Include="Gve.Api.Models" />
 	</ItemGroup>
 
 </Project>

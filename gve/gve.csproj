@@ -6,9 +6,6 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Gve.Cli</RootNamespace>
-		<Version>4.0.3</Version>
-		<FileVersion>4.0.3</FileVersion>
-		<AssemblyVersion>4.0.3</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,12 +18,7 @@
 
 	<ItemGroup>
 	  <Content Include="appsettings.json">
-	    <CopyToOutputDirectory>{
-  "ConnectionStrings": {
-    "Default": "mongodb://localhost:27017/cadmus-vela"
-  }
-}
-</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Assets\gve-carriers.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -43,23 +35,23 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.General.Parts" Version="8.0.1" />
-		<PackageReference Include="Cadmus.Mongo" Version="10.0.1" />
-		<PackageReference Include="DiffPlex" Version="1.9.0" />
-		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.2" />
-		<PackageReference Include="MongoDB.Bson" Version="3.6.0" />
-		<PackageReference Include="MongoDB.Driver" Version="3.6.0" />
-		<PackageReference Include="NPOI" Version="2.7.5" />
-		<PackageReference Include="Serilog" Version="4.3.0" />
-		<PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
-		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-		<PackageReference Include="Spectre.Console" Version="0.54.0" />
-		<PackageReference Include="Spectre.Console.Cli" Version="0.53.1" />
+		<PackageReference Include="Cadmus.General.Parts" />
+		<PackageReference Include="Cadmus.Mongo" />
+		<PackageReference Include="DiffPlex" />
+		<PackageReference Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+		<PackageReference Include="MongoDB.Bson" />
+		<PackageReference Include="MongoDB.Driver" />
+		<PackageReference Include="NPOI" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="Serilog.Extensions.Logging" />
+		<PackageReference Include="Serilog.Sinks.File" />
+		<PackageReference Include="Spectre.Console" />
+		<PackageReference Include="Spectre.Console.Cli" />
 	</ItemGroup>
 
 </Project>

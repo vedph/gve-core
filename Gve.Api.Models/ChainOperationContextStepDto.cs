@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Gve.Api.Models;
 
+/// <summary>
+/// Represents a data transfer object for a single step within a chain operation
+/// context, containing operation details, input and output tags, result information,
+/// feature set, and reference node identifiers.
+/// </summary>
 public sealed class ChainOperationContextStepDto
 {
     /// <summary>

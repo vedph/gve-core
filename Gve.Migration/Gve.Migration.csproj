@@ -15,18 +15,29 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>GVE</PackageTags>
-		<Version>4.0.3</Version>
-		<FileVersion>4.0.3</FileVersion>
-		<AssemblyVersion>4.0.3</AssemblyVersion>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<!-- SourceLink-related -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<Deterministic>true</Deterministic>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+	
 	<ItemGroup>
-	  <PackageReference Include="Fusi.Tools.Configuration" Version="8.0.0" />
-	  <PackageReference Include="Proteus.Rendering" Version="1.0.3" />
+	  <PackageReference Include="Fusi.Tools.Configuration" />
+	  <PackageReference Include="Proteus.Rendering" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
 	  <ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<ProjectReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>

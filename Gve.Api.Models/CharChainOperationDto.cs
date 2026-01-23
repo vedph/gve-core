@@ -8,16 +8,35 @@ namespace Gve.Api.Models;
 /// </summary>
 public class CharChainOperationDto : CharChainOperation
 {
-    // added for DTO, the DSL representing the operation
+    /// <summary>
+    /// Gets the domain-specific language (DSL) representation of the operation.
+    /// Used for DTO.
+    /// </summary>
     public string Dsl { get; }
 
-    // from move/swap
+    /// <summary>
+    /// Gets or sets a value indicating whether the target position should be
+    /// interpreted as an index.
+    /// </summary>
     public bool ToAsIndex { get; set; }
+
+    /// <summary>
+    /// Gets or sets the target position.
+    /// </summary>
     public int To { get; set; }
 
-    // from swap
+    /// <summary>
+    /// Gets or sets the to-count.
+    /// </summary>
     public int ToRun { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the CharChainOperationDto class by copying
+    /// relevant data from the specified CharChainOperation source.
+    /// </summary>
+    /// <param name="source">The CharChainOperation instance from which to copy
+    /// operation data. Cannot be null. The specific type of the
+    /// source determines which additional properties are set.</param>
     public CharChainOperationDto(CharChainOperation source) : base(source.Type)
     {
         Id = source.Id;

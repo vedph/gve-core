@@ -6,9 +6,6 @@
 		<Nullable>enable</Nullable>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-		<Version>4.0.5</Version>
-		<FileVersion>4.0.5</FileVersion>
-		<AssemblyVersion>4.0.5</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,17 +13,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.2" />
-		<PackageReference Include="bClipboard" Version="1.0.1" />
-		<PackageReference Include="Radzen.Blazor" Version="8.6.3" />
-		<PackageReference Include="HighlightBlazor" Version="0.1.10" />
-		<PackageReference Include="Z.Blazor.Diagrams" Version="3.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Components" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+		<PackageReference Include="bClipboard" />
+		<PackageReference Include="Radzen.Blazor" />
+		<PackageReference Include="HighlightBlazor" />
+		<PackageReference Include="Z.Blazor.Diagrams" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
 	  <ProjectReference Include="..\..\Gve.Migration\Gve.Migration.csproj" />
 	  <ProjectReference Include="..\..\Gve.Text\Gve.Text.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<ProjectReference Include="Gve.Migration" />
+		<ProjectReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>

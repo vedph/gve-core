@@ -174,7 +174,12 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
-- 2026-01-22: ⚠️ refactored models to remove visuals from operations.
+### 5.0.0
+
+- 2026-01-22:
+  - ⚠️ refactored models to remove visuals from operations.
+  - refactored solution by centralizing package management and versions.
+  - updated packages.
 - 2026-01-19:
   - updated packages.
   - replaced external IDs with links in Cadmus editor profile.
