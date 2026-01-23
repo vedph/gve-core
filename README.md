@@ -24,7 +24,7 @@ docker buildx create --use
 - 👉 GVE API:
 
 ```sh
-docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-api:3.0.1 -t vedph2020/gve-api:latest --push
+docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-api:5.0.0 -t vedph2020/gve-api:latest --push
 ```
 
 - 👉 GVE CADMUS API:
