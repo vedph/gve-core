@@ -1318,7 +1318,7 @@
     "fragmentSeeders": []
   },
   "settings": {
-    "gve-hint-designer-data": {
+    "gveRenditionSettings": {
       "hints": {
         "diagonal-stroke-down": {
           "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
