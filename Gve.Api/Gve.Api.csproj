@@ -21,9 +21,9 @@
 		<ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Gve.Api.Controllers" />
-		<ProjectReference Include="Gve.Api.Models" />
-		<ProjectReference Include="Gve.Text" />
+		<PackageReference Include="Gve.Api.Controllers" />
+		<PackageReference Include="Gve.Api.Models" />
+		<PackageReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>

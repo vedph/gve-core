@@ -24,7 +24,7 @@
 	  <ProjectReference Include="..\Gve.Migration\Gve.Migration.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Gve.Migration" />
+		<PackageReference Include="Gve.Migration" />
 	</ItemGroup>
 
 	<ItemGroup>

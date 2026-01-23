@@ -10,9 +10,6 @@
     <File Path="Dockerfile-cadmus" />
     <File Path="Dockerfile-gve" />
     <File Path="nuget.config" />
-    <File Path="Pack.bat" />
-    <File Path="Push.bat" />
-    <File Path="PushLocal.bat" />
     <File Path="README.md" />
   </Folder>
   <Project Path="Cadmus.Gve.Parts.Test/Cadmus.Gve.Parts.Test.csproj" />

@@ -27,9 +27,9 @@
 		<ProjectReference Include="..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Cadmus.Gve.Parts" />
-		<ProjectReference Include="Cadmus.Seed.Gve.Parts" />
-		<ProjectReference Include="Gve.Text" />
+		<PackageReference Include="Cadmus.Gve.Parts" />
+		<PackageReference Include="Cadmus.Seed.Gve.Parts" />
+		<PackageReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>

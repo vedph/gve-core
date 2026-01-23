@@ -33,7 +33,7 @@
 		<ProjectReference Include="..\Cadmus.Seed.Gve.Parts\Cadmus.Seed.Gve.Parts.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Cadmus.Seed.Gve.Parts" />
+		<PackageReference Include="Cadmus.Seed.Gve.Parts" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -26,8 +26,8 @@
 	  <ProjectReference Include="..\..\Gve.Text\Gve.Text.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Gve.Migration" />
-		<ProjectReference Include="Gve.Text" />
+		<PackageReference Include="Gve.Migration" />
+		<PackageReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>

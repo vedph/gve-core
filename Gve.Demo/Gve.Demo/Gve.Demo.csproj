@@ -18,7 +18,7 @@
 		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />		
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Gve.Demo.Client" />
+		<PackageReference Include="Gve.Demo.Client" />
 	</ItemGroup>
 
 </Project>

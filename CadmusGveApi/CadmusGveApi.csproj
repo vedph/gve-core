@@ -40,9 +40,9 @@
 		<ProjectReference Include="..\Gve.Api.Models\Gve.Api.Models.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Cadmus.Gve.Services" />
-		<ProjectReference Include="Gve.Api.Controllers" />
-		<ProjectReference Include="Gve.Api.Models" />
+		<PackageReference Include="Cadmus.Gve.Services" />
+		<PackageReference Include="Gve.Api.Controllers" />
+		<PackageReference Include="Gve.Api.Models" />
 	</ItemGroup>
 
 </Project>

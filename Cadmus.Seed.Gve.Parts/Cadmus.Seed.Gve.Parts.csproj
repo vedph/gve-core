@@ -36,7 +36,7 @@
 		<ProjectReference Include="..\Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Cadmus.Gve.Parts" />
+		<PackageReference Include="Cadmus.Gve.Parts" />
 	</ItemGroup>
 
 </Project>

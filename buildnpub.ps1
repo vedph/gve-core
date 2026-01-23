@@ -1,10 +1,13 @@
 # BUILD AND PUBLISH SCRIPT FOR .NET PROJECTS
+# Packages are pushed incrementally after each pack to resolve inter-project dependencies.
 # - to pack all packages:
 #   .\buildnpub.ps1 -Pack
 # - to pack and push locally:
 #   .\buildnpub.ps1 -Pack -PushLocal
 # - to pack and push to NuGet.org:
 #   .\buildnpub.ps1 -Pack -PushNuGet
+# - to pack and push to both:
+#   .\buildnpub.ps1 -Pack -PushLocal -PushNuGet
 
 param(
     [switch]$Pack,
@@ -25,7 +28,7 @@ $projectOrder = @(
     "Gve.Api.Controllers\Gve.Api.Controllers.csproj",
     "Cadmus.Gve.Parts\Cadmus.Gve.Parts.csproj",
     "Cadmus.Seed.Gve.Parts\Cadmus.Seed.Gve.Parts.csproj",
-    "Cadmus.Gve.Services\Cadmus.Gve.Services.csproj",
+    "Cadmus.Gve.Services\Cadmus.Gve.Services.csproj"
 )
 
 if ($Pack) {
@@ -43,14 +46,22 @@ if ($Pack) {
                 exit 1
             }
 
+            $projDir = Split-Path $fullPath
+            $nupkgs = Get-ChildItem "$projDir\bin\Release" -Filter *.nupkg -ErrorAction SilentlyContinue
+
             # If pushing locally, add the package immediately after packing
             if ($PushLocal) {
-                $projDir = Split-Path $fullPath
-                $nupkgs = Get-ChildItem "$projDir\bin\Release" -Filter *.nupkg -ErrorAction SilentlyContinue
-
                 foreach ($pkg in $nupkgs) {
                     Write-Host "  -> Adding $($pkg.Name) to local feed" -ForegroundColor Cyan
                     & $NuGetExe add $pkg.FullName -Source $LocalFeed
+                }
+            }
+
+            # If pushing to NuGet.org, push immediately after packing
+            if ($PushNuGet) {
+                foreach ($pkg in $nupkgs) {
+                    Write-Host "  -> Pushing $($pkg.Name) to NuGet.org" -ForegroundColor Cyan
+                    & $NuGetExe push $pkg.FullName -Source https://api.nuget.org/v3/index.json -SkipDuplicate
                 }
             }
         } else {
@@ -66,9 +77,10 @@ if ($PushLocal -and -not $Pack) {
     Write-Host "This section only runs if you use -PushLocal without -Pack." -ForegroundColor Cyan
 }
 
-# 3. Push to NuGet.org
-if ($PushNuGet) {
+# 3. Push to NuGet.org (only runs if -PushNuGet without -Pack)
+if ($PushNuGet -and -not $Pack) {
     Write-Host "`n=== PUSHING TO NUGET.ORG ===" -ForegroundColor Yellow
+    Write-Host "Note: Packages are pushed incrementally during packing when using -Pack -PushNuGet." -ForegroundColor Cyan
 
     foreach ($projPath in $projectOrder) {
         $fullPath = Join-Path $PSScriptRoot $projPath

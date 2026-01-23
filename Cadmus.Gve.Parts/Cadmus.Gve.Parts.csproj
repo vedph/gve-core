@@ -37,8 +37,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<ProjectReference Include="Gve.Cadmus" />
-		<ProjectReference Include="Gve.Text" />
+		<PackageReference Include="Gve.Text" />
 	</ItemGroup>
 
 </Project>
