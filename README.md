@@ -174,6 +174,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-01-25: updated profile settings.
 - 2026-01-24: updated profile settings.
 
 ### 5.0.0

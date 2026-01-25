@@ -1318,7 +1318,7 @@
     "fragmentSeeders": []
   },
   "settings": {
-    "gveRenditionSettings": {
+    "it.vedph.gve.snapshot": {
       "fontSize": 24,
       "fontFamily": "Georgia, serif",
       "foreColor": "#000000",
