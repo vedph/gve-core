@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="build-cli.ps1" />
     <File Path="buildnpub.ps1" />
     <File Path="bumpver.ps1" />
     <File Path="Directory.Build.props" />

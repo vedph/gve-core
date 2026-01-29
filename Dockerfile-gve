@@ -6,8 +6,9 @@ EXPOSE 8080
 # Stage 2: build
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
 COPY ["Gve.Api/Gve.Api.csproj", "Gve.Api/"]
-RUN dotnet restore "Gve.Api/Gve.Api.csproj" -s https://api.nuget.org/v3/index.json --verbosity n
+RUN dotnet restore "Gve.Api/Gve.Api.csproj" -s https://api.nuget.org/v3/index.json --verbosity n /p:Configuration=Release
 # copy the content of the API project
 COPY . .
 # build it

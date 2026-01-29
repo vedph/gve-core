@@ -2,7 +2,7 @@
   "profiles": {
     "gve": {
       "commandName": "Project",
-      "commandLineArgs": "import-list c:\\users\\dfusi\\desktop\\tables.xlsx c:\\users\\dfusi\\desktop\\gve-carriers.json"
+      "commandLineArgs": "import-list c:\\users\\dfusi\\desktop\\list.xlsx c:\\users\\dfusi\\desktop\\listcfg.json"
     }
   }
 }
