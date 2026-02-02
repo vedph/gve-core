@@ -174,6 +174,8 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-02-02: updated packages.
+
 ### 5.0.0
 
 - 2026-01-29: fixes to Docker files.
