@@ -15,20 +15,12 @@
           "sortKey": "01"
         },
         {
-          "typeId": "it.vedph.codicology.shelfmarks",
-          "name": "shelfmarks",
-          "description": "Current and historical shelfmarks.",
-          "colorKey": "C3B6E6",
-          "groupKey": "identity",
-          "sortKey": "02"
-        },
-        {
           "typeId": "it.vedph.pin-links",
           "name": "links",
           "description": "Links to external/internal resources.",
           "colorKey": "8CB7E6",
           "groupKey": "identity",
-          "sortKey": "03"
+          "sortKey": "02"
         },
         {
           "typeId": "it.vedph.categories",
@@ -37,7 +29,7 @@
           "description": "Material support categories.",
           "colorKey": "9DE0D6",
           "groupKey": "material",
-          "sortKey": "04"
+          "sortKey": "03"
         },
         {
           "typeId": "it.vedph.categories",
@@ -46,7 +38,7 @@
           "description": "Content categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "05"
+          "sortKey": "04"
         },
         {
           "typeId": "it.vedph.categories",
@@ -55,7 +47,7 @@
           "description": "Language(s) used in text.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "06"
+          "sortKey": "05"
         },
         {
           "typeId": "it.vedph.gve.snapshot",
@@ -63,7 +55,7 @@
           "description": "The carrier's snapshot.",
           "colorKey": "F7A8B8",
           "groupKey": "content",
-          "sortKey": "07"
+          "sortKey": "06"
         },
         {
           "typeId": "it.vedph.comment",
@@ -71,7 +63,7 @@
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "07"
         },
         {
           "typeId": "it.vedph.gve.hands",
@@ -79,7 +71,7 @@
           "description": "Description of hand(s) in the epigram's version.",
           "colorKey": "F9F79F",
           "groupKey": "content",
-          "sortKey": "09"
+          "sortKey": "08"
         },
         {
           "typeId": "it.vedph.doc-references",
@@ -87,7 +79,7 @@
           "description": "Documental references.",
           "colorKey": "F7DC6F",
           "groupKey": "editorial",
-          "sortKey": "10"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.note",
@@ -95,7 +87,7 @@
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "11"
+          "sortKey": "10"
         }
       ]
     },
@@ -265,7 +257,7 @@
     },
     {
       "id": "collection",
-      "label": "sequence",
+      "label": "collection",
       "description": "A collection of epigram versions.",
       "colorKey": "D1B3E0",
       "partDefinitions": [

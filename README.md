@@ -6,6 +6,25 @@
   - [CLI Tool](#cli-tool)
     - [Import List](#import-list)
   - [History](#history)
+    - [5.0.0](#500)
+    - [4.0.4](#404)
+    - [4.0.2](#402)
+    - [4.0.0](#400)
+    - [3.0.6](#306)
+    - [3.0.5](#305)
+    - [3.0.4](#304)
+    - [3.0.3](#303)
+    - [3.0.1](#301)
+    - [3.0.0](#300)
+    - [2.0.4](#204)
+    - [2.0.3](#203)
+    - [2.0.2](#202)
+    - [2.0.1](#201)
+    - [2.0.0](#200)
+    - [1.0.5](#105)
+    - [1.0.4](#104)
+    - [1.0.3](#103)
+    - [1.0.1](#101)
 
 [VEdition](https://vedph.github.io/gve-doc) backend (code-named `GVE` = Goethe Venetian Epigrams). This solution contains 3 main projects:
 
@@ -174,6 +193,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-02-05: removed shelfmarks part from snapshot item.
 - 2026-02-02: updated packages.
 
 ### 5.0.0
