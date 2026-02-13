@@ -32,13 +32,21 @@
           "sortKey": "03"
         },
         {
+          "typeId": "it.vedph.physical-states",
+          "name": "states",
+          "description": "Physical preservation states.",
+          "colorKey": "D6B6E6",
+          "groupKey": "material",
+          "sortKey": "04"
+        },
+        {
           "typeId": "it.vedph.categories",
           "roleId": "content",
           "name": "content",
           "description": "Content categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "04"
+          "sortKey": "05"
         },
         {
           "typeId": "it.vedph.categories",
@@ -47,7 +55,7 @@
           "description": "Language(s) used in text.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "05"
+          "sortKey": "06"
         },
         {
           "typeId": "it.vedph.gve.snapshot",
@@ -55,7 +63,7 @@
           "description": "The carrier's snapshot.",
           "colorKey": "F7A8B8",
           "groupKey": "content",
-          "sortKey": "06"
+          "sortKey": "07"
         },
         {
           "typeId": "it.vedph.comment",
@@ -63,7 +71,7 @@
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "07"
+          "sortKey": "08"
         },
         {
           "typeId": "it.vedph.gve.hands",
@@ -71,7 +79,7 @@
           "description": "Description of hand(s) in the epigram's version.",
           "colorKey": "F9F79F",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.doc-references",
@@ -79,7 +87,7 @@
           "description": "Documental references.",
           "colorKey": "F7DC6F",
           "groupKey": "editorial",
-          "sortKey": "09"
+          "sortKey": "10"
         },
         {
           "typeId": "it.vedph.note",
@@ -87,7 +95,7 @@
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "10"
+          "sortKey": "11"
         }
       ]
     },
@@ -139,21 +147,13 @@
           "sortKey": "05"
         },
         {
-          "typeId": "it.vedph.physical-states",
-          "name": "states",
-          "description": "Physical preservation states.",
-          "colorKey": "D6B6E6",
-          "groupKey": "material",
-          "sortKey": "06"
-        },
-        {
           "typeId": "it.vedph.categories",
           "roleId": "content",
           "name": "content",
           "description": "Content categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "07"
+          "sortKey": "06"
         },
         {
           "typeId": "it.vedph.categories",
@@ -162,7 +162,7 @@
           "description": "Text type categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "07"
         },
         {
           "typeId": "it.vedph.comment",
@@ -170,7 +170,7 @@
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "09"
+          "sortKey": "08"
         },
         {
           "typeId": "it.vedph.chronotopes",
@@ -178,7 +178,7 @@
           "description": "Date/place indications.",
           "colorKey": "F887C8",
           "groupKey": "history",
-          "sortKey": "10"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.note",
@@ -187,7 +187,7 @@
           "description": "History.",
           "colorKey": "F5B7B1",
           "groupKey": "history",
-          "sortKey": "11"
+          "sortKey": "10"
         },
         {
           "typeId": "it.vedph.doc-references",
@@ -195,7 +195,7 @@
           "description": "Documental references.",
           "colorKey": "F7DC6F",
           "groupKey": "editorial",
-          "sortKey": "12"
+          "sortKey": "11"
         },
         {
           "typeId": "it.vedph.note",
@@ -203,7 +203,7 @@
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "13"
+          "sortKey": "12"
         }
       ]
     },
@@ -571,56 +571,56 @@
       "id": "categories_support@en",
       "entries": [
         {
-          "id": "fmt",
-          "value": "format"
+          "id": "ms",
+          "value": "manuscript"
         },
         {
-          "id": "fmt.4",
-          "value": "format: quarto"
+          "id": "ms.fmt",
+          "value": "manuscript: format"
         },
         {
-          "id": "mat-loose",
-          "value": "loose materials"
+          "id": "ms.fmt.4",
+          "value": "manuscript: format: quarto"
         },
         {
-          "id": "mat-loose.sheet",
-          "value": "loose materials: sheet"
+          "id": "ms.fmt.8",
+          "value": "manuscript: format: octavo"
         },
         {
-          "id": "mat-loose.cut-out",
-          "value": "loose materials: cut-out/clipping"
+          "id": "ms.mat-loose",
+          "value": "manuscript: loose materials"
         },
         {
-          "id": "mat-folded",
-          "value": "folded materials"
+          "id": "ms.mat-loose.sheet",
+          "value": "manuscript: loose materials: sheet"
         },
         {
-          "id": "mat-bound",
-          "value": "bound materials"
+          "id": "ms.mat-loose.cut-out",
+          "value": "manuscript: loose materials: cut-out/clipping"
         },
         {
-          "id": "mat-bound.notebook-cover",
-          "value": "bound materials: notebook cover"
+          "id": "ms.mat-folded",
+          "value": "manuscript: folded materials"
         },
         {
-          "id": "mat-bound.notebook-bound",
-          "value": "bound materials: notebook bound"
+          "id": "ms.mat-bound",
+          "value": "manuscript: bound materials"
         },
         {
-          "id": "mat-bound.book-page",
-          "value": "bound materials: book page"
+          "id": "ms.mat-bound.notebook-cover",
+          "value": "manuscript: bound materials: notebook cover"
         },
         {
-          "id": "rotation",
-          "value": "rotation"
+          "id": "ms.mat-bound.notebook-bound",
+          "value": "manuscript: bound materials: notebook bound"
         },
         {
-          "id": "rotation.right",
-          "value": "rotation: right"
+          "id": "ms.mat-bound.book-page",
+          "value": "manuscript: bound materials: book page"
         },
         {
-          "id": "rotation.left",
-          "value": "rotation: left"
+          "id": "pr",
+          "value": "print"
         }
       ]
     },
@@ -837,6 +837,87 @@
         {
           "id": "q3",
           "value": "excellent"
+        }
+      ]
+    },
+    {
+      "id": "physical-state-features@en",
+      "entries": [
+        {
+          "id": "loss-support",
+          "value": "loss: support"
+        },
+        {
+          "id": "loss-pencil",
+          "value": "loss: pencil"
+        },
+        {
+          "id": "abrasion-support",
+          "value": "abrasion: support"
+        },
+        {
+          "id": "abrasion-pencil",
+          "value": "abrasion: pencil"
+        },
+        {
+          "id": "stain-water",
+          "value": "stain: water"
+        },
+        {
+          "id": "stain-ink",
+          "value": "stain: ink"
+        },
+        {
+          "id": "cut",
+          "value": "cut"
+        },
+        {
+          "id": "hole",
+          "value": "hole"
+        },
+        {
+          "id": "wormhole",
+          "value": "wormhole"
+        },
+        {
+          "id": "fade",
+          "value": "fade"
+        },
+        {
+          "id": "erasion",
+          "value": "erasion"
+        },
+        {
+          "id": "erasion-partial",
+          "value": "erasion: partial"
+        },
+        {
+          "id": "crease",
+          "value": "crease"
+        },
+        {
+          "id": "rip",
+          "value": "rip"
+        },
+        {
+          "id": "ink-oxidation",
+          "value": "ink oxidation"
+        },
+        {
+          "id": "patch",
+          "value": "patch"
+        },
+        {
+          "id": "patch-auth",
+          "value": "patch: authorial"
+        },
+        {
+          "id": "stamp",
+          "value": "stamp"
+        },
+        {
+          "id": "stuck",
+          "value": "stuck"
         }
       ]
     },
@@ -1251,7 +1332,7 @@
   "seed": {
     "options": {
       "seed": 1,
-      "users": [ "zeus" ],
+      "users": ["zeus"],
       "partRoles": [],
       "fragmentRoles": []
     },
@@ -1266,7 +1347,7 @@
         "id": "seed.it.vedph.categories",
         "options": {
           "maxCategoriesPerItem": 3,
-          "categories": [ "letter", "postcard" ]
+          "categories": ["letter", "postcard"]
         }
       },
       {
@@ -1278,8 +1359,8 @@
       {
         "id": "seed.it.vedph.comment",
         "options": {
-          "languages": [ "en", "it" ],
-          "categories": [ "letter", "postcard" ]
+          "languages": ["en", "it"],
+          "categories": ["letter", "postcard"]
         }
       },
       {

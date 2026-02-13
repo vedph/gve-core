@@ -193,6 +193,9 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-02-13:
+  - changed thesauri `categories_support`, `physical-state-features`.
+  - changed facets: moved physical states part from carrier facet into snapshot facet.
 - 2026-02-05: removed shelfmarks part from snapshot item.
 - 2026-02-02: updated packages.
 
