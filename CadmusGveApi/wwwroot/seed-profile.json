@@ -698,6 +698,19 @@
       ]
     },
     {
+      "id": "cod-shelfmark-libraries@en",
+      "entries": [
+        {
+          "id": "gsa",
+          "value": "GSA (Weimar)"
+        },
+        {
+          "id": "ub",
+          "value": "UB (Leipzig)"
+        }
+      ]
+    },
+    {
       "id": "comment-categories@en",
       "entries": [
         {
@@ -1391,6 +1404,9 @@
     "fragmentSeeders": []
   },
   "settings": {
+    "it.vedph.codicology.shelfmarks": {
+      "cityFromLibPattern": "\\((.+)\\)$"
+    },
     "it.vedph.gve.snapshot": {
       "fontSize": 24,
       "fontFamily": "Georgia, serif",
