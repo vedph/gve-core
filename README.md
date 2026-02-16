@@ -193,6 +193,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 ## History
 
+- 2026-02-16: updated packages (integrating new Cadmus API import controllers).
 - 2026-02-13:
   - changed/added thesauri `categories_support`, `physical-state-features`, `cod-shelfmark-libraries`.
   - added settings `it.vedph.codicology.shelfmarks`.
