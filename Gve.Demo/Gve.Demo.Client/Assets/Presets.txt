@@ -30,7 +30,7 @@ This too, is another line
 A text with all operation types illustrated and many rendition features.
 
 :title
-48-H5
+48_H5
 
 :base
 Wie von der künſtlichen Hand geſchnitzt , das liebe Figürchen ,
@@ -69,6 +69,26 @@ Dann du biſt alles zugleich und biſt ein Engel dazu .
 
 :dsc
 A real-word example from Goethe's notebook H5, epigram 48 (1: Geist in pencil; 2: Riemer in red chalk).
+
+:title
+H56_013
+
+:base
+══
+Mache der Schwärmer sich Schüle
+wie Sand am Meer
+der Nand ist
+Sand ! Die Perle sey mein . Du o Ver
+nünftiger freund .
+
+:operations
+36: [r_char-offsets="36:x=100 53:x=200 103:x=100" *log:="Indent lines."]
+57x1=S [*log:="Replace `Nand` with `Sand`"]
+113x1=F [*log:="Replace `freund` with `Freund`"]
+1: [note=14 r_hints=note_interlinear-above r_h-offset-x=-100 r_fore-color=orange *version^="stage 1" *log:="Add epigram number 14"]
+34+]"e" [r_fore-color=orange *log:="Add `e` after `Schüle`"]
+51+]"e" [r_fore-color=orange *log:="Add `e` after `Meer`" *version^="stage 2"]
+1: [note=55. r_hints=note_interlinear-above r_h-offset-x=-20 r_fore-color=brown *version^="stage 2" *log:="Add epigram number 55."]
 
 :title
 limerick 1

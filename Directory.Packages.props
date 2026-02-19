@@ -30,10 +30,10 @@
     <PackageVersion Include="Cadmus.Graph.Extras" Version="10.0.3" />
     <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="DiffPlex" Version="1.9.0" />
-    <PackageVersion Include="Gve.Api.Models" Version="5.0.1" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="5.0.1" />
-    <PackageVersion Include="Gve.Migration" Version="5.0.1" />
-    <PackageVersion Include="Gve.Text" Version="5.0.1" />
+    <PackageVersion Include="Gve.Api.Models" Version="5.0.2" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="5.0.2" />
+    <PackageVersion Include="Gve.Migration" Version="5.0.2" />
+    <PackageVersion Include="Gve.Text" Version="5.0.2" />
     <PackageVersion Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
     <PackageVersion Include="Fusi.Tools" Version="8.0.0" />
     <PackageVersion Include="Fusi.Tools.Configuration" Version="8.0.0" />
@@ -61,7 +61,7 @@
     <PackageVersion Include="Polly" Version="8.6.5" />
     <PackageVersion Include="Proteus.Rendering" Version="1.0.4" />
     <PackageVersion Include="Radzen.Blazor" Version="9.0.5" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.41" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.44" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />

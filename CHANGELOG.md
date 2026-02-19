@@ -1,5 +1,11 @@
 ﻿# History
 
+### 5.0.2
+
+- 2026-02-19:
+  - 🆕 added get operations DSL endpoint to GVE API.
+  - added preset to demo app.
+  - updated packages.
 - 2026-02-17: updated packages.
 
 ## 5.0.1

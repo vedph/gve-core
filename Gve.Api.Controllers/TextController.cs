@@ -104,6 +104,30 @@ public sealed class TextController : ControllerBase
     }
 
     /// <summary>
+    /// Gets the DSL representation of each operation in the given list of
+    /// operations.
+    /// </summary>
+    /// <param name="model">The model.</param>
+    /// <returns>Array of strings, one per operation.</returns>
+    [HttpPost("operations/dsl")]
+    [Produces("application/json")]
+    public ResultWrapperModel<string[]> GetOperationDsl
+        ([FromBody] OperationsBindingModel model)
+    {
+        try
+        {
+            List<CharChainOperation> operations = [.. model.Operations.Select(
+                s => s.ToOperation())];
+            string[] dsl = [.. operations.Select(op => op.ToString())];
+            return new ResultWrapperModel<string[]>(dsl);
+        }
+        catch (Exception e)
+        {
+            return new ResultWrapperModel<string[]>(null, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Runs operations on the specified text.
     /// </summary>
     /// <param name="model">The model with text and operations.</param>
