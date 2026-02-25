@@ -52,7 +52,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="MongoDB.Bson" Version="3.6.0" />
     <PackageVersion Include="MongoDB.Driver" Version="3.6.0" />
     <PackageVersion Include="Nanoid" Version="3.1.0" />
@@ -60,8 +60,8 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.6.5" />
     <PackageVersion Include="Proteus.Rendering" Version="1.0.4" />
-    <PackageVersion Include="Radzen.Blazor" Version="9.0.5" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.44" />
+    <PackageVersion Include="Radzen.Blazor" Version="9.0.6" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.47" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />

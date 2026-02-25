@@ -1,5 +1,9 @@
 ﻿# History
 
+- 2026-02-25:
+  - updated packages.
+  - updated thesaurus `snapshot-feat-values`.
+
 ### 5.0.2
 
 - 2026-02-19:

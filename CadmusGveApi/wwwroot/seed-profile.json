@@ -1172,6 +1172,62 @@
           "value": "bold off"
         },
         {
+          "id": "r_hints:diagonal-stroke-down",
+          "value": "diagonal stroke down"
+        },
+        {
+          "id": "r_hints:diagonal-stroke-up",
+          "value": "diagonal stroke up"
+        },
+        {
+          "id": "r_hints:cross-stroke",
+          "value": "cross stroke"
+        },
+        {
+          "id": "r_hints:horizontal-stroke",
+          "value": "horizontal stroke"
+        },
+        {
+          "id": "r_hints:vertical-stroke",
+          "value": "vertical stroke"
+        },
+        {
+          "id": "r_hints:box",
+          "value": "box"
+        },
+        {
+          "id": "r_hints:note",
+          "value": "note"
+        },
+        {
+          "id": "r_hints:note-interlinear-above",
+          "value": "note (interlinear, above)"
+        },
+        {
+          "id": "r_hints:note-underline",
+          "value": "note (underlined)"
+        },
+        {
+          "id": "r_hints:half-psi",
+          "value": "half-psi"
+        },
+        {
+          "id": "r_hints:i-dot",
+          "value": "i-dot"
+        },
+        {
+          "id": "r_hints:umlaut",
+          "value": "umlaut"
+        },
+        {
+          "id": "r_hints:snake",
+          "value": "snake"
+        },
+        {
+          "id": "r_hints:snake-callout",
+          "value": "snake (callout)"
+        },
+        {
           "id": "r_text-line-style:solid",
           "value": "solid"
         },
