@@ -226,7 +226,6 @@ public sealed class ExcelDictionaryReader : IDisposable
                     return cell.NumericCellValue.ToString();
                 }
             case CellType.Blank:
-            case CellType.Unknown:
             default:
                 return "";
         }
