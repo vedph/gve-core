@@ -6,6 +6,9 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Gve.Cli</RootNamespace>
+		<Version>5.0.3</Version>
+		<FileVersion>5.0.3</FileVersion>
+		<AssemblyVersion>5.0.3</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
