@@ -1,5 +1,11 @@
 ﻿# History
 
+### 5.0.4
+
+- 2026-03-25:
+  - updated packages.
+  - 🆕 added `models` to `settings` for facet editor.
+
 ### 5.0.3
 
 - 2026-03-19: updated packages.
