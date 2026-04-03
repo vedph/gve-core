@@ -1,5 +1,7 @@
 ﻿# History
 
+- 2026-03-04: added `proposal` to feature names thesaurus.
+
 ### 5.0.4
 
 - 2026-03-25:

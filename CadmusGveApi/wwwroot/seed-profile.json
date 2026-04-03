@@ -1380,6 +1380,10 @@
           "value": "confirmation"
         },
         {
+          "id": "reason:proposal",
+          "value": "proposal"
+        },
+        {
           "id": "reason:revert",
           "value": "revert change"
         },
