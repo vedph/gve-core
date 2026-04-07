@@ -116,7 +116,7 @@ internal sealed class DiffCommand : AsyncCommand<DiffCommandSettings>
         }
     }
 
-    public override Task<int> ExecuteAsync(CommandContext context,
+    protected override Task<int> ExecuteAsync(CommandContext context,
         DiffCommandSettings settings, CancellationToken cancel)
     {
         ShowSettings(settings);

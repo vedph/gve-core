@@ -9,6 +9,7 @@
 		<Version>5.0.4</Version>
 		<FileVersion>5.0.4</FileVersion>
 		<AssemblyVersion>5.0.4</AssemblyVersion>
+		<AcceptNPOIOSMFLicense>true</AcceptNPOIOSMFLicense>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -35,7 +35,7 @@ internal sealed class ImportListCommand : AsyncCommand<ImportListCommandSettings
             })!;
     }
 
-    public override Task<int> ExecuteAsync(CommandContext context,
+    protected override Task<int> ExecuteAsync(CommandContext context,
         ImportListCommandSettings settings, CancellationToken cancel)
     {
         ShowSettings(settings);

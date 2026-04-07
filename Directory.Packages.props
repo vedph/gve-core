@@ -35,8 +35,8 @@
     <PackageVersion Include="Gve.Migration" Version="5.0.2" />
     <PackageVersion Include="Gve.Text" Version="5.0.2" />
     <PackageVersion Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
-    <PackageVersion Include="Fusi.Tools" Version="8.0.1" />
-    <PackageVersion Include="Fusi.Tools.Configuration" Version="8.0.1" />
+    <PackageVersion Include="Fusi.Tools" Version="8.0.2" />
+    <PackageVersion Include="Fusi.Tools.Configuration" Version="8.0.2" />
     <PackageVersion Include="HighlightBlazor" Version="0.1.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.5" />
@@ -52,16 +52,16 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.5" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageVersion Include="MongoDB.Bson" Version="3.7.1" />
     <PackageVersion Include="MongoDB.Driver" Version="3.7.1" />
     <PackageVersion Include="Nanoid" Version="3.1.0" />
-    <PackageVersion Include="NPOI" Version="2.7.6" />
+    <PackageVersion Include="NPOI" Version="2.8.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.6.6" />
     <PackageVersion Include="Proteus.Rendering" Version="1.0.4" />
-    <PackageVersion Include="Radzen.Blazor" Version="10.2.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.13.18" />
+    <PackageVersion Include="Radzen.Blazor" Version="10.2.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.13.20" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
@@ -71,8 +71,8 @@
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageVersion Include="Serilog.Sinks.MongoDB" Version="7.2.0" />
     <PackageVersion Include="Serilog.Sinks.Postgresql.Alternative" Version="4.2.0" />
-    <PackageVersion Include="Spectre.Console" Version="0.54.0" />
-    <PackageVersion Include="Spectre.Console.Cli" Version="0.53.1" />
+    <PackageVersion Include="Spectre.Console" Version="0.55.0" />
+    <PackageVersion Include="Spectre.Console.Cli" Version="0.55.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="Z.Blazor.Diagrams" Version="3.0.4.1" />
