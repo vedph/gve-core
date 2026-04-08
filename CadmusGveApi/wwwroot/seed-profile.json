@@ -474,20 +474,24 @@
       "id": "categories_content@en",
       "entries": [
         {
-          "id": "copy-type",
-          "value": "copy type"
+          "id": "type",
+          "value": "ype"
         },
         {
-          "id": "copy-type.rough",
-          "value": "copy type: rough"
+          "id": "type.draft",
+          "value": "type: epigram draft"
         },
         {
-          "id": "copy-type.clean",
-          "value": "copy type: clean"
+          "id": "type.rough",
+          "value": "type: epigram rough copy"
         },
         {
-          "id": "copy-type.print",
-          "value": "copy type: print"
+          "id": "type.clean",
+          "value": "type: epigram clean copy"
+        },
+        {
+          "id": "type.print",
+          "value": "type: epigram print"
         },
         {
           "id": "lang",
@@ -506,20 +510,44 @@
           "value": "language: Latin"
         },
         {
-          "id": "language.grc",
+          "id": "lang.grc",
           "value": "language: Ancient Greek"
         },
         {
-          "id": "auth",
-          "value": "authorship"
+          "id": "script",
+          "value": "script"
         },
         {
-          "id": "auth.autograph",
-          "value": "authorship: autograph"
+          "id": "script.cursive-la",
+          "value": "script: Latin cursive"
         },
         {
-          "id": "auth.allograph",
-          "value": "authorship: allograph"
+          "id": "script.cursive-de",
+          "value": "script: German cursive"
+        },
+        {
+          "id": "script.blackletter",
+          "value": "script: blackletter"
+        },
+        {
+          "id": "script.antiqua",
+          "value": "script: antiqua"
+        },
+        {
+          "id": "hand",
+          "value": "hands"
+        },
+        {
+          "id": "hand.goethe",
+          "value": "hand: Goethe"
+        },
+        {
+          "id": "hand.riemer",
+          "value": "hand: Riemer"
+        },
+        {
+          "id": "hand.geist",
+          "value": "hand: Geist"
         },
         {
           "id": "nr",
@@ -551,19 +579,35 @@
         },
         {
           "id": "writing-mat.ink1",
-          "value": "writing material: ink 1"
+          "value": "writing material: ink 1 (black)"
         },
         {
           "id": "writing-mat.ink2",
-          "value": "writing material: ink 2"
+          "value": "writing material: ink 2 (brown)"
         },
         {
-          "id": "writing-mat.pencil",
-          "value": "writing material: pencil"
+          "id": "writing-mat.ink3",
+          "value": "writing material: ink 3 (dark-green)"
         },
         {
-          "id": "writing-mat.ink-red",
-          "value": "writing material: red ink"
+          "id": "writing-mat.ink-red1",
+          "value": "writing material: ink 4 (red)"
+        },
+        {
+          "id": "writing-mat.ink-red2",
+          "value": "writing material: ink 5 (orange)"
+        },
+        {
+          "id": "writing-mat.pencil1",
+          "value": "writing material: pencil 1 (blue)"
+        },
+        {
+          "id": "writing-mat.pencil2",
+          "value": "writing material: pencil 2 (light-blue)"
+        },
+        {
+          "id": "writing-mat.pencil3",
+          "value": "writing material: pencil 3 (TODO)"
         }
       ]
     },
