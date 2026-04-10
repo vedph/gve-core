@@ -2,7 +2,7 @@
 
 - 2026-04-08: `categories:content` thesaurus entries.
 - 2026-04-07: updated packages.
-- 2026-03-04: added `proposal` to feature names thesaurus.
+- 2026-03-04: added `proposal` to feature names thesaurus (`snapshot-feat-values`).
 
 ## 5.0.4
 
