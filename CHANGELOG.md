@@ -1,16 +1,16 @@
 ﻿# History
 
-- 2026-04-08: categories:content thesaurus entries.
+- 2026-04-08: `categories:content` thesaurus entries.
 - 2026-04-07: updated packages.
 - 2026-03-04: added `proposal` to feature names thesaurus.
 
-### 5.0.4
+## 5.0.4
 
 - 2026-03-25:
   - updated packages.
   - 🆕 added `models` to `settings` for facet editor.
 
-### 5.0.3
+## 5.0.3
 
 - 2026-03-19: updated packages.
 - 2026-03-18: updated packages.
@@ -19,7 +19,7 @@
   - updated packages.
   - updated thesaurus `snapshot-feat-values`.
 
-### 5.0.2
+## 5.0.2
 
 - 2026-02-19:
   - 🆕 added get operations DSL endpoint to GVE API.
