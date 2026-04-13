@@ -494,6 +494,10 @@
           "value": "type: epigram print"
         },
         {
+          "id": "type.index",
+          "value": "type: index"
+        },
+        {
           "id": "lang",
           "value": "language"
         },
@@ -548,6 +552,10 @@
         {
           "id": "hand.geist",
           "value": "hand: Geist"
+        },
+        {
+          "id": "hand.krauter",
+          "value": "hand: Kräuter"
         },
         {
           "id": "nr",
@@ -607,7 +615,7 @@
         },
         {
           "id": "writing-mat.pencil3",
-          "value": "writing material: pencil 3 (TODO)"
+          "value": "writing material: pencil 3 (grey)"
         }
       ]
     },

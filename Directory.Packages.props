@@ -60,8 +60,8 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.6.6" />
     <PackageVersion Include="Proteus.Rendering" Version="1.0.4" />
-    <PackageVersion Include="Radzen.Blazor" Version="10.2.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.13.20" />
+    <PackageVersion Include="Radzen.Blazor" Version="10.2.3" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.13.22" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
