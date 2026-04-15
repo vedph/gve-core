@@ -616,6 +616,10 @@
         {
           "id": "writing-mat.pencil3",
           "value": "writing material: pencil 3 (pink)"
+        },
+        {
+          "id": "writing-mat.pencil4",
+          "value": "writing material: pencil 4 (red)"
         }
       ]
     },
