@@ -26,9 +26,6 @@
 
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Version>5.0.4</Version>
-		<FileVersion>5.0.4</FileVersion>
-		<AssemblyVersion>5.0.4</AssemblyVersion>
 	</PropertyGroup>
 	
 	<ItemGroup>
