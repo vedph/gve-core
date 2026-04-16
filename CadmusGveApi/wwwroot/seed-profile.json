@@ -1127,6 +1127,10 @@
           "value": "epigram number"
         },
         {
+          "id": "sheet-nr",
+          "value": "sheet number"
+        },
+        {
           "id": "page-nr",
           "value": "page number"
         },
@@ -1176,36 +1180,56 @@
           "value": "black"
         },
         {
-          "id": "r_fore-color:dark-brown",
-          "value": "dark brown"
+          "id": "r_fore-color:blue",
+          "value": "blue"
+        },
+        {
+          "id": "r_fore-color:brown",
+          "value": "brown"
+        },
+        {
+          "id": "r_fore-color:darkgreen",
+          "value": "darkgreen"
+        },
+        {
+          "id": "r_fore-color:lightblue",
+          "value": "lightblue"
         },
         {
           "id": "r_fore-color:orange",
           "value": "orange"
         },
         {
-          "id": "r_fore-color:light-orange",
-          "value": "light orange"
-        },
-        {
-          "id": "r_fore-color:red",
-          "value": "red"
+          "id": "r_fore-color:pink",
+          "value": "pink"
         },
         {
           "id": "r_back-color:black",
           "value": "black"
         },
         {
-          "id": "r_back-color:dark-brown",
-          "value": "dark brown"
+          "id": "r_back-color:blue",
+          "value": "blue"
+        },
+        {
+          "id": "r_back-color:brown",
+          "value": "brown"
+        },
+        {
+          "id": "r_back-color:darkgreen",
+          "value": "darkgreen"
+        },
+        {
+          "id": "r_back-color:lightblue",
+          "value": "lightblue"
         },
         {
           "id": "r_back-color:orange",
           "value": "orange"
         },
         {
-          "id": "r_back-color:light-orange",
-          "value": "light orange"
+          "id": "r_back-color:pink",
+          "value": "pink"
         },
         {
           "id": "r_back-color:red",
@@ -1456,12 +1480,42 @@
           "value": "1"
         }
       ]
+    },
+    {
+      "id": "snapshot-source-ids@en",
+      "entries": [
+        {
+          "id": "goethe",
+          "value": "Goethe"
+        },
+        {
+          "id": "riemer",
+          "value": "Riemer"
+        },
+        {
+          "id": "geist",
+          "value": "Geist"
+        },
+        {
+          "id": "krauter",
+          "value": "Kräuter"
+        }
+      ]
+    },
+    {
+      "id": "snapshot-source-types@en",
+      "entries": [
+        {
+          "id": "hand",
+          "value": "hand"
+        }
+      ]
     }
   ],
   "seed": {
     "options": {
       "seed": 1,
-      "users": ["zeus"],
+      "users": [ "zeus" ],
       "partRoles": [],
       "fragmentRoles": []
     },
@@ -1476,7 +1530,7 @@
         "id": "seed.it.vedph.categories",
         "options": {
           "maxCategoriesPerItem": 3,
-          "categories": ["letter", "postcard"]
+          "categories": [ "letter", "postcard" ]
         }
       },
       {
@@ -1488,8 +1542,8 @@
       {
         "id": "seed.it.vedph.comment",
         "options": {
-          "languages": ["en", "it"],
-          "categories": ["letter", "postcard"]
+          "languages": [ "en", "it" ],
+          "categories": [ "letter", "postcard" ]
         }
       },
       {

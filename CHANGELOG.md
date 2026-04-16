@@ -1,5 +1,8 @@
 ﻿# History
 
+- 2026-04-16:
+	- updated packages.
+	- added `thesauri snapshot-source-ids`, `snapshot-source-types` and updated `snapshot-feat-names` and `snapshot-feat-values` refactoring colors and adding sheet number for foliation.
 - 2026-04-15: added red pencil.
 - 2026-04-13: updated packages.
 - 2026-04-08: `categories:content` thesaurus entries.
