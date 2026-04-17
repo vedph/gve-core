@@ -1151,6 +1151,10 @@
           "value": "page beginning"
         },
         {
+          "id": "script",
+          "value": "script"
+        },
+        {
           "id": "reason",
           "value": "reason"
         },
@@ -1466,6 +1470,22 @@
         {
           "id": "r_h-solid:1",
           "value": "solid on"
+        },
+        {
+          "id": "script:cursive-la",
+          "value": "Latin cursive"
+        },
+        {
+          "id": "script:cursive-de",
+          "value": "German cursive"
+        },
+        {
+          "id": "script:blackletter",
+          "value": "Blackletter"
+        },
+        {
+          "id": "script:antiqua",
+          "value": "Antiqua"
         },
         {
           "id": "reason:confirmation",

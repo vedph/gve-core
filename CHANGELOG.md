@@ -2,7 +2,7 @@
 
 - 2026-04-17:
   - updated packages.
-  - added more hands to thesauri.
+  - added scripts to features and more hands in thesauri.
 
 ### 5.0.5
 
