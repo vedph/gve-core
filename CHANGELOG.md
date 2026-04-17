@@ -5,7 +5,7 @@
 - 2026-04-16:
 	- updated packages.
 	- updated settings for hints to be equal to those in gve-snapshot-rendition `h5-48.settings.json`.
-	- added `thesauri snapshot-source-ids`, `snapshot-source-types` and updated `snapshot-feat-names` and `snapshot-feat-values` refactoring colors and adding sheet number for foliation.
+	- added thesauri `snapshot-source-ids`, `snapshot-source-types` and updated `snapshot-feat-names` and `snapshot-feat-values` refactoring colors and adding sheet number for foliation.
 	- fixed unified versioning.
 - 2026-04-15: added red pencil.
 - 2026-04-13: updated packages.
