@@ -558,6 +558,18 @@
           "value": "hand: Kräuter"
         },
         {
+          "id": "hand.schiller",
+          "value": "hand: Schilller"
+        },
+        {
+          "id": "hand.editor1",
+          "value": "hand: Editor 1"
+        },
+        {
+          "id": "hand.editor2",
+          "value": "hand: Editor 2"
+        },
+        {
           "id": "nr",
           "value": "numbering"
         },
@@ -1499,6 +1511,18 @@
         {
           "id": "krauter",
           "value": "Kräuter"
+        },
+        {
+          "id": "schiller",
+          "value": "Schiller"
+        },
+        {
+          "id": "editor1",
+          "value": "Editor 1"
+        },
+        {
+          "id": "editor2",
+          "value": "Editor 2"
         }
       ]
     },

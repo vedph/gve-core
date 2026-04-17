@@ -1,5 +1,9 @@
 ﻿# History
 
+- 2026-04-17:
+  - updated packages.
+  - added more hands to thesauri.
+
 ### 5.0.5
 
 - 2026-04-16:
