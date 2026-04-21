@@ -498,6 +498,10 @@
           "value": "type: index"
         },
         {
+          "id": "type.note",
+          "value": "type: note"
+        },
+        {
           "id": "lang",
           "value": "language"
         },
