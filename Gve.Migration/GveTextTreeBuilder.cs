@@ -729,12 +729,10 @@ public sealed class GveTextTreeBuilder
     private static string? GetVersionFromTag(ChainOperationContext<char> context,
         string tag)
     {
-        // we allow for null for v0
-        ChainOperationContextStep? step = context.Steps.FirstOrDefault(
-            s => s.OutputTag == tag);
-
-        return step?.FeatureSet.Features.FirstOrDefault(
-            f => f.Name == OperationFeature.F_VERSION)?.Value;
+        // Global features are snapshotted per version in Chain.GlobalFeatures.
+        // v0 has no step (it is the base text), so GlobalFeatures["v0"] is empty.
+        return context.Chain.GlobalFeatures.Get(tag)
+            .FirstOrDefault(f => f.Name == OperationFeature.F_VERSION)?.Value;
     }
 
     private static TreeNode<ExportedSegment> CreateSubTree(

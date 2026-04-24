@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Gve.Text.DTO;
@@ -35,9 +35,11 @@ public class CharChainNode
     public string SourceTag { get; set; } = "";
 
     /// <summary>
-    /// The node features.
+    /// The features for this node, grouped by version tag. Each entry is the
+    /// list of features that apply to this node at that version. Null when the
+    /// node has no features in any version.
     /// </summary>
-    public IList<Feature>? Features { get; set; }
+    public IDictionary<string, IList<Feature>>? Features { get; set; }
 
     /// <summary>
     /// Clones this instance.
@@ -45,6 +47,14 @@ public class CharChainNode
     /// <returns>New instance.</returns>
     public CharChainNode Clone()
     {
+        Dictionary<string, IList<Feature>>? feats = null;
+        if (Features != null)
+        {
+            feats = [];
+            foreach (KeyValuePair<string, IList<Feature>> kvp in Features)
+                feats[kvp.Key] = [.. kvp.Value];
+        }
+
         return new CharChainNode
         {
             Id = Id,
@@ -52,7 +62,7 @@ public class CharChainNode
             Label = Label,
             Data = Data,
             SourceTag = SourceTag,
-            Features = Features != null ? new List<Feature>(Features) : null
+            Features = feats
         };
     }
 
@@ -64,7 +74,9 @@ public class CharChainNode
     /// </returns>
     public override string ToString()
     {
-        return $"#{Id}={Label} ({string.Join(", ",
-            Features?.Select(f => f.ToString()) ?? [])})";
+        string feats = Features == null ? ""
+            : string.Join("; ", Features.Select(kvp =>
+                $"{kvp.Key}:[{string.Join(", ", kvp.Value)}]"));
+        return $"#{Id}={Label} ({feats})";
     }
 }

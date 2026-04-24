@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Gve.Text;
@@ -6,8 +6,8 @@ namespace Gve.Text;
 /// <summary>
 /// A step in a <see cref="ChainOperationContext{T}"/>. This contains metadata
 /// resulting after executing a single operation in the chain: the operation
-/// metadata, its input and output version tags, and the features accumulated up
-/// to this step, both for the whole context and for specific nodes.
+/// metadata, its input and output version tags, the result text, and the IDs
+/// of nodes referenced by the operation.
 /// </summary>
 public class ChainOperationContextStep
 {
@@ -32,11 +32,6 @@ public class ChainOperationContextStep
     public string? Result { get; set; }
 
     /// <summary>
-    /// Gets or sets the features emitted up to this step.
-    /// </summary>
-    public ChainOperationContextFeats FeatureSet { get; set; }
-
-    /// <summary>
     /// Gets or sets the reference node IDs. These are the ID of nodes in the
     /// chain that are involved in the operation which generates this step.
     /// For instance, a delete operation would have the deleted node ID(s) as
@@ -51,17 +46,15 @@ public class ChainOperationContextStep
     /// <param name="operation">The operation.</param>
     /// <param name="inputTag">The input tag.</param>
     /// <param name="outputTag">The output tag.</param>
-    /// <param name="features">The features.</param>
     /// <param name="refNodeIds">The reference node IDs.</param>
     /// <exception cref="ArgumentNullException">operation or tags</exception>
     public ChainOperationContextStep(OperationMetadata operation,
-        string inputTag, string outputTag, ChainOperationContextFeats features,
+        string inputTag, string outputTag,
         IList<int> refNodeIds)
     {
         Operation = operation ?? throw new ArgumentNullException(nameof(operation));
         InputTag = inputTag ?? throw new ArgumentNullException(nameof(inputTag));
         OutputTag = outputTag ?? throw new ArgumentNullException(nameof(outputTag));
-        FeatureSet = features ?? throw new ArgumentNullException(nameof(features));
         RefNodeIds = refNodeIds ?? throw new ArgumentNullException(nameof(refNodeIds));
     }
 

@@ -186,8 +186,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
     }
 
     [Fact]
@@ -242,8 +240,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
     }
 
     [Fact]
@@ -294,8 +290,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
     }
 
     [Fact]
@@ -358,8 +352,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(2, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
@@ -442,8 +434,6 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]

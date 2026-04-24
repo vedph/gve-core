@@ -248,27 +248,13 @@ public class TreeBuilderTest
         Assert.Equal(2, y);
         Assert.Equal(1, x);
         // A has all versions
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v6"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v5"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v4"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v3"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v2"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v1"));
-        Assert.True(a.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v0"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v6"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v5"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v4"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v3"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v2"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v1"));
+        Assert.True(TreeBuilder.GetTagFeatures(a.Data!).Any(f => f.Value == "v0"));
 
         // 2.1 A has 1 child x (level 3)
         Assert.Single(a.Children);
@@ -284,12 +270,8 @@ public class TreeBuilderTest
         Assert.Null(x4.Data);
         Assert.Equal(4, x4.GetY());
         // 4.1 B has v6 v3
-        Assert.True(b.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v6"));
-        Assert.True(b.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v3"));
+        Assert.True(TreeBuilder.GetTagFeatures(b.Data!).Any(f => f.Value == "v6"));
+        Assert.True(TreeBuilder.GetTagFeatures(b.Data!).Any(f => f.Value == "v3"));
 
         // 4.1 B has child x (level 5)
         Assert.Single(b.Children);
@@ -310,13 +292,9 @@ public class TreeBuilderTest
         Assert.Equal('D', d6.Data!.Data);
         Assert.False(d6.HasChildren);
         // C6 has v6
-        Assert.True(c6.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v6"));
+        Assert.True(TreeBuilder.GetTagFeatures(c6.Data!).Any(f => f.Value == "v6"));
         // D6 has v6
-        Assert.True(d6.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v6"));
+        Assert.True(TreeBuilder.GetTagFeatures(d6.Data!).Any(f => f.Value == "v6"));
 
         // 6.2 D3 has child C3 with no children
         Assert.Single(d3.Children);
@@ -324,13 +302,9 @@ public class TreeBuilderTest
         Assert.Equal('C', c3.Data!.Data);
         Assert.False(c3.HasChildren);
         // D3 has v3
-        Assert.True(d3.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v3"));
+        Assert.True(TreeBuilder.GetTagFeatures(d3.Data!).Any(f => f.Value == "v3"));
         // C3 has v3
-        Assert.True(c3.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v3"));
+        Assert.True(TreeBuilder.GetTagFeatures(c3.Data!).Any(f => f.Value == "v3"));
 
         // 4.2 x (level 4) has 2 children: x (level 5), R
         Assert.Equal(2, x4.Children.Count);
@@ -341,12 +315,8 @@ public class TreeBuilderTest
         Assert.Equal('R', r.Data!.Data);
 
         // 5.2 R has V1 v0
-        Assert.True(r.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v1"));
-        Assert.True(r.Data.Features?.Any(f =>
-            f.Name == TreeBuilder.TAG_FEATURE_NAME &&
-            f.Value == "v0"));
+        Assert.True(TreeBuilder.GetTagFeatures(r.Data!).Any(f => f.Value == "v1"));
+        Assert.True(TreeBuilder.GetTagFeatures(r.Data!).Any(f => f.Value == "v0"));
 
         // R has child x (level 6)
         Assert.Single(r.Children);

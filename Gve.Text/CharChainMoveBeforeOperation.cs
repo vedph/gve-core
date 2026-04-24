@@ -82,8 +82,7 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation,
         UpdateContext(context, inputTag, outputTag, nodes, nodes);
 
         // add segment features to added nodes
-        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context,
-            synchStep: true);
+        AddNodeTraceFeatures(inputTag, outputTag, true, nodes, context);
     }
 
     /// <summary>

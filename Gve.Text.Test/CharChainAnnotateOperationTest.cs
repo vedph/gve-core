@@ -76,8 +76,6 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Empty(context.Steps[0].FeatureSet.NodeFeatures);
     }
 
     [Fact]
@@ -153,8 +151,5 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        // 2 input and 2 output nodes with features
-        Assert.Equal(4, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 }

@@ -14,6 +14,7 @@
     <File Path="Dockerfile-gve" />
     <File Path="nuget.config" />
     <File Path="README.md" />
+    <File Path="REFACTOR.md" />
   </Folder>
   <Project Path="Cadmus.Gve.Parts.Test/Cadmus.Gve.Parts.Test.csproj" />
   <Project Path="Cadmus.Gve.Parts/Cadmus.Gve.Parts.csproj" />

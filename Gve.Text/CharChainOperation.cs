@@ -416,9 +416,12 @@ public abstract partial class CharChainOperation(OperationType type) :
         context.CopyTaggedNodeFeatures(inputTag, outputTag);
         UpdateContextFeatures(outputTag, context, targetNodes);
 
+        // snapshot global features for this version
+        context.Chain.GlobalFeatures.Set(outputTag, context.Features);
+
         // add this operation to the context's steps
         context.Steps.Add(new ChainOperationContextStep(
-            this, inputTag, outputTag, new ChainOperationContextFeats(context),
+            this, inputTag, outputTag,
             [.. refNodes.Select(n => n.Id)])
         {
             Result = GetVersionString(context, outputTag)
@@ -505,14 +508,9 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// <param name="context">The context.</param>
     /// <param name="second">True to add features referring to the second of
     /// two segments. This is used only for swap.</param>
-    /// <param name="synchStep">if set to <c>true</c>, synchronize the step's
-    /// feature set with the added features. This is required when this method
-    /// is called after the step has been created in executing the operation.
-    /// </param>
     protected void AddNodeTraceFeatures(string inputTag, string outputTag,
         bool afterExecution, IList<ChainNode<char>> nodes,
-        ChainOperationContext<char> context, bool second = false,
-        bool synchStep = false)
+        ChainOperationContext<char> context, bool second = false)
     {
         ArgumentNullException.ThrowIfNull(inputTag);
         ArgumentNullException.ThrowIfNull(outputTag);
@@ -544,21 +542,6 @@ public abstract partial class CharChainOperation(OperationType type) :
                 inputTag, outputTag,
                 i + 1);
             context.UpdateTraceFeatures(f, tag, nodes[i]);
-
-            // synchronize step feature set if requested - this can be required
-            // when this function is called after the step has been created
-            // (thus cloning its feature set) in executing the operation
-            if (synchStep)
-            {
-                string key = $"{tag}_{nodes[i].Id}";
-                if (!context.Steps[^1].FeatureSet.NodeFeatures.TryGetValue(key,
-                    out List<OperationFeature>? list))
-                {
-                    list = [];
-                    context.Steps[^1].FeatureSet.NodeFeatures[key] = list;
-                }
-                list.Add(f);
-            }
         }
 
         AddMoreNodeTraceFeatures(inputTag, outputTag, afterExecution, nodes,

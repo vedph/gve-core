@@ -29,6 +29,14 @@ public class ChainNode<T>
     public string SourceTag { get; set; } = "";
 
     /// <summary>
+    /// Gets the per-version features for this node. Each entry in this set
+    /// holds the features that apply to this node at a specific version.
+    /// This is populated by <see cref="ChainOperationContext{T}.SyncNodeFeaturesToChain"/>
+    /// after all operations have been executed.
+    /// </summary>
+    public OperationFeatureSet Features { get; } = new();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ChainNode{T}"/> class.
     /// </summary>
     public ChainNode()

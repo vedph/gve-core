@@ -149,50 +149,71 @@ public sealed class TextController : ControllerBase
             context.Chain.Reset(GetNodesFrom(model.Text));
             context.LastTag = "v0";
 
+            // record v0 global features (empty by definition for the base text)
+            context.Chain.GlobalFeatures.Set("v0", []);
+
             // execute all the operations in their order
-            List<string> tags = [];
             foreach (CharChainOperation op in operations)
-            {
                 op.Execute(context);
-                tags.Add(context.LastTag);
+
+            // populate each chain node's per-version features
+            context.SyncNodeFeaturesToChain();
+
+            // all distinct tags in version order (includes v0)
+            IList<string> allTags = context.Chain.GetDistinctTags();
+
+            // build nodes list: all chain nodes with their features
+            List<CharChainNode> nodes = [];
+            foreach (ChainNode<char> chainNode in context.Chain.Nodes)
+            {
+                // collect per-version features from the node's FeatureSet
+                Dictionary<string, IList<Feature>>? feats = null;
+                foreach (string tag in chainNode.Features.Tags)
+                {
+                    IList<OperationFeature> tagFeats = chainNode.Features.Get(tag);
+                    if (tagFeats.Count > 0)
+                    {
+                        feats ??= [];
+                        feats[tag] = [.. tagFeats.Cast<Feature>()];
+                    }
+                }
+
+                nodes.Add(new CharChainNode
+                {
+                    Id = chainNode.Id,
+                    Label = chainNode.Label,
+                    Data = chainNode.Data,
+                    SourceTag = chainNode.SourceTag.Length == 0
+                        ? "v0" : chainNode.SourceTag,
+                    Features = feats
+                });
             }
 
-            // build result
+            // build version→node-id-sequence map (includes v0)
+            Dictionary<string, IList<int>> versionNodeIds = [];
+            foreach (string tag in allTags)
+            {
+                versionNodeIds[tag] = [.. context.Chain.GetTagNodes(tag)
+                    .Select(n => n.Id)];
+            }
+
+            // build global features map from chain (includes v0)
+            Dictionary<string, IList<OperationFeature>> globalFeatures = [];
+            foreach (string tag in allTags)
+            {
+                globalFeatures[tag] = context.Chain.GlobalFeatures.Get(tag);
+            }
+
             CharChainResultModel result = new()
             {
-                Steps = [..context.Steps
-                    .Select(s => new ChainOperationContextStepDto(s))],
+                Steps = [.. context.Steps.Select(s =>
+                    new ChainOperationContextStepDto(s))],
                 ChainDump = context.Chain.Dump(),
-                ChainTags = context.Chain.GetDistinctTags(),
+                ChainTags = allTags,
+                Nodes = nodes,
+                VersionNodeIds = versionNodeIds,
+                GlobalFeatures = globalFeatures,
             };
-
-            // for each version in build order (distinct ensures that we
-            // have no duplicates, even if this is not expected here)
-            tags = [.. tags.Distinct()];
-            foreach (string tag in tags)
-            {
-                // get its nodes
-                IList<ChainNode<char>> nodes = context.Chain.GetTagNodes(tag);
-                result.TaggedNodes[tag] = [];
-
-                // create their models with injected features from context
-                int i = 0;
-                foreach (ChainNode<char> node in nodes)
-                {
-                    IList<Feature> feats = context.GetNodeFeatures(node.Id, tag);
-                    CharChainNode m = new()
-                    {
-                        Id = node.Id,
-                        Index = i++,
-                        Label = node.Label,
-                        Data = node.Data,
-                        SourceTag = node.SourceTag.Length == 0
-                            ? "v0" : node.SourceTag,
-                        Features = feats.Count == 0? null : feats
-                    };
-                    result.TaggedNodes[tag].Add(m);
-                }
-            }
 
             return new ResultWrapperModel<CharChainResultModel>(result);
         }

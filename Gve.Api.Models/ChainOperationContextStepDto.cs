@@ -1,13 +1,13 @@
-﻿using Gve.Text;
+using Gve.Text;
 using System;
 using System.Collections.Generic;
 
 namespace Gve.Api.Models;
 
 /// <summary>
-/// Represents a data transfer object for a single step within a chain operation
-/// context, containing operation details, input and output tags, result information,
-/// feature set, and reference node identifiers.
+/// Data transfer object for a single step within a chain operation context.
+/// Records the operation metadata, input/output version tags, the result text,
+/// and the IDs of nodes referenced by the operation.
 /// </summary>
 public sealed class ChainOperationContextStepDto
 {
@@ -22,31 +22,28 @@ public sealed class ChainOperationContextStepDto
     public string InputTag { get; }
 
     /// <summary>
-    /// Gets or sets the output tag.
+    /// Gets the output tag.
     /// </summary>
-    public string OutputTag { get; set; }
+    public string OutputTag { get; }
 
     /// <summary>
-    /// Gets or sets a string synthetically representing the result.
+    /// Gets a string synthetically representing the result (the text produced
+    /// by this operation).
     /// </summary>
-    public string? Result { get; set; }
+    public string? Result { get; }
 
     /// <summary>
-    /// Gets or sets the features emitted up to this step.
+    /// Gets the reference node IDs (the nodes involved in this operation,
+    /// e.g. deleted nodes for a delete operation).
     /// </summary>
-    public ChainOperationContextFeats FeatureSet { get; set; }
+    public IList<int> RefNodeIds { get; }
 
     /// <summary>
-    /// Gets or sets the reference node IDs.
-    /// </summary>
-    public IList<int> RefNodeIds { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ChainOperationContextStep"/>
-    /// class.
+    /// Initializes a new instance of the <see cref="ChainOperationContextStepDto"/>
+    /// class from a source step.
     /// </summary>
     /// <param name="source">The source step.</param>
-    /// <exception cref="ArgumentNullException">step</exception>
+    /// <exception cref="ArgumentNullException">source</exception>
     public ChainOperationContextStepDto(ChainOperationContextStep source)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -56,18 +53,11 @@ public sealed class ChainOperationContextStepDto
         InputTag = source.InputTag;
         OutputTag = source.OutputTag;
         Result = source.Result;
-        FeatureSet = source.FeatureSet;
         RefNodeIds = source.RefNodeIds;
     }
 
     /// <summary>
     /// Converts to string.
     /// </summary>
-    /// <returns>
-    /// A <see cref="string" /> that represents this instance.
-    /// </returns>
-    public override string ToString()
-    {
-        return $"[{InputTag}:{OutputTag}] {Operation}";
-    }
+    public override string ToString() => $"[{InputTag}:{OutputTag}] {Operation}";
 }

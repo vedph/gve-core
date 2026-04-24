@@ -52,6 +52,15 @@ public class Chain<T>
     /// </summary>
     public IReadOnlyList<ChainLink<T>> Links => _links;
 
+    /// <summary>
+    /// Gets the per-version global features for this chain. Each entry holds
+    /// a snapshot of the accumulated global features at the end of that version.
+    /// This is populated in <c>CharChainOperation.UpdateContext</c> after each
+    /// operation, and the v0 entry is set by <c>TextController.RunOperations</c>
+    /// after calling <see cref="Reset"/>.
+    /// </summary>
+    public OperationFeatureSet GlobalFeatures { get; } = new();
+
     #region ID
     /// <summary>
     /// Resets the identifier to the specified seed value. This means that the
@@ -1775,6 +1784,7 @@ public class Chain<T>
     {
         _nodes.Clear();
         _links.Clear();
+        GlobalFeatures.Clear();
     }
 
     /// <summary>

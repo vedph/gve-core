@@ -86,8 +86,6 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Single(context.Steps[0].FeatureSet.NodeFeatures);
     }
 
     [Fact]
@@ -153,8 +151,6 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
-        Assert.Single(context.Steps[0].FeatureSet.Features);
-        Assert.Equal(3, context.Steps[0].FeatureSet.NodeFeatures.Count);
     }
 
     [Fact]
@@ -217,15 +213,8 @@ public sealed class CharChainMoveAfterOperationTest
 
         // context steps
         Assert.Single(context.Steps);
-        ChainOperationContextStep step = context.Steps[0];
-        Assert.Equal("v0", step.InputTag);
-        Assert.Equal("v1", step.OutputTag);
-        Assert.Same(op, step.Operation);
-        Assert.Single(step.FeatureSet.Features);
-
-        Assert.Equal(3, step.FeatureSet.NodeFeatures.Count);
-        Assert.Single(step.FeatureSet.NodeFeatures["v0_3"]);
-        Assert.Single(step.FeatureSet.NodeFeatures["v0_5"]);
-        Assert.Equal(2, step.FeatureSet.NodeFeatures["v1_3"].Count);
+        Assert.Equal("v0", context.Steps[0].InputTag);
+        Assert.Equal("v1", context.Steps[0].OutputTag);
+        Assert.Same(op, context.Steps[0].Operation);
     }
 }

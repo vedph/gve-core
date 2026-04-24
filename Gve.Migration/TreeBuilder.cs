@@ -21,6 +21,29 @@ public static class TreeBuilder
     /// </summary>
     public const string TAG_FEATURE_NAME = "_tag";
 
+    private static void AddTagFeature(CharChainNode node, string tag)
+    {
+        node.Features ??= new Dictionary<string, IList<Feature>>();
+        if (!node.Features.TryGetValue(TAG_FEATURE_NAME,
+            out IList<Feature>? tagFeats))
+        {
+            tagFeats = [];
+            node.Features[TAG_FEATURE_NAME] = tagFeats;
+        }
+        if (!tagFeats.Any(f => f.Value == tag))
+            tagFeats.Add(new Feature(TAG_FEATURE_NAME, tag, FeatureSetPolicy.Multiple));
+    }
+
+    /// <summary>
+    /// Gets the version-tag features stored in <paramref name="node"/> by this
+    /// builder (i.e. the list stored under the <see cref="TAG_FEATURE_NAME"/> key).
+    /// </summary>
+    public static IList<Feature> GetTagFeatures(CharChainNode node)
+    {
+        return node.Features?.TryGetValue(TAG_FEATURE_NAME,
+            out IList<Feature>? feats) == true ? feats : [];
+    }
+
     private static List<CharChainNode> BuildVersionNodes(
          IList<ChainNode<char>> nodes,
          ChainOperationContext<char> context,
@@ -31,6 +54,8 @@ public static class TreeBuilder
         foreach (ChainNode<char> node in nodes)
         {
             IList<Feature> feats = context.GetNodeFeatures(node.Id, tag);
+            Dictionary<string, IList<Feature>>? dict = null;
+            if (feats.Count > 0) dict = new() { { tag, feats } };
             CharChainNode m = new()
             {
                 Id = node.Id,
@@ -38,7 +63,7 @@ public static class TreeBuilder
                 Label = node.Label,
                 Data = node.Data,
                 SourceTag = node.SourceTag,
-                Features = feats.Count == 0 ? null : feats
+                Features = dict
             };
             taggedNodes.Add(m);
         }
@@ -99,16 +124,7 @@ public static class TreeBuilder
     {
         while (node != null)
         {
-            if (node.Data != null)
-            {
-                node.Data.Features ??= [];
-                if (!node.Data.Features.Any(f =>
-                    f.Name == TAG_FEATURE_NAME && f.Value == tag))
-                {
-                    node.Data.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                        FeatureSetPolicy.Multiple));
-                }
-            }
+            if (node.Data != null) AddTagFeature(node.Data, tag);
             node = node.Parent;
         }
     }
@@ -127,9 +143,7 @@ public static class TreeBuilder
 
         // create first node
         CharChainNode firstNode = nodes[startIndex].Clone();
-        firstNode.Features ??= [];
-        firstNode.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-            FeatureSetPolicy.Multiple));
+        AddTagFeature(firstNode, tag);
         TreeNode<CharChainNode> branch = new(firstNode);
 
         // add remaining nodes
@@ -137,9 +151,7 @@ public static class TreeBuilder
         for (int i = startIndex + 1; i < nodes.Count; i++)
         {
             CharChainNode node = nodes[i].Clone();
-            node.Features ??= [];
-            node.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                FeatureSetPolicy.Multiple));
+            AddTagFeature(node, tag);
             TreeNode<CharChainNode> next = new(node);
             current.AddChild(next);
             current = next;
@@ -269,9 +281,7 @@ public static class TreeBuilder
                 for (int i = matchLength; i < versionNodes.Count; i++)
                 {
                     CharChainNode node = versionNodes[i].Clone();
-                    node.Features ??= [];
-                    node.Features.Add(new Feature(TAG_FEATURE_NAME, tag,
-                        FeatureSetPolicy.Multiple));
+                    AddTagFeature(node, tag);
 
                     TreeNode<CharChainNode> newNode = new(node);
                     currentNode.AddChild(newNode);
@@ -304,11 +314,9 @@ public static class TreeBuilder
 
         root.Traverse(node =>
         {
-            if (node.Data?.Features != null)
+            if (node.Data != null)
             {
-                foreach (string tag in node.Data.Features
-                    .Where(f => f.Name == TAG_FEATURE_NAME)
-                    .Select(f => f.Value!))
+                foreach (string tag in GetTagFeatures(node.Data).Select(f => f.Value!))
                 {
                     if (!versions.ContainsKey(tag))
                         versions[tag] = new StringBuilder();
@@ -348,12 +356,8 @@ public static class TreeBuilder
 
             if (node.Data != null)
             {
-                string tags = node.Data.Features != null
-                    ? string.Join(" ", node.Data.Features
-                        .Where(f => f.Name == TAG_FEATURE_NAME)
-                        .Select(f => f.Value)
-                        .Order())
-                    : "";
+                string tags = string.Join(" ",
+                    GetTagFeatures(node.Data).Select(f => f.Value).Order());
                 sb.AppendLine(tags.Length > 0
                     ? $"  {ids[node]} [label=\"{node.Data.Data}\", " +
                       $"color=\"#c0c0f0\", style=\"filled\", xlabel=\"{tags}\"];"

@@ -67,6 +67,27 @@ public class ChainOperationContext<T> : ChainOperationContextFeats
     }
 
     /// <summary>
+    /// Populates each chain node's <see cref="ChainNode{T}.Features"/> from
+    /// the context's <see cref="ChainOperationContextFeats.NodeFeatures"/>
+    /// dictionary. Call this once after all operations have been executed.
+    /// The context's internal storage remains intact so that other consumers
+    /// (e.g. migration builders) can still read from it directly.
+    /// </summary>
+    public void SyncNodeFeaturesToChain()
+    {
+        foreach (KeyValuePair<string, List<OperationFeature>> kvp in NodeFeatures)
+        {
+            // key format: "tag_nodeId"
+            int underscore = kvp.Key.LastIndexOf('_');
+            string tag = kvp.Key[..underscore];
+            int nodeId = int.Parse(kvp.Key.AsSpan(underscore + 1));
+
+            ChainNode<T>? node = Chain.FindNode(nodeId);
+            node?.Features.Set(tag, kvp.Value);
+        }
+    }
+
+    /// <summary>
     /// Gets the deleted nodes present in the specified version.
     /// </summary>
     /// <param name="tag">The version tag.</param>
