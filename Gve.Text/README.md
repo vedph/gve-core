@@ -144,3 +144,8 @@ I would rather suggest to store features in a different way:
 
 - node-specific features in the nodes themselves. A node once added stays in the chain forever, so its instance can accumulate all the features for it. We cannot just use a list, because features can be added, removed, or modified after each operation. So we use a dictionary of lists of features, keyed by version tag. This still duplicates features inherited from previous operations at each version, and this is ok because we want different instances so that values are preserved from operation to operation; but it's much more compact than multiplying this duplication for each step.
 - global features in the chain itself. Here too we would have a dictionary keyed by version.
+
+This implies:
+
+- removing `ChainOperationContextStep.FeatureSet`.
+- adding `Features`  as a `Dictionary<string, List<OperationFeature>>` to both `ChainNode<T>` and `Chain<T>`. Probably, it will be convenient to move logic related to adding/removing features to a centralized class and wrap this dictionary in it, so we can centralize it.
