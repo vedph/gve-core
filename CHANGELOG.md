@@ -1,5 +1,8 @@
 ﻿# History
 
+- 2026-04-24:
+  - thesauri.
+  - updated packages.
 - 2026-04-17:
   - updated packages.
   - added scripts to features and more hands in thesauri.

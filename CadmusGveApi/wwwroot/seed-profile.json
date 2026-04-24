@@ -1224,6 +1224,10 @@
           "value": "pink"
         },
         {
+          "id": "r_fore-color:red",
+          "value": "red"
+        },
+        {
           "id": "r_back-color:black",
           "value": "black"
         },
