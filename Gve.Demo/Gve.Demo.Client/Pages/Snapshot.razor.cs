@@ -239,17 +239,23 @@ public partial class Snapshot
         DeletedChars = [..nodes.Select(n => GetCharModel(n, 0))];
     }
 
+    private Dictionary<string, List<OperationFeature>> GetAllNodeFeatures()
+        => _context?.NodeFeatures ?? [];
+
     private void RunOperations()
     {
         _context = new();
         _context.Chain.AppendRange("", "v0", GetNodesFrom(Text));
         _context.LastTag = "v0";
+        _context.Chain.GlobalFeatures.Set("v0", []);
 
         foreach (CharChainOperation op in Operations)
         {
             op.NoTraceFeatures = NoTraceFeatures;
             op.Execute(_context);
         }
+
+        _context.SyncNodeFeaturesToChain();
 
         ChainTags = _context.Chain.GetDistinctTags();
         TaggedTexts = [.. ChainTags.Select((t, i) => new Tuple<string, string>(

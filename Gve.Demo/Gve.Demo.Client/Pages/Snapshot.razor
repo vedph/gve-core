@@ -199,11 +199,11 @@
                         </RadzenDataGridColumn>
 
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="FeatureSet.Features"
-                                              Title="c-features">
+                                              Title="c-features"
+                                              Filterable="false">
                             <Template>
                                 <ul>
-                                    @foreach (var f in context.FeatureSet.Features)
+                                    @foreach (var f in (_context?.Chain.GlobalFeatures.Get(context.OutputTag) ?? []))
                                     {
                                         <li>
                                             <span class="@(f.Name == "version" ? "feature-important" : "")">@f</span>
@@ -213,13 +213,13 @@
                             </Template>
                         </RadzenDataGridColumn>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="FeatureSet.NodeFeatures"
                                               Title="n-features"
                                               Filterable="false">
                             <Template>
                                 <div class="feats rz-text-wrap">
-                                    <OpFeatureDictionaryView Features="context.FeatureSet.NodeFeatures"
-                                                             NodeGetter="@GetNodeLabel" />
+                                    <OpFeatureDictionaryView
+                                        Features="@GetAllNodeFeatures()"
+                                        NodeGetter="@GetNodeLabel" />
                                 </div>
                             </Template>
                         </RadzenDataGridColumn>
