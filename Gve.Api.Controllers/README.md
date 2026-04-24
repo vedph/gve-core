@@ -15,9 +15,10 @@ This controller is used to manage text transformations via chains.
 
 The run operation returns a lot of redundant data (`CharChainResultModel`), which slows it down:
 
-- all the steps.
-- all the nodes for each version. This duplicates the nodes in each version just because they might have different features. Also, this is more difficult to consume because the returned nodes are only those used in the version. So, for instance the consumer cannot immediately see a node which was deleted.
+- `Steps`: all the steps, each with its full set of features, both for chain and for nodes.
+- `TaggedNodes`: all the nodes with their features extracted from steps, for each version. As each version contains only the nodes used for its text, this makes it difficult to access other nodes; for instance the consumer cannot immediately see a node which was deleted as it's no longer present in the version following its deletion.
 
-Suggestion: if we refactor `Gve.Text` as proposed there (features stored in nodes and in chain), we can return:
+Suggestion: if we refactor `Gve.Text` as proposed (features stored in nodes and in chain), we can return:
 
-- TODO
+- `Nodes`: all the nodes with their features (grouped by versions).
+- `TaggedNodes`: just return the sequence of node IDs for each version: e.g. v0 has node IDs 1,2,3; v1 has node IDs 1,3 (2 was deleted); etc. This provides the same functionality of `TaggedNodes` to build the effective sequence, but avoids a redundant copy of all the nodes for each version.

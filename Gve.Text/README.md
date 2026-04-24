@@ -148,4 +148,4 @@ I would rather suggest to store features in a different way:
 This implies:
 
 - removing `ChainOperationContextStep.FeatureSet`.
-- adding `Features`  as a `Dictionary<string, List<OperationFeature>>` to both `ChainNode<T>` and `Chain<T>`. Probably, it will be convenient to move logic related to adding/removing features to a centralized class (`FeatureSet`) and wrap this dictionary in it with all its utility API, so we can centralize it.
+- adding `FeatureSet` as a class wrapping a `Dictionary<string, List<OperationFeature>>` to both `ChainNode<T>` and `Chain<T>`. This class can also centralize logic related to adding/removing features.
