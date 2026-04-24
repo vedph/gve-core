@@ -11,7 +11,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>ByQoABAMQABQAHEEREhCiQXAAIMBSRIASIAAEgJIAWA=</HashCode>
+      <HashCode>ByQoABAMQABQBHEEREhCiQXAAMMBSRIASIAAEgJIA2A=</HashCode>
       <FileName>Chain.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -57,7 +57,7 @@
       <Method Name="UpdateContextFeatures" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AIBhAAAAQBAgAMQMAAAIAQAAAADCABgASQAgAIIRIEI=</HashCode>
+      <HashCode>AIBhCAAAQBAgAMQMAQAIAQAAAADCABgASAggAIIRIEI=</HashCode>
       <FileName>CharChainOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -67,7 +67,7 @@
       <Method Name="CharChainDeleteOperation" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAABAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>CharChainDeleteOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -88,25 +88,12 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAATIAAEAAAIAAAAAAABAAAAQAAQABAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAATIAAEAAAEAQAAAAABAAAAQAAQABAAAQBAAIAAAAA=</HashCode>
       <FileName>OperationMetadata.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Diplomatics" />
-    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Sources" />
     </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Gve.Text.OperationDiplomatics">
-    <Position X="13" Y="2.75" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAAAAAAAAAAACCAAAAAA=</HashCode>
-      <FileName>OperationDiplomatics.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="Gve.Text.OperationSource">
     <Position X="13" Y="0.5" Width="1.5" />
@@ -179,7 +166,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>hAABAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>hAABAAAAAAAAAAAEAAAAACAAAAAAAAAIAAQAAAAAAAA=</HashCode>
       <FileName>ChainOperationContext.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -215,7 +202,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAQAEAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAEAJAAAAQAEAAAABAARAAAABAAAAIIAAAAAAAAA=</HashCode>
       <FileName>ChainOperationContextFeats.cs</FileName>
     </TypeIdentifier>
   </Class>

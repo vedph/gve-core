@@ -9,7 +9,7 @@ namespace Gve.Text;
 /// <summary>
 /// The data context for a chain operation.
 /// </summary>
-/// <typeparam name="T">The type of chain node data.</typeparam>
+/// <typeparam name="T">The type of chain node payload data.</typeparam>
 public class ChainOperationContext<T> : ChainOperationContextFeats
 {
     /// <summary>

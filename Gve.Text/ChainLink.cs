@@ -5,7 +5,7 @@ namespace Gve.Text;
 /// <summary>
 /// A link between two nodes in a <see cref="Chain{T}"/>.
 /// </summary>
-/// <typeparam name="T">The node data type.</typeparam>
+/// <typeparam name="T">The node's payload data type.</typeparam>
 public class ChainLink<T>
 {
     /// <summary>

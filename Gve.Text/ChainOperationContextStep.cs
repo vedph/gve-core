@@ -37,7 +37,10 @@ public class ChainOperationContextStep
     public ChainOperationContextFeats FeatureSet { get; set; }
 
     /// <summary>
-    /// Gets or sets the reference node IDs.
+    /// Gets or sets the reference node IDs. These are the ID of nodes in the
+    /// chain that are involved in the operation which generates this step.
+    /// For instance, a delete operation would have the deleted node ID(s) as
+    /// its reference. Reference nodes are defined by each operation's type.
     /// </summary>
     public IList<int> RefNodeIds { get; set; }
 
