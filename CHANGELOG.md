@@ -2,7 +2,9 @@
 
 ### 6.0.0
 
-- 2026-04-25: ⚠️ [refactored core and API for features](REFACTOR.md).
+- 2026-04-25:
+  - ⚠️ [refactored core and API for features](REFACTOR.md).
+  - added to profile settings new hints: line-bottom, line-top, line-left, line-right, hamburger, hotdog.
 - 2026-04-24:
   - thesauri.
   - updated packages.
