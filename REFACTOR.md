@@ -1,5 +1,7 @@
 # GVE Refactoring Notes
 
+- 2026-04-25, version 6.0.0
+
 This document records all breaking and non-breaking changes introduced by the
 feature-storage and API-result refactoring after version 5.0.5.
 Frontend/consumer code must be updated accordingly.

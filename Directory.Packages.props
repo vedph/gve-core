@@ -4,22 +4,22 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- solution packages -->
-    <PackageVersion Include="Cadmus.Gve.Parts" Version="5.0.5" />
-    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="5.0.5" />
-    <PackageVersion Include="Cadmus.Gve.Services" Version="5.0.5" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="5.0.5" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="5.0.5" />
-    <PackageVersion Include="Cadmus.Gve.Api" Version="5.0.5" />
-    <PackageVersion Include="gve" Version="5.0.5" />
-    <PackageVersion Include="Gve.Api" Version="5.0.5" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="5.0.5" />
-    <PackageVersion Include="Gve.Api.Models" Version="5.0.5" />
-    <PackageVersion Include="GveDemo" Version="5.0.5" />
-    <PackageVersion Include="GveDemo.Client" Version="5.0.5" />
-    <PackageVersion Include="Gve.Migration" Version="5.0.5" />
-    <PackageVersion Include="Gve.Migration.Test" Version="5.0.5" />
-    <PackageVersion Include="Gve.Text" Version="5.0.5" />
-    <PackageVersion Include="Gve.Text.Test" Version="5.0.5" />
+    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.0" />
+    <PackageVersion Include="gve" Version="6.0.0" />
+    <PackageVersion Include="Gve.Api" Version="6.0.0" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.0" />
+    <PackageVersion Include="Gve.Api.Models" Version="6.0.0" />
+    <PackageVersion Include="GveDemo" Version="6.0.0" />
+    <PackageVersion Include="GveDemo.Client" Version="6.0.0" />
+    <PackageVersion Include="Gve.Migration" Version="6.0.0" />
+    <PackageVersion Include="Gve.Migration.Test" Version="6.0.0" />
+    <PackageVersion Include="Gve.Text" Version="6.0.0" />
+    <PackageVersion Include="Gve.Text.Test" Version="6.0.0" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
     <PackageVersion Include="Cadmus.Api.Config" Version="11.0.7" />

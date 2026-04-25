@@ -1,5 +1,8 @@
 ﻿# History
 
+### 6.0.0
+
+- 2026-04-25: ⚠️ [refactored core and API for features](REFACTOR.md).
 - 2026-04-24:
   - thesauri.
   - updated packages.

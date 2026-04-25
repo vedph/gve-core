@@ -46,58 +46,6 @@ To run the demo in Docker at <localhost:8080>, use this command:
 docker run -it --rm -p 8080:80 --name gve-demo gve-demo
 ```
 
-Real world examples for demo:
-
-```txt
-1234567890
-he did say
-
-4x4- [*log="delete did"]
-10x1="id" [*log="replace say with said" *version^="beta"]
-```
-
-```txt
-there was an old man with a beard,
-who cried: "It is just as I feared!
-four larks and a wren,
-two swans and a hen,
-all built their nests in my beard!"
-
-40x5="said" [*log="said for cried" x="72" y="140" style="font-size:20px;fill:red"]
-99x5="crows" [*log="crows for swans" x="30" y="210" style="font-size:20px;fill:red"]
-116+["have " [*log="insert have" *version^="alpha" reason="metrical" x="20" y="250" style="font-size:20px;fill:red"]
-72x23<>95x21  [*log="swap verses"]
-155x5="owls" [*log="owls for crows" *version^="beta" x="110" y="210" style="font-size:20px;fill:red"]
-```
-
-```txt
-Seyd Vernünftige mir g'rade Mitte gest
-
-27x1="' in die" [*log:="replaced e with ' in die"]
-@21x24="grad gegen über gestellt" [*log:="replaced g'rad' in die Mitte gest with grad gegen über gestellt" loc=below *version^:=beta]
-
-or better, keeping into account also the requirements of diplomatic annotations:
-
-27x1="'" [*log:="replace e with '"]
-28+[" in die" [*log:="insert in die before Mitte'" loc=above]
-23- [*log:="delete ' in g'rad'"]
-@25x8- [*log:="delete in die"]
-29x10="gegen über gestellt" [*log:="replace Mitte gest with gegen über gestellt" loc=below]
-```
-
-```txt
-he had a red hat for sure,
-and long moustache and grey beard.
-
-32+[\"very \" [*log=\"insert 'very ' before 'long'\"]
-10x3="green" [*log="replace 'red' with 'green'"]
-51x5- [*log="delete grey" *version^="A"]
-18x9>[1@fs [*log=\"move 'for sure,' before 'he'\"]
-17-@fs [*log="delete tail ' '"]
-1+[" "@fs [*log="insert space before 'he'"]
-37x9<>56x5 [*log="swap 'moustache' / 'beard'" *version^="B"]
-```
-
 ## CLI Tool
 
 ### Import List
