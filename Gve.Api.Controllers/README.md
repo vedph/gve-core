@@ -18,71 +18,106 @@ The endpoint returns a `ResultWrapperModel<CharChainResultModel>` where the resu
 
 ```json
 {
-  "steps": [
-    {
-      "operation": { "id": "...", "type": "Delete", ... },
-      "inputTag": "v0",
-      "outputTag": "v1",
-      "result": "BC",
-      "refNodeIds": [1]
-    }
-  ],
-  "chainDump": "...",
-  "chainTags": ["v0", "v1", "v2"],
-  "nodes": [
-    {
-      "id": 1, "label": "A", "data": "A", "sourceTag": "v0",
-      "features": {
-        "v1": [{ "name": "del", "value": "op1 v0:v1 1", ... }]
+  // either error message, or the result
+  "error": null,
+  "result": {
+  	// execution steps
+    "steps": [
+      // sample step
+      {
+      	// the operation which generated the step
+        "operation": {
+          "dsl": "",
+          "toAsIndex": false,
+          "to": 0,
+          "toRun": 0,
+          "inputTag": "",
+          "outputTag": "",
+          "atAsIndex": false,
+          "at": 0,
+          "run": 0,
+          "value": "",
+          "noTraceFeatures": false,
+          "type": 1,
+          "id": "",
+          "rank": "",
+          "groupId": "",
+          "features": [
+            {
+              "isNegated": false,
+              "isGlobal": false,
+              "isShortLived": false,
+              "setPolicy": 0,
+              "name": "",
+              "value": null
+            }
+          ],
+          "sources": [
+            {
+              "id": "",
+              "type": null,
+              "rank": 0,
+              "note": null
+            }
+          ]
+        },
+        // input and output tags
+        "inputTag": "",
+        "outputTag": "",
+        // result text
+        "result": "",
+        // IDs of nodes affected by operation
+        "refNodeIds": [
+          ""
+        ]
       }
+    ],
+    // chain textual dump
+    "chainDump": null,
+    // chain tags in order
+    "chainTags": [
+      ""
+    ],
+    // chain text nodes
+    "nodes": [
+      {
+        "id": 0,
+        "index": 0,
+        "label": "",
+        "data": "",
+        "sourceTag": "",
+        // node features keyed by version tag
+        "features": {
+          "version-tag": [
+            {
+              "setPolicy": 0,
+              "name": "",
+              "value": ""
+            }
+          ]
+        }
+      }
+    ],
+    // IDs of nodes in the sequence building the version's text,
+    // keyed by version tag
+    "versionNodeIds": {
+      "version-tag": [
+        1,2,3
+      ]
     },
-    { "id": 2, "label": "B", "data": "B", "sourceTag": "v0", "features": null }
-  ],
-  "versionNodeIds": {
-    "v0": [1, 2, 3],
-    "v1": [2, 3]
-  },
-  "globalFeatures": {
-    "v0": [],
-    "v1": [{ "name": "log", "value": "deleted A", "isGlobal": true }]
+    // global features, keyed by version tag
+    "globalFeatures": {
+      "version-tag": [
+        {
+          "isNegated": false,
+          "isGlobal": false,
+          "isShortLived": false,
+          "setPolicy": 0,
+          "name": "",
+          "value": ""
+        }
+      ]
+    }
   }
-}
-```
-
-### Fields
-
-- `steps`: execution trace — one entry per operation. Each step carries the operation metadata, input/output version tags, the result text, and the IDs of nodes referenced by the operation. Steps do **not** carry a feature snapshot.
-- `chainDump`: diagnostic string dump of the raw chain structure.
-- `chainTags`: all distinct version tags present in the chain, in version order. Includes `v0`.
-- `nodes`: **all** nodes in the chain regardless of which version(s) they belong to, including deleted nodes. Each node's `features` is a dictionary keyed by version tag; the value is the list of features for that node at that version. `features` is `null` when the node has no features in any version.
-- `versionNodeIds`: for each version tag (including `v0`), the ordered sequence of node IDs that make up that version's text. Use this together with `nodes` (looked up by `id`) to reconstruct any version.
-- `globalFeatures`: for each version tag (including `v0`), the accumulated global (chain-level) features at the end of that version. The `v0` entry is always an empty array.
-
-### How to use the result
-
-**Reconstruct version text:**
-
-```javascript
-function getVersionText(result, tag) {
-  const ids = result.versionNodeIds[tag] ?? [];
-  const nodeMap = Object.fromEntries(result.nodes.map(n => [n.id, n]));
-  return ids.map(id => nodeMap[id].data).join('');
-}
-```
-
-**Get features for a node at a specific version:**
-
-```javascript
-function getNodeFeatures(result, nodeId, tag) {
-  const node = result.nodes.find(n => n.id === nodeId);
-  return node?.features?.[tag] ?? [];
-}
-```
-
-**Get global features at a specific version:**
-
-```javascript
-function getGlobalFeatures(result, tag) {
-  return result.globalFeatures[tag] ?? [];
 }
 ```
