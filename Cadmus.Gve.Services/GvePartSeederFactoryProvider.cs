@@ -7,6 +7,7 @@ using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using Cadmus.Seed.Codicology.Parts;
+using Cadmus.Seed.Ndp.Parts;
 
 namespace Cadmus.Gve.Services;
 
@@ -29,7 +30,9 @@ public sealed class GvePartSeederFactoryProvider :
             // Cadmus.Seed.Codicology.Parts
             typeof(CodShelfmarksPartSeeder).Assembly,
             // Cadmus.Seed.Gve.Parts
-            typeof(GveSnapshotPartSeeder).GetTypeInfo().Assembly,
+            typeof(GveSnapshotPartSeeder).Assembly,
+            // Cadmus.Seed.Ndp.Parts
+            typeof(TextPassagesPartSeeder).Assembly,
         ];
         TagAttributeToTypeMap map = new();
         map.Add(seedAssemblies);

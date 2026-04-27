@@ -7,6 +7,7 @@ using Cadmus.General.Parts;
 using Cadmus.Philology.Parts;
 using Cadmus.Gve.Parts;
 using Cadmus.Codicology.Parts;
+using Cadmus.Ndp.Parts;
 
 namespace Cadmus.Gve.Services;
 
@@ -41,6 +42,8 @@ public sealed class GveRepositoryProvider : IRepositoryProvider
             typeof(CodShelfmarksPart).GetTypeInfo().Assembly,
             // Cadmus.Gve.Parts
             typeof(GveSnapshotPart).GetTypeInfo().Assembly,
+            // Cadmus.Ndp.Parts
+            typeof(TextPassagesPart).GetTypeInfo().Assembly,
         ]);
 
         _partTypeProvider = new StandardPartTypeProvider(map);

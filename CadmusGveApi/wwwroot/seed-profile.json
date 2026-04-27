@@ -165,12 +165,20 @@
           "sortKey": "07"
         },
         {
+          "typeId": "it.vedph.ndp.text-passages",
+          "name": "titles etc.",
+          "description": "Titles, mottos, etc.",
+          "colorKey": "5DF94D",
+          "groupKey": "content",
+          "sortKey": "08"
+        },
+        {
           "typeId": "it.vedph.comment",
           "name": "comment",
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.chronotopes",
@@ -178,7 +186,7 @@
           "description": "Date/place indications.",
           "colorKey": "F887C8",
           "groupKey": "history",
-          "sortKey": "09"
+          "sortKey": "10"
         },
         {
           "typeId": "it.vedph.note",
@@ -187,7 +195,7 @@
           "description": "History.",
           "colorKey": "F5B7B1",
           "groupKey": "history",
-          "sortKey": "10"
+          "sortKey": "11"
         },
         {
           "typeId": "it.vedph.doc-references",
@@ -195,7 +203,7 @@
           "description": "Documental references.",
           "colorKey": "F7DC6F",
           "groupKey": "editorial",
-          "sortKey": "11"
+          "sortKey": "12"
         },
         {
           "typeId": "it.vedph.note",
@@ -203,7 +211,7 @@
           "description": "A free text note.",
           "colorKey": "F9E79F",
           "groupKey": "editorial",
-          "sortKey": "12"
+          "sortKey": "13"
         }
       ]
     },
@@ -431,6 +439,10 @@
         {
           "id": "it.vedph.metadata",
           "value": "metadata"
+        },
+        {
+          "id": "it.vedph.ndp.text-passages",
+          "value": "titles etc."
         },
         {
           "id": "it.vedph.note",
@@ -1562,12 +1574,25 @@
           "value": "hand"
         }
       ]
+    },
+    {
+      "id": "text-passage-tags@en",
+      "entries": [
+        {
+          "id": "title",
+          "value": "title"
+        },
+        {
+          "id": "motto",
+          "value": "motto"
+        }
+      ]
     }
   ],
   "seed": {
     "options": {
       "seed": 1,
-      "users": [ "zeus" ],
+      "users": ["zeus"],
       "partRoles": [],
       "fragmentRoles": []
     },
@@ -1582,7 +1607,7 @@
         "id": "seed.it.vedph.categories",
         "options": {
           "maxCategoriesPerItem": 3,
-          "categories": [ "letter", "postcard" ]
+          "categories": ["letter", "postcard"]
         }
       },
       {
@@ -1594,8 +1619,8 @@
       {
         "id": "seed.it.vedph.comment",
         "options": {
-          "languages": [ "en", "it" ],
-          "categories": [ "letter", "postcard" ]
+          "languages": ["en", "it"],
+          "categories": ["letter", "postcard"]
         }
       },
       {
@@ -1612,6 +1637,15 @@
       },
       {
         "id": "seed.it.vedph.note"
+      },
+      {
+        "id": "seed.it.vedph.ndp.text-passages",
+        "options ": {
+          "tags": [
+            "title",
+            "motto"
+          ]
+        }
       },
       {
         "id": "seed.it.vedph.physical-measurements"
@@ -1644,7 +1678,7 @@
           ]
         },
         "it.vedph.categories": {
-          "thesauriIds": [ "categories" ]
+          "thesauriIds": ["categories"]
         },
         "it.vedph.chronotopes": {
           "thesauriIds": [
@@ -1668,7 +1702,7 @@
           ]
         },
         "it.vedph.decorated-counts": {
-          "thesauriIds": [ "decorated-count-ids", "decorated-count-tags" ]
+          "thesauriIds": ["decorated-count-ids", "decorated-count-tags"]
         },
         "it.vedph.district-location": {
           "thesauriIds": [
@@ -1677,7 +1711,7 @@
           ]
         },
         "it.vedph.doc-references": {
-          "thesauriIds": [ "doc-reference-types", "doc-reference-tags" ]
+          "thesauriIds": ["doc-reference-types", "doc-reference-tags"]
         },
         "it.vedph.external-ids": {
           "thesauriIds": [
@@ -1689,10 +1723,10 @@
           ]
         },
         "it.vedph.flags": {
-          "thesauriIds": [ "flags" ]
+          "thesauriIds": ["flags"]
         },
         "it.vedph.historical-date": {
-          "thesauriIds": [ "doc-reference-types", "doc-reference-tags" ]
+          "thesauriIds": ["doc-reference-types", "doc-reference-tags"]
         },
         "it.vedph.historical-events": {
           "thesauriIds": [
@@ -1709,13 +1743,13 @@
           ]
         },
         "it.vedph.index-keywords": {
-          "thesauriIds": [ "languages", "keyword-indexes", "keyword-tags" ]
+          "thesauriIds": ["languages", "keyword-indexes", "keyword-tags"]
         },
         "it.vedph.keywords": {
-          "thesauriIds": [ "languages" ]
+          "thesauriIds": ["languages"]
         },
         "it.vedph.metadata": {
-          "thesauriIds": [ "metadata-names", "metadata-types" ]
+          "thesauriIds": ["metadata-names", "metadata-types"]
         },
         "it.vedph.names": {
           "thesauriIds": [
@@ -1728,7 +1762,7 @@
           ]
         },
         "it.vedph.note": {
-          "thesauriIds": [ "note-tags" ]
+          "thesauriIds": ["note-tags"]
         },
         "it.vedph.physical-measurements": {
           "thesauriIds": [
@@ -1905,15 +1939,12 @@
           ]
         },
         "it.vedph.gve.snapshot": {
-          "thesauriIds": [
-            "snapshot-feat-names",
-            "snapshot-feat-values"
-          ]
+          "thesauriIds": ["snapshot-feat-names", "snapshot-feat-values"]
         }
       },
       "fragments": {
         "fr.it.vedph.chronology": {
-          "thesauriIds": [ "chronology-tags" ]
+          "thesauriIds": ["chronology-tags"]
         },
         "fr.it.vedph.comment": {
           "thesauriIds": [
