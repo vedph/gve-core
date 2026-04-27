@@ -1607,8 +1607,24 @@
           "value": "title"
         },
         {
+          "id": "subtitle",
+          "value": "subtitle"
+        },
+        {
           "id": "motto",
           "value": "motto"
+        },
+        {
+          "id": "dedication",
+          "value": "dedication epigram"
+        },
+        {
+          "id": "title-journal",
+          "value": "title (literary journal)"
+        },
+        {
+          "id": "number",
+          "value": "number"
         }
       ]
     }

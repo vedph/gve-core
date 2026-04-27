@@ -1,5 +1,7 @@
 ﻿# History
 
+- 2026-04-26: more entries added to `text-passage-tags` thesaurus.
+
 ### 6.0.0
 
 - 2026-04-26: added references to NDP parts for `TextPassagesPart` and its seeder.
