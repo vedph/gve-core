@@ -1308,6 +1308,30 @@
           "value": "vertical stroke"
         },
         {
+          "id": "r_hints:line-bottom",
+          "value": "line - bottom"
+        },
+        {
+          "id": "r_hints:line-top",
+          "value": "line - top"
+        },
+        {
+          "id": "r_hints:line-left",
+          "value": "line - left"
+        },
+        {
+          "id": "r_hints:line-right",
+          "value": "line - right"
+        },
+        {
+          "id": "r_hints:hamburger",
+          "value": "hamburger"
+        },
+        {
+          "id": "r_hints:hotdog",
+          "value": "hotdog"
+        },
+        {
           "id": "r_hints:box",
           "value": "box"
         },
@@ -1641,10 +1665,7 @@
       {
         "id": "seed.it.vedph.ndp.text-passages",
         "options ": {
-          "tags": [
-            "title",
-            "motto"
-          ]
+          "tags": ["title", "motto"]
         }
       },
       {

@@ -1,9 +1,8 @@
 ﻿# History
 
-- 2026-04-26: added references to NDP parts for `TextPassagesPart` and its seeder.
-
 ### 6.0.0
 
+- 2026-04-26: added references to NDP parts for `TextPassagesPart` and its seeder.
 - 2026-04-25:
   - ⚠️ [refactored core and API for features](REFACTOR.md).
   - added to profile settings new hints: line-bottom, line-top, line-left, line-right, hamburger, hotdog.
