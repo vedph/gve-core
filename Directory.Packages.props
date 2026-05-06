@@ -4,24 +4,24 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- solution packages -->
-    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Ndp.Parts" Version="1.0.6" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.0" />
-    <PackageVersion Include="Cadmus.Seed.Ndp.Parts" Version="1.0.6" />
-    <PackageVersion Include="gve" Version="6.0.0" />
-    <PackageVersion Include="Gve.Api" Version="6.0.0" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.0" />
-    <PackageVersion Include="Gve.Api.Models" Version="6.0.0" />
-    <PackageVersion Include="GveDemo" Version="6.0.0" />
-    <PackageVersion Include="GveDemo.Client" Version="6.0.0" />
-    <PackageVersion Include="Gve.Migration" Version="6.0.0" />
-    <PackageVersion Include="Gve.Migration.Test" Version="6.0.0" />
-    <PackageVersion Include="Gve.Text" Version="6.0.0" />
-    <PackageVersion Include="Gve.Text.Test" Version="6.0.0" />
+    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Ndp.Parts" Version="1.0.7" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.1" />
+    <PackageVersion Include="Cadmus.Seed.Ndp.Parts" Version="1.0.7" />
+    <PackageVersion Include="gve" Version="6.0.1" />
+    <PackageVersion Include="Gve.Api" Version="6.0.1" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.1" />
+    <PackageVersion Include="Gve.Api.Models" Version="6.0.1" />
+    <PackageVersion Include="GveDemo" Version="6.0.1" />
+    <PackageVersion Include="GveDemo.Client" Version="6.0.1" />
+    <PackageVersion Include="Gve.Migration" Version="6.0.1" />
+    <PackageVersion Include="Gve.Migration.Test" Version="6.0.1" />
+    <PackageVersion Include="Gve.Text" Version="6.0.1" />
+    <PackageVersion Include="Gve.Text.Test" Version="6.0.1" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
     <PackageVersion Include="Cadmus.Api.Config" Version="11.0.9" />
@@ -64,16 +64,16 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.7" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.7" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="MongoDB.Bson" Version="3.8.0" />
     <PackageVersion Include="MongoDB.Driver" Version="3.8.0" />
     <PackageVersion Include="Nanoid" Version="3.1.0" />
     <PackageVersion Include="NPOI" Version="2.8.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.6.6" />
-    <PackageVersion Include="Proteus.Rendering" Version="1.0.4" />
-    <PackageVersion Include="Radzen.Blazor" Version="10.3.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.14.5" />
+    <PackageVersion Include="Proteus.Rendering" Version="1.0.5" />
+    <PackageVersion Include="Radzen.Blazor" Version="10.3.2" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.14.11" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />

@@ -1,5 +1,10 @@
 ﻿# History
 
+### 6.0.1
+
+- 2026-05-06:
+  - added snake-e to settings and `snapshot-feat-values` thesaurus.
+  - updated packages.
 - 2026-04-26: more entries added to `text-passage-tags` thesaurus.
 
 ### 6.0.0
