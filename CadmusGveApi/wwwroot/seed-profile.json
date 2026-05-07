@@ -130,13 +130,21 @@
           "sortKey": "03"
         },
         {
+          "typeId": "it.vedph.chronotopes",
+          "name": "chronotopes",
+          "description": "Date/place indications.",
+          "colorKey": "F887C8",
+          "groupKey": "material",
+          "sortKey": "04"
+        },
+        {
           "typeId": "it.vedph.categories",
           "roleId": "support",
           "name": "support",
           "description": "Material support categories.",
           "colorKey": "9DE0D6",
           "groupKey": "material",
-          "sortKey": "04"
+          "sortKey": "05"
         },
         {
           "typeId": "it.vedph.physical-measurements",
@@ -144,7 +152,15 @@
           "description": "Physical measurements.",
           "colorKey": "C3B6E6",
           "groupKey": "material",
-          "sortKey": "05"
+          "sortKey": "06"
+        },
+        {
+          "typeId": "it.vedph.decorated-counts",
+          "name": "counts",
+          "description": "Various counts.",
+          "colorKey": "FFB366",
+          "groupKey": "material",
+          "sortKey": "07"
         },
         {
           "typeId": "it.vedph.categories",
@@ -153,7 +169,7 @@
           "description": "Content categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "06"
+          "sortKey": "08"
         },
         {
           "typeId": "it.vedph.categories",
@@ -162,7 +178,7 @@
           "description": "Text type categories.",
           "colorKey": "9DE0D6",
           "groupKey": "content",
-          "sortKey": "07"
+          "sortKey": "09"
         },
         {
           "typeId": "it.vedph.ndp.text-passages",
@@ -170,7 +186,7 @@
           "description": "Titles, mottos, etc.",
           "colorKey": "5DF94D",
           "groupKey": "content",
-          "sortKey": "08"
+          "sortKey": "10"
         },
         {
           "typeId": "it.vedph.comment",
@@ -178,23 +194,6 @@
           "description": "Comment.",
           "colorKey": "F9E79F",
           "groupKey": "content",
-          "sortKey": "09"
-        },
-        {
-          "typeId": "it.vedph.chronotopes",
-          "name": "chronotopes",
-          "description": "Date/place indications.",
-          "colorKey": "F887C8",
-          "groupKey": "history",
-          "sortKey": "10"
-        },
-        {
-          "typeId": "it.vedph.note",
-          "roleId": "hist",
-          "name": "history",
-          "description": "History.",
-          "colorKey": "F5B7B1",
-          "groupKey": "history",
           "sortKey": "11"
         },
         {
@@ -423,6 +422,10 @@
         {
           "id": "it.vedph.comment",
           "value": "comment"
+        },
+        {
+          "id": "it.vedph.decorated-counts",
+          "value": "counts"
         },
         {
           "id": "it.vedph.doc-references",
@@ -720,6 +723,14 @@
           "value": "epigram collection"
         },
         {
+          "id": "fair-copy",
+          "value": "fair copy"
+        },
+        {
+          "id": "gift-copy",
+          "value": "gift copy"
+        },
+        {
           "id": "letter",
           "value": "letter"
         },
@@ -795,23 +806,15 @@
       ]
     },
     {
-      "id": "comment-categories@en",
+      "id": "decorated-count-ids@en",
       "entries": [
         {
-          "id": "a",
-          "value": "alpha"
+          "id": "sheet",
+          "value": "total sheets"
         },
         {
-          "id": "a.1",
-          "value": "alpha: one"
-        },
-        {
-          "id": "a.2",
-          "value": "alpha: two"
-        },
-        {
-          "id": "b",
-          "value": "beta"
+          "id": "sheet-blank",
+          "value": "blank sheets"
         }
       ]
     },
@@ -1600,6 +1603,71 @@
         {
           "id": "hand",
           "value": "hand"
+        }
+      ]
+    },
+    {
+      "id": "text-passage-features@en",
+      "entries": [
+        {
+          "id": "script",
+          "value": "script"
+        },
+        {
+          "id": "script.cursive-la",
+          "value": "script: Latin cursive"
+        },
+        {
+          "id": "script.cursive-de",
+          "value": "script: German cursive"
+        },
+        {
+          "id": "script.blackletter",
+          "value": "script: blackletter"
+        },
+        {
+          "id": "script.antiqua",
+          "value": "script: antiqua"
+        },
+        {
+          "id": "writing-mat",
+          "value": "writing material"
+        },
+        {
+          "id": "writing-mat.ink1",
+          "value": "writing material: ink 1 (black)"
+        },
+        {
+          "id": "writing-mat.ink2",
+          "value": "writing material: ink 2 (brown)"
+        },
+        {
+          "id": "writing-mat.ink3",
+          "value": "writing material: ink 3 (dark-green)"
+        },
+        {
+          "id": "writing-mat.ink-red1",
+          "value": "writing material: ink 4 (red)"
+        },
+        {
+          "id": "writing-mat.ink-red2",
+          "value": "writing material: ink 5 (orange)"
+        },
+        {
+          "id": "writing-mat.pencil1",
+          "value": "writing material: pencil 1 (blue)"
+        },
+        {
+          "id": "writing-mat.pencil2",
+          "value": "writing material: pencil 2 (light-blue)"
+        },
+        {
+          "id": "writing-mat.pencil3",
+          "value": "writing material: pencil 3 (pink)"
+        },
+        {
+          "id": "writing-mat.pencil4",
+          "value": "writing material: pencil 4 (red)"
         }
       ]
     },
