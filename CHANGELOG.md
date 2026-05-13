@@ -1,5 +1,7 @@
 ﻿# History
 
+- 2026-05-13: reordered feature names in thesaurus.
+
 ### 6.0.1
 
 - 2026-05-06:

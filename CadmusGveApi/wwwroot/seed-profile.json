@@ -1034,8 +1034,60 @@
       "id": "snapshot-feat-names@en",
       "entries": [
         {
+          "id": "log",
+          "value": "log"
+        },
+        {
+          "id": "r_hints",
+          "value": "hints"
+        },
+        {
           "id": "r_char-offsets",
           "value": "char offsets"
+        },
+        {
+          "id": "version",
+          "value": "stage name"
+        },
+        {
+          "id": "reason",
+          "value": "reason"
+        },
+        {
+          "id": "immediate",
+          "value": "immediate"
+        },
+        {
+          "id": "comment",
+          "value": "editorial comment"
+        },
+        {
+          "id": "note",
+          "value": "note"
+        },
+        {
+          "id": "parallel",
+          "value": "parallel version"
+        },
+        {
+          "id": "script",
+          "value": "script"
+        },
+        {
+          "id": "epigram-nr",
+          "value": "epigram number"
+        },
+        {
+          "id": "sheet-nr",
+          "value": "sheet number"
+        },
+        {
+          "id": "page-nr",
+          "value": "page number"
+        },
+        {
+          "id": "page-beg",
+          "value": "page beginning"
         },
         {
           "id": "r_char-offset",
@@ -1088,10 +1140,6 @@
         {
           "id": "r_rotate",
           "value": "rotation"
-        },
-        {
-          "id": "r_hints",
-          "value": "hints"
         },
         {
           "id": "r_hint-vars",
@@ -1152,54 +1200,6 @@
         {
           "id": "r_h-displaced-span",
           "value": "displaced hint span"
-        },
-        {
-          "id": "epigram-nr",
-          "value": "epigram number"
-        },
-        {
-          "id": "sheet-nr",
-          "value": "sheet number"
-        },
-        {
-          "id": "page-nr",
-          "value": "page number"
-        },
-        {
-          "id": "page-beg",
-          "value": "page beginning"
-        },
-        {
-          "id": "script",
-          "value": "script"
-        },
-        {
-          "id": "reason",
-          "value": "reason"
-        },
-        {
-          "id": "immediate",
-          "value": "immediate"
-        },
-        {
-          "id": "comment",
-          "value": "editorial comment"
-        },
-        {
-          "id": "log",
-          "value": "log"
-        },
-        {
-          "id": "note",
-          "value": "note"
-        },
-        {
-          "id": "parallel",
-          "value": "parallel version"
-        },
-        {
-          "id": "version",
-          "value": "stage name"
         }
       ]
     },
