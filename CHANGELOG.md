@@ -1,5 +1,8 @@
 ﻿# History
 
+- 2026-05-14:
+  - removed solid features and added source-of features in thesauri `snapshot-feat-names` and `snapshot-feat-values`; removed solid property from hints in profile settings.
+  - updated packages.
 - 2026-05-13: reordered feature names in thesaurus.
 
 ### 6.0.1

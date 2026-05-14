@@ -3,7 +3,6 @@ using Cadmus.Gve.Parts;
 using Fusi.Tools.Configuration;
 using System;
 using System.Reflection;
-using Xunit;
 
 namespace Cadmus.Seed.Gve.Parts.Test;
 

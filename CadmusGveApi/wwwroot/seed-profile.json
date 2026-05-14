@@ -1062,6 +1062,14 @@
           "value": "editorial comment"
         },
         {
+          "id": "accepted-source-of",
+          "value": "accepted source of"
+        },
+        {
+          "id": "rejected-source-of",
+          "value": "rejected source of"
+        },
+        {
           "id": "note",
           "value": "note"
         },
@@ -1158,10 +1166,6 @@
           "value": "Y offset"
         },
         {
-          "id": "r_t-solid",
-          "value": "solid"
-        },
-        {
           "id": "r_t-displaced-span",
           "value": "displaced text span"
         },
@@ -1192,10 +1196,6 @@
         {
           "id": "r_h-rotation",
           "value": "hint rotation"
-        },
-        {
-          "id": "r_h-solid",
-          "value": "solid hint"
         },
         {
           "id": "r_h-displaced-span",
@@ -1463,10 +1463,6 @@
           "value": "origin"
         },
         {
-          "id": "r_t-solid:1",
-          "value": "solid on"
-        },
-        {
           "id": "r_h-position:nw",
           "value": "north-west"
         },
@@ -1517,10 +1513,6 @@
         {
           "id": "r_h-position:o",
           "value": "origin"
-        },
-        {
-          "id": "r_h-solid:1",
-          "value": "solid on"
         },
         {
           "id": "script:cursive-la",
@@ -2113,7 +2105,6 @@
           "scaleX": 1.1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "diagonal-stroke-up": {
@@ -2124,7 +2115,6 @@
           "scaleX": 1.1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "cross-stroke": {
@@ -2135,7 +2125,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "horizontal-stroke": {
@@ -2146,7 +2135,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "vertical-stroke": {
@@ -2157,7 +2145,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-down"
         },
         "line-bottom": {
@@ -2168,7 +2155,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "line-top": {
@@ -2179,7 +2165,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "line-left": {
@@ -2190,7 +2175,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "line-right": {
@@ -2201,7 +2185,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "hamburger": {
@@ -2212,7 +2195,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "hotdog": {
@@ -2223,7 +2205,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "box": {
@@ -2234,7 +2215,6 @@
           "scaleX": 1.1,
           "scaleY": 1.1,
           "rotation": 0,
-          "solid": false,
           "animation": "#scale-in"
         },
         "note": {
@@ -2245,7 +2225,6 @@
           "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
-          "solid": false,
           "animation": "#fade-in"
         },
         "note-interlinear-above": {
@@ -2276,7 +2255,6 @@
           "scaleX": 1,
           "scaleY": 1.5,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "i-dot": {
@@ -2287,7 +2265,6 @@
           "scaleX": 1,
           "scaleY": 0.3,
           "rotation": 0,
-          "solid": false,
           "animation": "#fade-in"
         },
         "umlaut": {
@@ -2298,7 +2275,6 @@
           "scaleX": 1,
           "scaleY": 0.3,
           "rotation": 0,
-          "solid": false,
           "animation": "#fade-in"
         },
         "snake": {
@@ -2309,7 +2285,6 @@
           "scaleX": 1.2,
           "scaleY": 2,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "snake-e": {
@@ -2320,7 +2295,6 @@
           "scaleX": 1.2,
           "scaleY": 2,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         },
         "snake-callout": {
@@ -2331,7 +2305,6 @@
           "scaleX": 1.2,
           "scaleY": 2,
           "rotation": 0,
-          "solid": false,
           "animation": "#wipe-right"
         }
       },
