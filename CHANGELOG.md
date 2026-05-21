@@ -3,6 +3,7 @@
 - 2026-05-21:
   - updated packages.
   - added hints.
+  - renamed hints: `snake-e` and `snake-w` to `snake-left` and `snake-right`; `note` to `note-above`; reordered all hints.
 
 ### 6.0.2
 
