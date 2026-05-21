@@ -123,7 +123,7 @@ Example: here we read data from a worksheet named `lists`, and a single column (
 
 If you need to add hints:
 
-1. in `seed-profile.json`, paste the new hints in the configuration object `it.vedph.gve.snapshot` in `settings.hints`.
+1. in `seed-profile.json`, paste the new hints in the configuration object `it.vedph.gve.snapshot` under `settings.hints`.
 2. in `seed-profile.json`, add the corresponding entries to thesaurus `snapshot-feat-values`.
 3. import settings and thesaurus via the Admin UI in the editor.
 
