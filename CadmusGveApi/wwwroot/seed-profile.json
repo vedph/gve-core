@@ -1311,22 +1311,6 @@
           "value": "vertical stroke"
         },
         {
-          "id": "r_hints:line-bottom",
-          "value": "line - bottom"
-        },
-        {
-          "id": "r_hints:line-top",
-          "value": "line - top"
-        },
-        {
-          "id": "r_hints:line-left",
-          "value": "line - left"
-        },
-        {
-          "id": "r_hints:line-right",
-          "value": "line - right"
-        },
-        {
           "id": "r_hints:hamburger",
           "value": "hamburger"
         },
@@ -1339,20 +1323,32 @@
           "value": "box"
         },
         {
-          "id": "r_hints:note",
-          "value": "note"
+          "id": "r_hints:line-bottom",
+          "value": "line - bottom"
         },
         {
-          "id": "r_hints:note-interlinear-above",
-          "value": "note (interlinear, above)"
+          "id": "r_hints:line-bottom-dotted",
+          "value": "line - bottom dotted"
         },
         {
-          "id": "r_hints:note-underline",
-          "value": "note (underlined)"
+          "id": "r_hints:line-top",
+          "value": "line - top"
         },
         {
-          "id": "r_hints:half-psi",
-          "value": "half-psi"
+          "id": "r_hints:line-top-dotted",
+          "value": "line - top dotted"
+        },
+        {
+          "id": "r_hints:line-left",
+          "value": "line - left"
+        },
+        {
+          "id": "r_hints:line-right",
+          "value": "line - right"
+        },
+        {
+          "id": "r_hints:dotless-exclamation",
+          "value": "dotless exclamation"
         },
         {
           "id": "r_hints:i-dot",
@@ -1363,24 +1359,28 @@
           "value": "umlaut"
         },
         {
-          "id": "r_hints:dotless-exclamation",
-          "value": "dotless exclamation"
+          "id": "r_hints:half-psi",
+          "value": "half-psi"
         },
         {
           "id": "r_hints:snake",
           "value": "snake"
         },
         {
-          "id": "r_hints:snake-w",
-          "value": "snake (west)"
+          "id": "r_hints:snake-left",
+          "value": "snake left"
         },
         {
-          "id": "r_hints:snake-e",
-          "value": "snake (east)"
+          "id": "r_hints:snake-right",
+          "value": "snake right"
         },
         {
           "id": "r_hints:snake-callout",
           "value": "snake (callout)"
+        },
+        {
+          "id": "r_hints:note-above",
+          "value": "note (above)"
         },
         {
           "id": "r_text-line-style:solid",
@@ -2110,7 +2110,7 @@
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
-          "scaleX": 1.1,
+          "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
           "animation": "#wipe-right"
@@ -2120,7 +2120,7 @@
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
-          "scaleX": 1.1,
+          "scaleX": 1,
           "scaleY": 1,
           "rotation": 0,
           "animation": "#wipe-right"
@@ -2155,68 +2155,8 @@
           "rotation": 0,
           "animation": "#wipe-down"
         },
-        "line-bottom": {
-          "svg": "<g><line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
-        "line-bottom-dotted": {
-          "svg": "<g><line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"0 16\"/></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
-        "line-top": {
-          "svg": "<g><line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
-        "line-top-dotted": {
-          "svg": "<g><line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"0 16\"/></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
-        "line-left": {
-          "svg": "<g><line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
-        "line-right": {
-          "svg": "<g><line x1=\"300\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
-          "position": "o",
-          "offsetX": 0,
-          "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#wipe-right"
-        },
         "hamburger": {
-          "svg": "<g><line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /><line x1=\"0\" y1=\"50\" x2=\"300\" y2=\"50\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /><line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n  <line x1=\"0\" y1=\"50\" x2=\"300\" y2=\"50\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n  <line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
@@ -2226,7 +2166,7 @@
           "animation": "#wipe-right"
         },
         "hotdog": {
-          "svg": "<g><line x1=\"50\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /><line x1=\"0\" y1=\"50\" x2=\"250\" y2=\"50\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /><line x1=\"50\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" /></g>",
+          "svg": "<g>\n  <line x1=\"50\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n  <line x1=\"0\" y1=\"50\" x2=\"250\" y2=\"50\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n  <line x1=\"50\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
@@ -2243,67 +2183,67 @@
           "scaleX": 1.1,
           "scaleY": 1.1,
           "rotation": 0,
-          "animation": "#scale-in"
-        },
-        "note": {
-          "svg": "<g>\n  <text id=\"placeholder\" x=\"150\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" fill=\"{{r_fore-color}}\" font-size=\"24\">{{note}}</text>\n</g>",
-          "position": "n",
-          "offsetX": 0,
-          "offsetY": -10,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#fade-in"
-        },
-        "note-interlinear-above": {
-          "svg": "<g><text x=\"0\" y=\"0\" font-family=\"Arial\" font-size=\"14\" fill=\"{{r_fore-color}}\" id=\"placeholder\">{{note}}</text></g>",
-          "position": "n",
-          "offsetX": 0,
-          "offsetY": 4,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
-          "animation": "#scale-in"
-        },
-        "note-underline": {
-          "svg": "<g><text x=\"0\" y=\"0\" font-family=\"Arial\" font-size=\"14\" fill=\"{{r_fore-color}}\" text-decoration=\"underline\" id=\"placeholder\">{{note}}</text></g>",
-          "position": "nw",
-          "offsetX": -20,
-          "offsetY": -10,
-          "scaleX": 1,
-          "scaleY": 1,
-          "rotation": 0,
           "animation": "#wipe-right"
         },
-        "half-psi": {
-          "svg": "<g>\n  <path\n     style=\"fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:5.04942;stroke-opacity:1\"\n     d=\"M 150,0 V 100\"\n     />\n  <path\n     style=\"fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:4.70823;stroke-linecap:round;stroke-opacity:1\"\n     d=\"m 152.09414,34.999888 11.93025,-11.63501 a 30.931452,30.496454 0 0 0 5.68666,-7.604445 l 4.43347,-8.4004413 a 8.2686977,8.1524124 0 0 1 2.87164,-3.0995426 l 2.8897,-1.8269636 v 0\"\n     />\n</g>",
+        "line-bottom": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
           "scaleX": 1,
-          "scaleY": 1.5,
+          "scaleY": 1,
           "rotation": 0,
           "animation": "#wipe-right"
         },
-        "i-dot": {
-          "svg": "<g>\n  <circle\n     style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n     cx=\"150\"\n     cy=\"9\"\n     r=\"9\" />\n</g>",
+        "line-bottom-dotted": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"0 16\"/>\n</g>",
           "position": "o",
           "offsetX": 0,
-          "offsetY": -16,
+          "offsetY": 0,
           "scaleX": 1,
-          "scaleY": 0.3,
+          "scaleY": 1,
           "rotation": 0,
-          "animation": "#fade-in"
+          "animation": "#wipe-right"
         },
-        "umlaut": {
-          "svg": "<g>\n<circle\n  style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"170\"\n  cy=\"9\"\n  r=\"9\" />\n<circle\n  style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"129\"\n  cy=\"9\"\n  r=\"9\" />\n</g>",
+        "line-top": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
           "position": "o",
           "offsetX": 0,
-          "offsetY": -16,
+          "offsetY": 0,
           "scaleX": 1,
-          "scaleY": 0.3,
+          "scaleY": 1,
           "rotation": 0,
-          "animation": "#fade-in"
+          "animation": "#wipe-right"
+        },
+        "line-top-dotted": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"0 16\"/>\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
+        "line-left": {
+          "svg": "<g>\n  <line x1=\"0\" y1=\"0\" x2=\"0\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "line-right": {
+          "svg": "<g>\n  <line x1=\"300\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"2\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
         },
         "dotless-exclamation": {
           "svg": "<g><rect style=\"fill:{{r_fore-color}};stroke-width:5;stroke-linecap:round\" width=\"14.5\" height=\"74\" x=\"142\" y=\"2\" /></g>",
@@ -2312,6 +2252,36 @@
           "offsetY": 0,
           "scaleX": 1,
           "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "i-dot": {
+          "svg": "<g>\n  <circle\n     style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n     cx=\"150\"\n     cy=\"9\"\n     r=\"9\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#fade-in"
+        },
+        "umlaut": {
+          "svg": "<g>\n<circle\n  style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"170\"\n  cy=\"9\"\n  r=\"9\" />\n<circle\n  style=\"fill:{{r_fore-color}};fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:round;stroke-opacity:1\"\n  cx=\"129\"\n  cy=\"9\"\n  r=\"9\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#fade-in"
+        },
+        "half-psi": {
+          "svg": "<g>\n  <path\n     style=\"fill:none;fill-opacity:1;stroke:{{r_fore-color}};stroke-width:5.04942;stroke-opacity:1\"\n     d=\"M 150,0 V 100\"\n     />\n  <path\n     style=\"fill:none;fill-opacity:1;stroke:{{r_fore-color}};stroke-width:4.70823;stroke-linecap:round;stroke-opacity:1\"\n     d=\"m 152.09414,34.999888 11.93025,-11.63501 a 30.931452,30.496454 0 0 0 5.68666,-7.604445 l 4.43347,-8.4004413 a 8.2686977,8.1524124 0 0 1 2.87164,-3.0995426 l 2.8897,-1.8269636 v 0\"\n     />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1.5,
           "rotation": 0,
           "animation": "#wipe-down"
         },
@@ -2325,9 +2295,9 @@
           "rotation": 0,
           "animation": "#wipe-right"
         },
-        "snake-w": {
-          "svg": "<g><path style=\"fill:none;stroke:{{r_fore-color}};stroke-width:5\" d=\"M 298.46529,3.0148358 257.25332,14.039149 a 12.787826,12.680467 0 0 0 -9.33488,10.493488 l -6.78784,48.324095 a 14.545787,14.42367 0 0 1 -7.3582,10.627309 l -25.56877,14.045081 v 0\" /></g>",
-          "position": "w",
+        "snake-left": {
+          "svg": "<g>\n  <path\n     style=\"fill:none;stroke:{{r_fore-color}};stroke-width:5\"\n     d=\"M 91.465289,2.7174008 50.253319,13.741714 a 12.787826,12.680467 0 0 0 -9.33488,10.493488 l -6.78784,48.324095 a 14.545787,14.42367 0 0 1 -7.3582,10.627309 L 1.2036293,97.231687 v 0\"\n     />\n</g>",
+          "position": "e",
           "offsetX": 0,
           "offsetY": 0,
           "scaleX": 1,
@@ -2335,9 +2305,9 @@
           "rotation": 0,
           "animation": "#wipe-right"
         },
-        "snake-e": {
-          "svg": "<g><path style=\"fill:none;stroke:{{r_fore-color}};stroke-width:5\" d=\"M 91.465289,2.7174008 50.253319,13.741714 a 12.787826,12.680467 0 0 0 -9.33488,10.493488 l -6.78784,48.324095 a 14.545787,14.42367 0 0 1 -7.3582,10.627309 L 1.2036293,97.231687 v 0\" /></g>",
-          "position": "e",
+        "snake-right": {
+          "svg": "<g>\n  <path\n     style=\"fill:none;stroke:{{r_fore-color}};stroke-width:5\"\n     d=\"M 298.46529,3.0148358 257.25332,14.039149 a 12.787826,12.680467 0 0 0 -9.33488,10.493488 l -6.78784,48.324095 a 14.545787,14.42367 0 0 1 -7.3582,10.627309 l -25.56877,14.045081 v 0\"\n     />\n</g>",
+          "position": "w",
           "offsetX": 0,
           "offsetY": 0,
           "scaleX": 1,
@@ -2352,6 +2322,16 @@
           "offsetY": 0,
           "scaleX": 1.2,
           "scaleY": 2,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
+        "note-above": {
+          "svg": "<g>\n  <text id=\"placeholder\" x=\"150\" y=\"50\" text-anchor=\"middle\" dominant-baseline=\"middle\" fill=\"{{r_fore-color}}\" font-size=\"24\">{{note}}</text>\n</g>",
+          "position": "n",
+          "offsetX": 0,
+          "offsetY": -10,
+          "scaleX": 1,
+          "scaleY": 1,
           "rotation": 0,
           "animation": "#wipe-right"
         }
