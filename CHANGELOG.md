@@ -1,5 +1,8 @@
 ﻿# History
 
+### 6.0.3
+
+- 2026-06-26: refactored some hints.
 - 2026-05-21:
   - updated packages.
   - added hints.
