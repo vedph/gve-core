@@ -26,6 +26,33 @@ public sealed class CharChainAddBeforeOperationTest
     }
 
     [Fact]
+    public void ParseOperation_ValueWithEscapedQuotes()
+    {
+        CharChainAddBeforeOperation op = CharChainOperation
+            .Parse<CharChainAddBeforeOperation>(
+                """1+["say \"hi\"" """);
+
+        Assert.Equal(OperationType.AddBefore, op.Type);
+        Assert.Equal(1, op.At);
+        Assert.Equal("say \"hi\"", op.Value);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
+    public void ParseOperation_ValueWithEscapedQuotes_RoundTrip()
+    {
+        const string dsl = """1+["say \"hi\"" """;
+
+        CharChainAddBeforeOperation op = CharChainOperation
+            .Parse<CharChainAddBeforeOperation>(dsl);
+
+        CharChainAddBeforeOperation op2 = CharChainOperation
+            .Parse<CharChainAddBeforeOperation>(op.ToString());
+
+        Assert.Equal(op.Value, op2.Value);
+    }
+
+    [Fact]
     public void Excute_Run1_Invalid()
     {
         CharChainAddBeforeOperation op = CharChainOperation

@@ -91,7 +91,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
         CharChainReplaceOperation op = new();
 
         string body = ParseHeadAndTail(text, op);
-        op.Value = body.Trim('"');
+        op.Value = ParseValueBody(body);
 
         return op;
     }
@@ -106,7 +106,7 @@ public sealed class CharChainReplaceOperation : CharChainOperation
     {
         StringBuilder sb = new();
         AppendHead(sb);
-        sb.Append('"').Append(Value).Append('"');
+        sb.Append('"').Append(EscapeValue(Value ?? "")).Append('"');
         AppendTail(sb);
         return sb.ToString();
     }

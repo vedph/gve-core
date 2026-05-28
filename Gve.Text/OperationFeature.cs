@@ -144,7 +144,7 @@ public partial record OperationFeature : Feature
     public bool IsShortLived { get; init; }
 
     [GeneratedRegex(
-        @"^(?<t>\!)?(?<g>\*)?(?<n>[^^:=]+)(?<s>\^)?(?:(?<p>[:=])?=(?<v>(?:""[^""]+"")|(?:[^\s]+)))?$")]
+        @"^(?<t>\!)?(?<g>\*)?(?<n>[^^:=]+)(?<s>\^)?(?:(?<p>[:=])?=(?<v>(?:""(?:[^""\\]|\\.)*"")|(?:[^\s]+)))?$")]
     private static partial Regex OpNameValueRegex();
 
     /// <summary>
@@ -177,11 +177,49 @@ public partial record OperationFeature : Feature
     public bool IsTraceFeature() =>
         Name.StartsWith(F_TRACE_PREFIX, StringComparison.Ordinal);
 
+    private static string ExtractFeatureValue(string raw) =>
+        raw.Length > 0 && raw[0] == '"'
+            ? UnescapeFeatureValue(raw[1..^1])
+            : raw;
+
+    private static string UnescapeFeatureValue(string value)
+    {
+        if (!value.Contains('\\')) return value;
+
+        StringBuilder sb = new(value.Length);
+        for (int i = 0; i < value.Length; i++)
+        {
+            if (value[i] == '\\' && i + 1 < value.Length)
+            {
+                char next = value[i + 1];
+                if (next == '"' || next == '\\')
+                {
+                    sb.Append(next);
+                    i++;
+                }
+                else
+                {
+                    sb.Append(value[i]);
+                }
+            }
+            else
+            {
+                sb.Append(value[i]);
+            }
+        }
+        return sb.ToString();
+    }
+
+    private static string EscapeFeatureValue(string value) =>
+        value.Replace(@"\", @"\\").Replace("\"", "\\\"");
+
     /// <summary>
     /// Parses the specified text representing a feature, with syntax
     /// <c>name=value or name="value"</c>, where <c>=</c> can be replaced by
     /// <c>:=</c> for a single feature or by <c>==</c> for a single-first
     /// feature. When value is null, the text just contains the feature name.
+    /// A quoted value may contain <c>\"</c> for a literal double-quote and
+    /// <c>\\</c> for a literal backslash.
     /// </summary>
     /// <param name="text">The text.</param>
     /// <returns>Feature.</returns>
@@ -196,7 +234,9 @@ public partial record OperationFeature : Feature
 
         return new OperationFeature(
             m.Groups["n"].Value,
-            m.Groups["v"].Success ? m.Groups["v"].Value.Trim('"') : null,
+            m.Groups["v"].Success
+                ? ExtractFeatureValue(m.Groups["v"].Value)
+                : null,
             m.Groups["p"].Value switch
             {
                 ":" => FeatureSetPolicy.Single, // :=
@@ -304,8 +344,8 @@ public partial record OperationFeature : Feature
             else if (SetPolicy == FeatureSetPolicy.SingleFirst) sb.Append('=');
             sb.Append('=');
 
-            if (Value.Any(char.IsWhiteSpace))
-                sb.Append('"').Append(Value).Append('"');
+            if (Value.Any(c => char.IsWhiteSpace(c) || c == '"'))
+                sb.Append('"').Append(EscapeFeatureValue(Value)).Append('"');
             else
                 sb.Append(Value);
         }

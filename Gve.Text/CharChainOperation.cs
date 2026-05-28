@@ -78,7 +78,7 @@ public abstract partial class CharChainOperation(OperationType type) :
     private static partial Regex TailRegex();
 
     // operation feature
-    [GeneratedRegex(@"\s*(?:[^:=]+)(?:(?:=|:=|==)(?:(?:""(?:[^""]+)"")|(?:[^\s]+)))?")]
+    [GeneratedRegex(@"\s*(?:[^:=]+)(?:(?:=|:=|==)(?:(?:""(?:[^""\\]|\\.)*"")|(?:[^\s]+)))?")]
     private static partial Regex FeatureRegex();
 
     // 1=operator
@@ -204,6 +204,59 @@ public abstract partial class CharChainOperation(OperationType type) :
             new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))
             .ToList();
     }
+
+    /// <summary>
+    /// Parses the body string of an operation value. If the body is enclosed
+    /// in double-quotes, the quotes are stripped and <c>\"</c> / <c>\\</c>
+    /// escape sequences are resolved. Otherwise the body is returned as-is
+    /// (unquoted single-char values are valid in the DSL).
+    /// </summary>
+    /// <param name="body">The raw body text.</param>
+    /// <returns>Parsed value, or null when <paramref name="body"/> is empty.
+    /// </returns>
+    protected static string? ParseValueBody(string body)
+    {
+        if (string.IsNullOrEmpty(body)) return null;
+        body = body.Trim();
+        if (body.Length >= 2 && body[0] == '"' && body[^1] == '"')
+            return UnescapeValue(body[1..^1]);
+        return body;
+    }
+
+    private static string UnescapeValue(string value)
+    {
+        if (!value.Contains('\\')) return value;
+
+        StringBuilder sb = new(value.Length);
+        for (int i = 0; i < value.Length; i++)
+        {
+            if (value[i] == '\\' && i + 1 < value.Length)
+            {
+                char next = value[i + 1];
+                if (next == '"' || next == '\\')
+                {
+                    sb.Append(next);
+                    i++;
+                }
+                else
+                {
+                    sb.Append(value[i]);
+                }
+            }
+            else
+            {
+                sb.Append(value[i]);
+            }
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Escapes <c>\</c> as <c>\\</c> and <c>"</c> as <c>\"</c> in
+    /// <paramref name="value"/>, for embedding inside a quoted DSL value.
+    /// </summary>
+    protected static string EscapeValue(string value) =>
+        value.Replace(@"\", @"\\").Replace("\"", "\\\"");
 
     /// <summary>
     /// Appends the head part of an operation to the specified string builder.

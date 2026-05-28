@@ -26,6 +26,36 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void ParseOperation_ValueWithEscapedQuotes()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>(
+                """65×1="say \"hello\"" """);
+
+        Assert.Equal(OperationType.Replace, op.Type);
+        Assert.Equal(65, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Equal("say \"hello\"", op.Value);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
+    public void ParseOperation_ValueWithEscapedQuotes_RoundTrip()
+    {
+        const string dsl =
+            """65×1="say \"hello\"" [*log:="replace \"h\" with \"H\""]""";
+
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>(dsl);
+
+        CharChainReplaceOperation op2 = CharChainOperation
+            .Parse<CharChainReplaceOperation>(op.ToString());
+
+        Assert.Equal(op.Value, op2.Value);
+        Assert.Equal(op.Features[0].Value, op2.Features[0].Value);
+    }
+
+    [Fact]
     public void ParseOperation_AtIndex1Run2()
     {
         CharChainReplaceOperation op = CharChainOperation
@@ -138,6 +168,33 @@ public sealed class CharChainReplaceOperationTest
         Assert.Empty(op.Features);
     }
     #endregion
+
+    [Fact]
+    public void ParseOperation_FeatWithEscapedQuotes()
+    {
+        // 65×1="H" [r_fore-color=lightblue *log:="replace \"h\" with \"H\"..."]
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>(
+                """65×1="H" [r_fore-color=lightblue *log:="replace \"h\" with \"H\" in \"höllisch\""]""");
+
+        Assert.Equal(OperationType.Replace, op.Type);
+        Assert.Equal(65, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Equal("H", op.Value);
+        Assert.Equal(2, op.Features.Count);
+
+        OperationFeature color = op.Features[0];
+        Assert.Equal("r_fore-color", color.Name);
+        Assert.Equal("lightblue", color.Value);
+
+        OperationFeature log = op.Features[1];
+        Assert.True(log.IsGlobal);
+        Assert.Equal("log", log.Name);
+        Assert.Equal(FeatureSetPolicy.Single, log.SetPolicy);
+        Assert.Equal(
+            "replace \"h\" with \"H\" in \"höllisch\"",
+            log.Value);
+    }
 
     [Fact]
     public void Execute_ReplaceSingle()

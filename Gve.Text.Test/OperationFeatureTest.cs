@@ -113,6 +113,47 @@ public sealed class OperationFeatureTest
     }
 
     [Fact]
+    public void Parse_NameEqValueWithEscapedQuotes()
+    {
+        OperationFeature feature = OperationFeature.Parse(
+            "*log:=\"replace \\\"h\\\" with \\\"H\\\" in \\\"höllisch\\\"\"");
+
+        Assert.False(feature.IsNegated);
+        Assert.True(feature.IsGlobal);
+        Assert.Equal("log", feature.Name);
+        Assert.Equal(FeatureSetPolicy.Single, feature.SetPolicy);
+        Assert.Equal("replace \"h\" with \"H\" in \"höllisch\"",
+            feature.Value);
+    }
+
+    [Fact]
+    public void ToString_ValueWithQuotes()
+    {
+        OperationFeature feature = new("log",
+            "replace \"h\" with \"H\"",
+            FeatureSetPolicy.Single,
+            isGlobal: true);
+
+        string result = feature.ToString();
+
+        Assert.Equal(
+            "*log:=\"replace \\\"h\\\" with \\\"H\\\"\"",
+            result);
+    }
+
+    [Fact]
+    public void Parse_RoundTrip_ValueWithEscapedQuotes()
+    {
+        const string original =
+            "*log:=\"replace \\\"h\\\" with \\\"H\\\" in \\\"höllisch\\\"\"";
+
+        OperationFeature feature = OperationFeature.Parse(original);
+        string roundTripped = feature.ToString();
+
+        Assert.Equal(original, roundTripped);
+    }
+
+    [Fact]
     public void TryParse_ShouldReturnTrueAndSetOutParameter_WhenInputIsValid()
     {
         bool result = OperationFeature.TryParse("name=value",
