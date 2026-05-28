@@ -26,6 +26,29 @@ public sealed class CharChainReplaceOperationTest
     }
 
     [Fact]
+    public void ParseOperation_EmptyValue()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>("65×1=\"\"");
+
+        Assert.Equal(65, op.At);
+        Assert.Equal(1, op.Run);
+        Assert.Equal("", op.Value);
+    }
+
+    [Fact]
+    public void ToString_EmptyValue_RoundTrip()
+    {
+        CharChainReplaceOperation op = CharChainOperation
+            .Parse<CharChainReplaceOperation>("65×1=\"\"");
+
+        CharChainReplaceOperation op2 = CharChainOperation
+            .Parse<CharChainReplaceOperation>(op.ToString());
+
+        Assert.Equal(op.Value, op2.Value);
+    }
+
+    [Fact]
     public void ParseOperation_ValueWithEscapedQuotes()
     {
         CharChainReplaceOperation op = CharChainOperation

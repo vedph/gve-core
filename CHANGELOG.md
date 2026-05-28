@@ -1,8 +1,11 @@
 ﻿# History
 
+### 6.0.4
+
 - 2026-05-28:
   - updated packages.
   - added escapes for operation DSL syntax in operation value and feature values. You can now escape `"` with `\"` and `\` with `\\` in operation DSL syntax. This allows you to use these characters in operation values and feature values without breaking the DSL syntax.
+  - ensure that an empty feature value is rendered as `""` in DSL.
 
 ### 6.0.3
 

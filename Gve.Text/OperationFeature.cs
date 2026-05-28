@@ -344,7 +344,8 @@ public partial record OperationFeature : Feature
             else if (SetPolicy == FeatureSetPolicy.SingleFirst) sb.Append('=');
             sb.Append('=');
 
-            if (Value.Any(c => char.IsWhiteSpace(c) || c == '"'))
+            if (Value.Length == 0
+                || Value.Any(c => char.IsWhiteSpace(c) || c == '"'))
                 sb.Append('"').Append(EscapeFeatureValue(Value)).Append('"');
             else
                 sb.Append(Value);

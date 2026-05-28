@@ -113,6 +113,37 @@ public sealed class OperationFeatureTest
     }
 
     [Fact]
+    public void Parse_EmptyValue()
+    {
+        OperationFeature feature = OperationFeature.Parse("name=\"\"");
+
+        Assert.Equal("name", feature.Name);
+        Assert.Equal("", feature.Value);
+    }
+
+    [Fact]
+    public void ToString_EmptyValue()
+    {
+        OperationFeature feature = new("name", "");
+
+        Assert.Equal("name=\"\"", feature.ToString());
+    }
+
+    [Fact]
+    public void Parse_RoundTrip_EmptyValue()
+    {
+        OperationFeature feature = new("log", "", FeatureSetPolicy.Single,
+            isGlobal: true);
+        string dsl = feature.ToString();
+        OperationFeature parsed = OperationFeature.Parse(dsl);
+
+        Assert.Equal(feature.Name, parsed.Name);
+        Assert.Equal(feature.Value, parsed.Value);
+        Assert.Equal(feature.SetPolicy, parsed.SetPolicy);
+        Assert.Equal(feature.IsGlobal, parsed.IsGlobal);
+    }
+
+    [Fact]
     public void Parse_NameEqValueWithEscapedQuotes()
     {
         OperationFeature feature = OperationFeature.Parse(
