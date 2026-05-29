@@ -2384,6 +2384,17 @@
           "value": "red"
         }
       ]
+    },
+    "gveFeatureProperties": {
+      "log": {
+        "setPolicy": "single",
+        "isGlobal": true
+      },
+      "version": {
+        "setPolicy": "single",
+        "isGlobal": true,
+        "isShortLived": true
+      }
     }
   }
 }
