@@ -1,5 +1,6 @@
 ﻿# History
 
+- 2026-06-06: added hints `slash-double` and `backslash-double`.
 - 2026-05-28: updated hints.
 
 ### 6.0.4

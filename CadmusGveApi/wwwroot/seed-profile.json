@@ -1319,6 +1319,14 @@
           "value": "hotdog"
         },
         {
+          "id": "r_hints:slash-double",
+          "value": "double slash"
+        },
+        {
+          "id": "r_hints:backslash-double",
+          "value": "double backslash"
+        },
+        {
           "id": "r_hints:box",
           "value": "box"
         },
@@ -1576,12 +1584,24 @@
       "id": "snapshot-source-ids@en",
       "entries": [
         {
-          "id": "goethe",
-          "value": "Goethe"
+          "id": "goethe1",
+          "value": "Goethe 1"
         },
         {
-          "id": "riemer",
-          "value": "Riemer"
+          "id": "goethe2",
+          "value": "Goethe 2"
+        },
+        {
+          "id": "goethe3",
+          "value": "Goethe 3"
+        },
+        {
+          "id": "riemer1",
+          "value": "Riemer 1"
+        },
+        {
+          "id": "riemer2",
+          "value": "Riemer 2"
         },
         {
           "id": "geist",
@@ -2175,6 +2195,26 @@
         },
         "hotdog": {
           "svg": "<g>\n  <line x1=\"50\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" />\n  <line x1=\"0\" y1=\"50\" x2=\"250\" y2=\"50\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" />\n  <line x1=\"50\" y1=\"100\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
+        "slash-double": {
+          "svg": "<g><line x1=\"200\" y1=\"5\" x2=\"140\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /><line x1=\"165\" y1=\"5\" x2=\"105\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /></g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
+        "backslash-double": {
+          "svg": "<g><line x1=\"105\" y1=\"5\" x2=\"165\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /><line x1=\"140\" y1=\"5\" x2=\"200\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /></g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
