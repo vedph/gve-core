@@ -1525,6 +1525,20 @@ public sealed class ChainTest
 
         Assert.Equal("ADBCEF", GetVersionString(chain.GetTagNodes("v1")));
     }
+
+    [Fact]
+    public void MoveRangeBefore_RefNodeImmediatelyAfter_NoOp()
+    {
+        // C before D: C is already immediately before D, so this is a no-op
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveRangeBefore("v0", "v1",
+            nodes[2], nodes[2], nodes[3]));
+
+        Assert.Equal("ABCDE", GetVersionString(chain.GetTagNodes("v1")));
+    }
     #endregion
 
     #region MoveRangeAfter
@@ -1581,6 +1595,20 @@ public sealed class ChainTest
             nodes[3], nodes[4], nodes[1]));
 
         Assert.Equal("ABDECF", GetVersionString(chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void MoveRangeAfter_RefNodeImmediatelyBefore_NoOp()
+    {
+        // C after B: C is already immediately after B, so this is a no-op
+        Chain<char> chain = new();
+        List<ChainNode<char>> nodes = GetNodesFrom("ABCDE");
+        chain.AppendRange("", "v0", nodes);
+
+        Assert.True(chain.MoveRangeAfter("v0", "v1",
+            nodes[2], nodes[2], nodes[1]));
+
+        Assert.Equal("ABCDE", GetVersionString(chain.GetTagNodes("v1")));
     }
     #endregion
 

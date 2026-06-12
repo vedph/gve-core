@@ -1,5 +1,9 @@
 ﻿# History
 
+### 6.0.6
+
+- 2026-06-12: fixes to `Chain`'s `MoveRangeBefore` and `MoveRangeAfter`.
+
 ### 6.0.5
 
 - 2026-06-12:

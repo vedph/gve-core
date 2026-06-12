@@ -1401,6 +1401,14 @@ public class Chain<T>
         // nope if firstNode or lastNode or ref node are not connected
         if (left == null || right == null || refLeft == null) return false;
 
+        // if lastNode is immediately before refNode, the range is already
+        // positioned right before it: nothing to do but copy the version
+        if (refLeft == right)
+        {
+            AddVersion(tag, newTag);
+            return true;
+        }
+
         // copy the source state into a new one except for left+right links
         AddVersion(tag, newTag, left, right, refLeft);
 
@@ -1491,6 +1499,14 @@ public class Chain<T>
         // nope if firstNode or lastNode or ref node are not connected
         if (left == null || right == null || refRight == null) return false;
 
+        // if firstNode is immediately after refNode, the range is already
+        // positioned right after it: nothing to do but copy the version
+        if (refRight == left)
+        {
+            AddVersion(tag, newTag);
+            return true;
+        }
+
         // copy the source state into a new one except for left+right links
         AddVersion(tag, newTag, left, right, refRight);
 
@@ -1521,15 +1537,15 @@ public class Chain<T>
             _links.Add(new ChainLink<T>(newTag, left.Source, null));
         }
         // move inner range DE after B:
-        // -:A [A] A:B [B]^ B:C [C] (C:D [D] D:E [E] E:F) [F] F:-
+        // -:A [A] A:B [B]^ B:G [G] ... C:D [D] D:E [E] F:- (old: B:G, C:D, E:F)
         // =>
-        // -:A [A] A:B [B] (B:D [D] D:E [E] E:C) [C] (C:F) [F] F:-
+        // -:A [A] A:B [B] (B:D [D] D:E [E] E:G) [G] ... C:F [F] F:-
         else
         {
             // add B:D
             _links.Add(new ChainLink<T>(newTag, refNode, firstNode));
-            // add E:C
-            _links.Add(new ChainLink<T>(newTag, lastNode, left.Source));
+            // add E:G
+            _links.Add(new ChainLink<T>(newTag, lastNode, refRight.Target));
             // add C:F
             _links.Add(new ChainLink<T>(newTag, left.Source, right.Target));
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -216,5 +215,45 @@ public sealed class CharChainMoveAfterOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
+    }
+
+    [Fact]
+    public void Execute_RealWorld_Ok()
+    {
+        // init chain with base text (v0)
+        ChainOperationContext<char> context = TestHelper.GetContext(
+            "41.\n" +
+            "So verwirrt mit dumpf willkührlich verwebten Geſtalten ,\n" +
+            "Hölliſch und trübe geſinnt , Breughel den ſchwankenden Blick ;\n" +
+            "So zerrüttet auch Dürer mit apokalÿptiſchen Bildern ,\n" +
+            "Menſchen und Grillen zugleich , unſer geſundes Gehirn ;\n" +
+            "So erreget ein Dichter , von Sphinxen , Sirenen , Centauren\n" +
+            "Singend , Neugier mit Macht in dem verwunderten Ohr ;\n" +
+            "So beweget ein Traum den Sorglichen , wenn er zu greifen ,\n" +
+            "Vorwärts glaubt zu gehn , alles veränderlich ſchwebt  ;\n" +
+            "So verwirrt uns Bettine , die holden Glieder verwechſelnd ,\n" +
+            "Doch erfreut ſie uns gleich , wenn ſie die Sohlen betritt .");
+
+        // the operation to test: move " Neugier" after "Macht"
+        CharChainMoveAfterOperation op =
+            CharChainOperation.Parse<CharChainMoveAfterOperation>(
+                "304×8>]321 [reason=revert accepted-source-of=N7 " +
+                "*log:=\"move 'Neugier' after 'Macht' *version^:=AS3]");
+
+        op.Execute(context);
+
+        Assert.Equal(
+            "41.\n" +
+            "So verwirrt mit dumpf willkührlich verwebten Geſtalten ,\n" +
+            "Hölliſch und trübe geſinnt , Breughel den ſchwankenden Blick ;\n" +
+            "So zerrüttet auch Dürer mit apokalÿptiſchen Bildern ,\n" +
+            "Menſchen und Grillen zugleich , unſer geſundes Gehirn ;\n" +
+            "So erreget ein Dichter , von Sphinxen , Sirenen , Centauren\n" +
+            "Singend , mit Macht Neugier in dem verwunderten Ohr ;\n" +
+            "So beweget ein Traum den Sorglichen , wenn er zu greifen ,\n" +
+            "Vorwärts glaubt zu gehn , alles veränderlich ſchwebt  ;\n" +
+            "So verwirrt uns Bettine , die holden Glieder verwechſelnd ,\n" +
+            "Doch erfreut ſie uns gleich , wenn ſie die Sohlen betritt .",
+            TestHelper.GetVersionString(context.Chain.GetTagNodes("v1")));
     }
 }

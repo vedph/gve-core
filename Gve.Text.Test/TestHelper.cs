@@ -13,4 +13,19 @@ internal static class TestHelper
         return [.. text.Select((c, _) =>
             new ChainNode<char>(c, $"{(char.IsWhiteSpace(c) ? '_' : c)}"))];
     }
+
+    public static ChainOperationContext<char> GetContext(string text)
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.Reset(GetNodesFrom(text));
+        context.LastTag = "v0";
+
+        // record v0 global features (empty by definition for the base text)
+        context.Chain.GlobalFeatures.Set("v0", []);
+
+        // populate each chain node's per-version features
+        context.SyncNodeFeaturesToChain();
+
+        return context;
+    }
 }
