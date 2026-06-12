@@ -1,5 +1,10 @@
 ﻿# History
 
+### 6.0.5
+
+- 2026-06-12:
+  - added hints `scribble-wavy`, `checkmark`, `circle-dotted`, `nota-bene`.
+  - updated packages.
 - 2026-06-06: added hints `slash-double` and `backslash-double`.
 - 2026-05-28: updated hints.
 
