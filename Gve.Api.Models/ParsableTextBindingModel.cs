@@ -11,6 +11,6 @@ public class ParsableTextBindingModel
     /// Gets or sets the text to parse.
     /// </summary>
     [Required]
-    [MaxLength(5000)]
+    [MaxLength(20000)]
     public string Text { get; set; } = "";
 }

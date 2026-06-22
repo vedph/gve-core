@@ -4,31 +4,31 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- solution packages -->
-    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.6" />
-    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.6" />
-    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.6" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.6" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.6" />
-    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.6" />
-    <PackageVersion Include="gve" Version="6.0.6" />
-    <PackageVersion Include="Gve.Api" Version="6.0.6" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.6" />
-    <PackageVersion Include="Gve.Api.Models" Version="6.0.6" />
-    <PackageVersion Include="GveDemo" Version="6.0.6" />
-    <PackageVersion Include="GveDemo.Client" Version="6.0.6" />
-    <PackageVersion Include="Gve.Migration" Version="6.0.6" />
-    <PackageVersion Include="Gve.Migration.Test" Version="6.0.6" />
-    <PackageVersion Include="Gve.Text" Version="6.0.6" />
-    <PackageVersion Include="Gve.Text.Test" Version="6.0.6" />
+    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.7" />
+    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.7" />
+    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.7" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.7" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.7" />
+    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.7" />
+    <PackageVersion Include="gve" Version="6.0.7" />
+    <PackageVersion Include="Gve.Api" Version="6.0.7" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.7" />
+    <PackageVersion Include="Gve.Api.Models" Version="6.0.7" />
+    <PackageVersion Include="GveDemo" Version="6.0.7" />
+    <PackageVersion Include="GveDemo.Client" Version="6.0.7" />
+    <PackageVersion Include="Gve.Migration" Version="6.0.7" />
+    <PackageVersion Include="Gve.Migration.Test" Version="6.0.7" />
+    <PackageVersion Include="Gve.Text" Version="6.0.7" />
+    <PackageVersion Include="Gve.Text.Test" Version="6.0.7" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
-    <PackageVersion Include="Cadmus.Api.Config" Version="11.0.9" />
-    <PackageVersion Include="Cadmus.Api.Controllers" Version="13.0.8" />
-    <PackageVersion Include="Cadmus.Api.Controllers.Export" Version="1.0.5" />
-    <PackageVersion Include="Cadmus.Api.Controllers.Import" Version="12.0.7" />
-    <PackageVersion Include="Cadmus.Api.Models" Version="11.0.6" />
-    <PackageVersion Include="Cadmus.Api.Services" Version="13.0.8" />
-    <PackageVersion Include="Cadmus.Codicology.Parts" Version="9.0.3" />
+    <PackageVersion Include="Cadmus.Api.Config" Version="11.0.10" />
+    <PackageVersion Include="Cadmus.Api.Controllers" Version="13.0.9" />
+    <PackageVersion Include="Cadmus.Api.Controllers.Export" Version="1.0.6" />
+    <PackageVersion Include="Cadmus.Api.Controllers.Import" Version="12.0.8" />
+    <PackageVersion Include="Cadmus.Api.Models" Version="11.0.7" />
+    <PackageVersion Include="Cadmus.Api.Services" Version="13.0.9" />
+    <PackageVersion Include="Cadmus.Codicology.Parts" Version="9.0.4" />
     <PackageVersion Include="Cadmus.Core" Version="10.0.6" />
     <PackageVersion Include="Cadmus.General.Parts" Version="8.0.3" />
     <PackageVersion Include="Cadmus.Refs.Bricks" Version="8.0.0" />
@@ -37,7 +37,7 @@
     <PackageVersion Include="Cadmus.Ndp.Parts" Version="1.0.7" />
     <PackageVersion Include="Cadmus.Philology.Parts" Version="12.0.2" />
     <PackageVersion Include="Cadmus.Seed" Version="10.1.5" />
-    <PackageVersion Include="Cadmus.Seed.Codicology.Parts" Version="9.0.3" />
+    <PackageVersion Include="Cadmus.Seed.Codicology.Parts" Version="9.0.4" />
     <PackageVersion Include="Cadmus.Seed.General.Parts" Version="8.0.3" />
     <PackageVersion Include="Cadmus.Seed.Ndp.Parts" Version="1.0.7" />
     <PackageVersion Include="Cadmus.Seed.Philology.Parts" Version="12.0.2" />
@@ -73,7 +73,7 @@
     <PackageVersion Include="Polly" Version="8.7.0" />
     <PackageVersion Include="Proteus.Rendering" Version="1.0.6" />
     <PackageVersion Include="Radzen.Blazor" Version="10.4.9" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.3" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.4" />
     <PackageVersion Include="Serilog" Version="4.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />

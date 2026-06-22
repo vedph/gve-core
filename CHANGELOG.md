@@ -1,5 +1,11 @@
 ﻿# History
 
+### 6.0.7
+
+- 2026-06-22:
+  - updated packages.
+  - raised `ParsableTextBindingModel`'s text max length from 5000 to 20000.
+
 ### 6.0.6
 
 - 2026-06-12: fixes to `Chain`'s `MoveRangeBefore` and `MoveRangeAfter`.
