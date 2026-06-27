@@ -43,6 +43,7 @@ public partial class Snapshot
     public RadzenDataGrid<CharChainOperation>? OperationsGrid { get; set; }
     public RadzenDataGrid<ChainOperationContextStep>? StepsGrid { get; set; }
     public bool IsBusy { get; set; }
+    public bool IsParsingBusy { get; set; }
     public Chain<char>? Chain { get; set; }
     public string? ChainDump { get; set; }
     public IList<string> ChainTags { get; set; } = [];
@@ -165,54 +166,82 @@ public partial class Snapshot
         }
     }
 
+    public async Task ParseAsync()
+    {
+        try
+        {
+            IsParsingBusy = true;
+            await Task.Yield();
+            ParseOperationText();
+        }
+        finally
+        {
+            IsParsingBusy = false;
+        }
+    }
+
     public async Task BuildRequest()
     {
-        ParseOperationText();
-        StringBuilder sb = new();
-        sb.AppendLine("{");
-
-        JsonSerializerOptions options = new()
+        try
         {
-            WriteIndented = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-        };
+            IsParsingBusy = true;
+            await Task.Yield();
+            ParseOperationText();
 
-        // operations
-        sb.AppendLine("\"operations\": [");
-        int i = 0;
-        foreach (CharChainOperation op in Operations)
-        {
-            CharChainOperationSource source = new(op);
-            sb.Append(JsonSerializer.Serialize(source, options));
-            if (++i < Operations.Count) sb.AppendLine(",");
-        }
-        sb.AppendLine("],");
+            StringBuilder sb = new();
+            sb.AppendLine("{");
 
-        // text
-        sb.AppendLine("\"text\": [");
-        int n = 0;
-        foreach (char c in Text)
-        {
-            if (n > 0) sb.AppendLine(",");
-            sb.AppendLine(JsonSerializer.Serialize(new CharChainNode
+            JsonSerializerOptions options = new()
             {
-                Id = ++n,
-                Index = n - 1,
-                Label = c == ' '
-                    ? "_" : DumpHelper.MapNonPrintables(c.ToString())!,
-                Data = c,
-                SourceTag = "v0"
-            }, options));
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+            };
+
+            // operations
+            sb.AppendLine("\"operations\": [");
+            int i = 0;
+            foreach (CharChainOperation op in Operations)
+            {
+                CharChainOperationSource source = new(op);
+                sb.Append(JsonSerializer.Serialize(source, options));
+                if (++i < Operations.Count) sb.AppendLine(",");
+            }
+            sb.AppendLine("],");
+
+            // text
+            sb.AppendLine("\"text\": [");
+            int n = 0;
+            foreach (char c in Text)
+            {
+                if (n > 0) sb.AppendLine(",");
+                sb.AppendLine(JsonSerializer.Serialize(new CharChainNode
+                {
+                    Id = ++n,
+                    Index = n - 1,
+                    Label = c == ' '
+                        ? "_" : DumpHelper.MapNonPrintables(c.ToString())!,
+                    Data = c,
+                    SourceTag = "v0"
+                }, options));
+            }
+            sb.AppendLine("]").AppendLine("}");
+
+            await ClipboardService.CopyToClipboardAsync(sb.ToString());
+            NotificationService.Notify(NotificationSeverity.Info, "Info",
+                "Request built and copied to clipboard");
         }
-        sb.AppendLine("]").AppendLine("}");
-
-        // copy to clipboard
-        await ClipboardService.CopyToClipboardAsync(sb.ToString());
-
-        // notify
-        NotificationService.Notify(NotificationSeverity.Info, "Info",
-            "Request built and copied to clipboard");
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Error",
+                ex.Message);
+        }
+        finally
+        {
+            IsParsingBusy = false;
+        }
     }
 
     private static List<ChainNode<char>> GetNodesFrom(string text)
@@ -286,13 +315,14 @@ public partial class Snapshot
         StepsGrid?.Reload();
     }
 
-    public void Run()
+    public async Task Run()
     {
         if (Operations.Count == 0) return;
 
         try
         {
             IsBusy = true;
+            await Task.Yield();
             RunOperations();
         }
         catch (Exception ex)
@@ -308,13 +338,14 @@ public partial class Snapshot
         }
     }
 
-    public void Export()
+    public async Task Export()
     {
         if (Operations.Count == 0 || _context == null) return;
 
         try
         {
             IsBusy = true;
+            await Task.Yield();
 
             // run operations
             RunOperations();

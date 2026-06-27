@@ -1,5 +1,7 @@
 ﻿# History
 
+- 2026-06-27: improved demo UI layout.
+
 ### 6.0.7
 
 - 2026-06-22:

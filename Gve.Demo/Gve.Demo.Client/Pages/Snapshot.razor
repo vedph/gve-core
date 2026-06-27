@@ -10,7 +10,7 @@
         /* Override the default Radzen DataGrid cell styles */
         white-space: pre-wrap !important;
         /* Allows text to wrap when it hits the container boundary,
-               but respects line breaks from the source. */
+                   but respects line breaks from the source. */
         word-break: break-word; /* Prevents overflow for long words/lines */
         margin: 0; /* Remove default margin from pre element */
         padding: 0; /* Adjust padding if necessary */
@@ -69,7 +69,7 @@
         <!-- buttons -->
         <RadzenStack Orientation="Orientation.Horizontal" Gap="8px">
             <!-- parse -->
-            <RadzenButton Text="Parse" Click="ParseOperationText"
+            <RadzenButton Text="Parse" Click="ParseAsync"
                           ButtonStyle="ButtonStyle.Primary" />
 
             <!-- build request -->
@@ -81,6 +81,14 @@
                 <RadzenDropDown @bind-Value="@SelectedChainTag" Data="@ChainTags" />
             }
         </RadzenStack>
+
+        <!-- parse/build-request progress -->
+        <div class="rz-w-100">
+            <RadzenProgressBar Value="100" Visible="IsParsingBusy"
+                               Style="height: 8px;margin-top:8px"
+                               ShowValue="false"
+                               Mode="ProgressBarMode.Indeterminate" />
+        </div>
     </RadzenStack>
 
     <!-- parsed operations -->
@@ -144,7 +152,9 @@
 
     <div class="rz-w-100">
         <RadzenProgressBar Value="100" Visible="IsBusy"
-                           Mode="ProgressBarMode.Indeterminate" />
+                           Mode="ProgressBarMode.Indeterminate" 
+                           Style="height: 8px;margin-top:8px" 
+                           ShowValue="false"/>
     </div>
 
     <!-- results -->
@@ -216,18 +226,15 @@
                                 </ul>
                             </Template>
                         </RadzenDataGridColumn>
-                        <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Title="n-features"
-                                              Filterable="false">
-                            <Template>
-                                <div class="feats rz-text-wrap">
-                                    <OpFeatureDictionaryView Features="@GetAllNodeFeatures()"
-                                                             NodeGetter="@GetNodeLabel" />
-                                </div>
-                            </Template>
-                        </RadzenDataGridColumn>
                     </Columns>
                 </RadzenDataGrid>
+                @if (_context != null)
+                {
+                    <div style="margin-top: 12px">
+                        <OpFeatureDictionaryView Features="@GetAllNodeFeatures()"
+                                                 NodeGetter="@GetNodeLabel" />
+                    </div>
+                }
             </RadzenTabsItem>
             <RadzenTabsItem Text="chain">
                 <div style="display: grid; grid-template-columns: auto 1fr; gap: 16px">

@@ -55,7 +55,11 @@ public partial class OpFeatureDictionaryView
     {
         // tags
         _selectedTag = null;
-        Tags = [.. Features.Keys.Select(s => s[..s.IndexOf('_')]).Distinct().Order()];
+        Tags = [.. Features.Keys
+            .Select(s => s[..s.IndexOf('_')])
+            .Distinct()
+            .OrderBy(t => int.TryParse(t.AsSpan(1), out int n) ? n : int.MaxValue)
+            .ThenBy(t => t)];
 
         // tag features, filtered by tag and sorted by node ID
         UpdateTagFeatures();
