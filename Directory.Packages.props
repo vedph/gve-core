@@ -14,8 +14,7 @@
     <PackageVersion Include="Gve.Api" Version="6.0.7" />
     <PackageVersion Include="Gve.Api.Controllers" Version="6.0.7" />
     <PackageVersion Include="Gve.Api.Models" Version="6.0.7" />
-    <PackageVersion Include="GveDemo" Version="6.0.7" />
-    <PackageVersion Include="GveDemo.Client" Version="6.0.7" />
+
     <PackageVersion Include="Gve.Migration" Version="6.0.7" />
     <PackageVersion Include="Gve.Migration.Test" Version="6.0.7" />
     <PackageVersion Include="Gve.Text" Version="6.0.7" />

@@ -14,11 +14,8 @@
 		<PackageReference Include="Z.Blazor.Diagrams" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)'=='Debug'">
-		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />		
-	</ItemGroup>
-	<ItemGroup Condition="'$(Configuration)'=='Release'">
-		<PackageReference Include="Gve.Demo.Client" />
+	<ItemGroup>
+		<ProjectReference Include="..\Gve.Demo.Client\Gve.Demo.Client.csproj" />
 	</ItemGroup>
 
 </Project>
