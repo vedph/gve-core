@@ -7,16 +7,16 @@
 
 <style>
     .multiline-text {
-    /* Override the default Radzen DataGrid cell styles */
-    white-space: pre-wrap !important; 
-    /* Allows text to wrap when it hits the container boundary, 
-       but respects line breaks from the source. */
-    word-break: break-word; /* Prevents overflow for long words/lines */
-    margin: 0; /* Remove default margin from pre element */
-    padding: 0; /* Adjust padding if necessary */
-    background: transparent; /* Ensure it looks like a normal cell */
-    border: none; /* Remove any border */
-}
+        /* Override the default Radzen DataGrid cell styles */
+        white-space: pre-wrap !important;
+        /* Allows text to wrap when it hits the container boundary,
+               but respects line breaks from the source. */
+        word-break: break-word; /* Prevents overflow for long words/lines */
+        margin: 0; /* Remove default margin from pre element */
+        padding: 0; /* Adjust padding if necessary */
+        background: transparent; /* Ensure it looks like a normal cell */
+        border: none; /* Remove any border */
+    }
 </style>
 
 <PageTitle>Snapshot</PageTitle>
@@ -24,14 +24,31 @@
 <h1>Snapshot</h1>
 <RadzenCard>
     <RadzenStack Orientation="Orientation.Vertical">
+        <!-- presets -->
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <SnapshotPresetPicker OnPresetSelected="OnPresetSelected" />
+            </RadzenColumn>
+        </RadzenRow>
+
         <RadzenRow>
             <!-- input -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
-                <RadzenTextArea @bind-Value="@Text" Placeholder="text" Rows="10"
-                                class="rz-w-100" />
+            <RadzenColumn Size="6" SizeSM="12" SizeMD="6">
+                <RadzenTextArea @bind-Value="@Text" Placeholder="text"
+                                class="rz-w-100" Rows="10"
+                                Style="font-family: Courier New, Courier, monospace" />
             </RadzenColumn>
+
+            <!-- operations -->
+            <RadzenColumn Size="6" SizeSM="12" SizeMD="6">
+                <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
+                                class="rz-w-100" Rows="10"
+                                Style="font-family: Courier New, Courier, monospace" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
             <!-- text characters -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
+            <RadzenColumn Size="12">
                 <RadzenStack Orientation="Orientation.Vertical">
                     <!-- tag -->
                     @if (SelectedChainTag != null)
@@ -46,19 +63,6 @@
                                     BackgroundColor="#ffd1c2" NoIndex="true" />
                     </RadzenColumn>
                 </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-
-        <RadzenRow>
-            <!-- operations -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="4">
-                <RadzenTextArea @bind-Value="@OperationText" Placeholder="operations"
-                                class="rz-w-100" Rows="8"
-                                Style="font-family: Courier New, Courier, monospace" />
-            </RadzenColumn>
-            <!-- presets -->
-            <RadzenColumn Size="12" SizeSM="12" SizeMD="8">
-                <SnapshotPresetPicker OnPresetSelected="OnPresetSelected" />
             </RadzenColumn>
         </RadzenRow>
 
@@ -150,14 +154,14 @@
                 <RadzenDataGrid AllowAlternatingRows="true" Data="@TaggedTexts"
                                 AllowColumnResize="true"
                                 AllowSorting="true" AllowFiltering="true"
-                                TItem="Tuple<string,string>"
+                                TItem="Tuple<string, string>"
                                 SelectionMode="DataGridSelectionMode.Single"
                                 FilterMode="FilterMode.Advanced"
                                 Title="texts">
                     <Columns>
-                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                        <RadzenDataGridColumn TItem="Tuple<string, string>"
                                               Property="Item1" Title="tag" />
-                        <RadzenDataGridColumn TItem="Tuple<string,string>"
+                        <RadzenDataGridColumn TItem="Tuple<string, string>"
                                               Title="text">
                             <Template>
                                 <div class="rz-text-wrap">@context.Item2</div>
@@ -217,9 +221,8 @@
                                               Filterable="false">
                             <Template>
                                 <div class="feats rz-text-wrap">
-                                    <OpFeatureDictionaryView
-                                        Features="@GetAllNodeFeatures()"
-                                        NodeGetter="@GetNodeLabel" />
+                                    <OpFeatureDictionaryView Features="@GetAllNodeFeatures()"
+                                                             NodeGetter="@GetNodeLabel" />
                                 </div>
                             </Template>
                         </RadzenDataGridColumn>
