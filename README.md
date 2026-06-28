@@ -5,6 +5,7 @@
   - [Demo](#demo)
   - [CLI Tool](#cli-tool)
     - [Import List](#import-list)
+  - [Adding Hints](#adding-hints)
 
 [VEdition](https://vedph.github.io/gve-doc) backend (code-named `GVE` = Goethe Venetian Epigrams). This solution contains 3 main projects:
 
@@ -36,6 +37,8 @@ docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,wi
 
 ```bash
 docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/gve-demo:6.0.7 -t vedph2020/gve-demo:latest --push
+
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:6.0.8 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
