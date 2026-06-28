@@ -10,7 +10,7 @@ This too, is another line
 :operations
 35: [r_char-offsets="35:x=100 70:x=100" *log^="Set indents"]
 1x3- [r_hints=diagonal-stroke r_fore-color=red *log^="Delete 'In_'"]
-4=T [r_t-position=n r_fore-color=red r_font-size=14 *log^="Replace 'T' with 't' in 'This'"]
+4=T [r_t-position=n r_fore-color=red r_font-size=14 *log^="Replace 't' with 'T' in 'this'"]
 14x2- [r_hints=diagonal-stroke r_fore-color=red *log^="Delete 'I_'"]
 19+]s [r_t-position=ne r_fore-color=red r_font-size=14 *log^="Add 's' after 'show'"]
 64x4: @swap-complex-long [note=1 r_hints=note-interlinear-above r_fore-color=red *log^="Annotate 'complex' with '1'"]
