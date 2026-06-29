@@ -170,7 +170,8 @@
                                 Title="texts">
                     <Columns>
                         <RadzenDataGridColumn TItem="Tuple<string, string>"
-                                              Property="Item1" Title="tag" />
+                                              Property="Item1" Title="tag"
+                                              Width="120px" />
                         <RadzenDataGridColumn TItem="Tuple<string, string>"
                                               Title="text">
                             <Template>
@@ -191,9 +192,10 @@
                                 Title="steps">
                     <Columns>
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Property="InputTag" Title="tin" />
+                                              Property="InputTag" Title="in"
+                                              Width="80px" />
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
-                                              Title="tout">
+                                              Title="out" Width="80px">
                             <Template>
                                 <strong>@context.OutputTag</strong>
                             </Template>
@@ -209,14 +211,12 @@
                             <Template>
                                 <pre class="multiline-text">@context.Result</pre>
                             </Template>
-
                         </RadzenDataGridColumn>
-
                         <RadzenDataGridColumn TItem="ChainOperationContextStep"
                                               Title="c-features"
                                               Filterable="false">
                             <Template>
-                                <ul>
+                                <ul style="white-space: normal; word-break: break-word; margin: 0; padding-left: 1.2em;">
                                     @foreach (var f in (_context?.Chain.GlobalFeatures.Get(context.OutputTag) ?? []))
                                     {
                                         <li>
