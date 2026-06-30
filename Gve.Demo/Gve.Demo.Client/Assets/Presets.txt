@@ -29,7 +29,7 @@ This too, is another line
 A text with all operation types illustrated and many rendition features.
 
 :title
-48_H5
+H5 48
 
 :base
 Wie von der künſtlichen Hand geſchnitzt , das liebe Figürchen ,
@@ -67,7 +67,7 @@ Dann du biſt alles zugleich und biſt ein Engel dazu .
 14x4: [r_hints=note note=37. r_t-position=n r_t-offset-y=-20 *log:="Add epigram number 37 above the first line."]
 
 :dsc
-A real-word example from Goethe's notebook H5, epigram 48 (1: Geist in pencil; 2: Riemer in red chalk).
+A real-word example from Goethe's notebook H5, epigram 48.
 
 :title
 H56 53

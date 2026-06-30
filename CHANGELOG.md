@@ -1,5 +1,6 @@
 ﻿# History
 
+- 2026-06-30: minor improvements to demo UI (image 6.0.9).
 - 2026-06-28: refactored demo sample for trace features.
 - 2026-06-27: improved demo UI layout.
 
