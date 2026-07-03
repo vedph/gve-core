@@ -2531,8 +2531,8 @@
           "svg": "<g><path d=\"M 101.521975 48.841189 C 107.062322 59.521266 113.987753 78.211400 118.143012 92.896506 127.838617 71.536352 145.844740 39.496122 170.776295 18.135968 181.856986 8.790901 191.552591 3.450863 198.478023 8.790901\" fill=\"none\" stroke=\"{{r_fore-color}}\" stroke-width=\"8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /></g>",
           "offsetX": 0,
           "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
+          "scaleX": 2,
+          "scaleY": 2,
           "rotation": 0,
           "animation": "#wipe-right"
         },
@@ -2540,8 +2540,8 @@
           "svg": "<g><circle cx=\"150\" cy=\"50\" r=\"46\" fill=\"none\" stroke=\"{{r_fore-color}}\" stroke-width=\"8\" /><circle cx=\"150\" cy=\"50\" r=\"5\" fill=\"{{r_fore-color}}\" /></g>",
           "offsetX": 0,
           "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
+          "scaleX": 1.5,
+          "scaleY": 1.5,
           "rotation": 0,
           "animation": "#wipe-right"
         },
@@ -2549,8 +2549,8 @@
           "svg": "<g><path d=\"m 111.488,31.589 v 28.837 l 5.926,2.403 17.779,-58.876 7.111,42.054 c 9.482,-20.426 28.446,-44.457 42.669,-26.434 9.482,12.016 -21.334,21.628 -21.334,21.628 23.705,2.403 33.187,32.442 16.593,48.062 -16.593,14.419 -52.15,0 -62.818,0\" fill=\"none\" stroke=\"{{r_fore-color}}\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /></g>",
           "offsetX": 0,
           "offsetY": 0,
-          "scaleX": 1,
-          "scaleY": 1,
+          "scaleX": 2,
+          "scaleY": 2,
           "rotation": 0,
           "animation": "#wipe-right"
         }
