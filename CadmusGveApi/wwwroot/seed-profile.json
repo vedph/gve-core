@@ -1240,11 +1240,11 @@
         },
         {
           "id": "r_fore-color:lightblue",
-          "value": "light blue"
+          "value": "lightblue"
         },
         {
           "id": "r_fore-color:lightgreen",
-          "value": "light green"
+          "value": "lightgreen"
         },
         {
           "id": "r_fore-color:orange",
@@ -1264,7 +1264,7 @@
         },
         {
           "id": "r_fore-color:rubyred",
-          "value": "ruby red"
+          "value": "rubyred"
         },
         {
           "id": "r_back-color:black",
@@ -1284,11 +1284,11 @@
         },
         {
           "id": "r_back-color:lightblue",
-          "value": "light blue"
+          "value": "lightblue"
         },
         {
           "id": "r_back-color:lightgreen",
-          "value": "light green"
+          "value": "lightgreen"
         },
         {
           "id": "r_back-color:orange",
@@ -1308,7 +1308,7 @@
         },
         {
           "id": "r_back-color:rubyred",
-          "value": "ruby red"
+          "value": "rubyred"
         },
         {
           "id": "r_italic:1",
@@ -1355,6 +1355,10 @@
           "value": "hotdog"
         },
         {
+          "id": "r_hints:pie",
+          "value": "pie"
+        },
+        {
           "id": "r_hints:slash-double",
           "value": "double slash"
         },
@@ -1397,6 +1401,14 @@
         {
           "id": "r_hints:line-right",
           "value": "line - right"
+        },
+        {
+          "id": "r_hints:bracket-left",
+          "value": "bracket left"
+        },
+        {
+          "id": "r_hints:bracket-right",
+          "value": "bracket right"
         },
         {
           "id": "r_hints:dotless-exclamation",
@@ -2275,6 +2287,16 @@
           "rotation": 0,
           "animation": "#wipe-right"
         },
+        "pie": {
+          "svg": "<g><line x1=\"0\" y1=\"80\" x2=\"300\" y2=\"80\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\"/><line x1=\"50\" y1=\"96\" x2=\"250\" y2=\"96\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\"/></g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 20,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
         "slash-double": {
           "svg": "<g><line x1=\"200\" y1=\"5\" x2=\"140\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /><line x1=\"165\" y1=\"5\" x2=\"105\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /></g>",
           "position": "o",
@@ -2377,6 +2399,26 @@
         },
         "line-right": {
           "svg": "<g>\n  <rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/>\n  <line x1=\"300\" y1=\"0\" x2=\"300\" y2=\"100\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "bracket-left": {
+          "svg": "<g>\n<rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/>\n<path d=\"m 3.56006,49.999974 q 0,12.676253 4.05023,22.783563 4.05023,10.107306 11.36541,18.656405 h 9.46424 v -0.421105 q -3.1823,-2.905852 -6.36461,-7.117229 -3.22363,-4.169265 -5.662,-9.349266 -2.56244,-5.390561 -4.05023,-11.370725 -1.52918,-5.980156 -1.52918,-13.181614 0,-6.906658 1.52918,-13.139503 1.52912,-6.232838 4.05023,-11.412841 2.60371,-5.348446 5.662,-9.349259 3.01697,-4.042924 6.36461,-7.1172293 V 8.56006 H 18.9757 Q 11.66052,17.109159 7.61029,27.216469 3.56006,37.323779 3.56006,50.000032 Z\" style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:7;stroke-opacity:1\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "bracket-right": {
+          "svg": "<g>\n<rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/>\n<path d=\"m 296.43994,49.999971 q 0,12.676253 -4.05023,22.783563 -4.05023,10.107306 -11.36541,18.656405 h -9.46424 v -0.421105 q 3.1823,-2.905852 6.36461,-7.117229 3.22363,-4.169265 5.662,-9.349266 2.56244,-5.390561 4.05023,-11.370725 1.52918,-5.980156 1.52918,-13.181614 0,-6.906658 -1.52918,-13.139503 -1.52912,-6.232838 -4.05023,-11.412841 -2.60371,-5.348446 -5.662,-9.349259 -3.01697,-4.042924 -6.36461,-7.1172288 V 8.5600575 h 9.46424 q 7.31518,8.5490985 11.36541,18.6564085 4.05023,10.10731 4.05023,22.783563 z\" style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:7;stroke-opacity:1\" />\n</g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
@@ -2514,12 +2556,13 @@
         }
       },
       "animations": {
+        "text-fade-in": "return new Promise(resolve => {\n  gsap.fromTo(targetEl,\n    { opacity: 0 },\n    { opacity: 1, duration: 0.05, onComplete: resolve }\n    );\n});",
         "fade-in": "// Fade in using GSAP\nreturn new Promise(resolve => {\n  gsap.fromTo(targetEl,\n    { opacity: 0 },\n    { opacity: 1, duration: 2, onComplete: resolve }\n  );\n});",
         "scale-in": "// Scale in using GSAP\nreturn new Promise(resolve => {\n  gsap.fromTo(targetEl,\n    { opacity: 0, scale: 0.5 },\n    { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)', onComplete: resolve }\n  );\n});",
-        "wipe-left": "// Wipe from right to left using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100% 100%' },\n    {\n      drawSVG: '0% 100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
-        "wipe-right": "// Wipe from left to right using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
-        "wipe-up": "// Wipe from bottom to top using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100%' },\n    {\n      drawSVG: '0%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});",
-        "wipe-down": "// Wipe from top to bottom using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: resolve\n    }\n  );\n});"
+        "wipe-left": "// Wipe from right to left using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  // Preserve any custom dash pattern (e.g. dotted/dashed lines): DrawSVGPlugin\n  // overwrites stroke-dasharray via inline style while drawing, so restore\n  // the authored pattern once the draw-in animation completes.\n  const dashed = Array.from(drawables).filter(el => el.hasAttribute('stroke-dasharray'));\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100% 100%' },\n    {\n      drawSVG: '0% 100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: () => {\n        dashed.forEach(el => {\n          el.style.strokeDasharray = '';\n          el.style.strokeDashoffset = '';\n        });\n        resolve();\n      }\n    }\n  );\n});",
+        "wipe-right": "// Wipe from left to right using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  // Preserve any custom dash pattern (e.g. dotted/dashed lines): DrawSVGPlugin\n  // overwrites stroke-dasharray via inline style while drawing, so restore\n  // the authored pattern once the draw-in animation completes.\n  const dashed = Array.from(drawables).filter(el => el.hasAttribute('stroke-dasharray'));\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: () => {\n        dashed.forEach(el => {\n          el.style.strokeDasharray = '';\n          el.style.strokeDashoffset = '';\n        });\n        resolve();\n      }\n    }\n  );\n});",
+        "wipe-up": "// Wipe from bottom to top using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  // Preserve any custom dash pattern (e.g. dotted/dashed lines): DrawSVGPlugin\n  // overwrites stroke-dasharray via inline style while drawing, so restore\n  // the authored pattern once the draw-in animation completes.\n  const dashed = Array.from(drawables).filter(el => el.hasAttribute('stroke-dasharray'));\n\n  gsap.fromTo(drawables,\n    { drawSVG: '100%' },\n    {\n      drawSVG: '0%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: () => {\n        dashed.forEach(el => {\n          el.style.strokeDasharray = '';\n          el.style.strokeDashoffset = '';\n        });\n        resolve();\n      }\n    }\n  );\n});",
+        "wipe-down": "// Wipe from top to bottom using GSAP DrawSVGPlugin\nreturn new Promise(resolve => {\n  // Set initial state\n  targetEl.style.opacity = '1';\n\n  // Find all drawable elements (line, path, polyline, polygon, circle, rect, ellipse)\n  const drawables = targetEl.querySelectorAll('line, path, polyline, polygon, circle, rect, ellipse');\n\n  // Preserve any custom dash pattern (e.g. dotted/dashed lines): DrawSVGPlugin\n  // overwrites stroke-dasharray via inline style while drawing, so restore\n  // the authored pattern once the draw-in animation completes.\n  const dashed = Array.from(drawables).filter(el => el.hasAttribute('stroke-dasharray'));\n\n  gsap.fromTo(drawables,\n    { drawSVG: '0%' },\n    {\n      drawSVG: '100%',\n      duration: 0.8,\n      ease: 'power2.out',\n      stagger: 0.1,\n      onComplete: () => {\n        dashed.forEach(el => {\n          el.style.strokeDasharray = '';\n          el.style.strokeDashoffset = '';\n        });\n        resolve();\n      }\n    }\n  );\n});"
       }
     },
     "gveHintDesignerVariables": {
