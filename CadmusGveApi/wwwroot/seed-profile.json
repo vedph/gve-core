@@ -1263,8 +1263,8 @@
           "value": "red"
         },
         {
-          "id": "r_fore-color:rubyred",
-          "value": "rubyred"
+          "id": "r_fore-color:maroon",
+          "value": "maroon"
         },
         {
           "id": "r_back-color:black",
@@ -1307,8 +1307,8 @@
           "value": "red"
         },
         {
-          "id": "r_back-color:rubyred",
-          "value": "rubyred"
+          "id": "r_back-color:maroon",
+          "value": "maroon"
         },
         {
           "id": "r_italic:1",
