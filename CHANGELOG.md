@@ -1,5 +1,10 @@
 ﻿# History
 
+### 6.0.9
+
+- 2026-07-10:
+  - updated hints and animations in seed profile.
+  - updated to core Cadmus packages version 14.
 - 2026-07-03:
   - fixes to animations (to fix dotted line rendering).
   - more hints. 
