@@ -1415,6 +1415,14 @@
           "value": "bracket right"
         },
         {
+          "id": "r_hints:bracket-square-left",
+          "value": "square bracket left"
+        },
+        {
+          "id": "r_hints:bracket-square-right",
+          "value": "square bracket right"
+        },
+        {
           "id": "r_hints:dotless-exclamation",
           "value": "dotless exclamation"
         },
@@ -2433,6 +2441,26 @@
         },
         "bracket-right": {
           "svg": "<g>\n<rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/>\n<path d=\"m 296.43994,49.999971 q 0,12.676253 -4.05023,22.783563 -4.05023,10.107306 -11.36541,18.656405 h -9.46424 v -0.421105 q 3.1823,-2.905852 6.36461,-7.117229 3.22363,-4.169265 5.662,-9.349266 2.56244,-5.390561 4.05023,-11.370725 1.52918,-5.980156 1.52918,-13.181614 0,-6.906658 -1.52918,-13.139503 -1.52912,-6.232838 -4.05023,-11.412841 -2.60371,-5.348446 -5.662,-9.349259 -3.01697,-4.042924 -6.36461,-7.1172288 V 8.5600575 h 9.46424 q 7.31518,8.5490985 11.36541,18.6564085 4.05023,10.10731 4.05023,22.783563 z\" style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:7;stroke-opacity:1\" />\n</g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "bracket-square-left": {
+          "svg": "<g><rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/><path d=\"m 3.56006,8.56006 v 82.87988 h 15.41564 v -0.421105 h -8.05103 v -82.03767 h 8.05103 v -0.421105 z\" style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:7;stroke-opacity:1\" /></g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-down"
+        },
+        "bracket-square-right": {
+          "svg": "<g><rect x=\"0\" y=\"0\" width=\"300\" height=\"100\" fill=\"none\" stroke=\"none\"/><path d=\"m 296.43994,8.56006 v 82.87988 h -15.41564 v -0.421105 h 8.05103 v -82.03767 h -8.05103 v -0.421105 z\" style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:7;stroke-opacity:1\" /></g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,
