@@ -1,5 +1,9 @@
 ﻿# History
 
+- 2026-07-20:
+  - updated packages.
+  - more hints.
+
 ### 6.0.9
 
 - 2026-07-10:
