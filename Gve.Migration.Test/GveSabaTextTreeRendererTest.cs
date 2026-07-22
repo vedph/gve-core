@@ -319,36 +319,6 @@ public sealed class GveSabaTextTreeRendererTest
         // TODO
     }
 
-    private static string TreeToMermaid(TreeNode<ExportedSegment> tree,
-        bool horizontal = false, bool yx = false, string? defaultLabel = null)
-    {
-        // convert the tree to a Mermaid diagram (flowchart TD)
-        StringBuilder sb = new("flowchart");
-        sb.Append(horizontal ? " LR" : " TD").AppendLine();
-
-        TreeNode<ExportedSegment> clone = tree.Clone();
-        clone.SetAutoIds();
-        clone.Traverse(node =>
-        {
-            if (node.Parent != null)
-                sb.Append(node.Parent.Id ?? "root").Append(" --> ");
-            
-            (int y, int x) = node.GetYX();
-            sb.Append(node.Id ?? "root");
-
-            string? label = yx
-                ? $"{y}.{x} {node.Label ?? defaultLabel}"
-                : node.Label ?? defaultLabel;
-            if (label != null) sb.AppendFormat("[{0}]", label);
-
-            sb.AppendLine();
-
-            return true;
-        });
-
-        return sb.ToString();
-    }
-
     [Fact]
     public void Apply_Cat_Ok()
     {
@@ -367,7 +337,8 @@ public sealed class GveSabaTextTreeRendererTest
             GetCatMultiTree();
 
         // render the tree
-        string mermaid = TreeToMermaid(multi, yx: true, defaultLabel: "");
+        string mermaid = MermaidHelper.TreeToMermaid(multi, yx: true, defaultLabel: "");
+        string url = MermaidHelper.BuildMermaidLiveUrl(mermaid);
         XElement? result = composite.Render(multi, context);
 
         Assert.NotNull(result);
