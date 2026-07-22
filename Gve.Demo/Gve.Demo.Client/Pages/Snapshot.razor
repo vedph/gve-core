@@ -254,6 +254,9 @@
                     <RadzenButton Text="Copy"
                                   Click="CopyRenderedTextAsync"
                                   Disabled="@(RenderedXml == null)" />
+                    <RadzenButton Text="See tree"
+                                  Click="() => OpenUrl(MermaidUrl!)"
+                                  Disabled="@(MermaidUrl == null)" />
                 </div>
                 <div>
                     <CodeHighlight Indent="false" Code="@RenderedXml" CodeLanguage="xml" />

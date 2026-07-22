@@ -6,9 +6,12 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
 
-namespace Gve.Migration.Test;
+namespace Gve.Migration;
 
-internal static class MermaidHelper
+/// <summary>
+/// Mermaid diagram helper.
+/// </summary>
+public static class MermaidHelper
 {
     private static byte[] ZlibCompress(byte[] data)
     {
@@ -21,18 +24,17 @@ internal static class MermaidHelper
         return output.ToArray();
     }
 
-    private static byte[] DeflateRaw(byte[] data)
-    {
-        using MemoryStream output = new();
-        using (DeflateStream deflater = new(output, CompressionLevel.Optimal, leaveOpen: true))
-        {
-            deflater.Write(data, 0, data.Length);
-        }
-        return output.ToArray();
-    }
-
+    /// <summary>
+    /// Build a Mermaid Live Editor URL from the specified Mermaid code.
+    /// </summary>
+    /// <param name="mermaidCode">The Mermaid code.</param>
+    /// <returns>The URL to the Mermaid Live Editor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if
+    /// <paramref name="mermaidCode"/> is null.</exception>
     public static string BuildMermaidLiveUrl(string mermaidCode)
     {
+        ArgumentNullException.ThrowIfNull(mermaidCode);
+
         // build the JSON payload expected by mermaid.live
         var payload = new
         {
@@ -49,9 +51,22 @@ internal static class MermaidHelper
         return "https://mermaid.live/edit#pako:" + encoded;
     }
 
+    /// <summary>
+    /// Converts a tree of <see cref="ExportedSegment"/> to a Mermaid diagram.
+    /// </summary>
+    /// <param name="tree">The tree to convert.</param>
+    /// <param name="horizontal">Whether the diagram should be horizontal.</param>
+    /// <param name="yx">Whether to include YX coordinates in the labels.</param>
+    /// <param name="defaultLabel">The default label to use if a node has no label.
+    /// </param>
+    /// <returns>The Mermaid diagram as a string.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="tree"/>
+    /// is null.</exception>
     public static string TreeToMermaid(TreeNode<ExportedSegment> tree,
         bool horizontal = false, bool yx = false, string? defaultLabel = null)
     {
+        ArgumentNullException.ThrowIfNull(tree);
+
         // convert the tree to a Mermaid diagram (flowchart TD)
         StringBuilder sb = new("flowchart");
         sb.Append(horizontal ? " LR" : " TD").AppendLine();

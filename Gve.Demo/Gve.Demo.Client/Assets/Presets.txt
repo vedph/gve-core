@@ -209,3 +209,14 @@ a red pen
 
 :dsc
 A 3-words text with many types of operations.
+
+:title
+cat
+
+:base
+The red cat sits on a small table.
+
+:operations
+5x3="black" [*log="Replace red with black" *version^=alpha]
+13+["happily " [*log="Insert 'happily' before 'sits'" *version^=beta]
+23x6- [*log="Delete 'small '" *version^=gamma]

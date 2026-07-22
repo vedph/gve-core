@@ -4,6 +4,8 @@ using Gve.Demo.Client.Services;
 using Gve.Migration;
 using Gve.Text;
 using Gve.Text.DTO;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Proteus.Rendering;
 using Proteus.Rendering.Filters;
 using Radzen;
@@ -19,10 +21,13 @@ namespace Gve.Demo.Client.Pages;
 
 public partial class Snapshot
 {
-    private string _text = "ARZDC";
+    private string _text = "ARZDC";             
     private string? _selectedChainTag;
     private string? _orRenderedText;
     private ChainOperationContext<char>? _context;
+
+    [Inject]
+    public required IJSRuntime JSRuntime { get; set; }
 
     public string Text
     {
@@ -62,6 +67,7 @@ public partial class Snapshot
     public bool NoTraceFeatures { get; set; }
 
     public string? RenderedXml { get; set; }
+    public string? MermaidUrl { get; set; }
     public int ResultIndex { get; set; }
 
     public Snapshot()
@@ -338,6 +344,27 @@ public partial class Snapshot
         }
     }
 
+    public async Task OpenUrl(string url)
+    {
+        try
+        {
+            IsBusy = true;
+            await Task.Yield();
+            await JSRuntime.InvokeVoidAsync("open", url, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.ToString());
+            Error = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Error",
+                ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     public async Task Export()
     {
         if (Operations.Count == 0 || _context == null) return;
@@ -400,7 +427,7 @@ public partial class Snapshot
             GveRendererContext rendContext = new()
             {
                 OpContext = _context,
-                Operations = Operations.ToList()
+                Operations = [.. Operations]
             };
 
             // create tree renderer
@@ -418,6 +445,11 @@ public partial class Snapshot
             _orRenderedText = result?.ToString();
             // https://github.com/Guyiming/Highlight.Blazor
             RenderedXml = WebUtility.HtmlEncode(_orRenderedText);
+
+            // build a mermaid diagram
+            string mermaid = MermaidHelper.TreeToMermaid(multi, yx: true,
+                defaultLabel: "");
+            MermaidUrl = MermaidHelper.BuildMermaidLiveUrl(mermaid);
 
             ResultIndex = 3;
         }
