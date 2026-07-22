@@ -20,33 +20,33 @@
     <PackageVersion Include="Gve.Text.Test" Version="6.0.9" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
-    <PackageVersion Include="Cadmus.Api.Config" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Api.Controllers" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Api.Controllers.Export" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Api.Controllers.Import" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Api.Models" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Api.Services" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Codicology.Parts" Version="9.0.4" />
-    <PackageVersion Include="Cadmus.Core" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.General.Parts" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Refs.Bricks" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Index.Sql" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Mongo" Version="14.0.2" />
+    <PackageVersion Include="Cadmus.Api.Config" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Api.Controllers" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Api.Controllers.Export" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Api.Controllers.Import" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Api.Models" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Api.Services" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Codicology.Parts" Version="9.0.5" />
+    <PackageVersion Include="Cadmus.Core" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.General.Parts" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Refs.Bricks" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Index.Sql" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Mongo" Version="15.0.0" />
     <PackageVersion Include="Cadmus.Ndp.Parts" Version="1.0.7" />
-    <PackageVersion Include="Cadmus.Philology.Parts" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Seed" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Seed.Codicology.Parts" Version="9.0.4" />
-    <PackageVersion Include="Cadmus.Seed.General.Parts" Version="14.0.2" />
+    <PackageVersion Include="Cadmus.Philology.Parts" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Seed" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Seed.Codicology.Parts" Version="9.0.5" />
+    <PackageVersion Include="Cadmus.Seed.General.Parts" Version="15.0.0" />
     <PackageVersion Include="Cadmus.Seed.Ndp.Parts" Version="1.0.7" />
-    <PackageVersion Include="Cadmus.Seed.Philology.Parts" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Graph" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Graph.Ef.PgSql" Version="14.0.2" />
-    <PackageVersion Include="Cadmus.Graph.Extras" Version="14.0.2" />
+    <PackageVersion Include="Cadmus.Seed.Philology.Parts" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Graph" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Graph.Ef.PgSql" Version="15.0.0" />
+    <PackageVersion Include="Cadmus.Graph.Extras" Version="15.0.0" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="DiffPlex" Version="1.9.0" />
     <PackageVersion Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
-    <PackageVersion Include="Fusi.Tools" Version="8.0.4" />
-    <PackageVersion Include="Fusi.Tools.Configuration" Version="8.0.3" />
+    <PackageVersion Include="Fusi.Tools" Version="9.0.0" />
+    <PackageVersion Include="Fusi.Tools.Configuration" Version="9.0.0" />
     <PackageVersion Include="HighlightBlazor" Version="0.1.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.10" />
@@ -69,9 +69,9 @@
     <PackageVersion Include="NPOI" Version="2.8.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.7.0" />
-    <PackageVersion Include="Proteus.Rendering" Version="14.0.2" />
+    <PackageVersion Include="Proteus.Rendering" Version="15.0.0" />
     <PackageVersion Include="Radzen.Blazor" Version="11.1.6" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.15" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.16" />
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
