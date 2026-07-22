@@ -36,7 +36,7 @@ docker buildx build . -f Dockerfile-cadmus --platform linux/amd64,linux/arm64,wi
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:6.0.9 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:6.0.10 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo

@@ -4,20 +4,20 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- solution packages -->
-    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.9" />
-    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.9" />
-    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.9" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.9" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.9" />
-    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.9" />
-    <PackageVersion Include="gve" Version="6.0.9" />
-    <PackageVersion Include="Gve.Api" Version="6.0.9" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.9" />
-    <PackageVersion Include="Gve.Api.Models" Version="6.0.9" />
-    <PackageVersion Include="Gve.Migration" Version="6.0.9" />
-    <PackageVersion Include="Gve.Migration.Test" Version="6.0.9" />
-    <PackageVersion Include="Gve.Text" Version="6.0.9" />
-    <PackageVersion Include="Gve.Text.Test" Version="6.0.9" />
+    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.10" />
+    <PackageVersion Include="gve" Version="6.0.10" />
+    <PackageVersion Include="Gve.Api" Version="6.0.10" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.10" />
+    <PackageVersion Include="Gve.Api.Models" Version="6.0.10" />
+    <PackageVersion Include="Gve.Migration" Version="6.0.10" />
+    <PackageVersion Include="Gve.Migration.Test" Version="6.0.10" />
+    <PackageVersion Include="Gve.Text" Version="6.0.10" />
+    <PackageVersion Include="Gve.Text.Test" Version="6.0.10" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
     <PackageVersion Include="Cadmus.Api.Config" Version="15.0.0" />
