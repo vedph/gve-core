@@ -15,7 +15,7 @@ public sealed class GveTextTreeBuilderTest
         List<CharChainOperation> Operations) GetPenContext()
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html
-                          // 123456789
+        // 123456789
         const string text = "a red pen";
 
         // setup text
@@ -54,8 +54,8 @@ public sealed class GveTextTreeBuilderTest
 
             // v5>v6: insert 'is ' before 'nice'
             "16+[\"is \" [*log=\"insert 'is ' before 'nice'\" *version^=\"beta\"]";
-            // 1|2|13|14|15|20|21|22|23|16|17|18|19
-            // a| |c |a |t |  |i |s |  |n |i |c |e
+        // 1|2|13|14|15|20|21|22|23|16|17|18|19
+        // a| |c |a |t |  |i |s |  |n |i |c |e
 
         List<CharChainOperation> operations = [];
         foreach (string line in operationsText.Split('\n',
@@ -228,9 +228,9 @@ public sealed class GveTextTreeBuilderTest
     {
         // https://vedph.github.io/gve-doc/model/sample-limerick.html
         const string text =
-          // 123456789-123456789-1234567
+            // 123456789-123456789-1234567
             "he had a red hat for sure,\n" +
-          // 89-123456789-123456789-123456789-1
+            // 89-123456789-123456789-123456789-1
             "and long moustache and grey beard.";
 
         // setup text
@@ -305,6 +305,68 @@ public sealed class GveTextTreeBuilderTest
         TreeNode<ExportedSegment>? tree = multi.Children.FirstOrDefault(
             n => n.Data?.HasFeature(CompositeTextTreeFilter.F_SUBTREE_ID, "v7") == true);
         Assert.NotNull(tree);
+        // TODO
+    }
+
+    internal static (
+        ChainOperationContext<char> Context,
+        List<CharChainOperation> Operations) GetCatContext()
+    {
+        //                   123456789-123456789-123456789-1234
+        const string text = "The red cat sits on a small table.";
+
+        // setup text
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom(text));
+        context.LastTag = "v0";
+        Assert.Equal(text, TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v0")));
+
+        // setup operations
+        const string operationsText =
+            "5x3=\"black\" [*log=\"Replace red with black\" *version^=alpha]\n" +
+            "13+[\"happily \" [*log=\"Insert 'happily' before 'sits'\" *version^=beta]\n" +
+            "23x6- [*log=\"Delete 'small '\" *version^=gamma]";
+
+        List<CharChainOperation> operations = [];
+        foreach (string line in operationsText.Split('\n',
+            StringSplitOptions.RemoveEmptyEntries))
+        {
+            CharChainOperation op = CharChainOperation
+                .Parse<CharChainOperation>(line);
+            operations.Add(op);
+        }
+
+        // execute operations
+        foreach (CharChainOperation op in operations) op.Execute(context);
+
+        return (context, operations);
+    }
+
+    [Fact]
+    public void Build_Cat_Deletions()
+    {
+        // get chain and its context
+        var (context, operations) = GetCatContext();
+
+        // get tree for final version (v7)
+        GveTextTreeBuilder builder = new()
+        {
+            FeatureNames =
+            [
+                OperationFeature.F_TRACE_SEG_IN,
+                OperationFeature.F_TRACE_SEG2_IN,
+                OperationFeature.F_TRACE_SEG_OUT,
+                OperationFeature.F_TRACE_SEG2_OUT,
+                OperationFeature.F_TRACE_DELETED
+            ],
+            TraceFeatureFlattening = true,
+            IncludeDeleted = true
+        };
+
+        TreeNode<ExportedSegment> multi = builder.Build(context, operations);
+
+        Assert.Equal(4, multi.Children.Count);
         // TODO
     }
 }
