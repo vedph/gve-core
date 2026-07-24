@@ -1367,6 +1367,10 @@
           "value": "double backslash"
         },
         {
+          "id": "r_hints:equals-tilted-up",
+          "value": "tilted up equals"
+        },
+        {
           "id": "r_hints:scribble-wavy",
           "value": "scribble (wavy)"
         },
@@ -2321,6 +2325,16 @@
         },
         "backslash-double": {
           "svg": "<g><line x1=\"105\" y1=\"5\" x2=\"165\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /><line x1=\"140\" y1=\"5\" x2=\"200\" y2=\"95\" stroke=\"{{r_fore-color}}\" stroke-width=\"5\" /></g>",
+          "position": "o",
+          "offsetX": 0,
+          "offsetY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "rotation": 0,
+          "animation": "#wipe-right"
+        },
+        "equals-tilted-up": {
+          "svg": "<g><path style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:8;stroke-dasharray:none\" d=\"m 112.44015,46.346597 c 75.1197,-18.193194 75.1197,-18.193194 75.1197,-18.193194\" /><path style=\"fill:{{r_fore-color}};stroke:{{r_fore-color}};stroke-width:8;stroke-dasharray:none\" d=\"m 112.44015,72.0808 c 75.1197,-18.193191 75.1197,-18.193191 75.1197,-18.193191\" /></g>",
           "position": "o",
           "offsetX": 0,
           "offsetY": 0,

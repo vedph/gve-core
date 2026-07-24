@@ -1,5 +1,6 @@
 ﻿# History
 
+- 2026-07-24: added hint.
 - 2026-07-23: updated packages.
 
 ### 6.0.10
