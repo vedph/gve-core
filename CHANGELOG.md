@@ -1,5 +1,8 @@
 ﻿# History
 
+- 2026-08-02:
+  - added hint.
+  - updated packages.
 - 2026-07-24: added hint.
 - 2026-07-23: updated packages.
 
