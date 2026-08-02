@@ -11,7 +11,7 @@ The core component here is `Chain<T>`, designed to represent multiple linear com
 
 Nodes and links can only be added. Once added, they stay there forever. Client code can ask the chain to produce the sequence of nodes corresponding to any of the links tags, and the chain will return that sequence using only the nodes effectively linked in a linear sequence by the links with the specified version tag.
 
-⚙️ In technical terms, we could describe this structure as a tagged multigraph linked list:
+⚙️ We can describe this structure as a tagged multigraph linked list:
 
 - it's a linked list because each node has at most one child in each version of the list.
 - it's a multigraph because it allows multiple edges (links) between nodes.
@@ -37,7 +37,7 @@ Nodes are of type `ChainNode<T>` where `T` is the node data payload type. In GVE
 - `Label`: the label of the node. This might be different from its character value, which is found in `Data`, e.g. to represent non-printable characters like whitespaces.
 - `Data`: the data payload of the node, in GVE corresponding to `char`.
 - `SourceTag`: the tag of the version which added this node to the chain.
-- `Features`: an `OperationFeatureSet` holding the per-version features for this node. It is populated by `ChainOperationContext<T>.SyncNodeFeaturesToChain()` after all operations have been executed (see below). During execution the live accumulator is `ChainOperationContextFeats.NodeFeatures`.
+- `Features`: an `OperationFeatureSet` holding the per-version features for this node. It is populated by `ChainOperationContext<T>.SyncNodeFeaturesToChain()` after all operations have been executed. During execution the live accumulator is `ChainOperationContextFeats.NodeFeatures`.
 
 ## Links
 
