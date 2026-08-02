@@ -779,4 +779,141 @@ public sealed class CharChainReplaceOperationTest
         Assert.Equal("Seyd Vernünftige mir grad gegen über gestellt",
             TestHelper.GetVersionString(context.Chain.GetTagNodes("v2")));
     }
+
+    #region Added-text references and post-insertion indexes
+    // These cover node coordinates once new text has been inserted, so
+    // that node IDs no longer match their ordinal position in the
+    // resulting sequence: AB -> insert X after A -> AXB, where A=id 1,
+    // B=id 2, X=id 3.
+    [Fact]
+    public void Execute_ById_TargetsNodeAddedByPriorOperation()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("AB"));
+        CharChainAddAfterOperation add = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            NoTraceFeatures = true
+        };
+        add.Execute(context);
+        Assert.Equal("AXB", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        // X has ID=3: target it directly by ID, not by its position
+        CharChainReplaceOperation replace = new()
+        {
+            At = 3,
+            Run = 1,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "Y",
+            NoTraceFeatures = true
+        };
+        replace.Execute(context);
+
+        Assert.Equal("AYB", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void Execute_ById_RunSpansAddedAndOriginalNode()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("AB"));
+        CharChainAddAfterOperation add = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            NoTraceFeatures = true
+        };
+        add.Execute(context);
+
+        // X (id=3) followed by B (id=2): a RUN of 2 starting at X's ID
+        // must follow the chain's link order, not the numeric ID order
+        CharChainReplaceOperation replace = new()
+        {
+            At = 3,
+            Run = 2,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "Z",
+            NoTraceFeatures = true
+        };
+        replace.Execute(context);
+
+        Assert.Equal("AZ", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void Execute_AtAsIndex_SelectsFullSequenceAfterInsertion()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("AB"));
+        CharChainAddAfterOperation add = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            NoTraceFeatures = true
+        };
+        add.Execute(context);
+
+        // AXB has 3 nodes in sequence order (indexes 0,1,2), even though
+        // their IDs (1,3,2) are not sequential
+        CharChainReplaceOperation replace = new()
+        {
+            At = 0,
+            AtAsIndex = true,
+            Run = 3,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "Z",
+            NoTraceFeatures = true
+        };
+        replace.Execute(context);
+
+        Assert.Equal("Z", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+
+    [Fact]
+    public void Execute_AtAsIndex_TargetsAddedNodeByPosition()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("AB"));
+        CharChainAddAfterOperation add = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            NoTraceFeatures = true
+        };
+        add.Execute(context);
+
+        // X is at index 1 in AXB, even though its ID (3) does not reflect
+        // its position
+        CharChainReplaceOperation replace = new()
+        {
+            At = 1,
+            AtAsIndex = true,
+            Run = 1,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "Y",
+            NoTraceFeatures = true
+        };
+        replace.Execute(context);
+
+        Assert.Equal("AYB", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+    #endregion
 }

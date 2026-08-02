@@ -152,8 +152,10 @@ public sealed class GveSabaTextTreeRendererTest
             "37x4=\"five\"\n" +
             // v3 -> v4
             "14x4- [*version^:=alpha]\n" +
-            // v4 -> v5
-            "@8x8<>17x10\n" +
+            // v4 -> v5: swap "five six" with "three four", both by index,
+            // as the original node IDs at those ranges were replaced/deleted
+            // by earlier operations
+            "@8x8<>@17x10\n" +
             // v5 -> v6
             "29x4>[1@zero\n" +
             // v6 -> v7

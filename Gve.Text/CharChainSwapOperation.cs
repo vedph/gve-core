@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -55,7 +56,7 @@ public sealed class CharChainSwapOperation : CharChainOperation,
 
         // get to target nodes
         IList<ChainNode<char>> toNodes = GetReferenceNodes(context.Chain, inputTag,
-            To, ToRun);
+            To, ToRun, ToAsIndex);
 
         // add trace features to segments before execution
         AddNodeTraceFeatures(inputTag, outputTag, false, nodes, context);
@@ -68,7 +69,8 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         // update context metadata
         List<ChainNode<char>> targetNodes = [];
         targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag));
-        targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag, To, ToRun));
+        targetNodes.AddRange(GetReferenceNodes(context.Chain, inputTag, To, ToRun,
+            ToAsIndex));
 
         UpdateContext(context, inputTag, outputTag, nodes, targetNodes);
 
@@ -89,16 +91,20 @@ public sealed class CharChainSwapOperation : CharChainOperation,
         ArgumentNullException.ThrowIfNull(text);
 
         CharChainSwapOperation op = new();
-        // AT RUN
-        string body = ParseHeadAndTail(text, op);
-        // TO RUN
-        Match m = ToRunRegex().Match(body);
-        if (!m.Success)
-            throw new FormatException($"Invalid move operation: {text}");
-        op.ToAsIndex = m.Groups["tox"].Success;
-        op.To = int.Parse(m.Groups["to"].Value);
-        op.ToRun = m.Groups["torun"].Length > 0
-            ? int.Parse(m.Groups["torun"].Value) : 1;
+        // AT RUN, then [@]TO[xTORUN] consumed right after the head so that
+        // a leading @ in TO is not mistaken for the tail's @GROUP marker
+        ParseHeadAndTail(text, op, afterHead =>
+        {
+            Match m = ToRunRegex().Match(afterHead);
+            if (!m.Success)
+                throw new FormatException($"Invalid move operation: {text}");
+            op.ToAsIndex = m.Groups["tox"].Success;
+            op.To = int.Parse(m.Groups["to"].Value, CultureInfo.InvariantCulture);
+            op.ToRun = m.Groups["torun"].Length > 0
+                ? int.Parse(m.Groups["torun"].Value, CultureInfo.InvariantCulture)
+                : 1;
+            return m.Length;
+        });
 
         return op;
     }

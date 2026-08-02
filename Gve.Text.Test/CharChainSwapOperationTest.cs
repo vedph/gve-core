@@ -69,6 +69,80 @@ public sealed class CharChainSwapOperationTest
         Assert.Empty(op.Features);
     }
 
+    #region ToAsIndex parsing
+    // These cover a DSL parsing bug where a bare "@TO" (index-based TO with
+    // nothing following it) was swallowed by the generic "@GROUP" tail
+    // marker, since both start with @, leaving nothing for the
+    // TO-specific regex to match.
+    [Fact]
+    public void ParseOperation_ToIndex3Run1_NoTail()
+    {
+        CharChainSwapOperation op = CharChainOperation
+            .Parse<CharChainSwapOperation>("1<>@3");
+
+        Assert.Equal(OperationType.Swap, op.Type);
+        Assert.False(op.AtAsIndex);
+        Assert.Equal(1, op.At);
+        Assert.True(op.ToAsIndex);
+        Assert.Equal(3, op.To);
+        Assert.Equal(1, op.ToRun);
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
+    public void ParseOperation_AtIndexToIndex_BothSides_NoTail()
+    {
+        CharChainSwapOperation op = CharChainOperation
+            .Parse<CharChainSwapOperation>("@8x8<>@17x10");
+
+        Assert.True(op.AtAsIndex);
+        Assert.Equal(8, op.At);
+        Assert.Equal(8, op.Run);
+        Assert.True(op.ToAsIndex);
+        Assert.Equal(17, op.To);
+        Assert.Equal(10, op.ToRun);
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
+    public void ParseOperation_ToIndex3Run2_WithGroupAndFeats()
+    {
+        // a real @GROUP and [FEATS] tail must still be parsed correctly
+        // after an index-based TO
+        CharChainSwapOperation op = CharChainOperation
+            .Parse<CharChainSwapOperation>("1<>@3x2^2@grp [g=1]");
+
+        Assert.True(op.ToAsIndex);
+        Assert.Equal(3, op.To);
+        Assert.Equal(2, op.ToRun);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("grp", op.GroupId);
+        Assert.Single(op.Features);
+        Assert.Equal("g", op.Features[0].Name);
+    }
+
+    [Fact]
+    public void ToString_ToIndex_RoundTrip()
+    {
+        CharChainSwapOperation op = CharChainOperation
+            .Parse<CharChainSwapOperation>("@8x8<>@17x10");
+
+        CharChainSwapOperation op2 = CharChainOperation
+            .Parse<CharChainSwapOperation>(op.ToString());
+
+        Assert.Equal(op.AtAsIndex, op2.AtAsIndex);
+        Assert.Equal(op.At, op2.At);
+        Assert.Equal(op.Run, op2.Run);
+        Assert.Equal(op.ToAsIndex, op2.ToAsIndex);
+        Assert.Equal(op.To, op2.To);
+        Assert.Equal(op.ToRun, op2.ToRun);
+    }
+    #endregion
+
     [Fact]
     public void Execute_At1Run1To3Run1()
     {
@@ -193,4 +267,73 @@ public sealed class CharChainSwapOperationTest
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
     }
+
+    #region ToAsIndex
+    // These cover a bug where the TO coordinate of a swap operation was
+    // always resolved using AtAsIndex (meant for AT) instead of its own
+    // ToAsIndex, so an index-mode TO was silently treated as a node ID
+    // (and vice versa).
+    [Fact]
+    public void Execute_AtById_ToByIndex()
+    {
+        // ABCD: swap A (id-based AT=1) with D (index-based TO=3)
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABCD"));
+        CharChainSwapOperation op = new()
+        {
+            At = 1,
+            AtAsIndex = false,
+            Run = 1,
+            To = 3,
+            ToAsIndex = true,
+            ToRun = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            NoTraceFeatures = true
+        };
+
+        op.Execute(context);
+
+        Assert.Equal("DBCA", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+    }
+
+    [Fact]
+    public void Execute_AtByIndex_ToById_AfterInsertion()
+    {
+        // AB -> insert X after A => AXB (A=1, B=2, X=3)
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("AB"));
+        CharChainAddAfterOperation add = new()
+        {
+            At = 1,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "X",
+            NoTraceFeatures = true
+        };
+        add.Execute(context);
+        Assert.Equal("AXB", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        // swap A (index-based AT=0) with B (id-based TO=2), leaving X in
+        // place
+        CharChainSwapOperation swap = new()
+        {
+            At = 0,
+            AtAsIndex = true,
+            Run = 1,
+            To = 2,
+            ToAsIndex = false,
+            ToRun = 1,
+            InputTag = "v1",
+            OutputTag = "v2",
+            NoTraceFeatures = true
+        };
+        swap.Execute(context);
+
+        Assert.Equal("BXA", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+    }
+    #endregion
 }

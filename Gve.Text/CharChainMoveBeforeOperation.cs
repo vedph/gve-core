@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -97,14 +98,17 @@ public sealed class CharChainMoveBeforeOperation : CharChainOperation,
         ArgumentNullException.ThrowIfNull(text);
 
         CharChainMoveBeforeOperation op = new();
-        // AT RUN
-        string body = ParseHeadAndTail(text, op);
-        Match m = ToRegex().Match(body);
-        if (!m.Success)
-            throw new FormatException($"Invalid move operation: {text}");
-        // TO
-        op.ToAsIndex = m.Groups["tox"].Success;
-        op.To = int.Parse(m.Groups["to"].Value);
+        // AT RUN, then [@]TO consumed right after the head so that a
+        // leading @ in TO is not mistaken for the tail's @GROUP marker
+        ParseHeadAndTail(text, op, afterHead =>
+        {
+            Match m = ToRegex().Match(afterHead);
+            if (!m.Success)
+                throw new FormatException($"Invalid move operation: {text}");
+            op.ToAsIndex = m.Groups["tox"].Success;
+            op.To = int.Parse(m.Groups["to"].Value, CultureInfo.InvariantCulture);
+            return m.Length;
+        });
 
         return op;
     }

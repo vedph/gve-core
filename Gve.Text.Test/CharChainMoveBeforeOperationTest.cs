@@ -45,6 +45,58 @@ public sealed class CharChainMoveBeforeOperationTest
         Assert.Empty(op.Features);
     }
 
+    #region ToAsIndex parsing
+    // These cover a DSL parsing bug where a bare "@TO" (index-based TO with
+    // nothing following it) was swallowed by the generic "@GROUP" tail
+    // marker, since both start with @, leaving nothing for the TO-specific
+    // regex to match.
+    [Fact]
+    public void ParseOperation_At1Run1ToIndex3_NoTail()
+    {
+        CharChainMoveBeforeOperation op = CharChainOperation
+            .Parse<CharChainMoveBeforeOperation>("1>[@3");
+
+        Assert.Equal(OperationType.MoveBefore, op.Type);
+        Assert.True(op.ToAsIndex);
+        Assert.Equal(3, op.To);
+        Assert.Equal(0, op.Rank);
+        Assert.Null(op.GroupId);
+        Assert.Empty(op.Features);
+    }
+
+    [Fact]
+    public void ParseOperation_At1Run1ToIndex3_WithGroupAndFeats()
+    {
+        // a real @GROUP and [FEATS] tail must still be parsed correctly
+        // after an index-based TO
+        CharChainMoveBeforeOperation op = CharChainOperation
+            .Parse<CharChainMoveBeforeOperation>("1>[@3^2@grp [g=1]");
+
+        Assert.True(op.ToAsIndex);
+        Assert.Equal(3, op.To);
+        Assert.Equal(2, op.Rank);
+        Assert.Equal("grp", op.GroupId);
+        Assert.Single(op.Features);
+        Assert.Equal("g", op.Features[0].Name);
+    }
+
+    [Fact]
+    public void ToString_ToIndex_RoundTrip()
+    {
+        CharChainMoveBeforeOperation op = CharChainOperation
+            .Parse<CharChainMoveBeforeOperation>("1>[@3");
+
+        CharChainMoveBeforeOperation op2 = CharChainOperation
+            .Parse<CharChainMoveBeforeOperation>(op.ToString());
+
+        Assert.Equal(op.ToAsIndex, op2.ToAsIndex);
+        Assert.Equal(op.To, op2.To);
+        Assert.Equal(op.At, op2.At);
+        Assert.Equal(op.Run, op2.Run);
+        Assert.Equal(op.AtAsIndex, op2.AtAsIndex);
+    }
+    #endregion
+
     [Fact]
     public void Execute_At1Run1To3()
     {

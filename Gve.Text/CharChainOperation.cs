@@ -113,23 +113,31 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// <param name="run">The optional run of characters to include from
     /// <paramref name="at"/>. If -1, the value of <see cref="Run"/> will be
     /// used.</param>
+    /// <param name="atAsIndex">The optional value indicating whether
+    /// <paramref name="at"/> refers to an index rather than a chain node ID.
+    /// If null, the value of <see cref="AtAsIndex"/> will be used. This
+    /// allows callers resolving a locator other than <see cref="At"/> (e.g.
+    /// <c>To</c> in swap operations) to supply their own index/ID mode
+    /// instead of inheriting <see cref="AtAsIndex"/>.</param>
     /// <returns>Target node(s).</returns>
     /// <exception cref="ArgumentNullException">chain or tag</exception>
     /// <exception cref="InvalidOperationException">Node not found</exception>
     protected IList<ChainNode<char>> GetReferenceNodes(
-        Chain<char> chain, string tag, int at = -1, int run = -1)
+        Chain<char> chain, string tag, int at = -1, int run = -1,
+        bool? atAsIndex = null)
     {
         ArgumentNullException.ThrowIfNull(chain);
         ArgumentNullException.ThrowIfNull(tag);
 
+        bool asIndex = atAsIndex ?? AtAsIndex;
         if (at == -1) at = At;
-        if (At == 0 && !AtAsIndex) return [];
+        if (at == 0 && !asIndex) return [];
         if (run == -1) run = Run;
 
         List<ChainNode<char>> nodes = [];
 
         // find at node
-        ChainNode<char>? node = FindNode(chain, at, AtAsIndex, tag) ??
+        ChainNode<char>? node = FindNode(chain, at, asIndex, tag) ??
             throw new InvalidOperationException(
                 "Node not found for the specified AT: " + ToString());
 
@@ -323,10 +331,21 @@ public abstract partial class CharChainOperation(OperationType type) :
     /// </summary>
     /// <param name="text">Text.</param>
     /// <param name="operation">Target operation.</param>
-    /// <returns>The body part of the text.</returns>
+    /// <param name="consumeExtra">An optional callback invoked with the
+    /// substring immediately following the head (before any tail is
+    /// extracted from it), which should parse and consume from its start
+    /// whatever locator is specific to the operation type (e.g. the
+    /// <c>[@]TO[xRUN]</c> coordinate of move/swap operations), returning
+    /// the number of characters it consumed. This runs before tail
+    /// extraction so that a leading <c>@</c> belonging to that locator is
+    /// not mistaken for the <c>@GROUP</c> tail marker (which also starts
+    /// with <c>@</c>).</param>
+    /// <returns>The body part of the text, i.e. whatever is left between
+    /// the head (plus any text consumed by <paramref name="consumeExtra"/>)
+    /// and the tail.</returns>
     /// <exception cref="FormatException">Invalid text.</exception>
     protected static string ParseHeadAndTail(string text,
-        CharChainOperation operation)
+        CharChainOperation operation, Func<string, int>? consumeExtra = null)
     {
         ArgumentNullException.ThrowIfNull(text);
 
@@ -347,8 +366,16 @@ public abstract partial class CharChainOperation(OperationType type) :
                 CultureInfo.InvariantCulture);
         }
 
+        // let the caller consume any type-specific locator (e.g. TO) coming
+        // right after the head, before the tail is extracted from what's
+        // left; this avoids a leading @ in that locator being swallowed by
+        // the tail's @GROUP marker
+        string afterHead = text[head.Length..];
+        int extraLength = consumeExtra?.Invoke(afterHead) ?? 0;
+        string remainder = afterHead[extraLength..];
+
         // tail: ^RANK@GROUP [FEATS]
-        Match tail = TailRegex().Match(text[head.Length..]);
+        Match tail = TailRegex().Match(remainder);
         if (!tail.Success)
             throw new FormatException($"Invalid operation tail: {text}");
 
@@ -367,8 +394,8 @@ public abstract partial class CharChainOperation(OperationType type) :
             }
         }
 
-        // return text minus head and tail
-        return text[head.Length..^tail.Length];
+        // return text minus head, extra locator, and tail
+        return remainder[..^tail.Length];
     }
 
     /// <summary>

@@ -3,6 +3,8 @@
 - 2026-08-02:
   - added hint.
   - updated packages.
+  - fixed `CharChainSwapOperation`: its "TO" coordinate (To/ToRun/ToAsIndex) was resolved through the shared `GetReferenceNodes` helper, but that helper always used the operation's `AtAsIndex` property — meant for `At` — regardless of what locator was actually being resolved. So whenever `ToAsIndex` differed from `AtAsIndex` (e.g. targeting one side by ID and the other by index), the TO node was resolved with the wrong ID/index mode — sometimes hitting the wrong node, sometimes throwing "Node not found".
+  - fixed `@` parsing with TO coordinates.
 - 2026-07-24: added hint.
 - 2026-07-23: updated packages.
 
