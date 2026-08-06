@@ -30,13 +30,13 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:6.0.11 -t vedph2020/cadmus-gve-api:latest --push .
+docker buildx build -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:6.0.12 -t vedph2020/cadmus-gve-api:latest --push .
 ```
 
 - 👉 DEMO:
 
 ```bash
-docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:6.0.10 -t vedph2020/gve-demo:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/gve-demo:6.0.12 -t vedph2020/gve-demo:latest --push
 ```
 
 ## Demo
