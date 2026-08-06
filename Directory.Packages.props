@@ -4,20 +4,20 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- solution packages -->
-    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.10" />
-    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.10" />
-    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.10" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.10" />
-    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.10" />
-    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.10" />
-    <PackageVersion Include="gve" Version="6.0.10" />
-    <PackageVersion Include="Gve.Api" Version="6.0.10" />
-    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.10" />
-    <PackageVersion Include="Gve.Api.Models" Version="6.0.10" />
-    <PackageVersion Include="Gve.Migration" Version="6.0.10" />
-    <PackageVersion Include="Gve.Migration.Test" Version="6.0.10" />
-    <PackageVersion Include="Gve.Text" Version="6.0.10" />
-    <PackageVersion Include="Gve.Text.Test" Version="6.0.10" />
+    <PackageVersion Include="Cadmus.Gve.Parts" Version="6.0.12" />
+    <PackageVersion Include="Cadmus.Gve.Parts.Test" Version="6.0.12" />
+    <PackageVersion Include="Cadmus.Gve.Services" Version="6.0.12" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts" Version="6.0.12" />
+    <PackageVersion Include="Cadmus.Seed.Gve.Parts.Test" Version="6.0.12" />
+    <PackageVersion Include="Cadmus.Gve.Api" Version="6.0.12" />
+    <PackageVersion Include="gve" Version="6.0.12" />
+    <PackageVersion Include="Gve.Api" Version="6.0.12" />
+    <PackageVersion Include="Gve.Api.Controllers" Version="6.0.12" />
+    <PackageVersion Include="Gve.Api.Models" Version="6.0.12" />
+    <PackageVersion Include="Gve.Migration" Version="6.0.12" />
+    <PackageVersion Include="Gve.Migration.Test" Version="6.0.12" />
+    <PackageVersion Include="Gve.Text" Version="6.0.12" />
+    <PackageVersion Include="Gve.Text.Test" Version="6.0.12" />
     <!-- external packages -->
     <PackageVersion Include="bClipboard" Version="1.0.1" />
     <PackageVersion Include="Cadmus.Api.Config" Version="16.0.0" />
@@ -45,8 +45,8 @@
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="DiffPlex" Version="1.9.0" />
     <PackageVersion Include="Fusi.Microsoft.Extensions.Configuration.InMemoryJson" Version="5.0.0" />
-    <PackageVersion Include="Fusi.Tools" Version="9.0.0" />
-    <PackageVersion Include="Fusi.Tools.Configuration" Version="9.0.0" />
+    <PackageVersion Include="Fusi.Tools" Version="9.0.1" />
+    <PackageVersion Include="Fusi.Tools.Configuration" Version="9.0.1" />
     <PackageVersion Include="HighlightBlazor" Version="0.1.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.10" />
@@ -70,7 +70,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Polly" Version="8.7.0" />
     <PackageVersion Include="Proteus.Rendering" Version="16.0.0" />
-    <PackageVersion Include="Radzen.Blazor" Version="11.2.0" />
+    <PackageVersion Include="Radzen.Blazor" Version="11.2.2" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.16.17" />
     <PackageVersion Include="Serilog" Version="4.4.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />

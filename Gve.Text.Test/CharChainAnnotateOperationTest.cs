@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Gve.Text.Test;
@@ -151,5 +152,135 @@ public sealed class CharChainAnnotateOperationTest
         Assert.Equal("v0", context.Steps[0].InputTag);
         Assert.Equal("v1", context.Steps[0].OutputTag);
         Assert.Same(op, context.Steps[0].Operation);
+    }
+
+    [Fact]
+    public void Execute_OnDeletedText()
+    {
+        // 123456789-12
+        // The red pen.
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0",
+            TestHelper.GetNodesFrom("The red pen."));
+
+        // replace "red" (nodes 5,6,7) with "blue"
+        CharChainReplaceOperation replaceOp = new()
+        {
+            At = 5,
+            Run = 3,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "blue",
+        };
+        replaceOp.Execute(context);
+
+        Assert.Equal("The blue pen.", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v1")));
+
+        // annotate "red" by its original node IDs (5,6,7), without pinning
+        // the input tag to v0: it defaults to the context's current tag
+        // (v1), where "red" has already been replaced by "blue". This must
+        // backtrack to v0 to find the nodes instead of throwing.
+        CharChainAnnotateOperation annotateOp = new()
+        {
+            At = 5,
+            Run = 3,
+            Features = [new OperationFeature("underline", "true")],
+        };
+
+        annotateOp.Execute(context);
+
+        // the input tag defaulted to v1 (context.LastTag), and the output
+        // tag was auto-generated as v2
+        Assert.Equal("v1", context.Steps[^1].InputTag);
+        Assert.Equal("v2", context.Steps[^1].OutputTag);
+        Assert.Equal("v2", context.LastTag);
+
+        // the current text (v2) is unaffected: annotate never changes text
+        Assert.Equal("The blue pen.", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+
+        // the annotation targeted the original "red" nodes (5,6,7)
+        Assert.Equal([5, 6, 7], context.Steps[^1].RefNodeIds);
+
+        // each of the "red" nodes got the annotation feature under v2,
+        // even though they are not part of v2's visible text
+        foreach (int id in new[] { 5, 6, 7 })
+        {
+            List<OperationFeature> features = context.NodeFeatures[$"v2_{id}"];
+            Assert.Contains(features,
+                f => f.Name == "underline" && f.Value == "true");
+        }
+    }
+
+    [Fact]
+    public void Execute_OnDeletedText_MultiLevelBacktrack()
+    {
+        // 123456789-12
+        // The red pen.
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0",
+            TestHelper.GetNodesFrom("The red pen."));
+
+        // v0 -> v1: replace "red" (5,6,7) with "blue"
+        new CharChainReplaceOperation
+        {
+            At = 5,
+            Run = 3,
+            InputTag = "v0",
+            OutputTag = "v1",
+            Value = "blue",
+        }.Execute(context);
+
+        // v1 -> v2: replace "pen" with "car" (an unrelated edit, to add
+        // another version between v0 and the current one)
+        new CharChainReplaceOperation
+        {
+            At = 9,
+            Run = 3,
+            InputTag = "v1",
+            OutputTag = "v2",
+            Value = "car",
+        }.Execute(context);
+
+        Assert.Equal("The blue car.", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes("v2")));
+
+        // annotate "red" (5,6,7) using the default (current) input tag,
+        // two versions removed from where "red" still exists (v0)
+        CharChainAnnotateOperation annotateOp = new()
+        {
+            At = 5,
+            Run = 3,
+            Features = [new OperationFeature("underline", "true")],
+        };
+
+        annotateOp.Execute(context);
+
+        Assert.Equal("v2", context.Steps[^1].InputTag);
+        Assert.Equal([5, 6, 7], context.Steps[^1].RefNodeIds);
+
+        // current text still unaffected
+        Assert.Equal("The blue car.", TestHelper.GetVersionString(
+            context.Chain.GetTagNodes(context.LastTag)));
+    }
+
+    [Fact]
+    public void Execute_OnNeverExistingNodes_Throws()
+    {
+        ChainOperationContext<char> context = new();
+        context.Chain.AppendRange("", "v0", TestHelper.GetNodesFrom("ABC"));
+
+        // node ID 99 never existed in this chain, so no ancestor can ever
+        // resolve it: backtracking must exhaust and rethrow
+        CharChainAnnotateOperation annotateOp = new()
+        {
+            At = 99,
+            Run = 1,
+            InputTag = "v0",
+            Features = [new OperationFeature("note", "x")],
+        };
+
+        Assert.Throws<InvalidOperationException>(() => annotateOp.Execute(context));
     }
 }

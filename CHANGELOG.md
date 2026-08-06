@@ -1,5 +1,11 @@
 ﻿# History
 
+### 6.0.12
+
+- 2026-08-06:
+  - fixed `CharChainAnnotateOperation` throwing when annotating text that a later operation has since replaced or deleted. Conceptually, an annotation may need to target text which is no longer part of the current version but is still relevant for visualization: e.g. a manuscript where "red" was first replaced by "blue", and then the author changed their mind and underlined the original "red" to mean its restoration — the underline must attach to the *old* "red" nodes (still present in the chain, just not in the current version's visible sequence), not to a hypothetical new "red" the author never actually wrote. Previously, resolving the annotation's target range failed with "Node not found"/"End node not found" as soon as the referenced nodes were no longer reachable by following the links of the operation's input version. Now, when that lookup fails, the operation backtracks through ancestor versions (the input of the input, and so on, up to the base version, using the input/output tag chain recorded in `ChainOperationContext.Steps`) until it finds a version where the target nodes are still reachable, then merges that ancestor's link structure into the output version (via the existing `Chain.AddVersion`, which only adds a link when no link with the same tag/source/target already exists) so the nodes become resolvable there too, without altering the text produced by that version. If no ancestor contains the nodes, the original exception is still raised. This is intentionally limited to the annotate operation, since it is the only one that does not alter the text, so retargeting/backtracking cannot corrupt other versions. Added tests for single- and multi-level backtracking and for the case where the nodes never existed (which must still throw).
+  - updated packages.
+
 ### 6.0.11
 
 - 2026-08-03: updated packages.
