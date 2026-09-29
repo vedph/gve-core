@@ -1,5 +1,6 @@
 ﻿# History
 
+- 2026-09-29: updated packages.
 - 2026-09-22:
   - updated packages.
   - migrated to MTP test platform (<https://learn.microsoft.com/en-us/dotnet/core/testing/migrating-vstest-microsoft-testing-platform>).
