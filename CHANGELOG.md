@@ -1,5 +1,10 @@
 ﻿# History
 
+### 6.0.13
+
+- 2026-10-27:
+  - updated packages.
+  - refactored Dockerfile for Cadmus API to use multi-stage build with platform-specific base image for ASP.NET runtime and SDK.
 - 2026-09-29: updated packages.
 - 2026-09-22:
   - updated packages.

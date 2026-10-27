@@ -18,7 +18,7 @@
 🐋 Quick Docker image build (replace with the current versions): as you need a `buildx` container, first ensure to have started one like this:
 
 ```sh
-docker buildx create --use
+docker buildx create --use --name multi-arch-builder || docker buildx use multi-arch-builder
 ```
 
 - 👉 GVE API:
@@ -30,7 +30,7 @@ docker buildx build . -f Dockerfile-gve --platform linux/amd64,linux/arm64,windo
 - 👉 GVE CADMUS API:
 
 ```bash
-docker buildx build -f Dockerfile-cadmus --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:6.0.12 -t vedph2020/cadmus-gve-api:latest --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-gve-api:6.0.13 -t vedph2020/cadmus-gve-api:latest --push .
 ```
 
 - 👉 DEMO:
