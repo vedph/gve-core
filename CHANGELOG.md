@@ -1,6 +1,10 @@
 ﻿# History
 
-### 6.0.13
+## 6.0.14
+
+- 2026-11-10: updated packages.
+
+## 6.0.13
 
 - 2026-10-27:
   - updated packages.
@@ -17,13 +21,13 @@
 - 2026-08-16: updated packages.
 - 2026-08-13: updated packages.
 
-### 6.0.12
+## 6.0.12
 
 - 2026-08-06:
   - fixed `CharChainAnnotateOperation` throwing when annotating text that a later operation has since replaced or deleted. Conceptually, an annotation may need to target text which is no longer part of the current version but is still relevant for visualization: e.g. a manuscript where "red" was first replaced by "blue", and then the author changed their mind and underlined the original "red" to mean its restoration — the underline must attach to the *old* "red" nodes (still present in the chain, just not in the current version's visible sequence), not to a hypothetical new "red" the author never actually wrote. Previously, resolving the annotation's target range failed with "Node not found"/"End node not found" as soon as the referenced nodes were no longer reachable by following the links of the operation's input version. Now, when that lookup fails, the operation backtracks through ancestor versions (the input of the input, and so on, up to the base version, using the input/output tag chain recorded in `ChainOperationContext.Steps`) until it finds a version where the target nodes are still reachable, then merges that ancestor's link structure into the output version (via the existing `Chain.AddVersion`, which only adds a link when no link with the same tag/source/target already exists) so the nodes become resolvable there too, without altering the text produced by that version. If no ancestor contains the nodes, the original exception is still raised. This is intentionally limited to the annotate operation, since it is the only one that does not alter the text, so retargeting/backtracking cannot corrupt other versions. Added tests for single- and multi-level backtracking and for the case where the nodes never existed (which must still throw).
   - updated packages.
 
-### 6.0.11
+## 6.0.11
 
 - 2026-08-03: updated packages.
 - 2026-08-02:
@@ -34,14 +38,14 @@
 - 2026-07-24: added hint.
 - 2026-07-23: updated packages.
 
-### 6.0.10
+## 6.0.10
 
 - 2026-07-22: updated packages.
 - 2026-07-20:
   - updated packages.
   - more hints.
 
-### 6.0.9
+## 6.0.9
 
 - 2026-07-10:
   - updated hints and animations in seed profile.
@@ -53,17 +57,17 @@
 - 2026-06-28: refactored demo sample for trace features.
 - 2026-06-27: improved demo UI layout.
 
-### 6.0.7
+## 6.0.7
 
 - 2026-06-22:
   - updated packages.
   - raised `ParsableTextBindingModel`'s text max length from 5000 to 20000.
 
-### 6.0.6
+## 6.0.6
 
 - 2026-06-12: fixes to `Chain`'s `MoveRangeBefore` and `MoveRangeAfter`.
 
-### 6.0.5
+## 6.0.5
 
 - 2026-06-12:
   - added hints `scribble-wavy`, `checkmark`, `circle-dotted`, `nota-bene`.
@@ -71,14 +75,14 @@
 - 2026-06-06: added hints `slash-double` and `backslash-double`.
 - 2026-05-28: updated hints.
 
-### 6.0.4
+## 6.0.4
 
 - 2026-05-28:
   - updated packages.
   - added escapes for operation DSL syntax in operation value and feature values. You can now escape `"` with `\"` and `\` with `\\` in operation DSL syntax. This allows you to use these characters in operation values and feature values without breaking the DSL syntax.
   - ensure that an empty feature value is rendered as `""` in DSL.
 
-### 6.0.3
+## 6.0.3
 
 - 2026-06-26: refactored some hints.
 - 2026-05-21:
@@ -86,7 +90,7 @@
   - added hints.
   - renamed hints: `snake-e` and `snake-w` to `snake-left` and `snake-right`; `note` to `note-above`; reordered all hints.
 
-### 6.0.2
+## 6.0.2
 
 - 2026-05-14:
   - removed solid features and added source-of features in thesauri `snapshot-feat-names` and `snapshot-feat-values`; removed solid property from hints in profile settings.
@@ -94,14 +98,14 @@
   - updated packages.
 - 2026-05-13: reordered feature names in thesaurus.
 
-### 6.0.1
+## 6.0.1
 
 - 2026-05-06:
   - added snake-e to settings and `snapshot-feat-values` thesaurus.
   - updated packages.
 - 2026-04-26: more entries added to `text-passage-tags` thesaurus.
 
-### 6.0.0
+## 6.0.0
 
 - 2026-04-26: added references to NDP parts for `TextPassagesPart` and its seeder.
 - 2026-04-25:
