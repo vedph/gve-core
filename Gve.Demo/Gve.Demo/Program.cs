@@ -30,7 +30,6 @@ public class Program
         // configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())
         {
-            app.UseWebAssemblyDebugging();
         }
         else
         {

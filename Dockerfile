@@ -1,11 +1,11 @@
 # Stage 1: base - pulled for the TARGET platform (not the build machine)
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS base
 WORKDIR /app
 EXPOSE 8080
 
 # Stage 2: build - runs natively on the BUILD machine (ARM); $TARGETARCH
 # is passed through so dotnet can cross-compile for the target platform.
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:11.0 AS build
 ARG TARGETARCH
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
